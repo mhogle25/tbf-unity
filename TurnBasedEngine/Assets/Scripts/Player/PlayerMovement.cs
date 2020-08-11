@@ -1,6 +1,7 @@
 ﻿using System;
 //using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -12,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
         actions += Move;
     }
     private void Update() {
-        actions.Invoke();
+        actions();
     }
 
     private void Move() {

@@ -1,58 +1,105 @@
-﻿//using System;
-using System;
+﻿using System;
+using UnityEditor;
 using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
+    public static bool IsGamepadConnected { get; private set; } = false;
     public static float HorizontalAxis { get; private set; } = 0;
     public static float VerticalAxis { get; private set; } = 0;
-    public static bool UpPressed { get; private set; } = false;
-    public static bool LeftPressed { get; private set; } = false;
-    public static bool DownPressed { get; private set; } = false;
-    public static bool RightPressed { get; private set; } = false;
-    public static bool SelectPressed { get; private set; } = false;
-    public static bool BackPressed { get; private set; } = false;
+    public static bool Up { get; private set; } = false;
+    public static bool Left { get; private set; } = false;
+    public static bool Down { get; private set; } = false;
+    public static bool Right { get; private set; } = false;
+    public static bool Confirm { get; private set; } = false;
+    public static bool Back { get; private set; } = false;
+    public static bool Menu { get; private set; } = false;
+    public static bool Attack { get; private set; } = false;
+    public static bool Pause { get; private set; } = false;
+    public static bool Select { get; private set; } = false;
+
 
     private Action inputListener;
+    private float joystickThreshold = 0.5f;
+
+    private void Awake() {
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void Start() {
         inputListener += Keyboard;
+        inputListener += GamepadConnected;
     }
 
     private void Update() {
+        //Call input listener methods
         inputListener();
+    }
+
+    private void Gamepad() {
+        //Set Key Press Flags
+        Confirm = Input.GetKey(ControlsConfig.GamepadConfirm);
+        Back = Input.GetKey(ControlsConfig.GamepadBack);
+        Menu = Input.GetKey(ControlsConfig.GamepadMenu);
+        Attack = Input.GetKey(ControlsConfig.GamepadAttack);
+        Pause = Input.GetKey(ControlsConfig.GamepadPause);
+        Select = Input.GetKey(ControlsConfig.GamepadSelect);
+
+        //Set Horizontal and Vertical Axis Values
+        HorizontalAxis = Input.GetAxis("Horizontal");
+        VerticalAxis = Input.GetAxis("Vertical");
+
+        //Set Directional Press flags
+        if (HorizontalAxis > joystickThreshold) {
+            Right = true;
+        } else if (HorizontalAxis < -joystickThreshold) {
+            Left = true;
+        } else {
+            Left = false;
+            Right = false;
+        }
+
+        if (VerticalAxis > joystickThreshold) {
+            Up = true;
+        } else if (VerticalAxis < -joystickThreshold) {
+            Down = true;
+        } else {
+            Up = false;
+            Down = false;
+        }
     }
 
     private void Keyboard() {
         //Set key press flags
-        UpPressed = Input.GetKey(ControlsConfig.ButtonUp);
-        LeftPressed = Input.GetKey(ControlsConfig.ButtonLeft);
-        DownPressed = Input.GetKey(ControlsConfig.ButtonDown);
-        RightPressed = Input.GetKey(ControlsConfig.ButtonRight);
-        SelectPressed = Input.GetKey(ControlsConfig.ButtonSelect);
-        BackPressed = Input.GetKey(ControlsConfig.ButtonBack);
+        Up = Input.GetKey(ControlsConfig.KeyboardUp);
+        Left = Input.GetKey(ControlsConfig.KeyboardLeft);
+        Down = Input.GetKey(ControlsConfig.KeyboardDown);
+        Right = Input.GetKey(ControlsConfig.KeyboardRight);
+        Confirm = Input.GetKey(ControlsConfig.KeyboardConfirm);
+        Back = Input.GetKey(ControlsConfig.KeyboardBack);
+        Menu = Input.GetKey(ControlsConfig.KeyboardMenu);
+        Attack = Input.GetKey(ControlsConfig.KeyboardAttack);
+        Pause = Input.GetKey(ControlsConfig.KeyboardPause);
+        Select = Input.GetKey(ControlsConfig.KeyboardSelect);
 
         //Set Horizontal and Vertical Axis Values
         float tempHor;
         float tempVer;
-        if (LeftPressed && RightPressed) {
+        if (Left && Right) {
             tempHor = 0;
-        } else if (LeftPressed) {
+        } else if (Left) {
             tempHor = -1;
-        } else if (RightPressed) {
+        } else if (Right) {
             tempHor = 1;
         } else {
             tempHor = 0;
         }
 
-        if (UpPressed && DownPressed) {
+        if (Up && Down) {
             tempVer = 0;
-        } else if (DownPressed) {
+        } else if (Down) {
             tempVer = -1;
-        } else if (UpPressed) {
+        } else if (Up) {
             tempVer = 1;
         } else {
             tempVer = 0;
@@ -66,5 +113,23 @@ public class InputManager : MonoBehaviour
 
         HorizontalAxis = tempHor;
         VerticalAxis = tempVer;
+    }
+
+    private void GamepadConnected() {
+        //Check if gamepad is connected
+        string[] gamepadNames = Input.GetJoystickNames();
+        if (gamepadNames[0] != string.Empty) {
+            if (!IsGamepadConnected) {
+                IsGamepadConnected = true;
+                inputListener += Gamepad;
+                inputListener -= Keyboard;
+            }
+        } else {
+            if (IsGamepadConnected) {
+                IsGamepadConnected = false;
+                inputListener -= Gamepad;
+                inputListener += Keyboard;
+            }
+        }
     }
 }
