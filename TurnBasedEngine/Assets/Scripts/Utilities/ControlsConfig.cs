@@ -1,9 +1,4 @@
-﻿using System;
-using System.Dynamic;
-using UnityEngine;
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+﻿using UnityEngine;
 
 public static class ControlsConfig {
     public static KeyCode KeyboardUp { get; set; } = KeyCode.W;

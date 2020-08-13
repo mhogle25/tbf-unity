@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEditor;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
@@ -118,17 +117,19 @@ public class InputManager : MonoBehaviour
     private void GamepadConnected() {
         //Check if gamepad is connected
         string[] gamepadNames = Input.GetJoystickNames();
-        if (gamepadNames[0] != string.Empty) {
-            if (!IsGamepadConnected) {
-                IsGamepadConnected = true;
-                inputListener += Gamepad;
-                inputListener -= Keyboard;
-            }
-        } else {
-            if (IsGamepadConnected) {
-                IsGamepadConnected = false;
-                inputListener -= Gamepad;
-                inputListener += Keyboard;
+        if (gamepadNames.Length > 0) {
+            if (gamepadNames[0] != string.Empty) {
+                if (!IsGamepadConnected) {
+                    IsGamepadConnected = true;
+                    inputListener += Gamepad;
+                    inputListener -= Keyboard;
+                }
+            } else {
+                if (IsGamepadConnected) {
+                    IsGamepadConnected = false;
+                    inputListener -= Gamepad;
+                    inputListener += Keyboard;
+                }
             }
         }
     }
