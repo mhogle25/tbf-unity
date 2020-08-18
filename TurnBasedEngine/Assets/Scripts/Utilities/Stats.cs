@@ -1,4 +1,5 @@
-﻿public class Stats
+﻿
+public class Stats
 {
     public int Health { get { return _health; } }
     private int _health;
@@ -8,6 +9,10 @@
     private int _stamina;
     public int MaxStamina { get { return _maxStamina; } }
     private int _maxStamina;
+    public int Speed { get { return _speed; } }
+    private int _speed;
+    public int Swiftness { get { return _swiftness; } }
+    private int _swiftness;
     public int Attack { get { return _attack + _strength; } }
     private int _attack;
     public int Strength { get { return _strength; } }
@@ -26,4 +31,17 @@
     public void Damage(int damage) {
         _health -= (damage - Defense) > 0 ? (damage - Defense) : 1;
     }
+
+    public void CriticalDamage(int damage) {
+        _health -= damage > 0 ? damage : 1;
+    }
+
+    public void PsychicDamage(int damage) {
+        _health -= (damage - Focus) > 0 ? (damage - Focus) : 1;
+    }
+
+    public void Heal(int healing) {
+        _health += healing > 0 ? healing : 1;
+    }
+
 }
