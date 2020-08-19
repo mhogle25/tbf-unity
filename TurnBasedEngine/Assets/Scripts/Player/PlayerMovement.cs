@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 0.2f;
+    [SerializeField] private float movementSpeed = 2;
 
     private Action actions;
     private void Start() {
@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move() {
         Vector3 moveFactor = new Vector3(InputManager.HorizontalAxis, InputManager.VerticalAxis, 0);
-        Vector3 newPosition = transform.localPosition + (moveFactor * movementSpeed);
+        Vector3 newPosition = transform.localPosition + (moveFactor * movementSpeed * Time.deltaTime);
         transform.localPosition = newPosition;
     }
 }

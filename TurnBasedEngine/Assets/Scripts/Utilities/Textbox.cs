@@ -8,4 +8,9 @@ public class Textbox : MonoBehaviour
     [SerializeField] private Text textField;
     [SerializeField] private Image textboxArrow;
 
+    private Image textboxImage;
+
+    private void Awake() {
+        textboxImage = GetComponent<Image>();
+    }
 }

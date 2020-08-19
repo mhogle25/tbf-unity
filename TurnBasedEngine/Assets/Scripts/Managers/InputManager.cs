@@ -103,13 +103,12 @@ public class InputManager : MonoBehaviour
         } else {
             tempVer = 0;
         }
-
-        /*
+        
         //Calculate distances for diagonals (unit circle shit)
         if (tempVer != 0 && tempHor != 0) {
             tempHor *= (Mathf.Sqrt(2) / 2);
             tempVer *= (Mathf.Sqrt(2) / 2);
-        }*/
+        }
 
         HorizontalAxis = tempHor;
         VerticalAxis = tempVer;
