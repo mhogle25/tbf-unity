@@ -264,7 +264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &699852718
 RectTransform:
   m_ObjectHideFlags: 0
@@ -530,7 +530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6728783e5a5116540aab696a1c831153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textField: {fileID: 0}
+  textField: {fileID: 2145091940}
   textboxArrow: {fileID: 699852719}
 --- !u!1 &1096256046
 GameObject:
@@ -687,10 +687,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.10087173
-    y: 0.20394737
-    width: 0.7970112
-    height: 0.59210527
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   near clip plane: 0
   far clip plane: 1000
   field of view: 43
@@ -858,10 +858,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<color=#A12121>P</color>QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!!!!!!!!!!!!!!!
-    Thats the way we PPP.
-
-    ?.,!''~:)(;"'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 49551c8e368a9f047b75abebaec74de5, type: 2}
   m_sharedMaterial: {fileID: -4108337986724282717, guid: 49551c8e368a9f047b75abebaec74de5, type: 2}
@@ -935,13 +932,13 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 2145091940}
-    characterCount: 102
+    characterCount: 0
     spriteCount: 0
-    spaceCount: 6
-    wordCount: 6
+    spaceCount: 0
+    wordCount: 0
     linkCount: 0
-    lineCount: 3
-    pageCount: 1
+    lineCount: 0
+    pageCount: 0
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
