@@ -7,7 +7,6 @@ public class PlayerMovement : MonoBehaviour
 
     private Action actions;
     private void Start() {
-        Textbox.Instance.Message("Hello World!");
         actions += Move;
     }
     private void Update() {
