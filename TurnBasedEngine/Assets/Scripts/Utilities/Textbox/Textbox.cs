@@ -5,6 +5,7 @@ using TMPro;
 
 public class Textbox : MonoBehaviour
 {
+    [SerializeField] private Image textbox;
     [SerializeField] private TextMeshProUGUI textField;
     [SerializeField] private Image continueArrow;
 
@@ -23,6 +24,8 @@ public class Textbox : MonoBehaviour
     }
 
     public void Message(string message) {
+        textbox.gameObject.SetActive(true);
+
         StartCoroutine(MessageParseAndDisplay(message, 0, _messageSpeed));
     }
 

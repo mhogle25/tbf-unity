@@ -9,7 +9,7 @@ public class Stats
     private protected int _stamina;
     public int MaxStamina { get { return _maxStamina; } }
     private protected int _maxStamina;
-    public int Speed { get { return _speed; } }
+    public int Speed { get { return _speed + _swiftness; } }
     private protected int _speed;
     public int Swiftness { get { return _swiftness; } }
     private protected int _swiftness;
@@ -44,4 +44,24 @@ public class Stats
         _health += healing > 0 ? healing : 1;
     }
 
+    public void ResetHealth() {
+        _health = _maxHealth;
+    }
+
+    public void Exert(int exertion) {
+        _stamina -= exertion;
+    }
+
+    public void Recover(int recovery) {
+        _stamina += recovery;
+    }
+
+    public void ResetStamina() {
+        _stamina = _maxStamina;
+    }
+
+    public void ResetStats() {
+        ResetHealth();
+        ResetStamina();
+    }
 }
