@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour
-{
+public class InputManager : MonoBehaviour {
     #region KEY
     public static bool Up { get { return _up; } }
     private static bool _up = false;
@@ -84,6 +83,16 @@ public class InputManager : MonoBehaviour
     private Action inputListener;
     private float joystickThreshold = 0.5f;
 
+    private bool gamepadLeftPressFlag = true;
+    private bool gamepadRightPressFlag = true;
+    private bool gamepadUpPressFlag = true;
+    private bool gamepadDownPressFlag = true;
+    private bool gamepadLeftReleaseFlag = true;
+    private bool gamepadRightReleaseFlag = true;
+    private bool gamepadUpReleaseFlag = true;
+    private bool gamepadDownReleaseFlag = true;
+
+
     private void Awake() {
         DontDestroyOnLoad(gameObject);
     }
@@ -100,6 +109,10 @@ public class InputManager : MonoBehaviour
 
     private void Gamepad() {
         //Set Key Flags
+        _up = Input.GetAxis("Vertical") > joystickThreshold;
+        _left = Input.GetAxis("Horizontal") < -joystickThreshold;
+        _down = Input.GetAxis("Vertical") < -joystickThreshold;
+        _right = Input.GetAxis("Horizontal") > joystickThreshold;
         _confirm = Input.GetKey(ControlsConfig.GamepadConfirm);
         _back = Input.GetKey(ControlsConfig.GamepadBack);
         _menu = Input.GetKey(ControlsConfig.GamepadMenu);
@@ -108,14 +121,118 @@ public class InputManager : MonoBehaviour
         _select = Input.GetKey(ControlsConfig.GamepadSelect);
 
         //Set Key Press Flags
+        if (Input.GetAxis("Vertical") > joystickThreshold) {
+            if (!_upPress && gamepadUpPressFlag) {
+                _upPress = true;
+            } else if (_upPress && gamepadUpPressFlag) {
+                _upPress = false;
+                gamepadUpPressFlag = false;
+            }
+        } else {
+            if (!_upPress && !gamepadUpPressFlag) {
+                gamepadUpPressFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Horizontal") < -joystickThreshold) {
+            if (!_leftPress && gamepadLeftPressFlag) {
+                _leftPress = true;
+            } else if (_leftPress && gamepadLeftPressFlag) {
+                _leftPress = false;
+                gamepadLeftPressFlag = false;
+            }
+        } else {
+            if (!_leftPress && !gamepadLeftPressFlag) {
+                gamepadLeftPressFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Vertical") < -joystickThreshold) {
+            if (!_downPress && gamepadDownPressFlag) {
+                _downPress = true;
+            } else if (_downPress && gamepadDownPressFlag) {
+                _downPress = false;
+                gamepadDownPressFlag = false;
+            }
+        } else {
+            if (!_downPress && !gamepadDownPressFlag) {
+                gamepadDownPressFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Horizontal") > joystickThreshold) {
+            if (!_rightPress && gamepadRightPressFlag) {
+                _rightPress = true;
+            } else if (_rightPress && gamepadRightPressFlag) {
+                _rightPress = false;
+                gamepadRightPressFlag = false;
+            }
+        } else {
+            if (!_rightPress && !gamepadRightPressFlag) {
+                gamepadRightPressFlag = true;
+            }
+        }
+
         _confirmPress = Input.GetKeyDown(ControlsConfig.GamepadConfirm);
         _backPress = Input.GetKeyDown(ControlsConfig.GamepadBack);
         _menuPress = Input.GetKeyDown(ControlsConfig.GamepadMenu);
         _attackPress = Input.GetKeyDown(ControlsConfig.GamepadAttack);
         _pausePress = Input.GetKeyDown(ControlsConfig.GamepadPause);
         _selectPress = Input.GetKeyDown(ControlsConfig.GamepadSelect);
-        
+
         //Set Key Release Flags
+        if (Input.GetAxis("Vertical") < joystickThreshold) {
+            if (!_upRelease && gamepadUpReleaseFlag) {
+                _upRelease = true;
+            } else if (_upRelease && gamepadUpReleaseFlag) {
+                _upRelease = false;
+                gamepadUpReleaseFlag = false;
+            }
+        } else {
+            if (!_upRelease && !gamepadUpReleaseFlag) {
+                gamepadUpReleaseFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Horizontal") > -joystickThreshold) {
+            if (!_leftRelease && gamepadLeftReleaseFlag) {
+                _leftRelease = true;
+            } else if (_leftRelease && gamepadLeftReleaseFlag) {
+                _leftRelease = false;
+                gamepadLeftReleaseFlag = false;
+            }
+        } else {
+            if (!_leftRelease && !gamepadLeftReleaseFlag) {
+                gamepadLeftReleaseFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Vertical") > -joystickThreshold) {
+            if (!_downRelease && gamepadDownReleaseFlag) {
+                _downRelease = true;
+            } else if (_downRelease && gamepadDownReleaseFlag) {
+                _downRelease = false;
+                gamepadDownReleaseFlag = false;
+            }
+        } else {
+            if (!_downRelease && !gamepadDownReleaseFlag) {
+                gamepadDownReleaseFlag = true;
+            }
+        }
+
+        if (Input.GetAxis("Horizontal") < joystickThreshold) {
+            if (!_rightRelease && gamepadRightReleaseFlag) {
+                _rightRelease = true;
+            } else if (_rightRelease && gamepadRightReleaseFlag) {
+                _rightRelease = false;
+                gamepadRightReleaseFlag = false;
+            }
+        } else {
+            if (!_rightRelease && !gamepadRightReleaseFlag) {
+                gamepadRightReleaseFlag = true;
+            }
+        }
+
         _confirmRelease = Input.GetKeyUp(ControlsConfig.GamepadConfirm);
         _backRelease = Input.GetKeyUp(ControlsConfig.GamepadBack);
         _menuRelease = Input.GetKeyUp(ControlsConfig.GamepadMenu);
@@ -206,7 +323,7 @@ public class InputManager : MonoBehaviour
         } else {
             tempVer = 0;
         }
-        
+
         //Calculate distances for diagonals (unit circle shit)
         if (tempVer != 0 && tempHor != 0) {
             tempHor *= (Mathf.Sqrt(2) / 2);
@@ -237,3 +354,4 @@ public class InputManager : MonoBehaviour
         }
     }
 }
+
