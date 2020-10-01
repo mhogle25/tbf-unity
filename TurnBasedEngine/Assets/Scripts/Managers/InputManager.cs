@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Animations;
 
 public class InputManager : MonoBehaviour {
     #region KEY

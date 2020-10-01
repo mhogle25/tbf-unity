@@ -11,5 +11,4 @@ public class PlayerStats : Stats
     public List<Item> Inventory { get { return _inventory; } }
     private List<Item> _inventory = new List<Item>();
 
-
 }
