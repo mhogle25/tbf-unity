@@ -15,7 +15,7 @@ public class Textbox : MonoBehaviour
     public float MessageSpeed { set { _messageSpeed = value;  } }
     private float _messageSpeed = 0.1f;
 
-    private void Awake() { 
+    private void Awake() {
         //Setup of Monobehaviour Singleton
         if (_instance != this && _instance != null) {
             Destroy(_instance.gameObject);
