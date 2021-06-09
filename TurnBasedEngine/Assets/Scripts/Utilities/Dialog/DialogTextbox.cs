@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using BF2D.UI;
 
 namespace BF2D.Dialog {
     public class DialogTextbox : MonoBehaviour {
@@ -12,6 +13,7 @@ namespace BF2D.Dialog {
         [SerializeField] private TextMeshProUGUI textField;
         [SerializeField] private Image nametag;
         [SerializeField] private TextMeshProUGUI nametagTextField;
+        [SerializeField] private UIOptionsGroup optionsGroup;
 
         [SerializeField] private Image continueArrow;
 
