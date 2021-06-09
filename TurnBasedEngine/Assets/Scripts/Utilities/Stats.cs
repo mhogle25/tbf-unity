@@ -1,5 +1,4 @@
-﻿
-public class Stats
+﻿public class Stats
 {
     public int Health { get { return _health; } }
     private protected int _health;

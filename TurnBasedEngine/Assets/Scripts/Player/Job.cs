@@ -1,17 +1,6 @@
-﻿public class Job {
-    public class Technique {
+﻿using System;
+using UnityEngine;
 
-    };
-}
-
-public class Weapon : Job.Technique {
-    
-}
-
-public class Art : Job.Technique {
-    
-}
-
-public class Fists : Art {
+public class Job {
 
 }

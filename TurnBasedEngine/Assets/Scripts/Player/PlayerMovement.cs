@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using BF2D;
+using BF2D.Dialog;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -10,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     private Action actions;
     private void Start() {
-        Textbox.Instance.Message("Hello[S:0.5] world!");
+        DialogTextbox.Instance.Dialog("test", 2);
 
         actions += Move;
     }

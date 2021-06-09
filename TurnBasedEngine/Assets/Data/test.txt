@@ -1,0 +1,5 @@
+Do you know where I could find anything of the sort?
+I'd greatly appreciate it.[E]
+[N:Chad Jace]Hello! I am a Wizard
+Travelling about the land,[P:0.5] looking for signs of [S:0.2]magic.[S:-1]
+[J:1]
