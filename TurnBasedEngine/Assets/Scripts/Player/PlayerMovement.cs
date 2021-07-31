@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
         actions += Move;
     }
-    private void Update() {
+    private void FixedUpdate() {
         actions();
     }
 
