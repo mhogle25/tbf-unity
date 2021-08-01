@@ -84,7 +84,7 @@ namespace BF2D.Dialog {
                 _activeLines = new List<string>();
                 _activeLines.Add(message);
 
-                _state += MessageParseAndDisplay;
+                _state += MessageParseAndDisplayClocked;
 
                 return true;
             } else {
@@ -102,7 +102,7 @@ namespace BF2D.Dialog {
                 _activeLines = _dialogFiles[key];
                 Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
 
-                _state += MessageParseAndDisplay;
+                _state += MessageParseAndDisplayClocked;
                 return true;
             } else {
                 return false;
@@ -117,7 +117,7 @@ namespace BF2D.Dialog {
 
                 _activeLines = lines;
 
-                _state += MessageParseAndDisplay;
+                _state += MessageParseAndDisplayClocked;
 
                 return true;
             } else {
@@ -125,76 +125,82 @@ namespace BF2D.Dialog {
             }
         }
 
-        private void MessageParseAndDisplay() {
+        private void MessageParseAndDisplayClocked() {
             //Message Interrupts
-            if (InputManager.Confirm) {
-                MessageParseAndDisplayInstantaneous();
+            if (InputManager.ConfirmPress) {                                                        //If the confirm button is pressed, switch to instantaneous parse
+                MessageParseAndDisplayInstantaneous();                                              
                 return;
             }
 
             //Message Parse Statement
             if (Time.time > _timeAccumulator) {
-                _timeAccumulator = Time.time + _messageSpeed;                                           //Implement time increment
-
-                string message = _activeLines[_dialogIndex];                                            //Set message to the current line of dialog
-
-                //If our message index is greater than the length of the message
-                if (message.Length <= _messageIndex) {
-                    //Change the state to Eol
-                    _state -= MessageParseAndDisplay;
-                    _state += EndOfLine;
-
-                    return;
-                }
-
-                //Begin tag parsing
-                if (message[_messageIndex] == '[') {
-                    //Take and read tag
-                    char tag = message[_messageIndex + 1];
-                    int newMessageIndex = _messageIndex;
-                    switch (tag) {
-                        case 'P':                                                                       //Case: Pause for seconds
-                            float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
-                            _timeAccumulator += wait;
-                            _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
-                            break;
-                        case 'S':                                                                       //Case: New text speed
-                            float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
-                            newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
-                            _messageSpeed = newSpeed;                                               
-                            _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
-                            break;
-                        case 'N':                                                                       //Case: Orator name
-                            string name = ParseTag(message, ref newMessageIndex);
-                            NametagEnable(name);
-                            _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
-                            break;
-                        case 'J':                                                                       //Case: Jump
-                            int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
-                            _dialogIndex = newDialogIndex - 1;
-                            _messageIndex = 0;
-                            break;
-                        case 'E':                                                                       //Case: End of Dialog
-                            //Change the state to Eof
-                            _state -= MessageParseAndDisplay;
-                            _state += EndOfDialog;
-                            break;
-                        default:
-                            Debug.Log("[DialogTextbox] Tag was not a valid character");
-                            break;
-                    }
-                } else { //Basic character
-                    string currentMessage = textField.text;
-                    currentMessage = currentMessage + message[_messageIndex];
-                    textField.text = currentMessage;
-
-                    _messageIndex++;                                                                 //Increment message index to move to next character
-                }
+                _timeAccumulator = Time.time + _messageSpeed;                                       //Implement time increment
+                MessageParseAndDisplay();                                                           //Call the message parse and display of the next character or implementation of the next flag
             }
         }
 
         private void MessageParseAndDisplayInstantaneous() {
+            while (MessageParseAndDisplay());                                                       //Run parse and display until the end of the line or end of dialog
+            _timeAccumulator = 0f;                                                                  //Reset the time accumulator
+        }
 
+        private bool MessageParseAndDisplay() {
+            string message = _activeLines[_dialogIndex];                                            //Set message to the current line of dialog
+
+            //If our message index is greater than the length of the message
+            if (message.Length <= _messageIndex) {
+                //Change the state to Eol
+                _state -= MessageParseAndDisplayClocked;
+                _state += EndOfLine;
+
+                return false;
+            }
+
+            //Begin tag parsing
+            if (message[_messageIndex] == '[') {
+                //Take and read tag
+                char tag = message[_messageIndex + 1];
+                int newMessageIndex = _messageIndex;
+                switch (tag) {
+                    case 'P':                                                                       //Case: Pause for seconds
+                        float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
+                        _timeAccumulator += wait;
+                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        break;
+                    case 'S':                                                                       //Case: New text speed
+                        float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
+                        newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
+                        _messageSpeed = newSpeed;
+                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        break;
+                    case 'N':                                                                       //Case: Orator name
+                        string name = ParseTag(message, ref newMessageIndex);
+                        NametagEnable(name);
+                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        break;
+                    case 'J':                                                                       //Case: Jump
+                        int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
+                        _dialogIndex = newDialogIndex - 1;
+                        _messageIndex = 0;
+                        break;
+                    case 'E':                                                                       //Case: End of Dialog
+                                                                                                    //Change the state to Eof
+                        _state -= MessageParseAndDisplayClocked;
+                        _state += EndOfDialog;
+                        return false;
+                    default:
+                        Debug.Log("[DialogTextbox] Tag was not a valid character");
+                        break;
+                }
+            } else { //Basic character
+                string currentMessage = textField.text;
+                currentMessage = currentMessage + message[_messageIndex];
+                textField.text = currentMessage;
+
+                _messageIndex++;                                                                    //Increment message index to move to next character
+            }
+
+            return true;
         }
 
         private string ParseTag(string message, ref int index) {
@@ -231,7 +237,7 @@ namespace BF2D.Dialog {
             if (!continueArrow.enabled)
                 continueArrow.enabled = true;
 
-            if (InputManager.Confirm) {
+            if (InputManager.ConfirmPress) {
                 continueArrow.enabled = false;
                 textField.text = "";
                 NametagDisable();
@@ -245,13 +251,13 @@ namespace BF2D.Dialog {
             if (!continueArrow.enabled)    
                 continueArrow.enabled = true;
             
-            if (InputManager.Confirm) {
+            if (InputManager.ConfirmPress) {
                 continueArrow.enabled = false;
                 textField.text = "";
                 _dialogIndex++;                  //Increment dialog index to the next line of dialog
                 _messageIndex = 0;               //Reset the message index to be on the first character of the line
                 _state -= EndOfLine;             //Change the state to MessageParseAndDisplay
-                _state += MessageParseAndDisplay;
+                _state += MessageParseAndDisplayClocked;
             }
         }
 
