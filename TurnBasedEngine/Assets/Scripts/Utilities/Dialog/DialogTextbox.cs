@@ -8,7 +8,7 @@ using BF2D.UI;
 
 namespace BF2D.Dialog {
     public class DialogTextbox : MonoBehaviour {
-        [Header("Private references")]
+        [Header("Private References")]
         //Serialized private variables
         [SerializeField] private Image textbox;
         [SerializeField] private TextMeshProUGUI textField;
@@ -20,9 +20,10 @@ namespace BF2D.Dialog {
 
         [SerializeField] private List<TextAsset> dialogFiles = new List<TextAsset>();
 
-        [Header("Public options")]
+        [Header("Public Options")]
         //Public variables
         public float DefaultMessageSpeed = 0.05f;
+        public bool MessageInterrupt = false;
 
         //Getter Setters and their private variables
         public static DialogTextbox Instance { get { return _instance; } }
@@ -127,7 +128,7 @@ namespace BF2D.Dialog {
 
         private void MessageParseAndDisplayClocked() {
             //Message Interrupts
-            if (InputManager.ConfirmPress) {                                                        //If the confirm button is pressed, switch to instantaneous parse
+            if (InputManager.ConfirmPress && MessageInterrupt) {                                                        //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
                 MessageParseAndDisplayInstantaneous();                                              
                 return;
             }
