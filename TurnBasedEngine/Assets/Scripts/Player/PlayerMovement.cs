@@ -10,14 +10,15 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalAxis;
     private float verticalAxis;
 
-    private Action actions;
+    private Action state;
     private void Start() {
         DialogTextbox.Instance.Dialog("test", 2);
 
-        actions += Move;
+        state += Move;
     }
-    private void FixedUpdate() {
-        actions();
+    private void LateUpdate() {
+        if (state != null)
+            state();
     }
 
     private void Move() {

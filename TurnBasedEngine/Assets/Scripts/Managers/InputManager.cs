@@ -104,7 +104,7 @@ namespace BF2D {
             inputListener += GamepadConnected;
         }
 
-        private void Update() {
+        private void FixedUpdate() {
             //Call input listener methods
             inputListener();
         }
