@@ -7,24 +7,24 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 2;
 
-    private float horizontalAxis;
-    private float verticalAxis;
+    private float _horizontalAxis;
+    private float _verticalAxis;
 
-    private Action state;
+    private Action _state;
     private void Start() {
         DialogTextbox.Instance.Dialog("test", 2);
 
-        state += Move;
+        _state += Move;
     }
-    private void LateUpdate() {
-        if (state != null)
-            state();
+    private void Update() {
+        if (_state != null)
+            _state();
     }
 
     private void Move() {
-        horizontalAxis = InputManager.HorizontalAxis;
-        verticalAxis = InputManager.VerticalAxis;
-        Vector3 moveFactor = new Vector3(horizontalAxis, verticalAxis, 0);
+        _horizontalAxis = InputManager.HorizontalAxis;
+        _verticalAxis = InputManager.VerticalAxis;
+        Vector3 moveFactor = new Vector3(_horizontalAxis, _verticalAxis, 0);
         Vector3 newPosition = transform.localPosition + (moveFactor * movementSpeed * Time.deltaTime);
         transform.localPosition = newPosition;
     }

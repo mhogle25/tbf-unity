@@ -564,5 +564,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: TextboxCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: MessageInterrupt
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}

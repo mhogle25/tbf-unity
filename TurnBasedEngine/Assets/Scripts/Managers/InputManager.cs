@@ -82,17 +82,18 @@ namespace BF2D {
         private static float _verticalAxis = 0;
         #endregion
 
-        private Action inputListener;
-        private float joystickThreshold = 0.5f;
+        [SerializeField] private float joystickThreshold = 0.5f;
 
-        private bool gamepadLeftPressFlag = true;
-        private bool gamepadRightPressFlag = true;
-        private bool gamepadUpPressFlag = true;
-        private bool gamepadDownPressFlag = true;
-        private bool gamepadLeftReleaseFlag = true;
-        private bool gamepadRightReleaseFlag = true;
-        private bool gamepadUpReleaseFlag = true;
-        private bool gamepadDownReleaseFlag = true;
+        private Action _inputListener;
+
+        private bool _gamepadLeftPressFlag = true;
+        private bool _gamepadRightPressFlag = true;
+        private bool _gamepadUpPressFlag = true;
+        private bool _gamepadDownPressFlag = true;
+        private bool _gamepadLeftReleaseFlag = true;
+        private bool _gamepadRightReleaseFlag = true;
+        private bool _gamepadUpReleaseFlag = true;
+        private bool _gamepadDownReleaseFlag = true;
 
 
         private void Awake() {
@@ -100,13 +101,13 @@ namespace BF2D {
         }
 
         private void Start() {
-            inputListener += Keyboard;
-            inputListener += GamepadConnected;
+            _inputListener += Keyboard;
+            _inputListener += GamepadConnected;
         }
 
-        private void Update() {
+        private void LateUpdate() {
             //Call input listener methods
-            inputListener();
+            _inputListener();
         }
 
         private void Gamepad() {
@@ -124,54 +125,54 @@ namespace BF2D {
 
             //Set Key Press Flags
             if (Input.GetAxis("Vertical") > joystickThreshold) {
-                if (!_upPress && gamepadUpPressFlag) {
+                if (!_upPress && _gamepadUpPressFlag) {
                     _upPress = true;
-                } else if (_upPress && gamepadUpPressFlag) {
+                } else if (_upPress && _gamepadUpPressFlag) {
                     _upPress = false;
-                    gamepadUpPressFlag = false;
+                    _gamepadUpPressFlag = false;
                 }
             } else {
-                if (!_upPress && !gamepadUpPressFlag) {
-                    gamepadUpPressFlag = true;
+                if (!_upPress && !_gamepadUpPressFlag) {
+                    _gamepadUpPressFlag = true;
                 }
             }
 
             if (Input.GetAxis("Horizontal") < -joystickThreshold) {
-                if (!_leftPress && gamepadLeftPressFlag) {
+                if (!_leftPress && _gamepadLeftPressFlag) {
                     _leftPress = true;
-                } else if (_leftPress && gamepadLeftPressFlag) {
+                } else if (_leftPress && _gamepadLeftPressFlag) {
                     _leftPress = false;
-                    gamepadLeftPressFlag = false;
+                    _gamepadLeftPressFlag = false;
                 }
             } else {
-                if (!_leftPress && !gamepadLeftPressFlag) {
-                    gamepadLeftPressFlag = true;
+                if (!_leftPress && !_gamepadLeftPressFlag) {
+                    _gamepadLeftPressFlag = true;
                 }
             }
 
             if (Input.GetAxis("Vertical") < -joystickThreshold) {
-                if (!_downPress && gamepadDownPressFlag) {
+                if (!_downPress && _gamepadDownPressFlag) {
                     _downPress = true;
-                } else if (_downPress && gamepadDownPressFlag) {
+                } else if (_downPress && _gamepadDownPressFlag) {
                     _downPress = false;
-                    gamepadDownPressFlag = false;
+                    _gamepadDownPressFlag = false;
                 }
             } else {
-                if (!_downPress && !gamepadDownPressFlag) {
-                    gamepadDownPressFlag = true;
+                if (!_downPress && !_gamepadDownPressFlag) {
+                    _gamepadDownPressFlag = true;
                 }
             }
 
             if (Input.GetAxis("Horizontal") > joystickThreshold) {
-                if (!_rightPress && gamepadRightPressFlag) {
+                if (!_rightPress && _gamepadRightPressFlag) {
                     _rightPress = true;
-                } else if (_rightPress && gamepadRightPressFlag) {
+                } else if (_rightPress && _gamepadRightPressFlag) {
                     _rightPress = false;
-                    gamepadRightPressFlag = false;
+                    _gamepadRightPressFlag = false;
                 }
             } else {
-                if (!_rightPress && !gamepadRightPressFlag) {
-                    gamepadRightPressFlag = true;
+                if (!_rightPress && !_gamepadRightPressFlag) {
+                    _gamepadRightPressFlag = true;
                 }
             }
 
@@ -184,54 +185,54 @@ namespace BF2D {
 
             //Set Key Release Flags
             if (Input.GetAxis("Vertical") < joystickThreshold) {
-                if (!_upRelease && gamepadUpReleaseFlag) {
+                if (!_upRelease && _gamepadUpReleaseFlag) {
                     _upRelease = true;
-                } else if (_upRelease && gamepadUpReleaseFlag) {
+                } else if (_upRelease && _gamepadUpReleaseFlag) {
                     _upRelease = false;
-                    gamepadUpReleaseFlag = false;
+                    _gamepadUpReleaseFlag = false;
                 }
             } else {
-                if (!_upRelease && !gamepadUpReleaseFlag) {
-                    gamepadUpReleaseFlag = true;
+                if (!_upRelease && !_gamepadUpReleaseFlag) {
+                    _gamepadUpReleaseFlag = true;
                 }
             }
 
             if (Input.GetAxis("Horizontal") > -joystickThreshold) {
-                if (!_leftRelease && gamepadLeftReleaseFlag) {
+                if (!_leftRelease && _gamepadLeftReleaseFlag) {
                     _leftRelease = true;
-                } else if (_leftRelease && gamepadLeftReleaseFlag) {
+                } else if (_leftRelease && _gamepadLeftReleaseFlag) {
                     _leftRelease = false;
-                    gamepadLeftReleaseFlag = false;
+                    _gamepadLeftReleaseFlag = false;
                 }
             } else {
-                if (!_leftRelease && !gamepadLeftReleaseFlag) {
-                    gamepadLeftReleaseFlag = true;
+                if (!_leftRelease && !_gamepadLeftReleaseFlag) {
+                    _gamepadLeftReleaseFlag = true;
                 }
             }
 
             if (Input.GetAxis("Vertical") > -joystickThreshold) {
-                if (!_downRelease && gamepadDownReleaseFlag) {
+                if (!_downRelease && _gamepadDownReleaseFlag) {
                     _downRelease = true;
-                } else if (_downRelease && gamepadDownReleaseFlag) {
+                } else if (_downRelease && _gamepadDownReleaseFlag) {
                     _downRelease = false;
-                    gamepadDownReleaseFlag = false;
+                    _gamepadDownReleaseFlag = false;
                 }
             } else {
-                if (!_downRelease && !gamepadDownReleaseFlag) {
-                    gamepadDownReleaseFlag = true;
+                if (!_downRelease && !_gamepadDownReleaseFlag) {
+                    _gamepadDownReleaseFlag = true;
                 }
             }
 
             if (Input.GetAxis("Horizontal") < joystickThreshold) {
-                if (!_rightRelease && gamepadRightReleaseFlag) {
+                if (!_rightRelease && _gamepadRightReleaseFlag) {
                     _rightRelease = true;
-                } else if (_rightRelease && gamepadRightReleaseFlag) {
+                } else if (_rightRelease && _gamepadRightReleaseFlag) {
                     _rightRelease = false;
-                    gamepadRightReleaseFlag = false;
+                    _gamepadRightReleaseFlag = false;
                 }
             } else {
-                if (!_rightRelease && !gamepadRightReleaseFlag) {
-                    gamepadRightReleaseFlag = true;
+                if (!_rightRelease && !_gamepadRightReleaseFlag) {
+                    _gamepadRightReleaseFlag = true;
                 }
             }
 
@@ -343,14 +344,14 @@ namespace BF2D {
                 if (gamepadNames[0] != string.Empty) {
                     if (!_isGamepadConnected) {
                         _isGamepadConnected = true;
-                        inputListener += Gamepad;
-                        inputListener -= Keyboard;
+                        _inputListener += Gamepad;
+                        _inputListener -= Keyboard;
                     }
                 } else {
                     if (_isGamepadConnected) {
                         _isGamepadConnected = false;
-                        inputListener -= Gamepad;
-                        inputListener += Keyboard;
+                        _inputListener -= Gamepad;
+                        _inputListener += Keyboard;
                     }
                 }
             }

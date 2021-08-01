@@ -15,9 +15,7 @@ namespace BF2D.Dialog {
         [SerializeField] private Image nametag;
         [SerializeField] private TextMeshProUGUI nametagTextField;
         [SerializeField] private UIOptionsGroup optionsGroup;
-
         [SerializeField] private Image continueArrow;
-
         [SerializeField] private List<TextAsset> dialogFiles = new List<TextAsset>();
 
         [Header("Public Options")]
@@ -29,11 +27,13 @@ namespace BF2D.Dialog {
         public static DialogTextbox Instance { get { return _instance; } }
         private static DialogTextbox _instance;
 
-        //Internal private variables
+        //Loaded dialogs
         private Dictionary<string, List<string>> _dialogFiles = new Dictionary<string, List<string>>();
 
+        //The state delegate
         private Action _state;
 
+        //Control Variables
         private List<string> _activeLines;
         private float _timeAccumulator = 0f;
         private float _messageSpeed = 0f;
@@ -50,32 +50,13 @@ namespace BF2D.Dialog {
             LoadDialogFiles();
         }
 
-        private void LateUpdate() {
+        private void Update() {
             //Execute the current state of the dialog component
             if (_state != null)
                 _state();
         }
 
-        private void LoadDialogFiles() {
-            foreach (TextAsset file in dialogFiles) {
-
-                List<string> lines = new List<string>();
-                StringReader lineReader = new StringReader(file.text);
-                string line;
-                while(true) {
-                    line = lineReader.ReadLine();
-                    if (line == null) {
-                        break;
-                    }
-                    lines.Add(line);
-                }
-
-                _dialogFiles[file.name] = lines;
-            }
-
-            Debug.Log("[DialogTextbox] Dialog Files Loaded");
-        }
-
+        #region PUBLIC_METHODS
         public bool Message(string message) {
             if (_state == null) {
                 textbox.gameObject.SetActive(true);
@@ -125,10 +106,12 @@ namespace BF2D.Dialog {
                 return false;
             }
         }
+        #endregion
 
+        #region STATES
         private void MessageParseAndDisplayClocked() {
             //Message Interrupts
-            if (InputManager.ConfirmPress && MessageInterrupt) {                                                        //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
+            if (InputManager.ConfirmPress && MessageInterrupt) {                                    //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
                 MessageParseAndDisplayInstantaneous();                                              
                 return;
             }
@@ -138,6 +121,64 @@ namespace BF2D.Dialog {
                 _timeAccumulator = Time.time + _messageSpeed;                                       //Implement time increment
                 MessageParseAndDisplay();                                                           //Call the message parse and display of the next character or implementation of the next flag
             }
+        }
+
+        private void EndOfLine() {
+            if (!continueArrow.enabled)
+                continueArrow.enabled = true;
+
+            if (InputManager.ConfirmPress) {
+                continueArrow.enabled = false;
+                textField.text = "";
+                _dialogIndex++;                  //Increment dialog index to the next line of dialog
+                _messageIndex = 0;               //Reset the message index to be on the first character of the line
+                _state -= EndOfLine;             //Change the state to MessageParseAndDisplay
+                _state += MessageParseAndDisplayClocked;
+            }
+        }
+
+        private void EndOfDialog() {
+            if (!continueArrow.enabled)
+                continueArrow.enabled = true;
+
+            if (InputManager.ConfirmPress) {
+                continueArrow.enabled = false;
+                textField.text = "";
+                NametagDisable();
+                //Reset the State
+                _state -= EndOfDialog;
+                textbox.gameObject.SetActive(false);
+            }
+        }
+        #endregion
+
+        #region PRIVATE_METHODS
+        private void LoadDialogFiles() {
+            foreach (TextAsset file in dialogFiles) {
+
+                List<string> lines = new List<string>();
+                StringReader lineReader = new StringReader(file.text);
+                string line;
+                while (true) {
+                    line = lineReader.ReadLine();
+                    if (line == null) {
+                        break;
+                    }
+                    lines.Add(line);
+                }
+
+                _dialogFiles[file.name] = lines;
+            }
+
+            Debug.Log("[DialogTextbox] Dialog Files Loaded");
+        }
+
+        private void ResetControlVariables(int dialogIndex) {
+            _dialogIndex = dialogIndex;
+            _messageIndex = 0;
+            _timeAccumulator = 0f;
+            _messageSpeed = DefaultMessageSpeed;
+            _activeLines = null;
         }
 
         private void MessageParseAndDisplayInstantaneous() {
@@ -233,41 +274,6 @@ namespace BF2D.Dialog {
         private void NametagDisable() {
             nametag.gameObject.SetActive(false);
         }
-
-        private void EndOfDialog() {
-            if (!continueArrow.enabled)
-                continueArrow.enabled = true;
-
-            if (InputManager.ConfirmPress) {
-                continueArrow.enabled = false;
-                textField.text = "";
-                NametagDisable();
-                //Reset the State
-                _state -= EndOfDialog;           
-                textbox.gameObject.SetActive(false);
-            }
-        }
-
-        private void EndOfLine() {
-            if (!continueArrow.enabled)    
-                continueArrow.enabled = true;
-            
-            if (InputManager.ConfirmPress) {
-                continueArrow.enabled = false;
-                textField.text = "";
-                _dialogIndex++;                  //Increment dialog index to the next line of dialog
-                _messageIndex = 0;               //Reset the message index to be on the first character of the line
-                _state -= EndOfLine;             //Change the state to MessageParseAndDisplay
-                _state += MessageParseAndDisplayClocked;
-            }
-        }
-
-        private void ResetControlVariables(int dialogIndex) {
-            _dialogIndex = dialogIndex;
-            _messageIndex = 0;
-            _timeAccumulator = 0f;
-            _messageSpeed = DefaultMessageSpeed;
-            _activeLines = null;
-        }
+        #endregion
     }
 }
