@@ -14,12 +14,13 @@ namespace BF2D.Dialog {
         [SerializeField] private TextMeshProUGUI textField;
         [SerializeField] private Image nametag;
         [SerializeField] private TextMeshProUGUI nametagTextField;
-        [SerializeField] private UIOptionsGroup optionsGroup;
+        [SerializeField] private UIOptionsGrid optionsGroup;
         [SerializeField] private Image continueArrow;
         [SerializeField] private List<TextAsset> dialogFiles = new List<TextAsset>();
 
         [Header("Public Options")]
         //Public variables
+        //public unsafe bool* ConfirmKeyPress;
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
 
@@ -56,7 +57,7 @@ namespace BF2D.Dialog {
                 _state();
         }
 
-        #region PUBLIC_METHODS
+        #region Public Methods
         public bool Message(string message) {
             if (_state == null) {
                 textbox.gameObject.SetActive(true);
@@ -108,7 +109,7 @@ namespace BF2D.Dialog {
         }
         #endregion
 
-        #region STATES
+        #region States
         private void MessageParseAndDisplayClocked() {
             //Message Interrupts
             if (InputManager.ConfirmPress && MessageInterrupt) {                                    //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
@@ -152,7 +153,7 @@ namespace BF2D.Dialog {
         }
         #endregion
 
-        #region PRIVATE_METHODS
+        #region Private Methods
         private void LoadDialogFiles() {
             foreach (TextAsset file in dialogFiles) {
 

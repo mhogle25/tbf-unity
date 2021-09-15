@@ -4,7 +4,7 @@ using UnityEngine.Animations;
 
 namespace BF2D {
     public class InputManager : MonoBehaviour {
-        #region KEY
+        #region Key
         public static bool Up { get { return _up; } }
         private static bool _up = false;
         public static bool Left { get { return _left; } }
@@ -27,7 +27,7 @@ namespace BF2D {
         private static bool _select = false;
         #endregion
 
-        #region KEY_PRESS
+        #region Key Press
         public static bool UpPress { get { return _upPress; } }
         private static bool _upPress = false;
         public static bool LeftPress { get { return _leftPress; } }
@@ -50,7 +50,7 @@ namespace BF2D {
         private static bool _selectPress = false;
         #endregion
 
-        #region KEY_RELEASE
+        #region Key Release
         public static bool UpRelease { get { return _upRelease; } }
         private static bool _upRelease = false;
         public static bool LeftRelease { get { return _leftRelease; } }
@@ -73,7 +73,7 @@ namespace BF2D {
         private static bool _selectRelease = false;
         #endregion
 
-        #region MISC
+        #region Misc
         public static bool IsGamepadConnected { get { return _isGamepadConnected; } }
         private static bool _isGamepadConnected = false;
         public static float HorizontalAxis { get { return _horizontalAxis; } }
