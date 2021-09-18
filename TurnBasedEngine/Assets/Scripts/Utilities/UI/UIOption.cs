@@ -14,11 +14,20 @@ namespace BF2D.UI {
     };
 
     public class UIOption : MonoBehaviour {
-        [SerializeField] private TextMeshProUGUI _textMesh;
-        [SerializeField] private Image _image;
-        [SerializeField] private Image _cursor;
+        [Tooltip("Reference to the TextMeshPro component of the option (optional)")]
+        [SerializeField] private TextMeshProUGUI _textMesh = null;
+        [Tooltip("Reference to the Image component of the option (optional)")]
+        [SerializeField] private Image _image = null;
+        [Tooltip("Reference to the Image component of the option's cursor (required)")]
+        [SerializeField] private Image _cursor = null;
+        [Tooltip("The actions that will be called on confirm")]
         [SerializeField] private UnityEvent _event = new UnityEvent();
 
+        /// <summary>
+        /// Sets up an instantiated option
+        /// </summary>
+        /// <param name="optionData">The data in the option</param>
+        /// <returns>True if setup is successful, otherwise returns false</returns>
         public bool Setup(UIOptionData optionData) {
             if (optionData.text != null) {
                 _textMesh.text = optionData.text;

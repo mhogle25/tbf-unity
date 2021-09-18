@@ -5,77 +5,95 @@ using UnityEngine;
 namespace BF2D.UI
 {
     public class UIOptionsGrid : MonoBehaviour {
-        public enum Axis
-        {
-            Horizontal, Vertical
-        };
 
-        [SerializeField] private UIOption _optionPrefab;
-        [SerializeField] private RectTransform _container;
-        [SerializeField] private Axis _instantiationAxis;    //Determines the direction that elements will be populated in
-        [SerializeField] private int _optionsWidth = 0;
-        [SerializeField] private int _optionsHeight = 0;
+        [Header("Grid")]
+        [SerializeField] private UIOption _optionPrefab = null;
+        [Tooltip("The container for grid options")]
+        [SerializeField] private RectTransform _container = null;
+        [Tooltip("Determines the direction that elements will be populated in")]
+        [SerializeField] private Axis _instantiationAxis = Axis.Horizontal;
+        [SerializeField] private int _gridWidth = 0;
+        [SerializeField] private int _gridHeight = 0;
+        [Tooltip("Enable/disable use of the confirm button")]
+        [SerializeField] private bool _confirmEnabled = true;
 
-        public int Size { get { return _optionsWidth * _optionsHeight; } }
+        [Header("Audio")]
+        [SerializeField] private AudioSource _audioSource = null;
+        [SerializeField] private AudioClip _navigateSound = null;
+        [SerializeField] private AudioClip _errorSound = null;
+        [SerializeField] private AudioClip _confirmSound = null;
+
+        /// <summary>
+        /// The area of the grid (width * height)
+        /// </summary>
+        public int Size { get { return _gridWidth * _gridHeight; } }
+        /// <summary>
+        /// The number of options in the grid
+        /// </summary>
         public int Count { get { return _count; } }
+        /// <summary>
+        /// Enable/disable use of the confirm button
+        /// </summary>
+        public bool ConfirmEnabled { get { return _confirmEnabled; } set { _confirmEnabled = value; } }
 
-        private UIOption[,] _options;
+        private UIOption[,] _grid;
         private int _count = 0;
         private IntVector2 _cursorPosition = new IntVector2(0, 0);
         private IntVector2 _head = new IntVector2(0, 0);
 
-        private Action _action;
-
         private void Awake()
         {
-            _action += () =>
-            {
-                //Horizontal Listener
-                NavigationListener(InputManager.LeftPress, InputManager.RightPress, Axis.Horizontal, _optionsWidth);
-                //Vertical Listener
-                NavigationListener(InputManager.UpPress, InputManager.DownPress, Axis.Vertical, _optionsHeight);
-            };
-
-            _action += ConfirmListener;
-
-            if (_optionsWidth > 0 && _optionsHeight > 0)
+            if (_gridWidth > 0 && _gridHeight > 0)
             {
                 //Create the element data structure
-                _options = new UIOption[_optionsWidth, _optionsHeight];
+                _grid = new UIOption[_gridWidth, _gridHeight];
             }
 
-            UIOption[] options = GetComponentsInChildren<UIOption>();
+            UIOption[] options = _container.GetComponentsInChildren<UIOption>();
 
-            if (options != null)
+            if (options != null && options.Length > 0)
             {
-                if (options.Length > 0)
+                foreach (UIOption option in options)
                 {
-                    foreach (UIOption option in options)
-                    {
-                        Add(option);
-                    }
+                    Add(option);
                 }
             }
         }
 
         private void Update() {
-            _action();
+            //Horizontal Listener
+            NavigationListener(InputManager.LeftPress, InputManager.RightPress, Axis.Horizontal, _gridWidth);
+            //Vertical Listener
+            NavigationListener(InputManager.UpPress, InputManager.DownPress, Axis.Vertical, _gridHeight);
+
+            if (_confirmEnabled)
+                ConfirmListener();
         }
 
         #region Public Methods
+        /// <summary>
+        /// Sets up a new grid, clearing any previous data
+        /// </summary>
+        /// <param name="width">The new grid width</param>
+        /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
             //Clean up anything that could be left over
             Clear();
 
             //Set the width and height
-            _optionsWidth = width;
-            _optionsHeight = height;
+            _gridWidth = width;
+            _gridHeight = height;
 
             //Create the element data structure
-            _options = new UIOption[_optionsWidth, _optionsHeight];
+            _grid = new UIOption[_gridWidth, _gridHeight];
         }
 
+        /// <summary>
+        /// Instantiates and adds an option to the grid
+        /// </summary>
+        /// <param name="optionData">The data for the option</param>
+        /// <returns>True if the option was added successfully, otherwise returns false</returns>
         public bool Add(UIOptionData optionData)
         {
             //Base case
@@ -87,7 +105,7 @@ namespace BF2D.UI
 
             //Create and set up the added element
             UIOption option = Instantiate(_optionPrefab);
-            _options[_head.x, _head.y] = option;
+            _grid[_head.x, _head.y] = option;
             option.transform.parent = transform;
             option.transform.localScale = Vector3.one;
             option.Setup(optionData);
@@ -106,6 +124,10 @@ namespace BF2D.UI
             return true;
         }
 
+        /// <summary>
+        /// Removes the option selected by the cursor from the grid
+        /// </summary>
+        /// <returns>True if the option was removed successfully, otherwise returns false</returns>
         public bool Remove()
         {
             //Base Case
@@ -115,7 +137,7 @@ namespace BF2D.UI
                 return false;
             }
 
-            Destroy(_options[_cursorPosition.x, _cursorPosition.y].gameObject);
+            Destroy(_grid[_cursorPosition.x, _cursorPosition.y].gameObject);
             _count--;
 
             if (_count < 1)
@@ -125,13 +147,13 @@ namespace BF2D.UI
                 return true;
             }
 
-            UIOption[,] temp = _options;
-            _options = new UIOption[_optionsWidth, _optionsHeight];
+            UIOption[,] temp = _grid;
+            _grid = new UIOption[_gridWidth, _gridHeight];
 
             Queue<UIOption> queue = new Queue<UIOption>();
-            for (int i = 0; i < _optionsWidth; i++)
+            for (int i = 0; i < _gridWidth; i++)
             {
-                for (int j = 0; j < _optionsHeight; j++)
+                for (int j = 0; j < _gridHeight; j++)
                 {
                     if (temp[i, j] != null)
                     {
@@ -140,15 +162,15 @@ namespace BF2D.UI
                 }
             }
 
-            for (int i = 0; i < _optionsWidth; i++)
+            for (int i = 0; i < _gridWidth; i++)
             {
-                for (int j = 0; j < _optionsHeight; j++)
+                for (int j = 0; j < _gridHeight; j++)
                 {
-                    _options[i, j] = queue.Dequeue();
+                    _grid[i, j] = queue.Dequeue();
                 }
             }
 
-            if (_cursorPosition.Tuple == (_optionsWidth - 1, _optionsHeight - 1))
+            if (_cursorPosition.Tuple == (_gridWidth - 1, _gridHeight - 1))
             {
                 Decrement(ref _cursorPosition);
             }
@@ -160,13 +182,16 @@ namespace BF2D.UI
             return true;
         }
 
+        /// <summary>
+        /// Clears all options and resets all option dependent data from the grid
+        /// </summary>
         public void Clear() {
             //Remove all elements in the grid
-            for (int i = 0; i < _optionsWidth ; i++) 
-                for (int j = 0; j < _optionsHeight; j++)
-                    if (_options[i, j] != null)
+            for (int i = 0; i < _gridWidth ; i++) 
+                for (int j = 0; j < _gridHeight; j++)
+                    if (_grid[i, j] != null)
                     {
-                        Destroy(_options[i, j].gameObject);
+                        Destroy(_grid[i, j].gameObject);
                     }
 
             //Reset all private members that are dependent on grid elements
@@ -187,7 +212,7 @@ namespace BF2D.UI
             }
 
             //Create and set up the added element
-            _options[_head.x, _head.y] = option;
+            _grid[_head.x, _head.y] = option;
 
             //If the cursor did not already exist, enable it
             if (_count < 1)
@@ -207,7 +232,8 @@ namespace BF2D.UI
         {
             if (InputManager.ConfirmPress)
             {
-                _options[_cursorPosition.x, _cursorPosition.y].Confirm();
+                _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
+                PlayAudioClip(_confirmSound);
             }
         }
 
@@ -256,14 +282,16 @@ namespace BF2D.UI
                 switch(axis)
                 {
                     case Axis.Horizontal:
-                        if (_options[tempField, _cursorPosition.y] == null)
+                        if (_grid[tempField, _cursorPosition.y] == null)
                         {
+                            PlayAudioClip(_errorSound);
                             return;
                         }
                         break;
                     case Axis.Vertical:
-                        if (_options[_cursorPosition.x, tempField] == null)
+                        if (_grid[_cursorPosition.x, tempField] == null)
                         {
+                            PlayAudioClip(_errorSound);
                             return;
                         }
                         break;
@@ -288,6 +316,8 @@ namespace BF2D.UI
                 }
 
                 SetCursorAtPosition(_cursorPosition, true);
+
+                PlayAudioClip(_navigateSound);
             }
         }
 
@@ -296,7 +326,7 @@ namespace BF2D.UI
             switch (_instantiationAxis)
             {
                 case Axis.Horizontal:
-                    if (vector.x + 1 >= _optionsWidth)
+                    if (vector.x + 1 >= _gridWidth)
                     {
                         vector.x = 0;
                         vector.y++;
@@ -307,7 +337,7 @@ namespace BF2D.UI
                     }
                     break;
                 case Axis.Vertical:
-                    if (vector.y + 1 >= _optionsHeight)
+                    if (vector.y + 1 >= _gridHeight)
                     {
                         vector.y = 0;
                         vector.x++;
@@ -327,7 +357,7 @@ namespace BF2D.UI
                 case Axis.Horizontal:
                     if (vector.x - 1 < 1)
                     {
-                        vector.x = _optionsWidth - 1;
+                        vector.x = _gridWidth - 1;
                         vector.y--;
                     }
                     else
@@ -338,7 +368,7 @@ namespace BF2D.UI
                 case Axis.Vertical:
                     if (vector.y - 1 < 1)
                     {
-                        vector.y = _optionsHeight - 1;
+                        vector.y = _gridHeight - 1;
                         vector.x--;
                     }
                     else
@@ -351,7 +381,16 @@ namespace BF2D.UI
 
         private void SetCursorAtPosition(IntVector2 cursorPosition, bool value)
         {
-            _options[cursorPosition.x, cursorPosition.y].SetCursor(value);
+            _grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
+        }
+
+        private void PlayAudioClip(AudioClip audioClip)
+        {
+            if (_audioSource != null && audioClip != null)
+            {
+                _audioSource.clip = audioClip;
+                _audioSource.Play();
+            }
         }
         #endregion
     }

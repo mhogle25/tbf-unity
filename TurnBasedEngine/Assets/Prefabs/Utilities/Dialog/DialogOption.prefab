@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 939872129}
   - component: {fileID: 939872128}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -165,9 +165,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbd4c198530429459bcf9522d6c0fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textMesh: {fileID: 9047699793556775555}
-  imageFile: {fileID: 0}
-  cursor: {fileID: 939872128}
+  _textMesh: {fileID: 9047699793556775555}
+  _image: {fileID: 0}
+  _cursor: {fileID: 939872128}
+  _event:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &4021248496372531499
 GameObject:
   m_ObjectHideFlags: 0

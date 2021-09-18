@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 8, y: 0}
-  m_SizeDelta: {x: 48.76, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &423787268
 CanvasRenderer:
@@ -566,14 +566,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f18f65ca372bb4d9ce8b470b7d5971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textbox: {fileID: 5812303957190546871}
-  textField: {fileID: 5812303956115522650}
-  nametag: {fileID: 1596405683}
-  nametagTextField: {fileID: 423787267}
-  optionsGroup: {fileID: 1049449389}
-  continueArrow: {fileID: 5812303956817240721}
-  dialogFiles:
+  _textbox: {fileID: 5812303957190546870}
+  _textField: {fileID: 5812303956115522650}
+  _nametag: {fileID: 1596405682}
+  _nametagTextField: {fileID: 423787267}
+  _optionsGroup: {fileID: 1049449389}
+  _continueArrow: {fileID: 5812303956817240721}
+  _dialogFiles:
   - {fileID: 4900000, guid: 54c9d60ee55c28240976fba472ae712b, type: 3}
+  DefaultMessageSpeed: 0.05
+  MessageInterrupt: 1
 --- !u!1 &5812303957190546873
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,7 +593,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5812303957190546870
 RectTransform:
   m_ObjectHideFlags: 0
@@ -691,7 +693,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 64}
-  m_SizeDelta: {x: 128, y: 14}
+  m_SizeDelta: {x: 128, y: 0}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &2521418758960133158
 CanvasRenderer:
@@ -783,7 +785,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  options: []
-  optionPrefab: {fileID: 1012626334224394726, guid: b0c93a6c35a2de14695126c69f6eeb97, type: 3}
-  horizontal: 0
-  vertical: 1
+  _optionPrefab: {fileID: 0}
+  _container: {fileID: 0}
+  _instantiationAxis: 0
+  _gridWidth: 0
+  _gridHeight: 0
+  _confirmEnabled: 1
+  _audioSource: {fileID: 0}
+  _navigateSound: {fileID: 0}
+  _errorSound: {fileID: 0}
+  _confirmSound: {fileID: 0}

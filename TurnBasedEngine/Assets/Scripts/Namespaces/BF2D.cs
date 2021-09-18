@@ -1,5 +1,10 @@
 ﻿namespace BF2D
 {
+    public enum Axis
+    {
+        Horizontal, Vertical
+    };
+
     struct IntVector2
     {
         public int x;
