@@ -9,16 +9,16 @@ public class GlobalGameManager : MonoBehaviour
     private static GlobalGameManager _instance;
     //All characters
     public List<PlayerStats> Characters { get { return _characters; } }
-    private List<PlayerStats> _characters;
+    private List<PlayerStats> _characters = new List<PlayerStats>();
     //The characters in your party
     public PlayerStats Char1 { get { return _char1; } }
-    private PlayerStats _char1;
+    private PlayerStats _char1 = null;
     public PlayerStats Char2 { get { return _char2; } }
-    private PlayerStats _char2;
+    private PlayerStats _char2 = null;
     public PlayerStats Char3 { get { return _char3; } }
-    private PlayerStats _char3;
+    private PlayerStats _char3 = null;
     public PlayerStats Char4 { get { return _char4; } }
-    private PlayerStats _char4;
+    private PlayerStats _char4 = null;
 
     private void Awake() {
         //Set this object not to destroy on loading new scenes

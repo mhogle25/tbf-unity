@@ -16,9 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private void Start() {
         DialogTextbox.Instance.Dialog("test", 3);
         DialogTextbox.Instance.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
-        DialogTextbox.Instance.Dialog(
-            new List<string>
-            {
+        DialogTextbox.Instance.Dialog(new List<string> {
                 "[N:Jim]Hi",
                 "[N:-1]Hello",
                 "[N:Giuseppe]Whaddup[E]"

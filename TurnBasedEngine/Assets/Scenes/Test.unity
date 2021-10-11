@@ -312,6 +312,7 @@ GameObject:
   - component: {fileID: 1284043477}
   - component: {fileID: 1284043476}
   - component: {fileID: 1284043479}
+  - component: {fileID: 1284043480}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -346,10 +347,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.004636785
+    y: 0.0054945056
+    width: 0.9891808
+    height: 0.989011
   near clip plane: 0
   far clip plane: 1000
   field of view: 43
@@ -404,6 +405,21 @@ MonoBehaviour:
   m_CropFrameX: 1
   m_CropFrameY: 1
   m_StretchFill: 0
+--- !u!114 &1284043480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284043475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a90607a1657e4139b4512cb1da3f103, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1986819454}
+  _smoothSpeed: 0.5
+  _offset: {x: 0, y: 0, z: 0}
 --- !u!1 &1551967970 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5812303956886749165, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
@@ -593,7 +609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d0fc183f26ae04092927f898b4d170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 2
+  movementSpeed: 5
 --- !u!95 &1986819452
 Animator:
   serializedVersion: 3

@@ -19,9 +19,9 @@ namespace BF2D.UI
 
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource = null;
-        [SerializeField] private AudioClip _navigateSound = null;
-        [SerializeField] private AudioClip _errorSound = null;
-        [SerializeField] private AudioClip _confirmSound = null;
+        [SerializeField] private AudioClip _navigateAudioClip = null;
+        [SerializeField] private AudioClip _errorAudioClip = null;
+        [SerializeField] private AudioClip _confirmAudioClip = null;
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -99,7 +99,7 @@ namespace BF2D.UI
             //Base case
             if (_count + 1 > Size)
             {
-                Debug.Log("[UIOptionsGrid]: Tried to add but the grid was full");
+                Debug.Log("[UIOptionsGrid] Tried to add but the grid was full");
                 return false;
             }
 
@@ -133,7 +133,7 @@ namespace BF2D.UI
             //Base Case
             if (_count < 1)
             {
-                Debug.Log("[UIOptionsGrid]: Tried to remove but the grid was empty");
+                Debug.Log("[UIOptionsGrid] Tried to remove but the grid was empty");
                 return false;
             }
 
@@ -207,7 +207,7 @@ namespace BF2D.UI
             //Base case
             if (_count + 1 > Size)
             {
-                Debug.Log("[UIOptionsGrid]: Tried to add but the grid was full");
+                Debug.Log("[UIOptionsGrid] Tried to add but the grid was full");
                 return false;
             }
 
@@ -233,7 +233,7 @@ namespace BF2D.UI
             if (InputManager.ConfirmPress)
             {
                 _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
-                PlayAudioClip(_confirmSound);
+                PlayAudioClip(_confirmAudioClip);
             }
         }
 
@@ -251,7 +251,7 @@ namespace BF2D.UI
                         tempField = _cursorPosition.y;
                         break;
                     default:
-                        Debug.Log("[UIOptionsGrid]: Could not determine the specified axis in the input listener");
+                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
                         return;
                 }
 
@@ -284,19 +284,19 @@ namespace BF2D.UI
                     case Axis.Horizontal:
                         if (_grid[tempField, _cursorPosition.y] == null)
                         {
-                            PlayAudioClip(_errorSound);
+                            PlayAudioClip(_errorAudioClip);
                             return;
                         }
                         break;
                     case Axis.Vertical:
                         if (_grid[_cursorPosition.x, tempField] == null)
                         {
-                            PlayAudioClip(_errorSound);
+                            PlayAudioClip(_errorAudioClip);
                             return;
                         }
                         break;
                     default:
-                        Debug.Log("[UIOptionsGrid]: Could not determine the specified axis in the input listener");
+                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
                         return;
                 }
 
@@ -311,13 +311,13 @@ namespace BF2D.UI
                         _cursorPosition.y = tempField;
                         break;
                     default:
-                        Debug.Log("[UIOptionsGrid]: Could not determine the specified axis in the input listener");
+                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
                         return;
                 }
 
                 SetCursorAtPosition(_cursorPosition, true);
 
-                PlayAudioClip(_navigateSound);
+                PlayAudioClip(_navigateAudioClip);
             }
         }
 

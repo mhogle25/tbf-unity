@@ -24,13 +24,16 @@ namespace BF2D.Dialog {
         [SerializeField] private Image _continueArrow = null;
         [SerializeField] private List<TextAsset> _dialogFiles = new List<TextAsset>();
 
-        [Header("Public Preferences")]
+        [Header("Preferences")]
         //Public variables
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
 
-        [Header("Audio Preferences")]
+        [Header("Audio")]
         [SerializeField] private AudioSource _audioSource = null;
+        [SerializeField] private AudioClip _confirmAudioClip = null;
+        [SerializeField] private AudioClip _defaultVoice = null;
+        [SerializeField] private List<AudioClip> _voiceAudioClipFiles = new List<AudioClip>();
 
         //Getter Setters and their private variables
         public static DialogTextbox Instance { get { return _instance; } }
@@ -38,6 +41,8 @@ namespace BF2D.Dialog {
 
         //Loaded dialogs
         private Dictionary<string, List<string>> _dialogs = new Dictionary<string, List<string>>();
+        //Loaded Voice Clips
+        private Dictionary<string, AudioClip> _voices = new Dictionary<string, AudioClip>();
 
         //The state delegate
         private Action _state;
@@ -51,6 +56,10 @@ namespace BF2D.Dialog {
         private float _messageSpeed = 0f;
         private int _dialogIndex = 0;
         private int _messageIndex = 0;
+        private AudioClip _activeVoice = null;
+
+        //Misc
+        private string _defaultTag = "-1";
 
         private void Awake() {
             //Setup of Monobehaviour Singleton
@@ -60,6 +69,7 @@ namespace BF2D.Dialog {
             _instance = this;
 
             LoadDialogFiles();
+            LoadVoiceAudioClipFiles();
 
             _state = DialogQueueHandler;
         }
@@ -87,6 +97,12 @@ namespace BF2D.Dialog {
 
         public void Dialog(string key, int dialogIndex) {
             Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
+
+            if (!_dialogs.ContainsKey(key))
+            {
+                Debug.Log("[DialogTextbox] The key was not found in the dialogs dictionary");
+                return;
+            }
 
             DialogData dialogData = new DialogData
             {
@@ -118,6 +134,7 @@ namespace BF2D.Dialog {
                 DialogData dialogData = _dialogQueue.Dequeue();
 
                 ResetControlVariables(dialogData.index);
+                _activeVoice = _defaultVoice;
                 _activeLines = dialogData.dialog;
 
                 Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
@@ -128,15 +145,15 @@ namespace BF2D.Dialog {
 
         private void MessageParseAndDisplayClocked() {
             //Message Interrupts
-            if (InputManager.ConfirmPress && MessageInterrupt) {                                    //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
+            if (InputManager.ConfirmPress && MessageInterrupt) {    //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
                 MessageParseAndDisplayInstantaneous();                                              
                 return;
             }
 
             //Message Parse Statement
             if (Time.time > _timeAccumulator) {
-                _timeAccumulator = Time.time + _messageSpeed;                                       //Implement time increment
-                MessageParseAndDisplay();                                                           //Call the message parse and display of the next character or implementation of the next flag
+                _timeAccumulator = Time.time + _messageSpeed;       //Implement time increment
+                MessageParseAndDisplay();                           //Call the message parse and display of the next character or implementation of the next flag
             }
         }
 
@@ -145,6 +162,7 @@ namespace BF2D.Dialog {
                 _continueArrow.enabled = true;
 
             if (InputManager.ConfirmPress) {
+                PlayAudioClip(_confirmAudioClip);       //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
                 _dialogIndex++;                         //Increment dialog index to the next line of dialog
@@ -158,6 +176,7 @@ namespace BF2D.Dialog {
                 _continueArrow.enabled = true;
 
             if (InputManager.ConfirmPress) {
+                PlayAudioClip(_confirmAudioClip);   //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
                 NametagDisable();
@@ -171,7 +190,6 @@ namespace BF2D.Dialog {
         #region Private Methods
         private void LoadDialogFiles() {
             foreach (TextAsset file in _dialogFiles) {
-
                 List<string> lines = new List<string>();
                 StringReader lineReader = new StringReader(file.text);
                 string line;
@@ -186,7 +204,17 @@ namespace BF2D.Dialog {
                 _dialogs[file.name] = lines;
             }
 
-            Debug.Log("[DialogTextbox] Dialog Files Loaded");
+            Debug.Log("[DialogTextbox] Dialog files loaded");
+        }
+
+        private void LoadVoiceAudioClipFiles()
+        {
+            foreach (AudioClip file in _voiceAudioClipFiles)
+            {
+                _voices[file.name] = file;
+            }
+
+            Debug.Log("[DialogTextbox] Voice audio clip files loaded");
         }
 
         private void ResetControlVariables(int dialogIndex) {
@@ -198,7 +226,7 @@ namespace BF2D.Dialog {
         }
 
         private void MessageParseAndDisplayInstantaneous() {
-            while (MessageParseAndDisplay());                                                       //Run parse and display until the end of the line or end of dialog
+            while (MessageParseAndDisplay());   //Run parse and display until the end of the line or end of dialog
             _timeAccumulator = 0f;                                                                  //Reset the time accumulator
         }
 
@@ -232,7 +260,7 @@ namespace BF2D.Dialog {
                         break;
                     case 'N':                                                                       //Case: Orator name
                         string name = ParseTag(message, ref newMessageIndex);
-                        if (name == "-1")
+                        if (name == _defaultTag)
                         {
                             NametagDisable();
                         } else
@@ -246,6 +274,21 @@ namespace BF2D.Dialog {
                         _dialogIndex = newDialogIndex - 1;
                         _messageIndex = 0;
                         break;
+                    case 'V':                                                                       //Case: Voice
+                        string key = ParseTag(message, ref newMessageIndex);
+
+                        if (_voices.ContainsKey(key))
+                        {
+                            _activeVoice = _voices[key];
+                        } else if (key == _defaultTag)
+                        {
+                            _activeVoice = _defaultVoice;
+                        } else
+                        {
+                            Debug.Log("[DialogTextbox] Voice key was neither found in the voices dictionary, nor was it the default value");
+                        }
+                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        break;
                     case 'E':
                         _state = EndOfDialog;
                         return false;
@@ -254,6 +297,11 @@ namespace BF2D.Dialog {
                         break;
                 }
             } else { //Basic character
+                if (message[_messageIndex] != ' ')
+                {
+                    PlayAudioClip(_activeVoice);
+                }
+
                 string currentMessage = _textField.text;
                 currentMessage = currentMessage + message[_messageIndex];
                 _textField.text = currentMessage;
@@ -292,6 +340,15 @@ namespace BF2D.Dialog {
 
         private void NametagDisable() {
             _nametag.gameObject.SetActive(false);
+        }
+
+        private void PlayAudioClip(AudioClip audioClip)
+        {
+            if (_audioSource != null && audioClip != null)
+            {
+                _audioSource.clip = audioClip;
+                _audioSource.Play();
+            }
         }
         #endregion
     }
