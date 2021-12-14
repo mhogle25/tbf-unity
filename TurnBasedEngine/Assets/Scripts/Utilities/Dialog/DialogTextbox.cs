@@ -100,7 +100,7 @@ namespace BF2D.Dialog {
 
             if (!_dialogs.ContainsKey(key))
             {
-                Debug.Log("[DialogTextbox] The key was not found in the dialogs dictionary");
+                Debug.Log("[DialogTextbox] The key '" + key + "' was not found in the dialogs dictionary");
                 return;
             }
 
@@ -285,7 +285,7 @@ namespace BF2D.Dialog {
                             _activeVoice = _defaultVoice;
                         } else
                         {
-                            Debug.Log("[DialogTextbox] Voice key was neither found in the voices dictionary, nor was it the default value");
+                            Debug.Log("[DialogTextbox] Voice key '" + key + "' was not found in the voices dictionary");
                         }
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
@@ -293,7 +293,7 @@ namespace BF2D.Dialog {
                         _state = EndOfDialog;
                         return false;
                     default:
-                        Debug.Log("[DialogTextbox] Tag was not a valid character");
+                        Debug.Log("[DialogTextbox] Tag '" + tag + "' was not a valid character");
                         break;
                 }
             } else { //Basic character
