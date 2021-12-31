@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D;
-using BF2D.Dialog;
+using BF2D.UI;
 
 public class PlayerMovement : MonoBehaviour
 {

@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using BF2D.UI;
 
-namespace BF2D.Dialog {
+namespace BF2D.UI {
     public class DialogTextbox : MonoBehaviour {
         private struct DialogData
         {
