@@ -19,7 +19,6 @@ namespace BF2D.UI {
         [SerializeField] private TextMeshProUGUI _textField = null;
         [SerializeField] private RectTransform _nametag = null;
         [SerializeField] private TextMeshProUGUI _nametagTextField = null;
-        [SerializeField] private UIOptionsGrid _optionsGroup = null;
         [SerializeField] private Image _continueArrow = null;
         [SerializeField] private List<TextAsset> _dialogFiles = new List<TextAsset>();
 
@@ -27,6 +26,10 @@ namespace BF2D.UI {
         //Public variables
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
+
+        [Header("Dialog Responses")]
+        [SerializeField] private UIOptionsGrid _optionsGroup = null;
+        [SerializeField] private List<TextAsset> _dialogOptionFiles = new List<TextAsset>();
 
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource = null;
@@ -42,6 +45,8 @@ namespace BF2D.UI {
         private Dictionary<string, List<string>> _dialogs = new Dictionary<string, List<string>>();
         //Loaded Voice Clips
         private Dictionary<string, AudioClip> _voices = new Dictionary<string, AudioClip>();
+        //Loaded dialog options
+        private Dictionary<string, string> _dialogOptions = new Dictionary<string, string>();
 
         //The state delegate
         private Action _state;
@@ -58,7 +63,14 @@ namespace BF2D.UI {
         private AudioClip _activeVoice = null;
 
         //Misc
-        private string _defaultTag = "-1";
+        private const string _defaultValue = "-1";
+        private const char _pauseTag = 'P';
+        private const char _speedTag = 'S';
+        private const char _voiceTag = 'V';
+        private const char _nameTag = 'N';
+        private const char _jumpTag = 'J';
+        private const char _endTag = 'E';
+        private const char _optionTag = 'O';
 
         private void Awake() {
             //Setup of Monobehaviour Singleton
@@ -79,10 +91,14 @@ namespace BF2D.UI {
         }
 
         #region Public Methods
+        /// <summary>
+        /// Pushes a single message to the dialog queue
+        /// </summary>
+        /// <param name="message">The message to be displayed</param>
         public void Message(string message) {
             List<string> lines = new List<string>
             {
-                message + "[E]"
+                message + "[" + _endTag + "]"
             };
 
             DialogData dialogData = new DialogData
@@ -94,29 +110,39 @@ namespace BF2D.UI {
             _dialogQueue.Enqueue(dialogData);
         }
 
+        /// <summary>
+        /// Pushes a dialog from the list of loaded dialog files to the dialog queue
+        /// </summary>
+        /// <param name="key">The filename of the desired dialog</param>
+        /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
         public void Dialog(string key, int dialogIndex) {
             Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
 
             if (!_dialogs.ContainsKey(key))
             {
-                Debug.Log("[DialogTextbox] The key '" + key + "' was not found in the dialogs dictionary");
+                Debug.LogError("[DialogTextbox] The key '" + key + "' was not found in the dialogs dictionary");
                 return;
             }
 
             DialogData dialogData = new DialogData
             {
                 dialog = _dialogs[key],
-                index = dialogIndex - 1
+                index = dialogIndex
             };
 
             _dialogQueue.Enqueue(dialogData);
         }
 
+        /// <summary>
+        /// Pushes a dialog to the dialog queue
+        /// </summary>
+        /// <param name="lines">The dialog to be displayed</param>
+        /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
         public void Dialog(List<string> lines, int dialogIndex) {
             DialogData dialogData = new DialogData
             {
                 dialog = lines,
-                index = dialogIndex - 1
+                index = dialogIndex
             };
 
             _dialogQueue.Enqueue(dialogData);
@@ -216,6 +242,14 @@ namespace BF2D.UI {
             Debug.Log("[DialogTextbox] Voice audio clip files loaded");
         }
 
+        private void LoadDialogOptionFiles()
+        {
+            foreach (TextAsset textAsset in _dialogOptionFiles)
+            {
+                _dialogOptions[textAsset.name] = textAsset.text;
+            }
+        }
+
         private void ResetControlVariables(int dialogIndex) {
             _dialogIndex = dialogIndex;
             _messageIndex = 0;
@@ -225,8 +259,8 @@ namespace BF2D.UI {
         }
 
         private void MessageParseAndDisplayInstantaneous() {
-            while (MessageParseAndDisplay());   //Run parse and display until the end of the line or end of dialog
-            _timeAccumulator = 0f;                                                                  //Reset the time accumulator
+            while (MessageParseAndDisplay()) ;   //Run parse and display until the end of the line or end of dialog
+            _timeAccumulator = 0f;
         }
 
         private bool MessageParseAndDisplay() {
@@ -246,20 +280,20 @@ namespace BF2D.UI {
                 char tag = message[_messageIndex + 1];
                 int newMessageIndex = _messageIndex;
                 switch (tag) {
-                    case 'P':                                                                       //Case: Pause for seconds
+                    case _pauseTag:                                                                       //Case: Pause for seconds
                         float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
                         _timeAccumulator += wait;
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case 'S':                                                                       //Case: New text speed
+                    case _speedTag:                                                                       //Case: New text speed
                         float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
                         newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
                         _messageSpeed = newSpeed;
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case 'N':                                                                       //Case: Orator name
+                    case _nameTag:                                                                       //Case: Orator name
                         string name = ParseTag(message, ref newMessageIndex);
-                        if (name == _defaultTag)
+                        if (name == _defaultValue)
                         {
                             NametagDisable();
                         } else
@@ -268,31 +302,71 @@ namespace BF2D.UI {
                         }
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case 'J':                                                                       //Case: Jump
+                    case _jumpTag:                                                                       //Case: Jump
                         int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
                         _dialogIndex = newDialogIndex - 1;
                         _messageIndex = 0;
                         break;
-                    case 'V':                                                                       //Case: Voice
+                    case _voiceTag:                                                                       //Case: Voice
                         string key = ParseTag(message, ref newMessageIndex);
 
                         if (_voices.ContainsKey(key))
                         {
                             _activeVoice = _voices[key];
-                        } else if (key == _defaultTag)
+                        } else if (key == _defaultValue)
                         {
                             _activeVoice = _defaultVoice;
                         } else
                         {
-                            Debug.Log("[DialogTextbox] Voice key '" + key + "' was not found in the voices dictionary");
+                            Debug.LogError("[DialogTextbox] Voice key '" + key + "' was not found in the voices dictionary");
                         }
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case 'E':
+                    case _optionTag:
+                        string option = ParseTag(message,ref newMessageIndex);
+                        if (!string.IsNullOrEmpty(option))
+                        {
+                            Dictionary<string, string> options = new Dictionary<string, string>();
+
+                            //Retrieve the data using Json Utility
+                            if (option[0] == '{' && option[option.Length - 1] == '}')   //If it looks like a JSON, try to deserialize it
+                            {
+                                try
+                                {
+                                    options = JsonUtility.FromJson<Dictionary<string, string>>(option);
+                                } catch (Exception x)
+                                {
+                                    Debug.LogException(x);
+                                    throw;
+                                }
+                            } else
+                            {   //else, try using it as a key in the dialog options dictionary and deserialize its value
+                                if (_dialogOptions.ContainsKey(option))
+                                {
+                                    try
+                                    {
+                                        options = JsonUtility.FromJson<Dictionary<string, string>>(_dialogOptions[option]);
+                                    } catch (Exception x)
+                                    {
+                                        Debug.LogException(x);
+                                        throw;
+                                    }
+                                } else
+                                {
+                                    Debug.LogError("[Dialog Textbox] The dialog option file for the specified key '" + option + "' was not found");
+                                }
+                            }
+
+                        } else
+                        {
+                            Debug.LogError("[DialogTextbox] The value for the option cannot be null");
+                        }
+                        break;
+                    case _endTag:
                         _state = EndOfDialog;
                         return false;
                     default:
-                        Debug.Log("[DialogTextbox] Tag '" + tag + "' was not a valid character");
+                        Debug.LogError("[DialogTextbox] Tag '" + tag + "' was not a valid character");
                         break;
                 }
             } else { //Basic character
@@ -317,7 +391,7 @@ namespace BF2D.UI {
             //Move to colon, check if colon exists, move on
             index++;
             if (message[index] != ':') {
-                Debug.Log("[DialogTextbox] Incorrect Syntax, add ':' after tag");
+                Debug.LogError("[DialogTextbox] Incorrect Syntax, add ':' after tag");
             }
             index++;
 
@@ -329,7 +403,7 @@ namespace BF2D.UI {
                 character = message[++index];
             }
 
-            return valueString;                 //Convert parsed string to float
+            return valueString;                 
         }
 
         private void NametagEnable(string name) {
