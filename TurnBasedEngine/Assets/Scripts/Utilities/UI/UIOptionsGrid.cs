@@ -106,7 +106,7 @@ namespace BF2D.UI
             //Create and set up the added element
             UIOption option = Instantiate(_optionPrefab);
             _grid[_head.x, _head.y] = option;
-            option.transform.parent = transform;
+            option.transform.SetParent(transform);
             option.transform.localScale = Vector3.one;
             option.Setup(optionData);
 
@@ -198,6 +198,16 @@ namespace BF2D.UI
             _count = 0;
             _cursorPosition = new IntVector2(0, 0); 
             _head = new IntVector2(0, 0);
+        }
+
+        public void SetCursorAtHead()
+        {
+            foreach (UIOption option in _grid)
+            {
+                option.SetCursor(false);
+            }
+
+            _grid[0, 0].SetCursor(true);
         }
         #endregion
 

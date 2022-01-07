@@ -3,7 +3,9 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using TMPro;
+using Newtonsoft.Json;
 
 namespace BF2D.UI {
     public class DialogTextbox : MonoBehaviour {
@@ -12,6 +14,13 @@ namespace BF2D.UI {
             public List<string> dialog;
             public int index;
         };
+
+        private struct ResponseData
+        {
+            public string text;
+            public int dialogIndex;
+            public object action;
+        }
 
         [Header("Private References")]
         //Serialized private variables
@@ -28,8 +37,12 @@ namespace BF2D.UI {
         public bool MessageInterrupt = false;
 
         [Header("Dialog Responses")]
-        [SerializeField] private UIOptionsGrid _optionsGroup = null;
-        [SerializeField] private List<TextAsset> _dialogOptionFiles = new List<TextAsset>();
+        [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
+        [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
+        [System.Serializable]
+        public class OptionClickEvent : UnityEvent<string> { }
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
+        private OptionClickEvent _optionClickEvent = new OptionClickEvent();
 
         [Header("Audio")]
         [SerializeField] private AudioSource _audioSource = null;
@@ -61,6 +74,8 @@ namespace BF2D.UI {
         private int _dialogIndex = 0;
         private int _messageIndex = 0;
         private AudioClip _activeVoice = null;
+        private bool _pass = false;
+        private int _nextDialogIndex = -1;
 
         //Misc
         private const string _defaultValue = "-1";
@@ -70,7 +85,7 @@ namespace BF2D.UI {
         private const char _nameTag = 'N';
         private const char _jumpTag = 'J';
         private const char _endTag = 'E';
-        private const char _optionTag = 'O';
+        private const char _responseTag = 'R';
 
         private void Awake() {
             //Setup of Monobehaviour Singleton
@@ -81,6 +96,7 @@ namespace BF2D.UI {
 
             LoadDialogFiles();
             LoadVoiceAudioClipFiles();
+            LoadDialogResponseFiles();
 
             _state = DialogQueueHandler;
         }
@@ -98,7 +114,7 @@ namespace BF2D.UI {
         public void Message(string message) {
             List<string> lines = new List<string>
             {
-                message + "[" + _endTag + "]"
+                message + '[' + _endTag + ']'
             };
 
             DialogData dialogData = new DialogData
@@ -182,25 +198,42 @@ namespace BF2D.UI {
             }
         }
 
+        private void PauseMessageDisplay()
+        {
+            return;
+        }
+
         private void EndOfLine() {
             if (!_continueArrow.enabled)
                 _continueArrow.enabled = true;
 
-            if (InputManager.ConfirmPress) {
+            if (InputManager.ConfirmPress || _pass) {
+                _pass = false;
                 PlayAudioClip(_confirmAudioClip);       //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
-                _dialogIndex++;                         //Increment dialog index to the next line of dialog
+                if (_nextDialogIndex != int.Parse(_defaultValue))
+                {
+                    _dialogIndex = _nextDialogIndex;
+                    _nextDialogIndex = -1;
+                } else
+                {
+                    _dialogIndex++;                         //Increment dialog index to the next line of dialog
+                }
                 _messageIndex = 0;                      //Reset the message index to be on the first character of the line
                 _state = MessageParseAndDisplayClocked; //Change the state to MessageParseAndDisplay
             }
         }
 
         private void EndOfDialog() {
+            if (_nextDialogIndex != int.Parse(_defaultValue))
+                _state = EndOfLine;
+
             if (!_continueArrow.enabled)
                 _continueArrow.enabled = true;
 
-            if (InputManager.ConfirmPress) {
+            if (InputManager.ConfirmPress || _pass) {
+                _pass = false;
                 PlayAudioClip(_confirmAudioClip);   //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
@@ -242,12 +275,14 @@ namespace BF2D.UI {
             Debug.Log("[DialogTextbox] Voice audio clip files loaded");
         }
 
-        private void LoadDialogOptionFiles()
+        private void LoadDialogResponseFiles()
         {
-            foreach (TextAsset textAsset in _dialogOptionFiles)
+            foreach (TextAsset textAsset in _dialogResponseFiles)
             {
                 _dialogOptions[textAsset.name] = textAsset.text;
             }
+
+            Debug.Log("[DialogTextbox] Response files loaded");
         }
 
         private void ResetControlVariables(int dialogIndex) {
@@ -256,10 +291,11 @@ namespace BF2D.UI {
             _timeAccumulator = 0f;
             _messageSpeed = DefaultMessageSpeed;
             _activeLines = null;
+            _pass = false;
         }
 
         private void MessageParseAndDisplayInstantaneous() {
-            while (MessageParseAndDisplay()) ;   //Run parse and display until the end of the line or end of dialog
+            while (MessageParseAndDisplay()) ;   //Run parse and display until end of line, end of dialog, or option response is called
             _timeAccumulator = 0f;
         }
 
@@ -304,7 +340,7 @@ namespace BF2D.UI {
                         break;
                     case _jumpTag:                                                                       //Case: Jump
                         int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
-                        _dialogIndex = newDialogIndex - 1;
+                        _dialogIndex = newDialogIndex;
                         _messageIndex = 0;
                         break;
                     case _voiceTag:                                                                       //Case: Voice
@@ -322,46 +358,34 @@ namespace BF2D.UI {
                         }
                         _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case _optionTag:
-                        string option = ParseTag(message,ref newMessageIndex);
-                        if (!string.IsNullOrEmpty(option))
+                    case _responseTag:
+                        string data = ParseTag(message,ref newMessageIndex);
+                        if (!string.IsNullOrEmpty(data))
                         {
-                            Dictionary<string, string> options = new Dictionary<string, string>();
+                            List<ResponseData> options = new List<ResponseData>();
 
                             //Retrieve the data using Json Utility
-                            if (option[0] == '{' && option[option.Length - 1] == '}')   //If it looks like a JSON, try to deserialize it
+                            if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
                             {
-                                try
-                                {
-                                    options = JsonUtility.FromJson<Dictionary<string, string>>(option);
-                                } catch (Exception x)
-                                {
-                                    Debug.LogException(x);
-                                    throw;
-                                }
+                                options = DeserializeResponseData(data);
                             } else
                             {   //else, try using it as a key in the dialog options dictionary and deserialize its value
-                                if (_dialogOptions.ContainsKey(option))
+                                if (_dialogOptions.ContainsKey(data))
                                 {
-                                    try
-                                    {
-                                        options = JsonUtility.FromJson<Dictionary<string, string>>(_dialogOptions[option]);
-                                    } catch (Exception x)
-                                    {
-                                        Debug.LogException(x);
-                                        throw;
-                                    }
+                                    options = DeserializeResponseData(_dialogOptions[data]);
                                 } else
                                 {
-                                    Debug.LogError("[Dialog Textbox] The dialog option file for the specified key '" + option + "' was not found");
+                                    Debug.LogError("[Dialog Textbox] The dialog response file for the specified key '" + data + "' was not found");
                                 }
                             }
-
+                            SetupResponses(options);
+                            _messageIndex = newMessageIndex + 1;
                         } else
                         {
-                            Debug.LogError("[DialogTextbox] The value for the option cannot be null");
+                            Debug.LogError("[DialogTextbox] The value for the response data cannot be null");
                         }
-                        break;
+                        _messageIndex = newMessageIndex + 1;
+                        return false;
                     case _endTag:
                         _state = EndOfDialog;
                         return false;
@@ -398,8 +422,20 @@ namespace BF2D.UI {
             char character = message[index];    //Initialize character index
             string valueString = "";            //Float before conversion
 
-            while (character != ']') {
+            Stack<char> stack = new Stack<char>();
+            while (character != ']' || stack.Count > 0) {
                 valueString += character;
+
+                if (character == '[')
+                {
+                    stack.Push(character);
+                }
+
+                if (character == ']')
+                {
+                    stack.Pop();
+                }
+
                 character = message[++index];
             }
 
@@ -422,6 +458,61 @@ namespace BF2D.UI {
                 _audioSource.clip = audioClip;
                 _audioSource.Play();
             }
+        }
+
+        private bool ValidJson(string json)
+        {
+            return (json[0] == '{' && json[json.Length - 1] == '}') || (json[0] == '[' && json[json.Length - 1] == ']');
+        }
+
+        private List<ResponseData> DeserializeResponseData(string json)
+        {
+            List<ResponseData> responseData = new List<ResponseData>();
+            try
+            {
+                responseData = JsonConvert.DeserializeObject<List<ResponseData>>(json);
+            }
+            catch (Exception x)
+            {
+                throw x;
+            }
+            return responseData;
+        }
+
+        private void SetupResponses(List<ResponseData> options)
+        {
+            _state = PauseMessageDisplay;
+            _responseOptionsGrid.gameObject.SetActive(true);
+            _responseOptionsGrid.Setup(1, options.Count);
+
+            foreach (ResponseData option in options)
+            {
+                _responseOptionsGrid.Add(new UIOptionData
+                {
+                    text = option.text,
+                    action = () =>
+                    {
+                        if (_optionClickEvent != null)
+                        {
+                            _optionClickEvent.Invoke(option.action.ToString());
+                        }
+                        FinalizeResponse(option.dialogIndex);
+                    }
+                });
+            }
+
+            _responseOptionsGrid.SetCursorAtHead();
+        }
+
+        private void FinalizeResponse(int dialogIndex)
+        {
+            if (dialogIndex != int.Parse(_defaultValue))
+            {
+                _nextDialogIndex = dialogIndex;
+            }
+            _responseOptionsGrid.gameObject.SetActive(false);
+            _pass = true;
+            _state = MessageParseAndDisplayClocked;
         }
         #endregion
     }

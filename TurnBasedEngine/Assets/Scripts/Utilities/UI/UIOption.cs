@@ -9,7 +9,6 @@ namespace BF2D.UI {
     {
         public string text;
         public Sprite icon;
-        public Sprite cursor;
         public Action action;
     };
 
@@ -46,14 +45,6 @@ namespace BF2D.UI {
                     _image.gameObject.SetActive(false);
                 }
             }
-
-            if (optionData.cursor == null)
-            {
-                Debug.Log("[UIOption]: No sprite for cursor was given");
-                return false;
-            }
-
-            _cursor.sprite = optionData.cursor;
 
             if (optionData.action != null)
             {
