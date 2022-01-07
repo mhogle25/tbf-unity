@@ -58,6 +58,7 @@ namespace BF2D.UI {
         }
 
         public void SetCursor(bool status) {
+            //Debug.Log(gameObject.name);
             _cursor.enabled = status;
         }
 

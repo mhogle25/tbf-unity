@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
+using BF2D;
 
 public class UIOptionsGridTest : MonoBehaviour
 {
@@ -25,6 +26,14 @@ public class UIOptionsGridTest : MonoBehaviour
             optionsGrid.Add(optionData);
         }
         */
+    }
+
+    private void Update()
+    {
+        if (InputManager.AttackPress)
+        {
+            optionsGrid.Remove();
+        }
     }
 
     public void HellYeah()

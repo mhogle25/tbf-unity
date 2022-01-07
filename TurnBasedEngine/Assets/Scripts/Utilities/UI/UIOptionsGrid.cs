@@ -115,7 +115,7 @@ namespace BF2D.UI
                 SetCursorAtPosition(_head, true);
             }
 
-            Increment(ref _head);
+            _head = Increment(_head);
 
             //Increase the count
             _count++;
@@ -137,6 +137,7 @@ namespace BF2D.UI
             }
 
             Destroy(_grid[_cursorPosition.x, _cursorPosition.y].gameObject);
+            _grid[_cursorPosition.x, _cursorPosition.y] = null;
             _count--;
 
             if (_count < 1)
@@ -146,37 +147,64 @@ namespace BF2D.UI
                 return true;
             }
 
-            UIOption[,] temp = _grid;
-            _grid = new UIOption[_gridWidth, _gridHeight];
+
+            int maxi = _gridHeight;
+            int maxj = _gridWidth;
+            if (_instantiationAxis == Axis.Vertical)
+            {
+                maxi = _gridWidth;
+                maxj = _gridHeight;
+            }
 
             Queue<UIOption> queue = new Queue<UIOption>();
-            for (int i = 0; i < _gridWidth; i++)
+            for (int i = 0; i < maxi; i++)
             {
-                for (int j = 0; j < _gridHeight; j++)
+                for (int j = 0; j < maxj; j++)
                 {
-                    if (temp[i, j] != null)
+                    int x = j;
+                    int y = i;
+                    if (_instantiationAxis == Axis.Vertical)
                     {
-                        queue.Enqueue(temp[i, j]);
+                        x = i;
+                        y = j;
+                    }
+
+                    if (_grid[x, y] != null)
+                    {
+                        queue.Enqueue(_grid[x, y]);
                     }
                 }
             }
 
-            for (int i = 0; i < _gridWidth; i++)
+            _grid = new UIOption[_gridWidth, _gridHeight];
+
+            for (int i = 0; i < maxi; i++)
             {
-                for (int j = 0; j < _gridHeight; j++)
+                for (int j = 0; j < maxj; j++)
                 {
-                    _grid[i, j] = queue.Dequeue();
+                    int x = j;
+                    int y = i;
+                    if (_instantiationAxis == Axis.Vertical)
+                    {
+                        x = i;
+                        y = j;
+                    }
+
+                    if (queue.Count > 0)
+                    {
+                        _grid[x, y] = queue.Dequeue();
+                    }
                 }
             }
 
-            if (_cursorPosition.Tuple == (_gridWidth - 1, _gridHeight - 1))
+            _head = Decrement(_head);
+
+            if (_cursorPosition == _head)
             {
-                Decrement(ref _cursorPosition);
+                _cursorPosition = Decrement(_cursorPosition);
             }
 
             SetCursorAtPosition(_cursorPosition, true);
-
-            Decrement(ref _head);
 
             return true;
         }
@@ -229,7 +257,7 @@ namespace BF2D.UI
                 SetCursorAtPosition(_head, true);
             }
 
-            Increment(ref _head);
+            _head = Increment(_head);
 
             //Increase the count
             _count++;
@@ -241,8 +269,15 @@ namespace BF2D.UI
         {
             if (InputManager.ConfirmPress)
             {
-                _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
-                PlayAudioSource(_confirmAudioSource);
+                if (_count > 0)
+                {
+                    _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
+                    PlayAudioSource(_confirmAudioSource);
+                }
+                else
+                {
+                    Debug.Log("[UIOptionsGrid] Tried to select an option but the grid was empty");
+                }
             }
         }
 
@@ -330,62 +365,68 @@ namespace BF2D.UI
             }
         }
 
-        private void Increment(ref IntVector2 vector)
+        private IntVector2 Increment(IntVector2 vector)
         {
+            IntVector2 v = vector;
             switch (_instantiationAxis)
             {
                 case Axis.Horizontal:
-                    if (vector.x + 1 >= _gridWidth)
+                    if (v.x + 1 >= _gridWidth)
                     {
-                        vector.x = 0;
-                        vector.y++;
+                        v.x = 0;
+                        v.y++;
                     }
                     else
                     {
-                        vector.x++;
+                        v.x++;
                     }
                     break;
                 case Axis.Vertical:
-                    if (vector.y + 1 >= _gridHeight)
+                    if (v.y + 1 >= _gridHeight)
                     {
-                        vector.y = 0;
-                        vector.x++;
+                        v.y = 0;
+                        v.x++;
                     }
                     else
                     {
-                        vector.y++;
+                        v.y++;
                     }
                     break;
             }
+
+            return v;
         }
 
-        private void Decrement(ref IntVector2 vector)
+        private IntVector2 Decrement(IntVector2 vector)
         {
+            IntVector2 v = vector;
             switch (_instantiationAxis)
             {
                 case Axis.Horizontal:
-                    if (vector.x - 1 < 1)
+                    if (v.x - 1 < 0)
                     {
-                        vector.x = _gridWidth - 1;
-                        vector.y--;
+                        v.x = _gridWidth - 1;
+                        v.y--;
                     }
                     else
                     {
-                        vector.x--;
+                        v.x--;
                     }
                     break;
                 case Axis.Vertical:
-                    if (vector.y - 1 < 1)
+                    if (v.y - 1 < 0)
                     {
-                        vector.y = _gridHeight - 1;
-                        vector.x--;
+                        v.y = _gridHeight - 1;
+                        v.x--;
                     }
                     else
                     {
-                        vector.y--;
+                        v.y--;
                     }
                     break;
             }
+
+            return v;
         }
 
         private void SetCursorAtPosition(IntVector2 cursorPosition, bool value)
