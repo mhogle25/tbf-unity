@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BF2D.UI
 {
-    public class UIOptionsGrid : MonoBehaviour {
+    public class UIOptionsGrid : UIUtility {
 
         [Header("Grid")]
         [SerializeField] private UIOption _optionPrefab = null;
@@ -18,10 +18,9 @@ namespace BF2D.UI
         [SerializeField] private bool _confirmEnabled = true;
 
         [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource = null;
-        [SerializeField] private AudioClip _navigateAudioClip = null;
-        [SerializeField] private AudioClip _errorAudioClip = null;
-        [SerializeField] private AudioClip _confirmAudioClip = null;
+        [SerializeField] private AudioSource _navigateAudioSource = null;
+        [SerializeField] private AudioSource _errorAudioSource = null;
+        [SerializeField] private AudioSource _confirmAudioSource = null;
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -243,7 +242,7 @@ namespace BF2D.UI
             if (InputManager.ConfirmPress)
             {
                 _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
-                PlayAudioClip(_confirmAudioClip);
+                PlayAudioSource(_confirmAudioSource);
             }
         }
 
@@ -294,14 +293,14 @@ namespace BF2D.UI
                     case Axis.Horizontal:
                         if (_grid[tempField, _cursorPosition.y] == null)
                         {
-                            PlayAudioClip(_errorAudioClip);
+                            PlayAudioSource(_errorAudioSource);
                             return;
                         }
                         break;
                     case Axis.Vertical:
                         if (_grid[_cursorPosition.x, tempField] == null)
                         {
-                            PlayAudioClip(_errorAudioClip);
+                            PlayAudioSource(_errorAudioSource);
                             return;
                         }
                         break;
@@ -327,7 +326,7 @@ namespace BF2D.UI
 
                 SetCursorAtPosition(_cursorPosition, true);
 
-                PlayAudioClip(_navigateAudioClip);
+                PlayAudioSource(_navigateAudioSource);
             }
         }
 
@@ -392,15 +391,6 @@ namespace BF2D.UI
         private void SetCursorAtPosition(IntVector2 cursorPosition, bool value)
         {
             _grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
-        }
-
-        private void PlayAudioClip(AudioClip audioClip)
-        {
-            if (_audioSource != null && audioClip != null)
-            {
-                _audioSource.clip = audioClip;
-                _audioSource.Play();
-            }
         }
         #endregion
     }

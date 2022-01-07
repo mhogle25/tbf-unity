@@ -8,7 +8,7 @@ using TMPro;
 using Newtonsoft.Json;
 
 namespace BF2D.UI {
-    public class DialogTextbox : MonoBehaviour {
+    public class DialogTextbox : UIUtility {
         private struct DialogData
         {
             public List<string> dialog;
@@ -20,7 +20,7 @@ namespace BF2D.UI {
             public string text;
             public int dialogIndex;
             public object action;
-        }
+        };
 
         [Header("Private References")]
         //Serialized private variables
@@ -40,13 +40,13 @@ namespace BF2D.UI {
         [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
         [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
         [System.Serializable]
-        public class OptionClickEvent : UnityEvent<string> { }
+        public class ResponseOptionEvent : UnityEvent<string> { }
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
-        private OptionClickEvent _optionClickEvent = new OptionClickEvent();
+        private ResponseOptionEvent _responseOptionEvent = new ResponseOptionEvent();
 
         [Header("Audio")]
-        [SerializeField] private AudioSource _audioSource = null;
-        [SerializeField] private AudioClip _confirmAudioClip = null;
+        [SerializeField] private AudioSource _confirmAudioSource = null;
+        [SerializeField] private AudioSource _voiceAudioSource = null;
         [SerializeField] private AudioClip _defaultVoice = null;
         [SerializeField] private List<AudioClip> _voiceAudioClipFiles = new List<AudioClip>();
 
@@ -209,7 +209,7 @@ namespace BF2D.UI {
 
             if (InputManager.ConfirmPress || _pass) {
                 _pass = false;
-                PlayAudioClip(_confirmAudioClip);       //Play the confirm sound
+                PlayAudioSource(_confirmAudioSource);       //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
                 if (_nextDialogIndex != int.Parse(_defaultValue))
@@ -234,7 +234,7 @@ namespace BF2D.UI {
 
             if (InputManager.ConfirmPress || _pass) {
                 _pass = false;
-                PlayAudioClip(_confirmAudioClip);   //Play the confirm sound
+                PlayAudioSource(_confirmAudioSource);   //Play the confirm sound
                 _continueArrow.enabled = false;
                 _textField.text = "";
                 NametagDisable();
@@ -396,7 +396,7 @@ namespace BF2D.UI {
             } else { //Basic character
                 if (message[_messageIndex] != ' ')
                 {
-                    PlayAudioClip(_activeVoice);
+                    PlayAudioSource(_voiceAudioSource);
                 }
 
                 string currentMessage = _textField.text;
@@ -451,18 +451,20 @@ namespace BF2D.UI {
             _nametag.gameObject.SetActive(false);
         }
 
-        private void PlayAudioClip(AudioClip audioClip)
-        {
-            if (_audioSource != null && audioClip != null)
-            {
-                _audioSource.clip = audioClip;
-                _audioSource.Play();
-            }
-        }
-
         private bool ValidJson(string json)
         {
-            return (json[0] == '{' && json[json.Length - 1] == '}') || (json[0] == '[' && json[json.Length - 1] == ']');
+            try
+            {
+                object rd = JsonConvert.DeserializeObject(json);
+
+            } 
+            catch (Exception x)
+            {
+                x.ToString();
+                return false;
+            }
+
+            return true;
         }
 
         private List<ResponseData> DeserializeResponseData(string json)
@@ -492,9 +494,9 @@ namespace BF2D.UI {
                     text = option.text,
                     action = () =>
                     {
-                        if (_optionClickEvent != null)
+                        if (_responseOptionEvent != null)
                         {
-                            _optionClickEvent.Invoke(option.action.ToString());
+                            _responseOptionEvent.Invoke(option.action.ToString());
                         }
                         FinalizeResponse(option.dialogIndex);
                     }

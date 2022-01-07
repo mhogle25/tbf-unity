@@ -314,17 +314,6 @@ MonoBehaviour:
   _target: {fileID: 1986819454}
   _smoothSpeed: 0.5
   _offset: {x: 0, y: 0, z: 0}
---- !u!114 &1574024594 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-  m_PrefabInstance: {fileID: 5812303956420232510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1825664404
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,10 +494,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2574579483709178496, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5812303956886749160, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: m_Camera
       value: 
@@ -601,45 +586,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: TextboxCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 5812303957190546873, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6509254057678927013, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _responseOptionsGrid
-      value: 
-      objectReference: {fileID: 1574024594}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      propertyPath: _responseOptionEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1986819451}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Print
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PlayerMovement, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: _optionClickEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}

@@ -1,0 +1,25 @@
+[
+    {
+        "text": "Option 1",
+        "dialogIndex": -1,
+        "action": 
+        {
+            "type": "openDialog",
+            "dialogId": "dialogId",
+            "dialogs": 
+            [
+                {
+                    "id": "dialogId"
+                }
+            ]
+        }
+    },
+    {
+        "text": "Option 2",
+        "dialogIndex": 2,
+        "action": 
+        {
+            "type": "openDialog"
+        }
+    }
+]

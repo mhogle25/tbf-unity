@@ -1,5 +1,0 @@
-Do you know where I could find anything of the sort?[R:[{"text": "Option 1","dialogIndex": -1,"action": {"type": "openDialog","dialogId": "dialogId","dialogs": [{"id": "dialogId"}]}},{"text": "Option 2","dialogIndex": 2,"action": {"type": "openDialog"}}]]
-I'd greatly appreciate it.[E]
-[N:Chad Jace]Hello! I am a Wizard.
-Traveling about the land,[P:0.5] looking for signs of [S:0.2]magic.[S:-1]
-[J:0]
