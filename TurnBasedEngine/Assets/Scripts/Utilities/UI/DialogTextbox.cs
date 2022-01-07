@@ -367,11 +367,14 @@ namespace BF2D.UI {
                             //Retrieve the data using Json Utility
                             if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
                             {
+                                Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
                                 options = DeserializeResponseData(data);
                             } else
                             {   //else, try using it as a key in the dialog options dictionary and deserialize its value
+                                Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
                                 if (_dialogOptions.ContainsKey(data))
                                 {
+                                    Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
                                     options = DeserializeResponseData(_dialogOptions[data]);
                                 } else
                                 {
