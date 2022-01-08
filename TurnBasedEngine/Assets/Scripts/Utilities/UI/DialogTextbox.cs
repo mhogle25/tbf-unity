@@ -103,7 +103,8 @@ namespace BF2D.UI {
 
         private void Update() {
             //Execute the current state of the dialog component
-            _state();
+            if (_state != null)
+                _state();
         }
 
         #region Public Methods
@@ -198,11 +199,6 @@ namespace BF2D.UI {
             }
         }
 
-        private void PauseMessageDisplay()
-        {
-            return;
-        }
-
         private void EndOfLine() {
             if (!_continueArrow.enabled)
                 _continueArrow.enabled = true;
@@ -295,7 +291,7 @@ namespace BF2D.UI {
         }
 
         private void MessageParseAndDisplayInstantaneous() {
-            while (MessageParseAndDisplay()) ;   //Run parse and display until end of line, end of dialog, or option response is called
+            while (MessageParseAndDisplay());   //Run parse and display until end of line, end of dialog, or option response is called
             _timeAccumulator = 0f;
         }
 
@@ -486,7 +482,7 @@ namespace BF2D.UI {
 
         private void SetupResponses(List<ResponseData> options)
         {
-            _state = PauseMessageDisplay;
+            _state = null;
             _responseOptionsGrid.gameObject.SetActive(true);
             _responseOptionsGrid.Setup(1, options.Count);
 
