@@ -15,7 +15,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start() {
         DialogTextbox.Instance.Dialog("test", 2);
-        DialogTextbox.Instance.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
+
+
+        /*DialogTextbox.Instance.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
         DialogTextbox.Instance.Dialog(new List<string> {
                 "[N:Jim]Hi",
                 "[N:-1]Hello",
@@ -23,8 +25,8 @@ public class PlayerMovement : MonoBehaviour
             },
             0
         );
-
-        _state += Move;
+        */
+        //_state += Move;
     }
 
     private void Update() {

@@ -1,25 +1,18 @@
 [
     {
-        "text": "Option 1",
+        "text": "Yes",
         "dialogIndex": -1,
-        "action": 
-        {
-            "type": "openDialog",
-            "dialogId": "dialogId",
-            "dialogs": 
-            [
-                {
-                    "id": "dialogId"
-                }
-            ]
+        "action": {
+        },
+        "prereq": {
         }
     },
     {
-        "text": "Option 2",
+        "text": "I wasn't listening",
         "dialogIndex": 2,
-        "action": 
-        {
-            "type": "openDialog"
+        "action": {
+        },
+        "prereq": {
         }
     }
 ]

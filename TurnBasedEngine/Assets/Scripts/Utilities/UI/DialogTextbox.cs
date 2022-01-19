@@ -20,6 +20,7 @@ namespace BF2D.UI {
             public string text;
             public int dialogIndex;
             public object action;
+            public object prereq;
         };
 
         [Header("Private References")]
@@ -28,7 +29,7 @@ namespace BF2D.UI {
         [SerializeField] private TextMeshProUGUI _textField = null;
         [SerializeField] private RectTransform _nametag = null;
         [SerializeField] private TextMeshProUGUI _nametagTextField = null;
-        [SerializeField] private Image _continueArrow = null;
+        [SerializeField] private Image _continueIcon = null;
         [SerializeField] private List<TextAsset> _dialogFiles = new List<TextAsset>();
 
         [Header("Preferences")]
@@ -39,7 +40,7 @@ namespace BF2D.UI {
         [Header("Dialog Responses")]
         [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
         [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
-        [System.Serializable]
+        [Serializable]
         public class ResponseOptionEvent : UnityEvent<string> { }
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
         private ResponseOptionEvent _responseOptionEvent = new ResponseOptionEvent();
@@ -73,12 +74,11 @@ namespace BF2D.UI {
         private float _messageSpeed = 0f;
         private int _dialogIndex = 0;
         private int _messageIndex = 0;
-        private AudioClip _activeVoice = null;
         private bool _pass = false;
         private int _nextDialogIndex = -1;
 
         //Misc
-        private const string _defaultValue = "-1";
+        private const int _defaultValue = -1;
         private const char _pauseTag = 'P';
         private const char _speedTag = 'S';
         private const char _voiceTag = 'V';
@@ -176,7 +176,7 @@ namespace BF2D.UI {
                 DialogData dialogData = _dialogQueue.Dequeue();
 
                 ResetControlVariables(dialogData.index);
-                _activeVoice = _defaultVoice;
+                _voiceAudioSource.clip = _defaultVoice;
                 _activeLines = dialogData.dialog;
 
                 Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
@@ -200,18 +200,18 @@ namespace BF2D.UI {
         }
 
         private void EndOfLine() {
-            if (!_continueArrow.enabled)
-                _continueArrow.enabled = true;
+            if (!_continueIcon.enabled)
+                _continueIcon.enabled = true;
 
             if (InputManager.ConfirmPress || _pass) {
                 _pass = false;
                 PlayAudioSource(_confirmAudioSource);       //Play the confirm sound
-                _continueArrow.enabled = false;
+                _continueIcon.enabled = false;
                 _textField.text = "";
-                if (_nextDialogIndex != int.Parse(_defaultValue))
+                if (_nextDialogIndex != _defaultValue)
                 {
                     _dialogIndex = _nextDialogIndex;
-                    _nextDialogIndex = -1;
+                    _nextDialogIndex = _defaultValue;
                 } else
                 {
                     _dialogIndex++;                         //Increment dialog index to the next line of dialog
@@ -222,16 +222,16 @@ namespace BF2D.UI {
         }
 
         private void EndOfDialog() {
-            if (_nextDialogIndex != int.Parse(_defaultValue))
+            if (_nextDialogIndex != _defaultValue)
                 _state = EndOfLine;
 
-            if (!_continueArrow.enabled)
-                _continueArrow.enabled = true;
+            if (!_continueIcon.enabled)
+                _continueIcon.enabled = true;
 
             if (InputManager.ConfirmPress || _pass) {
                 _pass = false;
                 PlayAudioSource(_confirmAudioSource);   //Play the confirm sound
-                _continueArrow.enabled = false;
+                _continueIcon.enabled = false;
                 _textField.text = "";
                 NametagDisable();
                 //Reset the State
@@ -325,7 +325,7 @@ namespace BF2D.UI {
                         break;
                     case _nameTag:                                                                       //Case: Orator name
                         string name = ParseTag(message, ref newMessageIndex);
-                        if (name == _defaultValue)
+                        if (name == _defaultValue.ToString())
                         {
                             NametagDisable();
                         } else
@@ -344,10 +344,10 @@ namespace BF2D.UI {
 
                         if (_voices.ContainsKey(key))
                         {
-                            _activeVoice = _voices[key];
-                        } else if (key == _defaultValue)
+                            _voiceAudioSource.clip = _voices[key];
+                        } else if (key == _defaultValue.ToString())
                         {
-                            _activeVoice = _defaultVoice;
+                            _voiceAudioSource.clip = _defaultVoice;
                         } else
                         {
                             Debug.LogError("[DialogTextbox] Voice key '" + key + "' was not found in the voices dictionary");
@@ -468,7 +468,7 @@ namespace BF2D.UI {
 
         private List<ResponseData> DeserializeResponseData(string json)
         {
-            List<ResponseData> responseData = new List<ResponseData>();
+            List<ResponseData> responseData;
             try
             {
                 responseData = JsonConvert.DeserializeObject<List<ResponseData>>(json);
@@ -507,7 +507,7 @@ namespace BF2D.UI {
 
         private void FinalizeResponse(int dialogIndex)
         {
-            if (dialogIndex != int.Parse(_defaultValue))
+            if (dialogIndex != _defaultValue)
             {
                 _nextDialogIndex = dialogIndex;
             }

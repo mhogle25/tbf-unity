@@ -954,7 +954,7 @@ MonoBehaviour:
   _textField: {fileID: 5812303956115522650}
   _nametag: {fileID: 1596405682}
   _nametagTextField: {fileID: 423787267}
-  _continueArrow: {fileID: 5812303956817240721}
+  _continueIcon: {fileID: 5812303956817240721}
   _dialogFiles:
   - {fileID: 4900000, guid: 54c9d60ee55c28240976fba472ae712b, type: 3}
   DefaultMessageSpeed: 0.05
