@@ -1,9 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class UIUtility : MonoBehaviour
 {
+    public virtual bool Interactable {
+        get 
+        {
+            return _interactable;
+        }
+
+        set
+        {
+            _interactable = value;
+        }
+    }
+    private protected bool _interactable = true;
+
     private protected void PlayAudioSource(AudioSource audioSource)
     {
         if (audioSource != null)

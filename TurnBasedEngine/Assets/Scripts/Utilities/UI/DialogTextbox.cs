@@ -40,6 +40,7 @@ namespace BF2D.UI {
         [Header("Dialog Responses")]
         [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
         [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
+        [SerializeField] private GameCondition _prereqConditionChecker = null;
         [Serializable]
         public class ResponseOptionEvent : UnityEvent<string> { }
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
@@ -102,9 +103,10 @@ namespace BF2D.UI {
         }
 
         private void Update() {
-            //Execute the current state of the dialog component
-            if (_state != null)
-                _state();
+            if (_interactable)
+                //Execute the current state of the dialog component
+                if (_state != null)
+                    _state();
         }
 
         #region Public Methods
@@ -482,24 +484,39 @@ namespace BF2D.UI {
 
         private void SetupResponses(List<ResponseData> options)
         {
-            _state = null;
+            _interactable = false;
             _responseOptionsGrid.gameObject.SetActive(true);
             _responseOptionsGrid.Setup(1, options.Count);
 
             foreach (ResponseData option in options)
             {
-                _responseOptionsGrid.Add(new UIOptionData
+                try
                 {
-                    text = option.text,
-                    action = () =>
+                    if (_prereqConditionChecker)
                     {
-                        if (_responseOptionEvent != null)
+                        if (_prereqConditionChecker.CheckJsonCondition(option.prereq.ToString()))
                         {
-                            _responseOptionEvent.Invoke(option.action.ToString());
+                            continue;
                         }
-                        FinalizeResponse(option.dialogIndex);
                     }
-                });
+
+                    _responseOptionsGrid.Add(new UIOptionData
+                    {
+                        text = option.text,
+                        action = () =>
+                        {
+                            if (_responseOptionEvent != null)
+                            {
+                                _responseOptionEvent.Invoke(option.action.ToString());
+                            }
+                            FinalizeResponse(option.dialogIndex);
+                        }
+                    });
+                } 
+                catch (Exception x)
+                {
+                    throw x;
+                }
             }
 
             _responseOptionsGrid.SetCursorAtHead();

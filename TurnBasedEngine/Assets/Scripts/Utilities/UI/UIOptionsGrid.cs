@@ -1,4 +1,4 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -60,13 +60,16 @@ namespace BF2D.UI
         }
 
         private void Update() {
-            //Horizontal Listener
-            NavigationListener(InputManager.LeftPress, InputManager.RightPress, Axis.Horizontal, _gridWidth);
-            //Vertical Listener
-            NavigationListener(InputManager.UpPress, InputManager.DownPress, Axis.Vertical, _gridHeight);
+            if (_interactable)
+            {
+                //Horizontal Listener
+                NavigationListener(InputManager.LeftPress, InputManager.RightPress, Axis.Horizontal, _gridWidth);
+                //Vertical Listener
+                NavigationListener(InputManager.UpPress, InputManager.DownPress, Axis.Vertical, _gridHeight);
 
-            if (_confirmEnabled)
-                ConfirmListener();
+                if (_confirmEnabled)
+                    ConfirmListener();
+            }
         }
 
         #region Public Methods
@@ -92,14 +95,14 @@ namespace BF2D.UI
         /// Instantiates and adds an option to the grid
         /// </summary>
         /// <param name="optionData">The data for the option</param>
-        /// <returns>True if the option was added successfully, otherwise returns false</returns>
-        public bool Add(UIOptionData optionData)
+        /// <returns>The UI option object</returns>
+        public UIOption Add(UIOptionData optionData)
         {
             //Base case
             if (_count + 1 > Size)
             {
                 Debug.Log("[UIOptionsGrid] Tried to add but the grid was full");
-                return false;
+                return null;
             }
 
             //Create and set up the added element
@@ -120,7 +123,7 @@ namespace BF2D.UI
             //Increase the count
             _count++;
 
-            return true;
+            return option;
         }
 
         /// <summary>
