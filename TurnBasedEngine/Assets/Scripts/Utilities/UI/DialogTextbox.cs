@@ -107,9 +107,14 @@ namespace BF2D.UI {
 
         private void Update() {
             if (_interactable)
+            {
                 //Execute the current state of the dialog component
                 if (_state != null)
+                {
                     _state();
+
+                }
+            }
         }
 
         #region Public Methods
@@ -138,7 +143,7 @@ namespace BF2D.UI {
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
         public void Dialog(string key, int dialogIndex) {
-            Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
+            //Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
 
             if (!_dialogs.ContainsKey(key))
             {
@@ -184,7 +189,7 @@ namespace BF2D.UI {
                 _voiceAudioSource.clip = _defaultVoice;
                 _activeLines = dialogData.dialog;
 
-                Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
+                //Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
 
                 _state = MessageParseAndDisplayClocked;
             }
@@ -263,7 +268,7 @@ namespace BF2D.UI {
                 _dialogs[file.name] = lines;
             }
 
-            Debug.Log("[DialogTextbox] Dialog files loaded");
+            //Debug.Log("[DialogTextbox] Dialog files loaded");
         }
 
         private void LoadVoiceAudioClipFiles()
@@ -273,7 +278,7 @@ namespace BF2D.UI {
                 _voices[file.name] = file;
             }
 
-            Debug.Log("[DialogTextbox] Voice audio clip files loaded");
+            //Debug.Log("[DialogTextbox] Voice audio clip files loaded");
         }
 
         private void LoadDialogResponseFiles()
@@ -283,7 +288,7 @@ namespace BF2D.UI {
                 _dialogOptions[textAsset.name] = textAsset.text;
             }
 
-            Debug.Log("[DialogTextbox] Response files loaded");
+            //Debug.Log("[DialogTextbox] Response files loaded");
         }
 
         private void ResetControlVariables(int dialogIndex) {
@@ -368,14 +373,14 @@ namespace BF2D.UI {
                             //Retrieve the data using Json Utility
                             if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
                             {
-                                Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
+                                // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
                                 options = DeserializeResponseData(data);
                             } else
                             {   //else, try using it as a key in the dialog options dictionary and deserialize its value
-                                Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
+                                //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
                                 if (_dialogOptions.ContainsKey(data))
                                 {
-                                    Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
+                                    //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
                                     options = DeserializeResponseData(_dialogOptions[data]);
                                 } else
                                 {
@@ -534,6 +539,7 @@ namespace BF2D.UI {
             _responseOptionsGrid.gameObject.SetActive(false);
             _pass = true;
             _state = MessageParseAndDisplayClocked;
+            _interactable = true;
         }
         #endregion
     }
