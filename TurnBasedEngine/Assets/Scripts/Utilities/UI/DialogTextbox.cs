@@ -53,6 +53,7 @@ namespace BF2D.UI {
         [SerializeField] private List<AudioClip> _voiceAudioClipFiles = new List<AudioClip>();
 
         //Getter Setters and their private variables
+
         /// <summary>
         /// The singleton monobehaviour instance of the dialog textbox
         /// </summary>
@@ -502,7 +503,7 @@ namespace BF2D.UI {
                 {
                     if (_prereqConditionChecker)
                     {
-                        if (_prereqConditionChecker.CheckJsonCondition(option.prereq.ToString()))
+                        if (_prereqConditionChecker.CheckCondition(option.prereq.ToString()))
                         {
                             continue;
                         }

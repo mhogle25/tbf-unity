@@ -25,10 +25,12 @@ namespace BF2D.UI
         /// The area of the grid (width * height)
         /// </summary>
         public int Size { get { return _gridWidth * _gridHeight; } }
+
         /// <summary>
         /// The number of options in the grid
         /// </summary>
         public int Count { get { return _count; } }
+
         /// <summary>
         /// Enable/disable use of the confirm button
         /// </summary>
@@ -72,6 +74,7 @@ namespace BF2D.UI
         }
 
         #region Public Methods
+
         /// <summary>
         /// Sets up a new grid, clearing any previous data
         /// </summary>
