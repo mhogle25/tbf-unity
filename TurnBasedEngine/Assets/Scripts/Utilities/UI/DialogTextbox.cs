@@ -39,12 +39,12 @@ namespace BF2D.UI {
 
         [Header("Dialog Responses")]
         [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
-        [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
         [SerializeField] private GameCondition _prereqConditionChecker = null;
         [Serializable]
         public class ResponseOptionEvent : UnityEvent<string> { }
         [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
         private ResponseOptionEvent _responseOptionEvent = new ResponseOptionEvent();
+        [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
 
         [Header("Audio")]
         [SerializeField] private AudioSource _confirmAudioSource = null;
@@ -53,6 +53,9 @@ namespace BF2D.UI {
         [SerializeField] private List<AudioClip> _voiceAudioClipFiles = new List<AudioClip>();
 
         //Getter Setters and their private variables
+        /// <summary>
+        /// The singleton monobehaviour instance of the dialog textbox
+        /// </summary>
         public static DialogTextbox Instance { get { return _instance; } }
         private static DialogTextbox _instance;
 

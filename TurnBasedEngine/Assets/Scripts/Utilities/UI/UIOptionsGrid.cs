@@ -19,7 +19,6 @@ namespace BF2D.UI
 
         [Header("Audio")]
         [SerializeField] private AudioSource _navigateAudioSource = null;
-        [SerializeField] private AudioSource _errorAudioSource = null;
         [SerializeField] private AudioSource _confirmAudioSource = null;
 
         /// <summary>
@@ -285,76 +284,30 @@ namespace BF2D.UI
         }
 
         private void NavigationListener(bool decrementInput, bool incrementInput, Axis axis, int size) {
+            
+            if (_count < 1)
+            {
+                //Debug.Log("[UIOptionsGrid] Tried to navigate but the grid was empty");
+                return;
+            }
+
             if (decrementInput || incrementInput)
             {
                 int tempField;
+
+                if (_grid[_cursorPosition.x, _cursorPosition.y] != null)    
+                    SetCursorAtPosition(_cursorPosition, false);
 
                 switch (axis)
                 {
                     case Axis.Horizontal:
                         tempField = _cursorPosition.x;
-                        break;
-                    case Axis.Vertical:
-                        tempField = _cursorPosition.y;
-                        break;
-                    default:
-                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
-                        return;
-                }
-
-                //Left or Up
-                if (decrementInput)
-                {
-                    if (tempField == 0)
-                    {
-                        tempField = size - 1;
-                    } else
-                    {
-                        tempField -= 1;
-                    }
-                }
-
-                //Down or Right
-                if (incrementInput)
-                {
-                    if (tempField == size - 1)
-                    {
-                        tempField = 0;
-                    } else
-                    {
-                        tempField += 1;
-                    }
-                }
-
-                switch(axis)
-                {
-                    case Axis.Horizontal:
-                        if (_grid[tempField, _cursorPosition.y] == null)
-                        {
-                            PlayAudioSource(_errorAudioSource);
-                            return;
-                        }
-                        break;
-                    case Axis.Vertical:
-                        if (_grid[_cursorPosition.x, tempField] == null)
-                        {
-                            PlayAudioSource(_errorAudioSource);
-                            return;
-                        }
-                        break;
-                    default:
-                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
-                        return;
-                }
-
-                SetCursorAtPosition(_cursorPosition, false);
-
-                switch (axis)
-                {
-                    case Axis.Horizontal:
+                        while (_grid[tempField = NavigationListenerHelper(decrementInput, incrementInput, tempField, size), _cursorPosition.y] == null) ;
                         _cursorPosition.x = tempField;
                         break;
                     case Axis.Vertical:
+                        tempField = _cursorPosition.y;
+                        while (_grid[_cursorPosition.x, tempField = NavigationListenerHelper(decrementInput, incrementInput, tempField, size)] == null) ;
                         _cursorPosition.y = tempField;
                         break;
                     default:
@@ -366,6 +319,49 @@ namespace BF2D.UI
 
                 PlayAudioSource(_navigateAudioSource);
             }
+        }
+
+        private int NavigationListenerHelper(bool decrementInput, bool incrementInput, int field, int size)
+        {
+            int tempField = field;
+            if (decrementInput)
+            {
+                tempField = NavigationListenerHelperDecrement(tempField, size);
+            }
+
+            if (incrementInput)
+            {
+                tempField = NavigationListenerHelperIncrement(tempField, size);
+            }
+            return tempField;
+        }
+
+        private int NavigationListenerHelperDecrement(int field, int size)
+        {
+            int tempField = field;
+            if (tempField == 0)
+            {
+                tempField = size - 1;
+            }
+            else
+            {
+                tempField -= 1;
+            }
+            return tempField;
+        }
+
+        private int NavigationListenerHelperIncrement(int field, int size)
+        {
+            int tempField = field;
+            if (tempField == size - 1)
+            {
+                tempField = 0;
+            }
+            else
+            {
+                tempField += 1;
+            }
+            return tempField;
         }
 
         private IntVector2 Increment(IntVector2 vector)
