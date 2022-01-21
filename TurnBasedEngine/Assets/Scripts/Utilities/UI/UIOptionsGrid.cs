@@ -1,55 +1,56 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace BF2D.UI
 {
     public class UIOptionsGrid : UIUtility {
 
         [Header("Grid")]
-        [SerializeField] private UIOption _optionPrefab = null;
+        [SerializeField] private UIOption optionPrefab = null;
         [Tooltip("The container for grid options")]
-        [SerializeField] private RectTransform _container = null;
+        [SerializeField] private RectTransform container = null;
         [Tooltip("Determines the direction that elements will be populated in")]
-        [SerializeField] private Axis _instantiationAxis = Axis.Horizontal;
-        [SerializeField] private int _gridWidth = 0;
-        [SerializeField] private int _gridHeight = 0;
+        [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
+        [SerializeField] private int gridWidth = 1;
+        [SerializeField] private int gridHeight = 1;
         [Tooltip("Enable/disable use of the confirm button")]
-        [SerializeField] private bool _confirmEnabled = true;
+        [SerializeField] private bool confirmEnabled = true;
 
         [Header("Audio")]
-        [SerializeField] private AudioSource _navigateAudioSource = null;
-        [SerializeField] private AudioSource _confirmAudioSource = null;
+        [SerializeField] private AudioSource navigateAudioSource = null;
+        [SerializeField] private AudioSource confirmAudioSource = null;
 
         /// <summary>
         /// The area of the grid (width * height)
         /// </summary>
-        public int Size { get { return _gridWidth * _gridHeight; } }
+        public int Size { get { return this.gridWidth * this.gridHeight; } }
 
         /// <summary>
         /// The number of options in the grid
         /// </summary>
-        public int Count { get { return _count; } }
+        public int Count { get { return this.count; } }
 
         /// <summary>
         /// Enable/disable use of the confirm button
         /// </summary>
-        public bool ConfirmEnabled { get { return _confirmEnabled; } set { _confirmEnabled = value; } }
+        public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
 
-        private UIOption[,] _grid;
-        private int _count = 0;
-        private IntVector2 _cursorPosition = new IntVector2(0, 0);
-        private IntVector2 _head = new IntVector2(0, 0);
+        private UIOption[,] grid;
+        private int count = 0;
+        private IntVector2 cursorPosition = new IntVector2(0, 0);
+        private IntVector2 head = new IntVector2(0, 0);
 
         private void Awake()
         {
-            if (_gridWidth > 0 && _gridHeight > 0)
+            if (this.gridWidth > 0 && this.gridHeight > 0)
             {
                 //Create the element data structure
-                _grid = new UIOption[_gridWidth, _gridHeight];
+                this.grid = new UIOption[this.gridWidth, this.gridHeight];
             }
 
-            UIOption[] options = _container.GetComponentsInChildren<UIOption>();
+            UIOption[] options = this.container.GetComponentsInChildren<UIOption>();
 
             if (options != null && options.Length > 0)
             {
@@ -57,19 +58,6 @@ namespace BF2D.UI
                 {
                     Add(option);
                 }
-            }
-        }
-
-        private void Update() {
-            if (_interactable)
-            {
-                //Horizontal Listener
-                NavigationListener(InputManager.LeftPress, InputManager.RightPress, Axis.Horizontal, _gridWidth);
-                //Vertical Listener
-                NavigationListener(InputManager.UpPress, InputManager.DownPress, Axis.Vertical, _gridHeight);
-
-                if (_confirmEnabled)
-                    ConfirmListener();
             }
         }
 
@@ -82,15 +70,19 @@ namespace BF2D.UI
         /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
-            //Clean up anything that could be left over
-            Clear();
+            if (this.interactable)
+            {
+                //Clean up anything that could be left over
+                Clear();
 
-            //Set the width and height
-            _gridWidth = width;
-            _gridHeight = height;
+                //Set the width and height
+                this.gridWidth = width;
+                this.gridHeight = height;
 
-            //Create the element data structure
-            _grid = new UIOption[_gridWidth, _gridHeight];
+                //Create the element data structure
+                this.grid = new UIOption[this.gridWidth, this.gridHeight];
+
+            }
         }
 
         /// <summary>
@@ -100,30 +92,35 @@ namespace BF2D.UI
         /// <returns>The UI option object</returns>
         public UIOption Add(UIOptionData optionData)
         {
-            //Base case
-            if (_count + 1 > Size)
+            UIOption option = null;
+
+            if (this.interactable)
             {
-                Debug.Log("[UIOptionsGrid] Tried to add but the grid was full");
-                return null;
+                //Base case
+                if (this.count + 1 > Size)
+                {
+                    Debug.LogWarning("[UIOptionsGrid] Tried to add but the grid was full");
+                    return null;
+                }
+
+                //Create and set up the added element
+                option = Instantiate(this.optionPrefab);
+                this.grid[this.head.x, this.head.y] = option;
+                option.transform.SetParent(this.container);
+                option.transform.localScale = Vector3.one;
+                option.Setup(optionData);
+
+                //If the cursor did not already exist, enable it
+                if (this.count < 1)
+                {
+                    SetCursorAtPosition(this.head, true);
+                }
+
+                this.head = Increment(this.head);
+
+                //Increase the count
+                this.count++;
             }
-
-            //Create and set up the added element
-            UIOption option = Instantiate(_optionPrefab);
-            _grid[_head.x, _head.y] = option;
-            option.transform.SetParent(transform);
-            option.transform.localScale = Vector3.one;
-            option.Setup(optionData);
-
-            //If the cursor did not already exist, enable it
-            if (_count < 1)
-            {
-                SetCursorAtPosition(_head, true);
-            }
-
-            _head = Increment(_head);
-
-            //Increase the count
-            _count++;
 
             return option;
         }
@@ -134,112 +131,177 @@ namespace BF2D.UI
         /// <returns>True if the option was removed successfully, otherwise returns false</returns>
         public bool Remove()
         {
-            //Base Case
-            if (_count < 1)
+            if (this.interactable && this.gameObject.activeSelf)
             {
-                Debug.Log("[UIOptionsGrid] Tried to remove but the grid was empty");
+                //Base Case
+                if (this.count < 1)
+                {
+                    Debug.LogWarning("[UIOptionsGrid] Tried to remove but the grid was empty");
+                    return false;
+                }
+
+                Destroy(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject);
+                this.grid[this.cursorPosition.x, this.cursorPosition.y] = null;
+                this.count--;
+
+                if (this.count < 1)
+                {
+                    this.cursorPosition = new IntVector2(0, 0);
+                    this.head = new IntVector2(0, 0);
+                    return true;
+                }
+
+
+                int maxi = this.gridHeight;
+                int maxj = this.gridWidth;
+                if (this.instantiationAxis == Axis.Vertical)
+                {
+                    maxi = this.gridWidth;
+                    maxj = this.gridHeight;
+                }
+
+                Queue<UIOption> queue = new Queue<UIOption>();
+                for (int i = 0; i < maxi; i++)
+                {
+                    for (int j = 0; j < maxj; j++)
+                    {
+                        int x = j;
+                        int y = i;
+                        if (this.instantiationAxis == Axis.Vertical)
+                        {
+                            x = i;
+                            y = j;
+                        }
+
+                        if (this.grid[x, y] != null)
+                        {
+                            queue.Enqueue(this.grid[x, y]);
+                        }
+                    }
+                }
+
+                this.grid = new UIOption[this.gridWidth, this.gridHeight];
+
+                for (int i = 0; i < maxi; i++)
+                {
+                    for (int j = 0; j < maxj; j++)
+                    {
+                        int x = j;
+                        int y = i;
+                        if (this.instantiationAxis == Axis.Vertical)
+                        {
+                            x = i;
+                            y = j;
+                        }
+
+                        if (queue.Count > 0)
+                        {
+                            this.grid[x, y] = queue.Dequeue();
+                        }
+                    }
+                }
+
+                this.head = Decrement(this.head);
+
+                if (this.cursorPosition == this.head)
+                {
+                    this.cursorPosition = Decrement(this.cursorPosition);
+                }
+
+                SetCursorAtPosition(this.cursorPosition, true);
+
+                return true;
+            }
+            else
+            {
                 return false;
             }
 
-            Destroy(_grid[_cursorPosition.x, _cursorPosition.y].gameObject);
-            _grid[_cursorPosition.x, _cursorPosition.y] = null;
-            _count--;
-
-            if (_count < 1)
-            {
-                _cursorPosition = new IntVector2(0, 0);
-                _head = new IntVector2(0, 0);
-                return true;
-            }
-
-
-            int maxi = _gridHeight;
-            int maxj = _gridWidth;
-            if (_instantiationAxis == Axis.Vertical)
-            {
-                maxi = _gridWidth;
-                maxj = _gridHeight;
-            }
-
-            Queue<UIOption> queue = new Queue<UIOption>();
-            for (int i = 0; i < maxi; i++)
-            {
-                for (int j = 0; j < maxj; j++)
-                {
-                    int x = j;
-                    int y = i;
-                    if (_instantiationAxis == Axis.Vertical)
-                    {
-                        x = i;
-                        y = j;
-                    }
-
-                    if (_grid[x, y] != null)
-                    {
-                        queue.Enqueue(_grid[x, y]);
-                    }
-                }
-            }
-
-            _grid = new UIOption[_gridWidth, _gridHeight];
-
-            for (int i = 0; i < maxi; i++)
-            {
-                for (int j = 0; j < maxj; j++)
-                {
-                    int x = j;
-                    int y = i;
-                    if (_instantiationAxis == Axis.Vertical)
-                    {
-                        x = i;
-                        y = j;
-                    }
-
-                    if (queue.Count > 0)
-                    {
-                        _grid[x, y] = queue.Dequeue();
-                    }
-                }
-            }
-
-            _head = Decrement(_head);
-
-            if (_cursorPosition == _head)
-            {
-                _cursorPosition = Decrement(_cursorPosition);
-            }
-
-            SetCursorAtPosition(_cursorPosition, true);
-
-            return true;
         }
 
         /// <summary>
         /// Clears all options and resets all option dependent data from the grid
         /// </summary>
         public void Clear() {
-            //Remove all elements in the grid
-            for (int i = 0; i < _gridWidth ; i++) 
-                for (int j = 0; j < _gridHeight; j++)
-                    if (_grid[i, j] != null)
-                    {
-                        Destroy(_grid[i, j].gameObject);
-                    }
+            if (this.interactable)
+            {
+                //Remove all elements in the grid
+                for (int i = 0; i < this.gridWidth; i++)
+                    for (int j = 0; j < this.gridHeight; j++)
+                        if (this.grid[i, j] != null)
+                        {
+                            Destroy(this.grid[i, j].gameObject);
+                        }
 
-            //Reset all private members that are dependent on grid elements
-            _count = 0;
-            _cursorPosition = new IntVector2(0, 0); 
-            _head = new IntVector2(0, 0);
+                //Reset all private members that are dependent on grid elements
+                this.count = 0;
+                this.cursorPosition = new IntVector2(0, 0);
+                this.head = new IntVector2(0, 0);
+            }
         }
 
+        /// <summary>
+        /// Reset the cursor to be at the head of the grid
+        /// </summary>
         public void SetCursorAtHead()
         {
-            foreach (UIOption option in _grid)
+            if (this.interactable)
             {
-                option.SetCursor(false);
-            }
+                foreach (UIOption option in this.grid)
+                {
+                    option.SetCursor(false);
+                }
 
-            _grid[0, 0].SetCursor(true);
+                this.grid[0, 0].SetCursor(true);
+            }
+        }
+
+        /// <summary>
+        /// Call the confirm event of the selected option
+        /// </summary>
+        public void Confirm()
+        {
+            if (this.interactable && this.gameObject.activeSelf && this.confirmEnabled && this.count > 0)
+            {
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].Confirm();
+                PlayAudioSource(this.confirmAudioSource);
+            }
+        }
+
+        /// <summary>
+        /// Navigate through the grid
+        /// </summary>
+        /// <param name="direction">The direction of navigation</param>
+        public void Navigate(MoveDirection direction)
+        {
+            if (this.interactable && this.gameObject.activeSelf && this.count > 0)
+            {
+                if (this.grid[this.cursorPosition.x, this.cursorPosition.y] != null)
+                    SetCursorAtPosition(this.cursorPosition, false);
+
+                switch (direction)
+                {
+                    case MoveDirection.Left:
+                        while (this.grid[this.cursorPosition.x = NavigationDecrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
+                        break;
+                    case MoveDirection.Up:
+                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = NavigationDecrement(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        break;
+                    case MoveDirection.Right:
+                        while (this.grid[this.cursorPosition.x = NavigationIncrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
+                        break;
+                    case MoveDirection.Down:
+                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = NavigationIncrement(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        break;
+                    default:
+                        Debug.LogError("[UIOptionsGrid] Invalid direction");
+                        break;
+                }
+
+                SetCursorAtPosition(this.cursorPosition, true);
+
+                PlayAudioSource(this.navigateAudioSource);
+            }
         }
         #endregion
 
@@ -247,133 +309,106 @@ namespace BF2D.UI
         private bool Add(UIOption option)
         {
             //Base case
-            if (_count + 1 > Size)
+            if (this.count + 1 > Size)
             {
-                Debug.Log("[UIOptionsGrid] Tried to add but the grid was full");
+                Debug.LogWarning("[UIOptionsGrid] Tried to add but the grid was full");
                 return false;
             }
 
             //Create and set up the added element
-            _grid[_head.x, _head.y] = option;
+            this.grid[this.head.x, this.head.y] = option;
 
             //If the cursor did not already exist, enable it
-            if (_count < 1)
+            if (this.count < 1)
             {
-                SetCursorAtPosition(_head, true);
+                SetCursorAtPosition(this.head, true);
             }
 
-            _head = Increment(_head);
+            this.head = Increment(this.head);
 
             //Increase the count
-            _count++;
+            this.count++;
 
             return true;
         }
 
-        private void ConfirmListener()
-        {
-            if (InputManager.ConfirmPress)
-            {
-                if (_count > 0)
-                {
-                    _grid[_cursorPosition.x, _cursorPosition.y].Confirm();
-                    PlayAudioSource(_confirmAudioSource);
-                }
-                else
-                {
-                    Debug.Log("[UIOptionsGrid] Tried to select an option but the grid was empty");
-                }
-            }
-        }
-
-        private void NavigationListener(bool decrementInput, bool incrementInput, Axis axis, int size) {
+        /*
+        private void Navigation(bool decrementInput, bool incrementInput, Axis axis, int size) {
             
-            if (_count < 1)
+            if (this.count < 1)
             {
                 //Debug.Log("[UIOptionsGrid] Tried to navigate but the grid was empty");
                 return;
             }
 
-            if (decrementInput || incrementInput)
+            int tempField;
+
+            if (this.grid[this.cursorPosition.x, this.cursorPosition.y] != null)    
+                SetCursorAtPosition(this.cursorPosition, false);
+
+            switch (axis)
             {
-                int tempField;
-
-                if (_grid[_cursorPosition.x, _cursorPosition.y] != null)    
-                    SetCursorAtPosition(_cursorPosition, false);
-
-                switch (axis)
-                {
-                    case Axis.Horizontal:
-                        tempField = _cursorPosition.x;
-                        while (_grid[tempField = NavigationListenerHelper(decrementInput, incrementInput, tempField, size), _cursorPosition.y] == null) ;
-                        _cursorPosition.x = tempField;
-                        break;
-                    case Axis.Vertical:
-                        tempField = _cursorPosition.y;
-                        while (_grid[_cursorPosition.x, tempField = NavigationListenerHelper(decrementInput, incrementInput, tempField, size)] == null) ;
-                        _cursorPosition.y = tempField;
-                        break;
-                    default:
-                        Debug.Log("[UIOptionsGrid] Could not determine the specified axis in the input listener");
-                        return;
-                }
-
-                SetCursorAtPosition(_cursorPosition, true);
-
-                PlayAudioSource(_navigateAudioSource);
+                case Axis.Horizontal:
+                    tempField = this.cursorPosition.x;
+                    while (this.grid[tempField = NavigationHelper(decrementInput, incrementInput, tempField, size), this.cursorPosition.y] == null) ;
+                    this.cursorPosition.x = tempField;
+                    break;
+                case Axis.Vertical:
+                    tempField = this.cursorPosition.y;
+                    while (this.grid[this.cursorPosition.x, tempField = NavigationHelper(decrementInput, incrementInput, tempField, size)] == null) ;
+                    this.cursorPosition.y = tempField;
+                    break;
+                default:
+                    Debug.LogError("[UIOptionsGrid] Invalid Axis");
+                    return;
             }
+
+            SetCursorAtPosition(this.cursorPosition, true);
+
+            PlayAudioSource(this.navigateAudioSource);
         }
+        */
 
-        private int NavigationListenerHelper(bool decrementInput, bool incrementInput, int field, int size)
+        private int NavigationDecrement(int value, int size)
         {
-            int tempField = field;
-            if (decrementInput)
-            {
-                tempField = NavigationListenerHelperDecrement(tempField, size);
-            }
+            int field = value;
 
-            if (incrementInput)
+            if (field == 0)
             {
-                tempField = NavigationListenerHelperIncrement(tempField, size);
-            }
-            return tempField;
-        }
-
-        private int NavigationListenerHelperDecrement(int field, int size)
-        {
-            int tempField = field;
-            if (tempField == 0)
-            {
-                tempField = size - 1;
+                field = size - 1;
             }
             else
             {
-                tempField -= 1;
+                field -= 1;
             }
-            return tempField;
+
+            return field;
+
         }
 
-        private int NavigationListenerHelperIncrement(int field, int size)
+        private int NavigationIncrement(int value, int size)
         {
-            int tempField = field;
-            if (tempField == size - 1)
+            int field = value;
+
+            if (field == size - 1)
             {
-                tempField = 0;
+                field = 0;
             }
             else
             {
-                tempField += 1;
+                field += 1;
             }
-            return tempField;
+
+            return field;
         }
 
         private IntVector2 Increment(IntVector2 vector)
         {
             IntVector2 v = vector;
-            switch (_instantiationAxis)
+            switch (this.instantiationAxis)
             {
                 case Axis.Horizontal:
-                    if (v.x + 1 >= _gridWidth)
+                    if (v.x + 1 >= this.gridWidth)
                     {
                         v.x = 0;
                         v.y++;
@@ -384,7 +419,7 @@ namespace BF2D.UI
                     }
                     break;
                 case Axis.Vertical:
-                    if (v.y + 1 >= _gridHeight)
+                    if (v.y + 1 >= this.gridHeight)
                     {
                         v.y = 0;
                         v.x++;
@@ -402,12 +437,12 @@ namespace BF2D.UI
         private IntVector2 Decrement(IntVector2 vector)
         {
             IntVector2 v = vector;
-            switch (_instantiationAxis)
+            switch (this.instantiationAxis)
             {
                 case Axis.Horizontal:
                     if (v.x - 1 < 0)
                     {
-                        v.x = _gridWidth - 1;
+                        v.x = this.gridWidth - 1;
                         v.y--;
                     }
                     else
@@ -418,7 +453,7 @@ namespace BF2D.UI
                 case Axis.Vertical:
                     if (v.y - 1 < 0)
                     {
-                        v.y = _gridHeight - 1;
+                        v.y = this.gridHeight - 1;
                         v.x--;
                     }
                     else
@@ -433,7 +468,7 @@ namespace BF2D.UI
 
         private void SetCursorAtPosition(IntVector2 cursorPosition, bool value)
         {
-            _grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
+            this.grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
         }
         #endregion
     }

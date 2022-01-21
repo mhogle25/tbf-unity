@@ -32,7 +32,7 @@ public class UIOptionsGridTest : MonoBehaviour
     {
         if (InputManager.AttackPress)
         {
-            optionsGrid.Remove();
+            this.optionsGrid.Remove();
         }
     }
 

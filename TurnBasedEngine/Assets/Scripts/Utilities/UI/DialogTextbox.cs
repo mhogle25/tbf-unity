@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using TMPro;
 using Newtonsoft.Json;
 
@@ -25,12 +26,12 @@ namespace BF2D.UI {
 
         [Header("Private References")]
         //Serialized private variables
-        [SerializeField] private RectTransform _textbox = null;
-        [SerializeField] private TextMeshProUGUI _textField = null;
-        [SerializeField] private RectTransform _nametag = null;
-        [SerializeField] private TextMeshProUGUI _nametagTextField = null;
-        [SerializeField] private Image _continueIcon = null;
-        [SerializeField] private List<TextAsset> _dialogFiles = new List<TextAsset>();
+        [SerializeField] private RectTransform textbox = null;
+        [SerializeField] private TextMeshProUGUI textField = null;
+        [SerializeField] private RectTransform nametag = null;
+        [SerializeField] private TextMeshProUGUI nametagTextField = null;
+        [SerializeField] private Image continueIcon = null;
+        [SerializeField] private List<TextAsset> dialogFiles = new List<TextAsset>();
 
         [Header("Preferences")]
         //Public variables
@@ -38,82 +39,83 @@ namespace BF2D.UI {
         public bool MessageInterrupt = false;
 
         [Header("Dialog Responses")]
-        [SerializeField] private UIOptionsGrid _responseOptionsGrid = null;
-        [SerializeField] private GameCondition _prereqConditionChecker = null;
+        [SerializeField] private UIOptionsGrid responseOptionsGrid = null;
+        [SerializeField] private GameCondition prereqConditionChecker = null;
         [Serializable]
         public class ResponseOptionEvent : UnityEvent<string> { }
-        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
-        private ResponseOptionEvent _responseOptionEvent = new ResponseOptionEvent();
-        [SerializeField] private List<TextAsset> _dialogResponseFiles = new List<TextAsset>();
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("mOnClick")]
+        private ResponseOptionEvent responseOptionEvent = new ResponseOptionEvent();
+        [SerializeField] private List<TextAsset> dialogResponseFiles = new List<TextAsset>();
 
         [Header("Audio")]
-        [SerializeField] private AudioSource _confirmAudioSource = null;
-        [SerializeField] private AudioSource _voiceAudioSource = null;
-        [SerializeField] private AudioClip _defaultVoice = null;
-        [SerializeField] private List<AudioClip> _voiceAudioClipFiles = new List<AudioClip>();
+        [SerializeField] private AudioSource confirmAudioSource = null;
+        [SerializeField] private AudioSource voiceAudioSource = null;
+        [SerializeField] private AudioClip defaultVoice = null;
+        [SerializeField] private List<AudioClip> voiceAudioClipFiles = new List<AudioClip>();
 
         //Getter Setters and their private variables
 
         /// <summary>
         /// The singleton monobehaviour instance of the dialog textbox
         /// </summary>
-        public static DialogTextbox Instance { get { return _instance; } }
-        private static DialogTextbox _instance;
+        public static DialogTextbox Instance { get { return instance; } }
+        private static DialogTextbox instance;
 
         //Loaded dialogs
-        private Dictionary<string, List<string>> _dialogs = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> dialogs = new Dictionary<string, List<string>>();
         //Loaded Voice Clips
-        private Dictionary<string, AudioClip> _voices = new Dictionary<string, AudioClip>();
+        private Dictionary<string, AudioClip> voices = new Dictionary<string, AudioClip>();
         //Loaded dialog options
-        private Dictionary<string, string> _dialogOptions = new Dictionary<string, string>();
+        private Dictionary<string, string> dialogOptions = new Dictionary<string, string>();
 
         //The state delegate
-        private Action _state;
+        private Action state;
 
         //The dialog queue
-        private Queue<DialogData> _dialogQueue = new Queue<DialogData>();
+        private Queue<DialogData> dialogQueue = new Queue<DialogData>();
 
         //Control Variables
-        private List<string> _activeLines;
-        private float _timeAccumulator = 0f;
-        private float _messageSpeed = 0f;
-        private int _dialogIndex = 0;
-        private int _messageIndex = 0;
-        private bool _pass = false;
-        private int _nextDialogIndex = -1;
+        private List<string> activeLines;
+        private float timeAccumulator = 0f;
+        private float messageSpeed = 0f;
+        private int dialogIndex = 0;
+        private int messageIndex = 0;
+        private bool pass = false;
+        private int nextDialogIndex = -1;
+        private bool continueFlag = false;
 
         //Misc
-        private const int _defaultValue = -1;
-        private const char _pauseTag = 'P';
-        private const char _speedTag = 'S';
-        private const char _voiceTag = 'V';
-        private const char _nameTag = 'N';
-        private const char _jumpTag = 'J';
-        private const char _endTag = 'E';
-        private const char _responseTag = 'R';
+        private const int defaultValue = -1;
+        private const char pauseTag = 'P';
+        private const char speedTag = 'S';
+        private const char voiceTag = 'V';
+        private const char nameTag = 'N';
+        private const char jumpTag = 'J';
+        private const char endTag = 'E';
+        private const char responseTag = 'R';
 
         private void Awake() {
             //Setup of Monobehaviour Singleton
-            if (_instance != this && _instance != null) {
-                Destroy(_instance.gameObject);
+            if (DialogTextbox.instance != this && DialogTextbox.instance != null) {
+                Destroy(DialogTextbox.instance.gameObject);
             }
-            _instance = this;
+            DialogTextbox.instance = this;
 
             LoadDialogFiles();
             LoadVoiceAudioClipFiles();
             LoadDialogResponseFiles();
 
-            _state = DialogQueueHandler;
+            this.state = DialogQueueHandler;
         }
 
-        private void Update() {
-            if (_interactable)
+        private void Update()
+        { 
+            if (this.interactable)
             {
                 //Execute the current state of the dialog component
-                if (_state != null)
+                if (this.state != null)
                 {
-                    _state();
-
+                    this.state();
                 }
             }
         }
@@ -124,18 +126,21 @@ namespace BF2D.UI {
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         public void Message(string message) {
-            List<string> lines = new List<string>
+            if (this.interactable)
             {
-                message + '[' + _endTag + ']'
-            };
+                List<string> lines = new List<string>
+                {
+                    message + '[' + DialogTextbox.endTag + ']'
+                };
 
-            DialogData dialogData = new DialogData
-            {
-                dialog = lines,
-                index = 0
-            };
+                DialogData dialogData = new DialogData
+                {
+                    dialog = lines,
+                    index = 0
+                };
 
-            _dialogQueue.Enqueue(dialogData);
+                this.dialogQueue.Enqueue(dialogData);
+            }
         }
 
         /// <summary>
@@ -144,21 +149,24 @@ namespace BF2D.UI {
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
         public void Dialog(string key, int dialogIndex) {
-            //Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
-
-            if (!_dialogs.ContainsKey(key))
+            if (this.interactable)
             {
-                Debug.LogError("[DialogTextbox] The key '" + key + "' was not found in the dialogs dictionary");
-                return;
+                //Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
+
+                if (!this.dialogs.ContainsKey(key))
+                {
+                    Debug.LogError("[DialogTextbox] The key '" + key + "' was not found in the dialogs dictionary");
+                    return;
+                }
+
+                DialogData dialogData = new DialogData
+                {
+                    dialog = this.dialogs[key],
+                    index = dialogIndex
+                };
+
+                this.dialogQueue.Enqueue(dialogData);
             }
-
-            DialogData dialogData = new DialogData
-            {
-                dialog = _dialogs[key],
-                index = dialogIndex
-            };
-
-            _dialogQueue.Enqueue(dialogData);
         }
 
         /// <summary>
@@ -167,94 +175,110 @@ namespace BF2D.UI {
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
         public void Dialog(List<string> lines, int dialogIndex) {
-            DialogData dialogData = new DialogData
+            if (this.interactable)
             {
-                dialog = lines,
-                index = dialogIndex
-            };
+                DialogData dialogData = new DialogData
+                {
+                    dialog = lines,
+                    index = dialogIndex
+                };
 
-            _dialogQueue.Enqueue(dialogData);
+                this.dialogQueue.Enqueue(dialogData);
+            }
+        }
+
+        /// <summary>
+        /// Continues to the next line of dialog and interrupts if MessageInterrupt is enabled
+        /// </summary>
+        public void Continue()
+        {
+            if (this.interactable)
+            {
+                if (this.state == MessageParseAndDisplayClocked && MessageInterrupt) // If the confirm button is pressed and interrupt is on, switch to instantaneous parse
+                {
+                    MessageParseAndDisplayInstantaneous();
+                }
+                else if (this.state == EndOfLine || this.state == EndOfDialog)
+                {
+                    this.continueFlag = true;
+                }
+            }
         }
         #endregion
 
         #region States
         private void DialogQueueHandler()
         {
-            if (_dialogQueue.Count > 0)
+            if (this.dialogQueue.Count > 0)
             {
-                _textbox.gameObject.SetActive(true);
+                this.textbox.gameObject.SetActive(true);
 
-                DialogData dialogData = _dialogQueue.Dequeue();
+                DialogData dialogData = this.dialogQueue.Dequeue();
 
                 ResetControlVariables(dialogData.index);
-                _voiceAudioSource.clip = _defaultVoice;
-                _activeLines = dialogData.dialog;
+                this.voiceAudioSource.clip = this.defaultVoice;
+                this.activeLines = dialogData.dialog;
 
-                //Debug.Log("[DialogTextbox] Dialog Loaded\n" + _activeLines.Count + " lines");
+                //Debug.Log("[DialogTextbox] Dialog Loaded\n" + this.activeLines.Count + " lines");
 
-                _state = MessageParseAndDisplayClocked;
+                this.state = MessageParseAndDisplayClocked;
             }
         }
 
         private void MessageParseAndDisplayClocked() {
-            //Message Interrupts
-            if (InputManager.ConfirmPress && MessageInterrupt) {    //If the confirm button is pressed and interrupt is on, switch to instantaneous parse
-                MessageParseAndDisplayInstantaneous();                                              
-                return;
-            }
-
             //Message Parse Statement
-            if (Time.time > _timeAccumulator) {
-                _timeAccumulator = Time.time + _messageSpeed;       //Implement time increment
+            if (Time.time > this.timeAccumulator) {
+                this.timeAccumulator = Time.time + this.messageSpeed;       //Implement time increment
                 MessageParseAndDisplay();                           //Call the message parse and display of the next character or implementation of the next flag
             }
         }
 
         private void EndOfLine() {
-            if (!_continueIcon.enabled)
-                _continueIcon.enabled = true;
+            if (!this.continueIcon.enabled)
+                this.continueIcon.enabled = true;
 
-            if (InputManager.ConfirmPress || _pass) {
-                _pass = false;
-                PlayAudioSource(_confirmAudioSource);       //Play the confirm sound
-                _continueIcon.enabled = false;
-                _textField.text = "";
-                if (_nextDialogIndex != _defaultValue)
+            if (this.continueFlag || this.pass) {
+                this.continueFlag = false;
+                this.pass = false;
+                PlayAudioSource(this.confirmAudioSource);       //Play the confirm sound
+                this.continueIcon.enabled = false;
+                this.textField.text = "";
+                if (this.nextDialogIndex != DialogTextbox.defaultValue)
                 {
-                    _dialogIndex = _nextDialogIndex;
-                    _nextDialogIndex = _defaultValue;
+                    this.dialogIndex = this.nextDialogIndex;
+                    this.nextDialogIndex = DialogTextbox.defaultValue;
                 } else
                 {
-                    _dialogIndex++;                         //Increment dialog index to the next line of dialog
+                    this.dialogIndex++;                         //Increment dialog index to the next line of dialog
                 }
-                _messageIndex = 0;                      //Reset the message index to be on the first character of the line
-                _state = MessageParseAndDisplayClocked; //Change the state to MessageParseAndDisplay
+                this.messageIndex = 0;                      //Reset the message index to be on the first character of the line
+                this.state = MessageParseAndDisplayClocked; //Change the state to MessageParseAndDisplay
             }
         }
 
         private void EndOfDialog() {
-            if (_nextDialogIndex != _defaultValue)
-                _state = EndOfLine;
+            if (this.nextDialogIndex != DialogTextbox.defaultValue)
+                this.state = EndOfLine;
 
-            if (!_continueIcon.enabled)
-                _continueIcon.enabled = true;
+            if (!this.continueIcon.enabled)
+                this.continueIcon.enabled = true;
 
-            if (InputManager.ConfirmPress || _pass) {
-                _pass = false;
-                PlayAudioSource(_confirmAudioSource);   //Play the confirm sound
-                _continueIcon.enabled = false;
-                _textField.text = "";
+            if (this.continueFlag || this.pass) {
+                this.pass = false;
+                PlayAudioSource(this.confirmAudioSource);   //Play the confirm sound
+                this.continueIcon.enabled = false;
+                this.textField.text = "";
                 NametagDisable();
                 //Reset the State
-                _state = DialogQueueHandler;
-                _textbox.gameObject.SetActive(false);
+                this.state = DialogQueueHandler;
+                this.textbox.gameObject.SetActive(false);
             }
         }
         #endregion
 
         #region Private Methods
         private void LoadDialogFiles() {
-            foreach (TextAsset file in _dialogFiles) {
+            foreach (TextAsset file in this.dialogFiles) {
                 List<string> lines = new List<string>();
                 StringReader lineReader = new StringReader(file.text);
                 string line;
@@ -266,7 +290,7 @@ namespace BF2D.UI {
                     lines.Add(line);
                 }
 
-                _dialogs[file.name] = lines;
+                this.dialogs[file.name] = lines;
             }
 
             //Debug.Log("[DialogTextbox] Dialog files loaded");
@@ -274,9 +298,9 @@ namespace BF2D.UI {
 
         private void LoadVoiceAudioClipFiles()
         {
-            foreach (AudioClip file in _voiceAudioClipFiles)
+            foreach (AudioClip file in this.voiceAudioClipFiles)
             {
-                _voices[file.name] = file;
+                this.voices[file.name] = file;
             }
 
             //Debug.Log("[DialogTextbox] Voice audio clip files loaded");
@@ -284,88 +308,88 @@ namespace BF2D.UI {
 
         private void LoadDialogResponseFiles()
         {
-            foreach (TextAsset textAsset in _dialogResponseFiles)
+            foreach (TextAsset textAsset in this.dialogResponseFiles)
             {
-                _dialogOptions[textAsset.name] = textAsset.text;
+                this.dialogOptions[textAsset.name] = textAsset.text;
             }
 
             //Debug.Log("[DialogTextbox] Response files loaded");
         }
 
         private void ResetControlVariables(int dialogIndex) {
-            _dialogIndex = dialogIndex;
-            _messageIndex = 0;
-            _timeAccumulator = 0f;
-            _messageSpeed = DefaultMessageSpeed;
-            _activeLines = null;
-            _pass = false;
+            this.dialogIndex = dialogIndex;
+            this.messageIndex = 0;
+            this.timeAccumulator = 0f;
+            this.messageSpeed = DefaultMessageSpeed;
+            this.activeLines = null;
+            this.pass = false;
         }
 
         private void MessageParseAndDisplayInstantaneous() {
             while (MessageParseAndDisplay());   //Run parse and display until end of line, end of dialog, or option response is called
-            _timeAccumulator = 0f;
+            this.timeAccumulator = 0f;
         }
 
         private bool MessageParseAndDisplay() {
-            string message = _activeLines[_dialogIndex];                                            //Set message to the current line of dialog
+            string message = this.activeLines[this.dialogIndex];                                            //Set message to the current line of dialog
 
             //If our message index is greater than the length of the message
-            if (message.Length <= _messageIndex) {
+            if (message.Length <= this.messageIndex) {
                 //Change the state to Eol
-                _state = EndOfLine;
+                this.state = EndOfLine;
 
                 return false;
             }
 
             //Begin tag parsing
-            if (message[_messageIndex] == '[') {
+            if (message[this.messageIndex] == '[') {
                 //Take and read tag
-                char tag = message[_messageIndex + 1];
-                int newMessageIndex = _messageIndex;
+                char tag = message[this.messageIndex + 1];
+                int newMessageIndex = this.messageIndex;
                 switch (tag) {
-                    case _pauseTag:                                                                       //Case: Pause for seconds
+                    case DialogTextbox.pauseTag:                                                                       //Case: Pause for seconds
                         float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
-                        _timeAccumulator += wait;
-                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        this.timeAccumulator += wait;
+                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case _speedTag:                                                                       //Case: New text speed
+                    case DialogTextbox.speedTag:                                                                       //Case: New text speed
                         float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
                         newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
-                        _messageSpeed = newSpeed;
-                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        this.messageSpeed = newSpeed;
+                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case _nameTag:                                                                       //Case: Orator name
+                    case DialogTextbox.nameTag:                                                                       //Case: Orator name
                         string name = ParseTag(message, ref newMessageIndex);
-                        if (name == _defaultValue.ToString())
+                        if (name == DialogTextbox.defaultValue.ToString())
                         {
                             NametagDisable();
                         } else
                         {
                             NametagEnable(name);
                         }
-                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case _jumpTag:                                                                       //Case: Jump
+                    case DialogTextbox.jumpTag:                                                                       //Case: Jump
                         int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
-                        _dialogIndex = newDialogIndex;
-                        _messageIndex = 0;
+                        this.dialogIndex = newDialogIndex;
+                        this.messageIndex = 0;
                         break;
-                    case _voiceTag:                                                                       //Case: Voice
+                    case DialogTextbox.voiceTag:                                                                       //Case: Voice
                         string key = ParseTag(message, ref newMessageIndex);
 
-                        if (_voices.ContainsKey(key))
+                        if (this.voices.ContainsKey(key))
                         {
-                            _voiceAudioSource.clip = _voices[key];
-                        } else if (key == _defaultValue.ToString())
+                            this.voiceAudioSource.clip = this.voices[key];
+                        } else if (key == DialogTextbox.defaultValue.ToString())
                         {
-                            _voiceAudioSource.clip = _defaultVoice;
+                            this.voiceAudioSource.clip = this.defaultVoice;
                         } else
                         {
                             Debug.LogError("[DialogTextbox] Voice key '" + key + "' was not found in the voices dictionary");
                         }
-                        _messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
-                    case _responseTag:
+                    case DialogTextbox.responseTag:
                         string data = ParseTag(message,ref newMessageIndex);
                         if (!string.IsNullOrEmpty(data))
                         {
@@ -379,41 +403,41 @@ namespace BF2D.UI {
                             } else
                             {   //else, try using it as a key in the dialog options dictionary and deserialize its value
                                 //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
-                                if (_dialogOptions.ContainsKey(data))
+                                if (this.dialogOptions.ContainsKey(data))
                                 {
                                     //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
-                                    options = DeserializeResponseData(_dialogOptions[data]);
+                                    options = DeserializeResponseData(this.dialogOptions[data]);
                                 } else
                                 {
                                     Debug.LogError("[Dialog Textbox] The dialog response file for the specified key '" + data + "' was not found");
                                 }
                             }
                             SetupResponses(options);
-                            _messageIndex = newMessageIndex + 1;
+                            this.messageIndex = newMessageIndex + 1;
                         } else
                         {
                             Debug.LogError("[DialogTextbox] The value for the response data cannot be null");
                         }
-                        _messageIndex = newMessageIndex + 1;
+                        this.messageIndex = newMessageIndex + 1;
                         return false;
-                    case _endTag:
-                        _state = EndOfDialog;
+                    case DialogTextbox.endTag:
+                        this.state = EndOfDialog;
                         return false;
                     default:
                         Debug.LogError("[DialogTextbox] Tag '" + tag + "' was not a valid character");
                         break;
                 }
             } else { //Basic character
-                if (message[_messageIndex] != ' ')
+                if (message[this.messageIndex] != ' ')
                 {
-                    PlayAudioSource(_voiceAudioSource);
+                    PlayAudioSource(this.voiceAudioSource);
                 }
 
-                string currentMessage = _textField.text;
-                currentMessage = currentMessage + message[_messageIndex];
-                _textField.text = currentMessage;
+                string currentMessage = this.textField.text;
+                currentMessage = currentMessage + message[this.messageIndex];
+                this.textField.text = currentMessage;
 
-                _messageIndex++;                                                                    //Increment message index to move to next character
+                this.messageIndex++;                                                                    //Increment message index to move to next character
             }
 
             return true;
@@ -453,12 +477,12 @@ namespace BF2D.UI {
         }
 
         private void NametagEnable(string name) {
-            _nametag.gameObject.SetActive(true);
-            _nametagTextField.text = name;
+            this.nametag.gameObject.SetActive(true);
+            this.nametagTextField.text = name;
         }
 
         private void NametagDisable() {
-            _nametag.gameObject.SetActive(false);
+            this.nametag.gameObject.SetActive(false);
         }
 
         private bool ValidJson(string json)
@@ -493,30 +517,30 @@ namespace BF2D.UI {
 
         private void SetupResponses(List<ResponseData> options)
         {
-            _interactable = false;
-            _responseOptionsGrid.gameObject.SetActive(true);
-            _responseOptionsGrid.Setup(1, options.Count);
+            this.interactable = false;
+            this.responseOptionsGrid.gameObject.SetActive(true);
+            this.responseOptionsGrid.Setup(1, options.Count);
 
             foreach (ResponseData option in options)
             {
                 try
                 {
-                    if (_prereqConditionChecker)
+                    if (this.prereqConditionChecker)
                     {
-                        if (_prereqConditionChecker.CheckCondition(option.prereq.ToString()))
+                        if (this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
                         {
                             continue;
                         }
                     }
 
-                    _responseOptionsGrid.Add(new UIOptionData
+                    this.responseOptionsGrid.Add(new UIOptionData
                     {
                         text = option.text,
                         action = () =>
                         {
-                            if (_responseOptionEvent != null)
+                            if (this.responseOptionEvent != null)
                             {
-                                _responseOptionEvent.Invoke(option.action.ToString());
+                                this.responseOptionEvent.Invoke(option.action.ToString());
                             }
                             FinalizeResponse(option.dialogIndex);
                         }
@@ -528,19 +552,19 @@ namespace BF2D.UI {
                 }
             }
 
-            _responseOptionsGrid.SetCursorAtHead();
+            this.responseOptionsGrid.SetCursorAtHead();
         }
 
         private void FinalizeResponse(int dialogIndex)
         {
-            if (dialogIndex != _defaultValue)
+            if (dialogIndex != DialogTextbox.defaultValue)
             {
-                _nextDialogIndex = dialogIndex;
+                this.nextDialogIndex = dialogIndex;
             }
-            _responseOptionsGrid.gameObject.SetActive(false);
-            _pass = true;
-            _state = MessageParseAndDisplayClocked;
-            _interactable = true;
+            this.responseOptionsGrid.gameObject.SetActive(false);
+            this.pass = true;
+            this.state = MessageParseAndDisplayClocked;
+            this.interactable = true;
         }
         #endregion
     }

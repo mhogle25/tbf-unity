@@ -165,10 +165,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbd4c198530429459bcf9522d6c0fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textMesh: {fileID: 9047699793556775555}
-  _image: {fileID: 0}
-  _cursor: {fileID: 939872128}
-  _event:
+  textMesh: {fileID: 9047699793556775555}
+  image: {fileID: 1286603530}
+  cursor: {fileID: 939872128}
+  confirmEvent:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &4021248496372531499

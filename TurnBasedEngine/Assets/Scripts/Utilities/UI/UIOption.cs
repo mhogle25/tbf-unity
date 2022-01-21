@@ -14,13 +14,13 @@ namespace BF2D.UI {
 
     public class UIOption : MonoBehaviour {
         [Tooltip("Reference to the TextMeshPro component of the option (optional)")]
-        [SerializeField] private TextMeshProUGUI _textMesh = null;
+        [SerializeField] private TextMeshProUGUI textMesh = null;
         [Tooltip("Reference to the Image component of the option (optional)")]
-        [SerializeField] private Image _image = null;
+        [SerializeField] private Image image = null;
         [Tooltip("Reference to the Image component of the option's cursor (required)")]
-        [SerializeField] private Image _cursor = null;
+        [SerializeField] private Image cursor = null;
         [Tooltip("The actions that will be called on confirm")]
-        [SerializeField] private UnityEvent _event = new UnityEvent();
+        [SerializeField] private UnityEvent confirmEvent = new UnityEvent();
 
         /// <summary>
         /// Sets up an instantiated option
@@ -29,26 +29,26 @@ namespace BF2D.UI {
         /// <returns>True if setup is successful, otherwise returns false</returns>
         public bool Setup(UIOptionData optionData) {
             if (optionData.text != null) {
-                _textMesh.text = optionData.text;
+                this.textMesh.text = optionData.text;
             } else {
-                if (_textMesh != null)
+                if (this.textMesh != null)
                 {
-                    _textMesh.gameObject.SetActive(false);
+                    this.textMesh.enabled = false;
                 }
             }
 
             if (optionData.icon != null) {
-                _image.sprite = optionData.icon;
+                this.image.sprite = optionData.icon;
             } else {
-                if (_image != null)
+                if (this.image != null)
                 {
-                    _image.gameObject.SetActive(false);
+                    this.image.enabled = false;
                 }
             }
 
             if (optionData.action != null)
             {
-                _event.AddListener(() =>
+                this.confirmEvent.AddListener(() =>
                 {
                     optionData.action();
                 });
@@ -59,12 +59,12 @@ namespace BF2D.UI {
 
         public void SetCursor(bool status) {
             //Debug.Log(gameObject.name);
-            _cursor.enabled = status;
+            this.cursor.enabled = status;
         }
 
         public void Confirm()
         {
-            _event.Invoke();
+            this.confirmEvent.Invoke();
         }
     }
 }

@@ -6,15 +6,15 @@ public class UIUtility : MonoBehaviour
     public virtual bool Interactable {
         get 
         {
-            return _interactable;
+            return this.interactable;
         }
 
         set
         {
-            _interactable = value;
+            this.interactable = value;
         }
     }
-    private protected bool _interactable = true;
+    private protected bool interactable = true;
 
     private protected void PlayAudioSource(AudioSource audioSource)
     {

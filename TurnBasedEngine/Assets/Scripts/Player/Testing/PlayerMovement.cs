@@ -8,10 +8,10 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 2;
 
-    private float _horizontalAxis;
-    private float _verticalAxis;
+    private float horizontalAxis;
+    private float verticalAxis;
 
-    private Action _state;
+    private Action state;
 
     private void Start() {
         DialogTextbox.Instance.Dialog("test", 2);
@@ -25,20 +25,29 @@ public class PlayerMovement : MonoBehaviour
             0
         );
 
-        //_state += Move;
+        //this.state += Move;
+        this.state += Listen;
     }
 
     private void Update() {
-        if (_state != null)
-            _state();
+        if (this.state != null)
+            this.state();
     }
 
     private void Move() {
-        _horizontalAxis = InputManager.HorizontalAxis;
-        _verticalAxis = InputManager.VerticalAxis;
-        Vector3 moveFactor = new Vector3(_horizontalAxis, _verticalAxis, 0);
+        this.horizontalAxis = InputManager.HorizontalAxis;
+        this.verticalAxis = InputManager.VerticalAxis;
+        Vector3 moveFactor = new Vector3(this.horizontalAxis, this.verticalAxis, 0);
         Vector3 newPosition = transform.localPosition + (moveFactor * movementSpeed * Time.deltaTime);
         transform.localPosition = newPosition;
+    }
+
+    private void Listen()
+    {
+        if (InputManager.ConfirmPress)
+        {
+            DialogTextbox.Instance.Continue();
+        }
     }
 
     public void Print(string text)
