@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -282,16 +281,16 @@ namespace BF2D.UI
                 switch (direction)
                 {
                     case MoveDirection.Left:
-                        while (this.grid[this.cursorPosition.x = NavigationDecrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
+                        while (this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
                     case MoveDirection.Up:
-                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = NavigationDecrement(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)] == null);
                         break;
                     case MoveDirection.Right:
-                        while (this.grid[this.cursorPosition.x = NavigationIncrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
+                        while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
                     case MoveDirection.Down:
-                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = NavigationIncrement(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)] == null);
                         break;
                     default:
                         Debug.LogError("[UIOptionsGrid] Invalid direction");
@@ -332,61 +331,7 @@ namespace BF2D.UI
             return true;
         }
 
-        /*
-        private void Navigation(bool decrementInput, bool incrementInput, Axis axis, int size) {
-            
-            if (this.count < 1)
-            {
-                //Debug.Log("[UIOptionsGrid] Tried to navigate but the grid was empty");
-                return;
-            }
-
-            int tempField;
-
-            if (this.grid[this.cursorPosition.x, this.cursorPosition.y] != null)    
-                SetCursorAtPosition(this.cursorPosition, false);
-
-            switch (axis)
-            {
-                case Axis.Horizontal:
-                    tempField = this.cursorPosition.x;
-                    while (this.grid[tempField = NavigationHelper(decrementInput, incrementInput, tempField, size), this.cursorPosition.y] == null) ;
-                    this.cursorPosition.x = tempField;
-                    break;
-                case Axis.Vertical:
-                    tempField = this.cursorPosition.y;
-                    while (this.grid[this.cursorPosition.x, tempField = NavigationHelper(decrementInput, incrementInput, tempField, size)] == null) ;
-                    this.cursorPosition.y = tempField;
-                    break;
-                default:
-                    Debug.LogError("[UIOptionsGrid] Invalid Axis");
-                    return;
-            }
-
-            SetCursorAtPosition(this.cursorPosition, true);
-
-            PlayAudioSource(this.navigateAudioSource);
-        }
-        */
-
-        private int NavigationDecrement(int value, int size)
-        {
-            int field = value;
-
-            if (field == 0)
-            {
-                field = size - 1;
-            }
-            else
-            {
-                field -= 1;
-            }
-
-            return field;
-
-        }
-
-        private int NavigationIncrement(int value, int size)
+        private int Increment(int value, int size)
         {
             int field = value;
 
@@ -432,6 +377,23 @@ namespace BF2D.UI
             }
 
             return v;
+        }
+
+        private int Decrement(int value, int size)
+        {
+            int field = value;
+
+            if (field == 0)
+            {
+                field = size - 1;
+            }
+            else
+            {
+                field -= 1;
+            }
+
+            return field;
+
         }
 
         private IntVector2 Decrement(IntVector2 vector)

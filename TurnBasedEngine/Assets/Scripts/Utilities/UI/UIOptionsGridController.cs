@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -56,11 +54,11 @@ namespace BF2D.UI
 
         private Action state = null;
         private MoveDirection direction = MoveDirection.Left;
-        private float time = 0f;
+        private float timeAccumulator = 0f;
 
         private void Awake()
         {
-            this.state = StateInputListener;
+            this.state = StateDirectionInputListener;
         }
 
         private void Update()
@@ -69,9 +67,14 @@ namespace BF2D.UI
             {
                 this.state();
             }
+
+            if (InputManager.ConfirmPress)
+            {
+                this.optionsGrid.Confirm();
+            }
         }
 
-        private void StateInputListener()
+        private void StateDirectionInputListener()
         {
             if (InputManager.LeftPress)
             {
@@ -92,20 +95,15 @@ namespace BF2D.UI
             {
                 DirectionalCall(MoveDirection.Down);
             }
-
-            if (InputManager.ConfirmPress)
-            {
-                this.optionsGrid.Confirm();
-            }
         }
 
         private void StateDelay()
         {
             KeyReleaseListener();
 
-            if (Time.time > this.time + delay)
+            if (Time.time > this.timeAccumulator + delay)
             {
-                this.time = 0f;
+                this.timeAccumulator = 0f;
                 this.state = StateAutoNavigate;
             }
         }
@@ -114,9 +112,9 @@ namespace BF2D.UI
         {
             KeyReleaseListener();
 
-            if (Time.time > this.time)
+            if (Time.time > this.timeAccumulator)
             {
-                this.time = Time.time + this.speed;
+                this.timeAccumulator = Time.time + this.speed;
                 this.optionsGrid.Navigate(this.direction);
             }
         }
@@ -125,7 +123,7 @@ namespace BF2D.UI
         {
             if (InputReleaseFromDirection(this.direction))
             {
-                this.state = StateInputListener;
+                this.state = StateDirectionInputListener;
             }
         }
 
@@ -133,7 +131,7 @@ namespace BF2D.UI
         {
             this.optionsGrid.Navigate(direction);
             this.direction = direction;
-            this.time = Time.time;
+            this.timeAccumulator = Time.time;
             this.state = StateDelay;
         }
 
@@ -142,13 +140,13 @@ namespace BF2D.UI
             switch (moveDirection)
             {
                 case MoveDirection.Left:
-                    return InputManager.LeftRelease;
+                    return !InputManager.Left;
                 case MoveDirection.Up:
-                    return InputManager.UpRelease;
+                    return !InputManager.Up;
                 case MoveDirection.Right:
-                    return InputManager.RightRelease;
+                    return !InputManager.Right;
                 case MoveDirection.Down:
-                    return InputManager.DownRelease;
+                    return !InputManager.Down;
                 default:
                     Debug.LogError("[UIOptionsGridController] Invalid move direction");
                     return false;
