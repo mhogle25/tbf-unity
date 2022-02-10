@@ -9,7 +9,10 @@ namespace BF2D.UI {
     {
         public string text;
         public Sprite icon;
-        public Action action;
+        public Action confirmAction;
+        public Action menuAction;
+        public Action attackAction;
+        public Action backAction;
     };
 
     public class UIOption : MonoBehaviour {
@@ -21,6 +24,12 @@ namespace BF2D.UI {
         [SerializeField] private Image cursor = null;
         [Tooltip("The actions that will be called on confirm")]
         [SerializeField] private UnityEvent confirmEvent = new UnityEvent();
+        [Tooltip("The actions that will be called on confirm")]
+        [SerializeField] private UnityEvent menuEvent = new UnityEvent();
+        [Tooltip("The actions that will be called on confirm")]
+        [SerializeField] private UnityEvent attackEvent = new UnityEvent();
+        [Tooltip("The actions that will be called on confirm")]
+        [SerializeField] private UnityEvent backEvent = new UnityEvent();
 
         /// <summary>
         /// Sets up an instantiated option
@@ -46,11 +55,35 @@ namespace BF2D.UI {
                 }
             }
 
-            if (optionData.action != null)
+            if (optionData.confirmAction != null)
             {
                 this.confirmEvent.AddListener(() =>
                 {
-                    optionData.action();
+                    optionData.confirmAction();
+                });
+            }
+
+            if (optionData.menuAction != null)
+            {
+                this.menuEvent.AddListener(() =>
+                {
+                    optionData.menuAction();
+                });
+            }
+
+            if (optionData.attackAction != null)
+            {
+                this.attackEvent.AddListener(() =>
+                {
+                    optionData.attackAction();
+                });
+            }
+
+            if (optionData.backAction != null)
+            {
+                this.backEvent.AddListener(() =>
+                {
+                    optionData.backAction();
                 });
             }
 
@@ -62,9 +95,24 @@ namespace BF2D.UI {
             this.cursor.enabled = status;
         }
 
-        public void Confirm()
+        public void ConfirmInvoke()
         {
             this.confirmEvent.Invoke();
+        }
+
+        public void MenuInvoke()
+        {
+            this.menuEvent.Invoke();
+        }
+
+        public void AttackInvoke()
+        {
+            this.attackEvent.Invoke();
+        }
+
+        public void BackInvoke()
+        {
+            this.backEvent.Invoke();
         }
     }
 }

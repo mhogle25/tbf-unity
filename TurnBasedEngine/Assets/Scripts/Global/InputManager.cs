@@ -95,7 +95,6 @@ namespace BF2D {
         private bool _gamepadUpReleaseFlag = true;
         private bool _gamepadDownReleaseFlag = true;
 
-
         private void Awake() {
             DontDestroyOnLoad(gameObject);
         }
@@ -105,7 +104,8 @@ namespace BF2D {
             _inputListener += GamepadConnected;
         }
 
-        private void LateUpdate() {
+        private void LateUpdate()
+        {
             //Call input listener methods
             _inputListener();
         }

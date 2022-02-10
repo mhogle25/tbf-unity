@@ -70,7 +70,7 @@ namespace BF2D.UI
 
             if (InputManager.ConfirmPress)
             {
-                this.optionsGrid.Confirm();
+                this.optionsGrid.ConfirmInvoke();
             }
         }
 

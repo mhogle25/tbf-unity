@@ -16,10 +16,19 @@ namespace BF2D.UI
         [SerializeField] private int gridHeight = 1;
         [Tooltip("Enable/disable use of the confirm button")]
         [SerializeField] private bool confirmEnabled = true;
+        [Tooltip("Enable/disable use of the menu button")]
+        [SerializeField] private bool menuEnabled = true;
+        [Tooltip("Enable/disable use of the attack button")]
+        [SerializeField] private bool attackEnabled = true;
+        [Tooltip("Enable/disable use of the back button")]
+        [SerializeField] private bool backEnabled = true;
 
         [Header("Audio")]
         [SerializeField] private AudioSource navigateAudioSource = null;
         [SerializeField] private AudioSource confirmAudioSource = null;
+        [SerializeField] private AudioSource menuAudioSource = null;
+        [SerializeField] private AudioSource attackAudioSource = null;
+        [SerializeField] private AudioSource backAudioSource = null;
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -35,6 +44,21 @@ namespace BF2D.UI
         /// Enable/disable use of the confirm button
         /// </summary>
         public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
+
+        /// <summary>
+        /// Enable/disable use of the menu button
+        /// </summary>
+        public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
+        
+        /// <summary>
+        /// Enable/disable use of the menu button
+        /// </summary>
+        public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
+
+        /// <summary>
+        /// Enable/disable use of the menu button
+        /// </summary>
+        public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
 
         private UIOption[,] grid;
         private int count = 0;
@@ -258,12 +282,48 @@ namespace BF2D.UI
         /// <summary>
         /// Call the confirm event of the selected option
         /// </summary>
-        public void Confirm()
+        public void ConfirmInvoke()
         {
             if (this.interactable && this.gameObject.activeSelf && this.confirmEnabled && this.count > 0)
             {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].Confirm();
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].ConfirmInvoke();
                 PlayAudioSource(this.confirmAudioSource);
+            }
+        }
+
+        /// <summary>
+        /// Call the menu event of the selected option
+        /// </summary>
+        public void MenuInvoke()
+        {
+            if (this.interactable && this.gameObject.activeSelf && this.menuEnabled && this.count > 0)
+            {
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].MenuInvoke();
+                PlayAudioSource(this.menuAudioSource);
+            }
+        }
+
+        /// <summary>
+        /// Call the attack event of the selected option
+        /// </summary>
+        public void AttackInvoke()
+        {
+            if (this.interactable && this.gameObject.activeSelf && this.attackEnabled && this.count > 0)
+            {
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].AttackInvoke();
+                PlayAudioSource(this.attackAudioSource);
+            }
+        }
+
+        /// <summary>
+        /// Call the back event of the selected option
+        /// </summary>
+        public void BackInvoke()
+        {
+            if (this.interactable && this.gameObject.activeSelf && this.backEnabled && this.count > 0)
+            {
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].AttackInvoke();
+                PlayAudioSource(this.backAudioSource);
             }
         }
 

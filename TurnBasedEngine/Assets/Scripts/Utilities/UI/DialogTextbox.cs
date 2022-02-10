@@ -322,7 +322,9 @@ namespace BF2D.UI {
             this.messageSpeed = DefaultMessageSpeed;
             this.activeLines = null;
             this.pass = false;
-        }
+            this.nextDialogIndex = -1;
+            this.continueFlag = false;
+    }
 
         private void MessageParseAndDisplayInstantaneous() {
             while (MessageParseAndDisplay());   //Run parse and display until end of line, end of dialog, or option response is called
@@ -535,7 +537,7 @@ namespace BF2D.UI {
                     this.responseOptionsGrid.Add(new UIOptionData
                     {
                         text = option.text,
-                        action = () =>
+                        confirmAction = () =>
                         {
                             if (this.responseOptionEvent != null)
                             {
