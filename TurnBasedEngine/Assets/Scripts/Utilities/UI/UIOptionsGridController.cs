@@ -72,6 +72,21 @@ namespace BF2D.UI
             {
                 this.optionsGrid.ConfirmInvoke();
             }
+
+            if (InputManager.MenuPress)
+            {
+                this.optionsGrid.MenuInvoke();
+            }
+
+            if (InputManager.AttackPress)
+            {
+                this.optionsGrid.AttackInvoke();
+            }
+
+            if (InputManager.BackPress)
+            {
+                this.optionsGrid.BackInvoke();
+            }
         }
 
         private void StateDirectionInputListener()
