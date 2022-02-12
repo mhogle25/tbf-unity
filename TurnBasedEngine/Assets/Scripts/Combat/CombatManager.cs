@@ -1,16 +1,20 @@
 ﻿using UnityEngine;
+using System;
+using BF2D;
 
 public class CombatManager : MonoBehaviour
 {
     //Singleton Reference
-    public static CombatManager Instance { get { return _instance; } }
-    private static CombatManager _instance;
+    public static CombatManager Instance { get { return instance; } }
+    private static CombatManager instance;
 
     private void Awake() {
         //Setup of Monobehaviour Singleton
-        if (_instance != this && _instance != null) {
-            Destroy(_instance.gameObject);
+        if (CombatManager.instance != this && CombatManager.instance != null) {
+            Destroy(CombatManager.instance.gameObject);
         }
-        _instance = this;
+        CombatManager.instance = this;
     }
+    
+    
 }

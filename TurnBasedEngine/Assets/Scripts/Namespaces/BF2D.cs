@@ -1,10 +1,18 @@
-﻿namespace BF2D
+﻿using System.Runtime.Serialization;
+using System;
+
+namespace BF2D
 {
+    [Serializable]
     public enum Axis
     {
-        Horizontal, Vertical
+        [EnumMember(Value = "Horizontal")]
+        Horizontal, 
+        [EnumMember(Value = "Vertical")]
+        Vertical
     };
 
+    [Serializable]
     struct IntVector2
     {
         public int x;
@@ -37,5 +45,30 @@
         {
             return base.GetHashCode();
         }
+    }
+
+    [Serializable]
+    public enum InputKey
+    {
+        [EnumMember(Value = "Up")]
+        Up,
+        [EnumMember(Value = "Left")]
+        Left,
+        [EnumMember(Value = "Down")]
+        Down,
+        [EnumMember(Value = "Right")]
+        Right,
+        [EnumMember(Value = "Confirm")]
+        Confirm,
+        [EnumMember(Value = "Back")]
+        Back,
+        [EnumMember(Value = "Attack")]
+        Attack,
+        [EnumMember(Value = "Menu")]
+        Menu,
+        [EnumMember(Value = "Pause")]
+        Pause,
+        [EnumMember(Value = "Select")]
+        Select
     }
 }

@@ -3,74 +3,162 @@ using UnityEngine;
 using UnityEngine.Animations;
 
 namespace BF2D {
+
     public class InputManager : MonoBehaviour {
         #region Key
-        public static bool Up { get { return _up; } }
-        private static bool _up = false;
-        public static bool Left { get { return _left; } }
-        private static bool _left = false;
-        public static bool Down { get { return _down; } }
-        private static bool _down = false;
-        public static bool Right { get { return _right; } }
-        private static bool _right = false;
-        public static bool Confirm { get { return _confirm; } }
-        private static bool _confirm = false;
-        public static bool Back { get { return _back; } }
-        private static bool _back = false;
-        public static bool Menu { get { return _menu; } }
-        private static bool _menu = false;
-        public static bool Attack { get { return _attack; } }
-        private static bool _attack = false;
-        public static bool Pause { get { return _pause; } }
-        private static bool _pause = false;
-        public static bool Select { get { return _select; } }
-        private static bool _select = false;
+        public static bool Up { get { return InputManager.up; } }
+        private static bool up = false;
+        public static bool Left { get { return InputManager.left; } }
+        private static bool left = false;
+        public static bool Down { get { return InputManager.down; } }
+        private static bool down = false;
+        public static bool Right { get { return InputManager.right; } }
+        private static bool right = false;
+        public static bool Confirm { get { return InputManager.confirm; } }
+        private static bool confirm = false;
+        public static bool Back { get { return InputManager.back; } }
+        private static bool back = false;
+        public static bool Menu { get { return InputManager.menu; } }
+        private static bool menu = false;
+        public static bool Attack { get { return InputManager.attack; } }
+        private static bool attack = false;
+        public static bool Pause { get { return InputManager.pause; } }
+        private static bool pause = false;
+        public static bool Select { get { return InputManager.select; } }
+        private static bool select = false;
+
+        public static bool Key(InputKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case InputKey.Up:
+                    return InputManager.up;
+                case InputKey.Left:
+                    return InputManager.left;
+                case InputKey.Down:
+                    return InputManager.down;
+                case InputKey.Right:
+                    return InputManager.right;
+                case InputKey.Confirm:
+                    return InputManager.confirm;
+                case InputKey.Back:
+                    return InputManager.back;
+                case InputKey.Attack:
+                    return InputManager.attack;
+                case InputKey.Menu:
+                    return InputManager.menu;
+                case InputKey.Pause:
+                    return InputManager.pause;
+                case InputKey.Select:
+                    return InputManager.select;
+                default:
+                    throw new ArgumentException("Input Key was null or invalid");
+            }
+        }
         #endregion
 
         #region Key Press
-        public static bool UpPress { get { return _upPress; } }
-        private static bool _upPress = false;
-        public static bool LeftPress { get { return _leftPress; } }
-        private static bool _leftPress = false;
-        public static bool DownPress { get { return _downPress; } }
-        private static bool _downPress = false;
-        public static bool RightPress { get { return _rightPress; } }
-        private static bool _rightPress = false;
-        public static bool ConfirmPress { get { return _confirmPress; } }
-        private static bool _confirmPress = false;
-        public static bool BackPress { get { return _backPress; } }
-        private static bool _backPress = false;
-        public static bool MenuPress { get { return _menuPress; } }
-        private static bool _menuPress = false;
-        public static bool AttackPress { get { return _attackPress; } }
-        private static bool _attackPress = false;
-        public static bool PausePress { get { return _pausePress; } }
-        private static bool _pausePress = false;
-        public static bool SelectPress { get { return _selectPress; } }
-        private static bool _selectPress = false;
+        public static bool UpPress { get { return InputManager.upPress; } }
+        private static bool upPress = false;
+        public static bool LeftPress { get { return InputManager.leftPress; } }
+        private static bool leftPress = false;
+        public static bool DownPress { get { return InputManager.downPress; } }
+        private static bool downPress = false;
+        public static bool RightPress { get { return InputManager.rightPress; } }
+        private static bool rightPress = false;
+        public static bool ConfirmPress { get { return InputManager.confirmPress; } }
+        private static bool confirmPress = false;
+        public static bool BackPress { get { return InputManager.backPress; } }
+        private static bool backPress = false;
+        public static bool MenuPress { get { return InputManager.menuPress; } }
+        private static bool menuPress = false;
+        public static bool AttackPress { get { return InputManager.attackPress; } }
+        private static bool attackPress = false;
+        public static bool PausePress { get { return InputManager.pausePress; } }
+        private static bool pausePress = false;
+        public static bool SelectPress { get { return InputManager.selectPress; } }
+        private static bool selectPress = false;
+
+        public static bool KeyPress(InputKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case InputKey.Up:
+                    return InputManager.upPress;
+                case InputKey.Left:
+                    return InputManager.leftPress;
+                case InputKey.Down:
+                    return InputManager.downPress;
+                case InputKey.Right:
+                    return InputManager.rightPress;
+                case InputKey.Confirm:
+                    return InputManager.confirmPress;
+                case InputKey.Back:
+                    return InputManager.backPress;
+                case InputKey.Attack:
+                    return InputManager.attackPress;
+                case InputKey.Menu:
+                    return InputManager.menuPress;
+                case InputKey.Pause:
+                    return InputManager.pausePress;
+                case InputKey.Select:
+                    return InputManager.selectPress;
+                default:
+                    throw new ArgumentException("Input Key was null or invalid");
+            }
+        }
         #endregion
 
         #region Key Release
-        public static bool UpRelease { get { return _upRelease; } }
-        private static bool _upRelease = false;
-        public static bool LeftRelease { get { return _leftRelease; } }
-        private static bool _leftRelease = false;
-        public static bool DownRelease { get { return _downRelease; } }
-        private static bool _downRelease = false;
-        public static bool RightRelease { get { return _rightRelease; } }
-        private static bool _rightRelease = false;
-        public static bool ConfirmRelease { get { return _confirmRelease; } }
-        private static bool _confirmRelease = false;
-        public static bool BackRelease { get { return _backRelease; } }
-        private static bool _backRelease = false;
-        public static bool MenuRelease { get { return _menuRelease; } }
-        private static bool _menuRelease = false;
-        public static bool AttackRelease { get { return _attackRelease; } }
-        private static bool _attackRelease = false;
-        public static bool PauseRelease { get { return _pauseRelease; } }
-        private static bool _pauseRelease = false;
-        public static bool SelectRelease { get { return _selectRelease; } }
-        private static bool _selectRelease = false;
+        public static bool UpRelease { get { return InputManager.upRelease; } }
+        private static bool upRelease = false;
+        public static bool LeftRelease { get { return InputManager.leftRelease; } }
+        private static bool leftRelease = false;
+        public static bool DownRelease { get { return InputManager.downRelease; } }
+        private static bool downRelease = false;
+        public static bool RightRelease { get { return InputManager.rightRelease; } }
+        private static bool rightRelease = false;
+        public static bool ConfirmRelease { get { return InputManager.confirmRelease; } }
+        private static bool confirmRelease = false;
+        public static bool BackRelease { get { return InputManager.backRelease; } }
+        private static bool backRelease = false;
+        public static bool MenuRelease { get { return InputManager.menuRelease; } }
+        private static bool menuRelease = false;
+        public static bool AttackRelease { get { return InputManager.attackRelease; } }
+        private static bool attackRelease = false;
+        public static bool PauseRelease { get { return InputManager.pauseRelease; } }
+        private static bool pauseRelease = false;
+        public static bool SelectRelease { get { return InputManager.selectRelease; } }
+        private static bool selectRelease = false;
+
+        public static bool KeyRelease(InputKey inputKey)
+        {
+            switch (inputKey)
+            {
+                case InputKey.Up:
+                    return InputManager.upRelease;
+                case InputKey.Left:
+                    return InputManager.leftRelease;
+                case InputKey.Down:
+                    return InputManager.downRelease;
+                case InputKey.Right:
+                    return InputManager.rightRelease;
+                case InputKey.Confirm:
+                    return InputManager.confirmRelease;
+                case InputKey.Back:
+                    return InputManager.backRelease;
+                case InputKey.Attack:
+                    return InputManager.attackRelease;
+                case InputKey.Menu:
+                    return InputManager.menuRelease;
+                case InputKey.Pause:
+                    return InputManager.pauseRelease;
+                case InputKey.Select:
+                    return InputManager.selectRelease;
+                default:
+                    throw new ArgumentException("Input Key was null or invalid");
+            }
+        }
         #endregion
 
         #region Misc
@@ -84,244 +172,244 @@ namespace BF2D {
 
         [SerializeField] private float joystickThreshold = 0.5f;
 
-        private Action _inputListener;
+        private Action inputListener;
 
-        private bool _gamepadLeftPressFlag = true;
-        private bool _gamepadRightPressFlag = true;
-        private bool _gamepadUpPressFlag = true;
-        private bool _gamepadDownPressFlag = true;
-        private bool _gamepadLeftReleaseFlag = true;
-        private bool _gamepadRightReleaseFlag = true;
-        private bool _gamepadUpReleaseFlag = true;
-        private bool _gamepadDownReleaseFlag = true;
+        private bool gamepadLeftPressFlag = true;
+        private bool gamepadRightPressFlag = true;
+        private bool gamepadUpPressFlag = true;
+        private bool gamepadDownPressFlag = true;
+        private bool gamepadLeftReleaseFlag = true;
+        private bool gamepadRightReleaseFlag = true;
+        private bool gamepadUpReleaseFlag = true;
+        private bool gamepadDownReleaseFlag = true;
 
         private void Awake() {
             DontDestroyOnLoad(gameObject);
         }
 
         private void Start() {
-            _inputListener += Keyboard;
-            _inputListener += GamepadConnected;
+            this.inputListener += Keyboard;
+            this.inputListener += GamepadConnected;
         }
 
         private void LateUpdate()
         {
             //Call input listener methods
-            _inputListener();
+            this.inputListener();
         }
 
         private void Gamepad() {
             //Set Key Flags
-            _up = Input.GetAxis("Vertical") > joystickThreshold;
-            _left = Input.GetAxis("Horizontal") < -joystickThreshold;
-            _down = Input.GetAxis("Vertical") < -joystickThreshold;
-            _right = Input.GetAxis("Horizontal") > joystickThreshold;
-            _confirm = Input.GetKey(ControlsConfig.GamepadConfirm);
-            _back = Input.GetKey(ControlsConfig.GamepadBack);
-            _menu = Input.GetKey(ControlsConfig.GamepadMenu);
-            _attack = Input.GetKey(ControlsConfig.GamepadAttack);
-            _pause = Input.GetKey(ControlsConfig.GamepadPause);
-            _select = Input.GetKey(ControlsConfig.GamepadSelect);
+            InputManager.up = Input.GetAxis("Vertical") > this.joystickThreshold;
+            InputManager.left = Input.GetAxis("Horizontal") < -this.joystickThreshold;
+            InputManager.down = Input.GetAxis("Vertical") < -this.joystickThreshold;
+            InputManager.right = Input.GetAxis("Horizontal") > this.joystickThreshold;
+            InputManager.confirm = Input.GetKey(ControlsConfig.GamepadConfirm);
+            InputManager.back = Input.GetKey(ControlsConfig.GamepadBack);
+            InputManager.menu = Input.GetKey(ControlsConfig.GamepadMenu);
+            InputManager.attack = Input.GetKey(ControlsConfig.GamepadAttack);
+            InputManager.pause = Input.GetKey(ControlsConfig.GamepadPause);
+            InputManager.select = Input.GetKey(ControlsConfig.GamepadSelect);
 
             //Set Key Press Flags
-            if (Input.GetAxis("Vertical") > joystickThreshold) {
-                if (!_upPress && _gamepadUpPressFlag) {
-                    _upPress = true;
-                } else if (_upPress && _gamepadUpPressFlag) {
-                    _upPress = false;
-                    _gamepadUpPressFlag = false;
+            if (Input.GetAxis("Vertical") > this.joystickThreshold) {
+                if (!InputManager.upPress && this.gamepadUpPressFlag) {
+                    InputManager.upPress = true;
+                } else if (InputManager.upPress && this.gamepadUpPressFlag) {
+                    InputManager.upPress = false;
+                    this.gamepadUpPressFlag = false;
                 }
             } else {
-                if (!_upPress && !_gamepadUpPressFlag) {
-                    _gamepadUpPressFlag = true;
+                if (!InputManager.upPress && !this.gamepadUpPressFlag) {
+                    this.gamepadUpPressFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Horizontal") < -joystickThreshold) {
-                if (!_leftPress && _gamepadLeftPressFlag) {
-                    _leftPress = true;
-                } else if (_leftPress && _gamepadLeftPressFlag) {
-                    _leftPress = false;
-                    _gamepadLeftPressFlag = false;
+            if (Input.GetAxis("Horizontal") < -this.joystickThreshold) {
+                if (!InputManager.leftPress && this.gamepadLeftPressFlag) {
+                    InputManager.leftPress = true;
+                } else if (InputManager.leftPress && this.gamepadLeftPressFlag) {
+                    InputManager.leftPress = false;
+                    this.gamepadLeftPressFlag = false;
                 }
             } else {
-                if (!_leftPress && !_gamepadLeftPressFlag) {
-                    _gamepadLeftPressFlag = true;
+                if (!InputManager.leftPress && !this.gamepadLeftPressFlag) {
+                    this.gamepadLeftPressFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Vertical") < -joystickThreshold) {
-                if (!_downPress && _gamepadDownPressFlag) {
-                    _downPress = true;
-                } else if (_downPress && _gamepadDownPressFlag) {
-                    _downPress = false;
-                    _gamepadDownPressFlag = false;
+            if (Input.GetAxis("Vertical") < -this.joystickThreshold) {
+                if (!InputManager.downPress && this.gamepadDownPressFlag) {
+                    InputManager.downPress = true;
+                } else if (InputManager.downPress && this.gamepadDownPressFlag) {
+                    InputManager.downPress = false;
+                    this.gamepadDownPressFlag = false;
                 }
             } else {
-                if (!_downPress && !_gamepadDownPressFlag) {
-                    _gamepadDownPressFlag = true;
+                if (!InputManager.downPress && !this.gamepadDownPressFlag) {
+                    this.gamepadDownPressFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Horizontal") > joystickThreshold) {
-                if (!_rightPress && _gamepadRightPressFlag) {
-                    _rightPress = true;
-                } else if (_rightPress && _gamepadRightPressFlag) {
-                    _rightPress = false;
-                    _gamepadRightPressFlag = false;
+            if (Input.GetAxis("Horizontal") > this.joystickThreshold) {
+                if (!InputManager.rightPress && this.gamepadRightPressFlag) {
+                    InputManager.rightPress = true;
+                } else if (InputManager.rightPress && this.gamepadRightPressFlag) {
+                    InputManager.rightPress = false;
+                    this.gamepadRightPressFlag = false;
                 }
             } else {
-                if (!_rightPress && !_gamepadRightPressFlag) {
-                    _gamepadRightPressFlag = true;
+                if (!InputManager.rightPress && !this.gamepadRightPressFlag) {
+                    this.gamepadRightPressFlag = true;
                 }
             }
 
-            _confirmPress = Input.GetKeyDown(ControlsConfig.GamepadConfirm);
-            _backPress = Input.GetKeyDown(ControlsConfig.GamepadBack);
-            _menuPress = Input.GetKeyDown(ControlsConfig.GamepadMenu);
-            _attackPress = Input.GetKeyDown(ControlsConfig.GamepadAttack);
-            _pausePress = Input.GetKeyDown(ControlsConfig.GamepadPause);
-            _selectPress = Input.GetKeyDown(ControlsConfig.GamepadSelect);
+            InputManager.confirmPress = Input.GetKeyDown(ControlsConfig.GamepadConfirm);
+            InputManager.backPress = Input.GetKeyDown(ControlsConfig.GamepadBack);
+            InputManager.menuPress = Input.GetKeyDown(ControlsConfig.GamepadMenu);
+            InputManager.attackPress = Input.GetKeyDown(ControlsConfig.GamepadAttack);
+            InputManager.pausePress = Input.GetKeyDown(ControlsConfig.GamepadPause);
+            InputManager.selectPress = Input.GetKeyDown(ControlsConfig.GamepadSelect);
 
             //Set Key Release Flags
-            if (Input.GetAxis("Vertical") < joystickThreshold) {
-                if (!_upRelease && _gamepadUpReleaseFlag) {
-                    _upRelease = true;
-                } else if (_upRelease && _gamepadUpReleaseFlag) {
-                    _upRelease = false;
-                    _gamepadUpReleaseFlag = false;
+            if (Input.GetAxis("Vertical") < this.joystickThreshold) {
+                if (!InputManager.upRelease && this.gamepadUpReleaseFlag) {
+                    InputManager.upRelease = true;
+                } else if (InputManager.upRelease && this.gamepadUpReleaseFlag) {
+                    InputManager.upRelease = false;
+                    this.gamepadUpReleaseFlag = false;
                 }
             } else {
-                if (!_upRelease && !_gamepadUpReleaseFlag) {
-                    _gamepadUpReleaseFlag = true;
+                if (!InputManager.upRelease && !this.gamepadUpReleaseFlag) {
+                    this.gamepadUpReleaseFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Horizontal") > -joystickThreshold) {
-                if (!_leftRelease && _gamepadLeftReleaseFlag) {
-                    _leftRelease = true;
-                } else if (_leftRelease && _gamepadLeftReleaseFlag) {
-                    _leftRelease = false;
-                    _gamepadLeftReleaseFlag = false;
+            if (Input.GetAxis("Horizontal") > -this.joystickThreshold) {
+                if (!InputManager.leftRelease && this.gamepadLeftReleaseFlag) {
+                    InputManager.leftRelease = true;
+                } else if (InputManager.leftRelease && this.gamepadLeftReleaseFlag) {
+                    InputManager.leftRelease = false;
+                    this.gamepadLeftReleaseFlag = false;
                 }
             } else {
-                if (!_leftRelease && !_gamepadLeftReleaseFlag) {
-                    _gamepadLeftReleaseFlag = true;
+                if (!InputManager.leftRelease && !this.gamepadLeftReleaseFlag) {
+                    this.gamepadLeftReleaseFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Vertical") > -joystickThreshold) {
-                if (!_downRelease && _gamepadDownReleaseFlag) {
-                    _downRelease = true;
-                } else if (_downRelease && _gamepadDownReleaseFlag) {
-                    _downRelease = false;
-                    _gamepadDownReleaseFlag = false;
+            if (Input.GetAxis("Vertical") > -this.joystickThreshold) {
+                if (!InputManager.downRelease && this.gamepadDownReleaseFlag) {
+                    InputManager.downRelease = true;
+                } else if (InputManager.downRelease && this.gamepadDownReleaseFlag) {
+                    InputManager.downRelease = false;
+                    this.gamepadDownReleaseFlag = false;
                 }
             } else {
-                if (!_downRelease && !_gamepadDownReleaseFlag) {
-                    _gamepadDownReleaseFlag = true;
+                if (!InputManager.downRelease && !this.gamepadDownReleaseFlag) {
+                    this.gamepadDownReleaseFlag = true;
                 }
             }
 
-            if (Input.GetAxis("Horizontal") < joystickThreshold) {
-                if (!_rightRelease && _gamepadRightReleaseFlag) {
-                    _rightRelease = true;
-                } else if (_rightRelease && _gamepadRightReleaseFlag) {
-                    _rightRelease = false;
-                    _gamepadRightReleaseFlag = false;
+            if (Input.GetAxis("Horizontal") < this.joystickThreshold) {
+                if (!InputManager.rightRelease && this.gamepadRightReleaseFlag) {
+                    InputManager.rightRelease = true;
+                } else if (InputManager.rightRelease && this.gamepadRightReleaseFlag) {
+                    InputManager.rightRelease = false;
+                    this.gamepadRightReleaseFlag = false;
                 }
             } else {
-                if (!_rightRelease && !_gamepadRightReleaseFlag) {
-                    _gamepadRightReleaseFlag = true;
+                if (!InputManager.rightRelease && !this.gamepadRightReleaseFlag) {
+                    this.gamepadRightReleaseFlag = true;
                 }
             }
 
-            _confirmRelease = Input.GetKeyUp(ControlsConfig.GamepadConfirm);
-            _backRelease = Input.GetKeyUp(ControlsConfig.GamepadBack);
-            _menuRelease = Input.GetKeyUp(ControlsConfig.GamepadMenu);
-            _attackRelease = Input.GetKeyUp(ControlsConfig.GamepadAttack);
-            _pauseRelease = Input.GetKeyUp(ControlsConfig.GamepadPause);
-            _selectRelease = Input.GetKeyUp(ControlsConfig.GamepadSelect);
+            InputManager.confirmRelease = Input.GetKeyUp(ControlsConfig.GamepadConfirm);
+            InputManager.backRelease = Input.GetKeyUp(ControlsConfig.GamepadBack);
+            InputManager.menuRelease = Input.GetKeyUp(ControlsConfig.GamepadMenu);
+            InputManager.attackRelease = Input.GetKeyUp(ControlsConfig.GamepadAttack);
+            InputManager.pauseRelease = Input.GetKeyUp(ControlsConfig.GamepadPause);
+            InputManager.selectRelease = Input.GetKeyUp(ControlsConfig.GamepadSelect);
 
             //Set Horizontal and Vertical Axis Values
             _horizontalAxis = Input.GetAxis("Horizontal");
             _verticalAxis = Input.GetAxis("Vertical");
 
             //Set Directional Press flags
-            if (_horizontalAxis > joystickThreshold) {
-                _right = true;
-            } else if (_horizontalAxis < -joystickThreshold) {
-                _left = true;
+            if (_horizontalAxis > this.joystickThreshold) {
+                InputManager.right = true;
+            } else if (_horizontalAxis < -this.joystickThreshold) {
+                InputManager.left = true;
             } else {
-                _left = false;
-                _right = false;
+                InputManager.left = false;
+                InputManager.right = false;
             }
 
-            if (_verticalAxis > joystickThreshold) {
-                _up = true;
-            } else if (_verticalAxis < -joystickThreshold) {
-                _down = true;
+            if (_verticalAxis > this.joystickThreshold) {
+                InputManager.up = true;
+            } else if (_verticalAxis < -this.joystickThreshold) {
+                InputManager.down = true;
             } else {
-                _up = false;
-                _down = false;
+                InputManager.up = false;
+                InputManager.down = false;
             }
         }
 
         private void Keyboard() {
             //Set key flags
-            _up = Input.GetKey(ControlsConfig.KeyboardUp);
-            _left = Input.GetKey(ControlsConfig.KeyboardLeft);
-            _down = Input.GetKey(ControlsConfig.KeyboardDown);
-            _right = Input.GetKey(ControlsConfig.KeyboardRight);
-            _confirm = Input.GetKey(ControlsConfig.KeyboardConfirm);
-            _back = Input.GetKey(ControlsConfig.KeyboardBack);
-            _menu = Input.GetKey(ControlsConfig.KeyboardMenu);
-            _attack = Input.GetKey(ControlsConfig.KeyboardAttack);
-            _pause = Input.GetKey(ControlsConfig.KeyboardPause);
-            _select = Input.GetKey(ControlsConfig.KeyboardSelect);
+            InputManager.up = Input.GetKey(ControlsConfig.KeyboardUp);
+            InputManager.left = Input.GetKey(ControlsConfig.KeyboardLeft);
+            InputManager.down = Input.GetKey(ControlsConfig.KeyboardDown);
+            InputManager.right = Input.GetKey(ControlsConfig.KeyboardRight);
+            InputManager.confirm = Input.GetKey(ControlsConfig.KeyboardConfirm);
+            InputManager.back = Input.GetKey(ControlsConfig.KeyboardBack);
+            InputManager.menu = Input.GetKey(ControlsConfig.KeyboardMenu);
+            InputManager.attack = Input.GetKey(ControlsConfig.KeyboardAttack);
+            InputManager.pause = Input.GetKey(ControlsConfig.KeyboardPause);
+            InputManager.select = Input.GetKey(ControlsConfig.KeyboardSelect);
 
             //Set key press flags
-            _upPress = Input.GetKeyDown(ControlsConfig.KeyboardUp);
-            _leftPress = Input.GetKeyDown(ControlsConfig.KeyboardLeft);
-            _downPress = Input.GetKeyDown(ControlsConfig.KeyboardDown);
-            _rightPress = Input.GetKeyDown(ControlsConfig.KeyboardRight);
-            _confirmPress = Input.GetKeyDown(ControlsConfig.KeyboardConfirm);
-            _backPress = Input.GetKeyDown(ControlsConfig.KeyboardBack);
-            _menuPress = Input.GetKeyDown(ControlsConfig.KeyboardMenu);
-            _attackPress = Input.GetKeyDown(ControlsConfig.KeyboardAttack);
-            _pausePress = Input.GetKeyDown(ControlsConfig.KeyboardPause);
-            _selectPress = Input.GetKeyDown(ControlsConfig.KeyboardSelect);
+            InputManager.upPress = Input.GetKeyDown(ControlsConfig.KeyboardUp);
+            InputManager.leftPress = Input.GetKeyDown(ControlsConfig.KeyboardLeft);
+            InputManager.downPress = Input.GetKeyDown(ControlsConfig.KeyboardDown);
+            InputManager.rightPress = Input.GetKeyDown(ControlsConfig.KeyboardRight);
+            InputManager.confirmPress = Input.GetKeyDown(ControlsConfig.KeyboardConfirm);
+            InputManager.backPress = Input.GetKeyDown(ControlsConfig.KeyboardBack);
+            InputManager.menuPress = Input.GetKeyDown(ControlsConfig.KeyboardMenu);
+            InputManager.attackPress = Input.GetKeyDown(ControlsConfig.KeyboardAttack);
+            InputManager.pausePress = Input.GetKeyDown(ControlsConfig.KeyboardPause);
+            InputManager.selectPress = Input.GetKeyDown(ControlsConfig.KeyboardSelect);
 
             //Set key release flags
-            _upRelease = Input.GetKeyUp(ControlsConfig.KeyboardUp);
-            _leftRelease = Input.GetKeyUp(ControlsConfig.KeyboardLeft);
-            _downRelease = Input.GetKeyUp(ControlsConfig.KeyboardDown);
-            _rightRelease = Input.GetKeyUp(ControlsConfig.KeyboardRight);
-            _confirmRelease = Input.GetKeyUp(ControlsConfig.KeyboardConfirm);
-            _backRelease = Input.GetKeyUp(ControlsConfig.KeyboardBack);
-            _menuRelease = Input.GetKeyUp(ControlsConfig.KeyboardMenu);
-            _attackRelease = Input.GetKeyUp(ControlsConfig.KeyboardAttack);
-            _pauseRelease = Input.GetKeyUp(ControlsConfig.KeyboardPause);
-            _selectRelease = Input.GetKeyUp(ControlsConfig.KeyboardSelect);
+            InputManager.upRelease = Input.GetKeyUp(ControlsConfig.KeyboardUp);
+            InputManager.leftRelease = Input.GetKeyUp(ControlsConfig.KeyboardLeft);
+            InputManager.downRelease = Input.GetKeyUp(ControlsConfig.KeyboardDown);
+            InputManager.rightRelease = Input.GetKeyUp(ControlsConfig.KeyboardRight);
+            InputManager.confirmRelease = Input.GetKeyUp(ControlsConfig.KeyboardConfirm);
+            InputManager.backRelease = Input.GetKeyUp(ControlsConfig.KeyboardBack);
+            InputManager.menuRelease = Input.GetKeyUp(ControlsConfig.KeyboardMenu);
+            InputManager.attackRelease = Input.GetKeyUp(ControlsConfig.KeyboardAttack);
+            InputManager.pauseRelease = Input.GetKeyUp(ControlsConfig.KeyboardPause);
+            InputManager.selectRelease = Input.GetKeyUp(ControlsConfig.KeyboardSelect);
 
             //Set Horizontal and Vertical Axis Values
             float tempHor;
             float tempVer;
-            if (_left && _right) {
+            if (InputManager.left && InputManager.right) {
                 tempHor = 0;
-            } else if (_left) {
+            } else if (InputManager.left) {
                 tempHor = -1;
-            } else if (_right) {
+            } else if (InputManager.right) {
                 tempHor = 1;
             } else {
                 tempHor = 0;
             }
 
-            if (_up && _down) {
+            if (InputManager.up && InputManager.down) {
                 tempVer = 0;
-            } else if (_down) {
+            } else if (InputManager.down) {
                 tempVer = -1;
-            } else if (_up) {
+            } else if (InputManager.up) {
                 tempVer = 1;
             } else {
                 tempVer = 0;
@@ -344,14 +432,14 @@ namespace BF2D {
                 if (gamepadNames[0] != string.Empty) {
                     if (!_isGamepadConnected) {
                         _isGamepadConnected = true;
-                        _inputListener += Gamepad;
-                        _inputListener -= Keyboard;
+                        this.inputListener += Gamepad;
+                        this.inputListener -= Keyboard;
                     }
                 } else {
                     if (_isGamepadConnected) {
                         _isGamepadConnected = false;
-                        _inputListener -= Gamepad;
-                        _inputListener += Keyboard;
+                        this.inputListener -= Gamepad;
+                        this.inputListener += Keyboard;
                     }
                 }
             }
