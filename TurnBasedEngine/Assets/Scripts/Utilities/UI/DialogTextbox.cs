@@ -15,6 +15,7 @@ namespace BF2D.UI {
             public int index;
         };
 
+        [Serializable]
         private struct ResponseData
         {
             public string text;
@@ -88,8 +89,8 @@ namespace BF2D.UI {
         private const char pauseTag = 'P';
         private const char speedTag = 'S';
         private const char voiceTag = 'V';
-        private const char nameTag = 'N';
         private const char jumpTag = 'J';
+        private const char nameTag = 'N';
         private const char endTag = 'E';
         private const char responseTag = 'R';
 

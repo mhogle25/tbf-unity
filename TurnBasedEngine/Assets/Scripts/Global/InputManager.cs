@@ -162,12 +162,12 @@ namespace BF2D {
         #endregion
 
         #region Misc
-        public static bool IsGamepadConnected { get { return _isGamepadConnected; } }
-        private static bool _isGamepadConnected = false;
-        public static float HorizontalAxis { get { return _horizontalAxis; } }
-        private static float _horizontalAxis = 0;
-        public static float VerticalAxis { get { return _verticalAxis; } }
-        private static float _verticalAxis = 0;
+        public static bool IsGamepadConnected { get { return isGamepadConnected; } }
+        private static bool isGamepadConnected = false;
+        public static float HorizontalAxis { get { return horizontalAxis; } }
+        private static float horizontalAxis = 0;
+        public static float VerticalAxis { get { return verticalAxis; } }
+        private static float verticalAxis = 0;
         #endregion
 
         [SerializeField] private float joystickThreshold = 0.5f;
@@ -332,22 +332,22 @@ namespace BF2D {
             InputManager.selectRelease = Input.GetKeyUp(ControlsConfig.GamepadSelect);
 
             //Set Horizontal and Vertical Axis Values
-            _horizontalAxis = Input.GetAxis("Horizontal");
-            _verticalAxis = Input.GetAxis("Vertical");
+            InputManager.horizontalAxis = Input.GetAxis("Horizontal");
+            InputManager.verticalAxis = Input.GetAxis("Vertical");
 
             //Set Directional Press flags
-            if (_horizontalAxis > this.joystickThreshold) {
+            if (InputManager.horizontalAxis > this.joystickThreshold) {
                 InputManager.right = true;
-            } else if (_horizontalAxis < -this.joystickThreshold) {
+            } else if (InputManager.horizontalAxis < -this.joystickThreshold) {
                 InputManager.left = true;
             } else {
                 InputManager.left = false;
                 InputManager.right = false;
             }
 
-            if (_verticalAxis > this.joystickThreshold) {
+            if (InputManager.verticalAxis > this.joystickThreshold) {
                 InputManager.up = true;
-            } else if (_verticalAxis < -this.joystickThreshold) {
+            } else if (InputManager.verticalAxis < -this.joystickThreshold) {
                 InputManager.down = true;
             } else {
                 InputManager.up = false;
@@ -421,8 +421,8 @@ namespace BF2D {
                 tempVer *= (Mathf.Sqrt(2) / 2);
             }
 
-            _horizontalAxis = tempHor;
-            _verticalAxis = tempVer;
+            InputManager.horizontalAxis = tempHor;
+            InputManager.verticalAxis = tempVer;
         }
 
         private void GamepadConnected() {
@@ -430,14 +430,14 @@ namespace BF2D {
             string[] gamepadNames = Input.GetJoystickNames();
             if (gamepadNames.Length > 0) {
                 if (gamepadNames[0] != string.Empty) {
-                    if (!_isGamepadConnected) {
-                        _isGamepadConnected = true;
+                    if (!InputManager.isGamepadConnected) {
+                        InputManager.isGamepadConnected = true;
                         this.inputListener += Gamepad;
                         this.inputListener -= Keyboard;
                     }
                 } else {
-                    if (_isGamepadConnected) {
-                        _isGamepadConnected = false;
+                    if (InputManager.isGamepadConnected) {
+                        InputManager.isGamepadConnected = false;
                         this.inputListener -= Gamepad;
                         this.inputListener += Keyboard;
                     }
