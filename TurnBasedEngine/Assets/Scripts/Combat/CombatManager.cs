@@ -2,59 +2,39 @@
 using System;
 using System.Collections.Generic;
 using BF2D;
-using DataStructures.PriorityQueue;
-
-public class CombatManager : MonoBehaviour
+namespace BF2D.TurnBased
 {
-    public class ComboManager
+    public class CombatManager : MonoBehaviour
     {
-        [Serializable]
-        private class KeystrokeGraph
+        /// <summary>
+        /// Static reference to the last instantiated CombatManager
+        /// </summary>
+        public static CombatManager LastInstance { get { return lastInstance; } }
+        private static CombatManager lastInstance = null;
+
+        [SerializeField] private ComboManager comboManager = null;
+
+        private void Awake()
         {
-            [Serializable]
-            private struct Keystroke
+            CombatManager.lastInstance = this;
+        }
+
+        private void Update()
+        {
+
+        }
+
+        private void OnDestroy()
+        {
+            if (CombatManager.LastInstance != null)
             {
-                public InputKey inputKey;
-                public int frames;
-                public object prereq;
-                public List<Keystroke> next;
+                Destroy(CombatManager.LastInstance.gameObject);
             }
-
-            Keystroke root;
         }
 
-        private List<KeystrokeGraph> combos = new List<KeystrokeGraph>();
-
-
-    }
-
-    //Singleton Reference
-    public static CombatManager Instance { get { return instance; } }
-    private static CombatManager instance = null;
-
-    private void Awake() {
-        //Setup of Monobehaviour Singleton
-        if (CombatManager.instance != this && CombatManager.instance != null) {
-            Destroy(CombatManager.instance.gameObject);
-        }
-        CombatManager.instance = this;
-    }
-
-    private void Update()
-    {
-        
-    }
-
-    private void OnDestroy()
-    {
-        if (CombatManager.instance != null)
+        private void InitializeCombat()
         {
-            Destroy(CombatManager.instance.gameObject);
+
         }
-    }
-
-    private void InitializeCombat()
-    {
-
     }
 }

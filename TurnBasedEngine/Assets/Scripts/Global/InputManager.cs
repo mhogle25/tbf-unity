@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -106,6 +107,11 @@ namespace BF2D {
                 default:
                     throw new ArgumentException("Input Key was null or invalid");
             }
+        }
+
+        public static bool KeyPress()
+        {
+            return InputManager.upPress || InputManager.leftPress || InputManager.downPress || InputManager.rightPress || InputManager.confirmPress || InputManager.backPress || InputManager.attackPress || InputManager.menuPress || InputManager.pausePress || InputManager.selectPress;
         }
         #endregion
 

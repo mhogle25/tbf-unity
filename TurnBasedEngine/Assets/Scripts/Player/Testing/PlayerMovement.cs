@@ -28,7 +28,8 @@ public class PlayerMovement : MonoBehaviour
 
         //this.state += Move;
         this.state += Listen;
-    }
+
+    }   
 
     private void Update() {
         if (this.state != null)
