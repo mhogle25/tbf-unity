@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using BF2D;
+using System.Reflection;
 
 public struct ComboAction
 {
@@ -65,20 +66,22 @@ public class ComboManager : MonoBehaviour
     }
 
     private List<Combo> combos = new List<Combo>();
-    private Dictionary<string, Action> comboActions = new Dictionary<string, Action>
+    private Dictionary<string, Func<string, int>> comboActions = new Dictionary<string, Func<string, int>>
     {
         { 
             "foo",
-            () =>
+            (x) =>
             {
                 Debug.Log("foo");
+                return 1;
             }
         },
         {
             "bar",
-            () =>
+            (x) =>
             {
                 Debug.Log("bar");
+                return 1;
             }
         }
     };
@@ -99,6 +102,8 @@ public class ComboManager : MonoBehaviour
 
     public void Update()
     {
-        
+        MethodInfo mi = this.GetType().GetMethod("");
     }
+
+    private void Foo()
 }
