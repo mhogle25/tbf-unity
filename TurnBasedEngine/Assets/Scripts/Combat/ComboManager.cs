@@ -72,15 +72,15 @@ public class ComboManager : MonoBehaviour
             "foo",
             (x) =>
             {
-                Debug.Log("foo");
-                return 1;
+                Debug.Log("foo" + x);
+                return 0;
             }
         },
         {
             "bar",
             (x) =>
             {
-                Debug.Log("bar");
+                Debug.Log("bar" + x);
                 return 1;
             }
         }
@@ -100,10 +100,9 @@ public class ComboManager : MonoBehaviour
         }
     }
 
-    public void Update()
+    public void Start()
     {
-        MethodInfo mi = this.GetType().GetMethod("");
+        int x = comboActions["foo"]("test");
+        Debug.Log(x);
     }
-
-    private void Foo()
 }
