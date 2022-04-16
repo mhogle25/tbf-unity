@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.Animations;
 
 namespace BF2D {
-
     public class InputManager : MonoBehaviour {
         #region Key
         public static bool Up { get { return InputManager.up; } }

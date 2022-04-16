@@ -4,11 +4,6 @@ using System.Collections.Generic;
 using BF2D;
 using System.Reflection;
 
-public struct ComboAction
-{
-
-}
-
 public class ComboManager : MonoBehaviour
 {
     [Serializable]
@@ -35,7 +30,9 @@ public class ComboManager : MonoBehaviour
         public string Name { get { return this.name; } }
         private string name = string.Empty;
 
-        private object action = null;
+        public string actionType;
+        public object action;
+
         private List<Keystroke> keystrokes = new List<Keystroke>();
         private int keystrokeIndex = 0;
         private int frameIndex = 0;
@@ -51,7 +48,7 @@ public class ComboManager : MonoBehaviour
 
             if (this.keystrokeIndex > this.keystrokes.Count - 1)
             {
-                string a = action.ToString();
+                string a = this.action.ToString();
                 return a;
             }
 
@@ -60,7 +57,7 @@ public class ComboManager : MonoBehaviour
                 ++this.keystrokeIndex;
             }
 
-            frameIndex++;
+            this.frameIndex++;
             return null;
         }
     }
@@ -88,7 +85,7 @@ public class ComboManager : MonoBehaviour
 
     public void LoadCombos(string json)
     {
-        combos.Clear();
+        this.combos.Clear();
         try
         {
             this.combos = JsonUtility.FromJson<List<Combo>>(json);
@@ -102,7 +99,7 @@ public class ComboManager : MonoBehaviour
 
     public void Start()
     {
-        int x = comboActions["foo"]("test");
+        int x = this.comboActions["foo"]("test");
         Debug.Log(x);
     }
 }
