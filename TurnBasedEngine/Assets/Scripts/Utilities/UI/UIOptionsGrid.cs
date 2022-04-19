@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using BF2D.Enums;
 
 namespace BF2D.UI
 {
@@ -62,8 +63,8 @@ namespace BF2D.UI
 
         private UIOption[,] grid;
         private int count = 0;
-        private IntVector2 cursorPosition = new IntVector2(0, 0);
-        private IntVector2 head = new IntVector2(0, 0);
+        private Vector2Int cursorPosition = new Vector2Int(0, 0);
+        private Vector2Int head = new Vector2Int(0, 0);
 
         private void Awake()
         {
@@ -169,8 +170,8 @@ namespace BF2D.UI
 
                 if (this.count < 1)
                 {
-                    this.cursorPosition = new IntVector2(0, 0);
-                    this.head = new IntVector2(0, 0);
+                    this.cursorPosition = new Vector2Int(0, 0);
+                    this.head = new Vector2Int(0, 0);
                     return true;
                 }
 
@@ -258,8 +259,8 @@ namespace BF2D.UI
 
                 //Reset all private members that are dependent on grid elements
                 this.count = 0;
-                this.cursorPosition = new IntVector2(0, 0);
-                this.head = new IntVector2(0, 0);
+                this.cursorPosition = new Vector2Int(0, 0);
+                this.head = new Vector2Int(0, 0);
             }
         }
 
@@ -331,7 +332,7 @@ namespace BF2D.UI
         /// Navigate through the grid
         /// </summary>
         /// <param name="direction">The direction of navigation</param>
-        public void Navigate(MoveDirection direction)
+        public void Navigate(InputDirection direction)
         {
             if (this.interactable && this.gameObject.activeSelf && this.count > 0)
             {
@@ -340,16 +341,16 @@ namespace BF2D.UI
 
                 switch (direction)
                 {
-                    case MoveDirection.Left:
+                    case InputDirection.Left:
                         while (this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
-                    case MoveDirection.Up:
+                    case InputDirection.Up:
                         while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)] == null);
                         break;
-                    case MoveDirection.Right:
+                    case InputDirection.Right:
                         while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
-                    case MoveDirection.Down:
+                    case InputDirection.Down:
                         while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)] == null);
                         break;
                     default:
@@ -407,9 +408,9 @@ namespace BF2D.UI
             return field;
         }
 
-        private IntVector2 Increment(IntVector2 vector)
+        private Vector2Int Increment(Vector2Int vector)
         {
-            IntVector2 v = vector;
+            Vector2Int v = vector;
             switch (this.instantiationAxis)
             {
                 case Axis.Horizontal:
@@ -456,9 +457,9 @@ namespace BF2D.UI
 
         }
 
-        private IntVector2 Decrement(IntVector2 vector)
+        private Vector2Int Decrement(Vector2Int vector)
         {
-            IntVector2 v = vector;
+            Vector2Int v = vector;
             switch (this.instantiationAxis)
             {
                 case Axis.Horizontal:
@@ -488,7 +489,7 @@ namespace BF2D.UI
             return v;
         }
 
-        private void SetCursorAtPosition(IntVector2 cursorPosition, bool value)
+        private void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
         {
             this.grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
         }

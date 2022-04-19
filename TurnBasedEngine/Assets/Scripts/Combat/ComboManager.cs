@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using BF2D;
 using System.Reflection;
+using BF2D.Enums;
 
 public class ComboManager : MonoBehaviour
 {
@@ -12,16 +13,16 @@ public class ComboManager : MonoBehaviour
         [Serializable]
         private class Keystroke
         {
-            private List<InputKey> inputKeys = new List<InputKey>();
+            private List<InputButton> inputKeys = new List<InputButton>();
             public float Timer { get { return this.timer; } }
             private float timer = 0f;
 
             public bool Check()
             {
                 bool value = true;
-                foreach (InputKey key in this.inputKeys)
+                foreach (InputButton key in this.inputKeys)
                 {
-                    value = value && InputManager.KeyPress(key);
+                    value = value && InputManager.GetButtonPress(key);
                 }
                 return value;
             }

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using BF2D.Enums;
 
 namespace BF2D.UI
 {
@@ -53,7 +54,7 @@ namespace BF2D.UI
         }
 
         private Action state = null;
-        private MoveDirection direction = MoveDirection.Left;
+        private InputDirection direction = InputDirection.Left;
         private float timeAccumulator = 0f;
 
         private void Awake()
@@ -63,6 +64,7 @@ namespace BF2D.UI
 
         private void Update()
         {
+
             if (this.state != null)
             {
                 this.state();
@@ -91,24 +93,24 @@ namespace BF2D.UI
 
         private void StateDirectionInputListener()
         {
-            if (InputManager.LeftPress)
+            if (InputManager.Left)
             {
-                DirectionalCall(MoveDirection.Left);
+                DirectionalCall(InputDirection.Left);
             }
 
-            if (InputManager.UpPress)
+            if (InputManager.Up)
             {
-                DirectionalCall(MoveDirection.Up);
+                DirectionalCall(InputDirection.Up);
             }
 
-            if (InputManager.RightPress)
+            if (InputManager.Right)
             {
-                DirectionalCall(MoveDirection.Right);
+                DirectionalCall(InputDirection.Right);
             }
 
-            if (InputManager.DownPress)
+            if (InputManager.Down)
             {
-                DirectionalCall(MoveDirection.Down);
+                DirectionalCall(InputDirection.Down);
             }
         }
 
@@ -142,7 +144,7 @@ namespace BF2D.UI
             }
         }
 
-        private void DirectionalCall(MoveDirection direction)
+        private void DirectionalCall(InputDirection direction)
         {
             this.optionsGrid.Navigate(direction);
             this.direction = direction;
@@ -150,17 +152,17 @@ namespace BF2D.UI
             this.state = StateDelay;
         }
 
-        private bool InputReleaseFromDirection(MoveDirection moveDirection)
+        private bool InputReleaseFromDirection(InputDirection InputDirection)
         {
-            switch (moveDirection)
+            switch (InputDirection)
             {
-                case MoveDirection.Left:
+                case InputDirection.Left:
                     return !InputManager.Left;
-                case MoveDirection.Up:
+                case InputDirection.Up:
                     return !InputManager.Up;
-                case MoveDirection.Right:
+                case InputDirection.Right:
                     return !InputManager.Right;
-                case MoveDirection.Down:
+                case InputDirection.Down:
                     return !InputManager.Down;
                 default:
                     Debug.LogError("[UIOptionsGridController] Invalid move direction");
