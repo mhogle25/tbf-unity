@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
 using Newtonsoft.Json;
+using BF2D.Enums;
 
 namespace BF2D.UI {
     public class DialogTextbox : UIUtility {
@@ -491,7 +492,7 @@ namespace BF2D.UI {
         {
             try
             {
-                object rd = JsonConvert.DeserializeObject(json);
+                object rd = JsonConvert.DeserializeObject<object>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
 
             } 
             catch (Exception x)
@@ -508,7 +509,7 @@ namespace BF2D.UI {
             List<ResponseData> responseData;
             try
             {
-                responseData = JsonConvert.DeserializeObject<List<ResponseData>>(json);
+                responseData = JsonConvert.DeserializeObject<List<ResponseData>>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
             }
             catch (Exception x)
             {
@@ -538,13 +539,16 @@ namespace BF2D.UI {
                     this.responseOptionsGrid.Add(new UIOptionData
                     {
                         text = option.text,
-                        confirmAction = () =>
+                        actions = new InputButtonCollection<Action>
                         {
-                            if (this.responseOptionEvent != null)
+                            [InputButton.Confirm] = () =>
                             {
-                                this.responseOptionEvent.Invoke(option.action.ToString());
+                                if (this.responseOptionEvent != null)
+                                {
+                                    this.responseOptionEvent.Invoke(option.action.ToString());
+                                }
+                                FinalizeResponse(option.dialogIndex);
                             }
-                            FinalizeResponse(option.dialogIndex);
                         }
                     });
                 } 

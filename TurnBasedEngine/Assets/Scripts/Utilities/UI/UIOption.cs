@@ -3,16 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using TMPro;
+using BF2D.Enums;
+using BF2D.Attributes;
 
 namespace BF2D.UI {
     public struct UIOptionData
     {
         public string text;
         public Sprite icon;
-        public Action confirmAction;
-        public Action menuAction;
-        public Action attackAction;
-        public Action backAction;
+        public InputButtonCollection<Action> actions;
     };
 
     public class UIOption : MonoBehaviour {
@@ -22,97 +21,110 @@ namespace BF2D.UI {
         [SerializeField] private Image image = null;
         [Tooltip("Reference to the Image component of the option's cursor (required)")]
         [SerializeField] private Image cursor = null;
+
+        public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
+        [SerializeField] private bool confirmEnabled = true;
         [Tooltip("The actions that will be called on confirm")]
         [SerializeField] private UnityEvent confirmEvent = new UnityEvent();
-        [Tooltip("The actions that will be called on confirm")]
-        [SerializeField] private UnityEvent menuEvent = new UnityEvent();
-        [Tooltip("The actions that will be called on confirm")]
-        [SerializeField] private UnityEvent attackEvent = new UnityEvent();
-        [Tooltip("The actions that will be called on confirm")]
+        public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
+        [SerializeField] private bool backEnabled = true;
+        [Tooltip("The actions that will be called on back")]
         [SerializeField] private UnityEvent backEvent = new UnityEvent();
+        public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
+        [SerializeField] private bool menuEnabled = true;
+        [Tooltip("The actions that will be called on menu")]
+        [SerializeField] private UnityEvent menuEvent = new UnityEvent();
+        public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
+        [SerializeField] private bool attackEnabled = true;
+        [Tooltip("The actions that will be called on attack")]
+        [SerializeField] private UnityEvent attackEvent = new UnityEvent();
+        public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
+        [SerializeField] private bool pauseEnabled = true;
+        [Tooltip("The actions that will be performed on pause")]
+        [SerializeField] private UnityEvent pauseEvent = new UnityEvent();
+        public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
+        [SerializeField] private bool selectEnabled = true;
+        [Tooltip("The actions that will be performed on select")]
+        [SerializeField] private UnityEvent selectEvent = new UnityEvent();
+
+        private UIOptionData data;
 
         /// <summary>
         /// Sets up an instantiated option
         /// </summary>
-        /// <param name="optionData">The data in the option</param>
+        /// <param name="this.data">The data in the option</param>
         /// <returns>True if setup is successful, otherwise returns false</returns>
         public bool Setup(UIOptionData optionData) {
-            if (optionData.text != null) {
-                this.textMesh.text = optionData.text;
+            this.data = optionData;
+
+            if (this.data.text != null) {
+                this.textMesh.text = this.data.text;
             } else {
-                if (this.textMesh != null)
+                if (this.textMesh.text == null)
                 {
                     this.textMesh.enabled = false;
                 }
             }
 
-            if (optionData.icon != null) {
-                this.image.sprite = optionData.icon;
+            if (this.data.icon != null) {
+                this.image.sprite = this.data.icon;
             } else {
-                if (this.image != null)
+                if (this.image.sprite == null)
                 {
                     this.image.enabled = false;
                 }
             }
 
-            if (optionData.confirmAction != null)
+            foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
             {
-                this.confirmEvent.AddListener(() =>
+                if (this.data.actions[inputButton] != null)
                 {
-                    optionData.confirmAction();
-                });
-            }
-
-            if (optionData.menuAction != null)
-            {
-                this.menuEvent.AddListener(() =>
-                {
-                    optionData.menuAction();
-                });
-            }
-
-            if (optionData.attackAction != null)
-            {
-                this.attackEvent.AddListener(() =>
-                {
-                    optionData.attackAction();
-                });
-            }
-
-            if (optionData.backAction != null)
-            {
-                this.backEvent.AddListener(() =>
-                {
-                    optionData.backAction();
-                });
+                    GetEvent(inputButton).AddListener(() =>
+                    {
+                        this.data.actions[inputButton]();
+                    });
+                }
             }
 
             return true;
         }
 
         public void SetCursor(bool status) {
-            //Debug.Log(gameObject.name);
             this.cursor.enabled = status;
         }
 
-        public void ConfirmInvoke()
+        public void InvokeEvent(InputButton inputButton)
         {
-            this.confirmEvent.Invoke();
+            if (GetEvent(inputButton) != null && EventEnabled(inputButton))
+                GetEvent(inputButton).Invoke();
         }
 
-        public void MenuInvoke()
+        private UnityEvent GetEvent(InputButton inputButton)
         {
-            this.menuEvent.Invoke();
+            return inputButton switch
+            {
+                InputButton.Confirm => this.confirmEvent,
+                InputButton.Back => this.backEvent,
+                InputButton.Menu => this.menuEvent,
+                InputButton.Attack => this.attackEvent,
+                InputButton.Pause => this.pauseEvent,
+                InputButton.Select => this.selectEvent,
+                _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")
+            };
         }
 
-        public void AttackInvoke()
+        private bool EventEnabled(InputButton inputButton)
         {
-            this.attackEvent.Invoke();
-        }
-
-        public void BackInvoke()
-        {
-            this.backEvent.Invoke();
+            return inputButton switch
+            {
+                InputButton.Confirm => this.confirmEnabled,
+                InputButton.Back => this.backEnabled,
+                InputButton.Menu => this.menuEnabled,
+                InputButton.Attack => this.attackEnabled,
+                InputButton.Pause => this.pauseEnabled,
+                InputButton.Select => this.selectEnabled,
+                _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")
+            };
         }
     }
 }

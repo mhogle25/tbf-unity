@@ -20,6 +20,31 @@ namespace BF2D.Enums
         Right
     }
 
+    public class InputDirectionCollection<T>
+    {
+        private T[] collection;
+        private readonly int enumSize = 0;
+
+        public InputDirectionCollection()
+        {
+            enumSize = Enum.GetValues(typeof(InputDirection)).Length;
+            collection = new T[enumSize];
+        }
+
+        public T this[InputDirection index]
+        {
+            get
+            {
+                return this.collection[(int)index];
+            }
+
+            set
+            {
+                this.collection[(int)index] = value;
+            }
+        }
+    }
+
     public class InputDirectionSelector : MonoBehaviour
     {
         public InputDirection inputDirection;

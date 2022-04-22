@@ -1,7 +1,6 @@
-
 using UnityEngine;
 
-public class UIUtility : MonoBehaviour
+public abstract class UIUtility : MonoBehaviour
 {
     public virtual bool Interactable {
         get 

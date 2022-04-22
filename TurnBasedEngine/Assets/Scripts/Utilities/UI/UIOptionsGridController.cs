@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using BF2D.Enums;
 
 namespace BF2D.UI
@@ -72,22 +71,32 @@ namespace BF2D.UI
 
             if (InputManager.ConfirmPress)
             {
-                this.optionsGrid.ConfirmInvoke();
+                this.optionsGrid.InvokeEvent(InputButton.Confirm);
             }
 
             if (InputManager.MenuPress)
             {
-                this.optionsGrid.MenuInvoke();
+                this.optionsGrid.InvokeEvent(InputButton.Menu);
             }
 
             if (InputManager.AttackPress)
             {
-                this.optionsGrid.AttackInvoke();
+                this.optionsGrid.InvokeEvent(InputButton.Attack);
             }
 
             if (InputManager.BackPress)
             {
-                this.optionsGrid.BackInvoke();
+                this.optionsGrid.InvokeEvent(InputButton.Back);
+            }
+
+            if (InputManager.PausePress)
+            {
+                this.OptionsGrid.InvokeEvent(InputButton.Pause);
+            }
+
+            if (InputManager.SelectPress)
+            {
+                this.OptionsGrid.InvokeEvent(InputButton.Select);
             }
         }
 

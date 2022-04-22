@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using System;
 using BF2D.Enums;
+using BF2D.Attributes;
+using UnityEngine.UI;
 
 namespace BF2D.UI
 {
@@ -10,26 +12,36 @@ namespace BF2D.UI
         [Header("Grid")]
         [SerializeField] private UIOption optionPrefab = null;
         [Tooltip("The container for grid options")]
-        [SerializeField] private RectTransform container = null;
+        [SerializeField] private LayoutGroup container = null;
         [Tooltip("Determines the direction that elements will be populated in")]
         [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
         [SerializeField] private int gridWidth = 1;
         [SerializeField] private int gridHeight = 1;
-        [Tooltip("Enable/disable use of the confirm button")]
-        [SerializeField] private bool confirmEnabled = true;
-        [Tooltip("Enable/disable use of the menu button")]
-        [SerializeField] private bool menuEnabled = true;
-        [Tooltip("Enable/disable use of the attack button")]
-        [SerializeField] private bool attackEnabled = true;
-        [Tooltip("Enable/disable use of the back button")]
-        [SerializeField] private bool backEnabled = true;
-
-        [Header("Audio")]
         [SerializeField] private AudioSource navigateAudioSource = null;
+        [Tooltip("Enable/disable use of the confirm button with the grid")]
+        [SerializeField] private bool confirmEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(confirmEnabled))]
         [SerializeField] private AudioSource confirmAudioSource = null;
-        [SerializeField] private AudioSource menuAudioSource = null;
-        [SerializeField] private AudioSource attackAudioSource = null;
+        [Tooltip("Enable/disable use of the back button with the grid")]
+        [SerializeField] private bool backEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(backEnabled))]
         [SerializeField] private AudioSource backAudioSource = null;
+        [Tooltip("Enable/disable use of the menu button with the grid")]
+        [SerializeField] private bool menuEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(menuEnabled))]
+        [SerializeField] private AudioSource menuAudioSource = null;
+        [Tooltip("Enable/disable use of the attack button with the grid")]
+        [SerializeField] private bool attackEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(attackEnabled))]
+        [SerializeField] private AudioSource attackAudioSource = null;
+        [Tooltip("Enable/disable use of the pause button with the grid")]
+        [SerializeField] private bool pauseEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(pauseEnabled))]
+        [SerializeField] private AudioSource pauseAudioSource = null;
+        [Tooltip("Enable/disable use of the select button with the grid")]
+        [SerializeField] private bool selectEnabled = true;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(selectEnabled))]
+        [SerializeField] private AudioSource selectAudioSource = null;
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -49,6 +61,11 @@ namespace BF2D.UI
         /// <summary>
         /// Enable/disable use of the menu button
         /// </summary>
+        public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
+
+        /// <summary>
+        /// Enable/disable use of the menu button
+        /// </summary>
         public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
         
         /// <summary>
@@ -59,7 +76,12 @@ namespace BF2D.UI
         /// <summary>
         /// Enable/disable use of the menu button
         /// </summary>
-        public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
+        public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
+
+        /// <summary>
+        /// Enable/disable use of the menu button
+        /// </summary>
+        public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 
         private UIOption[,] grid;
         private int count = 0;
@@ -130,7 +152,7 @@ namespace BF2D.UI
                 //Create and set up the added element
                 option = Instantiate(this.optionPrefab);
                 this.grid[this.head.x, this.head.y] = option;
-                option.transform.SetParent(this.container);
+                option.transform.SetParent(this.container.transform);
                 option.transform.localScale = Vector3.one;
                 option.Setup(optionData);
 
@@ -280,51 +302,13 @@ namespace BF2D.UI
             }
         }
 
-        /// <summary>
-        /// Call the confirm event of the selected option
-        /// </summary>
-        public void ConfirmInvoke()
+        public void InvokeEvent(InputButton inputButton)
         {
-            if (this.interactable && this.gameObject.activeSelf && this.confirmEnabled && this.count > 0)
-            {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].ConfirmInvoke();
-                PlayAudioSource(this.confirmAudioSource);
-            }
-        }
 
-        /// <summary>
-        /// Call the menu event of the selected option
-        /// </summary>
-        public void MenuInvoke()
-        {
-            if (this.interactable && this.gameObject.activeSelf && this.menuEnabled && this.count > 0)
+            if (this.interactable && this.gameObject.activeSelf && GetButtonEnabled(inputButton) && this.count > 0)
             {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].MenuInvoke();
-                PlayAudioSource(this.menuAudioSource);
-            }
-        }
-
-        /// <summary>
-        /// Call the attack event of the selected option
-        /// </summary>
-        public void AttackInvoke()
-        {
-            if (this.interactable && this.gameObject.activeSelf && this.attackEnabled && this.count > 0)
-            {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].AttackInvoke();
-                PlayAudioSource(this.attackAudioSource);
-            }
-        }
-
-        /// <summary>
-        /// Call the back event of the selected option
-        /// </summary>
-        public void BackInvoke()
-        {
-            if (this.interactable && this.gameObject.activeSelf && this.backEnabled && this.count > 0)
-            {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].AttackInvoke();
-                PlayAudioSource(this.backAudioSource);
+                this.grid[this.cursorPosition.x, this.cursorPosition.y].InvokeEvent(inputButton);
+                PlayAudioSource(GetAudioSource(inputButton));
             }
         }
 
@@ -492,6 +476,34 @@ namespace BF2D.UI
         private void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
         {
             this.grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
+        }
+
+        private AudioSource GetAudioSource(InputButton inputButton)
+        {
+            return inputButton switch
+            {
+                InputButton.Confirm => this.confirmAudioSource,
+                InputButton.Back => this.backAudioSource,
+                InputButton.Menu => this.menuAudioSource,
+                InputButton.Attack => this.attackAudioSource,
+                InputButton.Pause => this.pauseAudioSource,
+                InputButton.Select => this.selectAudioSource,
+                _ => throw new ArgumentException("[UIOptionsGrid] InputButton was null or invalid")
+            };
+        }
+
+        private bool GetButtonEnabled(InputButton inputButton)
+        {
+            return inputButton switch
+            {
+                InputButton.Confirm => this.confirmEnabled,
+                InputButton.Back => this.backEnabled,
+                InputButton.Menu => this.menuEnabled,
+                InputButton.Attack => this.attackEnabled,
+                InputButton.Pause => this.pauseEnabled,
+                InputButton.Select => this.selectEnabled,
+                _ => throw new ArgumentException("[UIOptionsGrid] InputButton was null or invalid")
+            };
         }
         #endregion
     }
