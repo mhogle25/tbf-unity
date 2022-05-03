@@ -9,6 +9,7 @@ using BF2D.Attributes;
 namespace BF2D.UI {
     public struct UIOptionData
     {
+        public string name;
         public string text;
         public Sprite icon;
         public InputButtonCollection<Action> actions;
@@ -52,9 +53,10 @@ namespace BF2D.UI {
         /// <summary>
         /// Sets up an instantiated option
         /// </summary>
-        /// <param name="this.data">The data in the option</param>
+        /// <param name="optionData">The data in the option</param>
         /// <returns>True if setup is successful, otherwise returns false</returns>
         public bool Setup(UIOptionData optionData) {
+            this.gameObject.name = optionData.name;
             this.data = optionData;
 
             if (this.data.text != null) {
@@ -95,8 +97,8 @@ namespace BF2D.UI {
 
         public void InvokeEvent(InputButton inputButton)
         {
-            if (GetEvent(inputButton) != null && EventEnabled(inputButton))
-                GetEvent(inputButton).Invoke();
+            if (EventEnabled(inputButton))
+                GetEvent(inputButton)?.Invoke();
         }
 
         private UnityEvent GetEvent(InputButton inputButton)

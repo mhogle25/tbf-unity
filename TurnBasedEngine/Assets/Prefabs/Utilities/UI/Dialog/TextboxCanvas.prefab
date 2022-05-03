@@ -1393,7 +1393,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
 --- !u!114 &5812303956886749162
 MonoBehaviour:
@@ -1447,6 +1447,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f18f65ca372bb4d9ce8b470b7d5971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactable: 1
   textbox: {fileID: 5812303957190546870}
   textField: {fileID: 5812303956115522650}
   nametag: {fileID: 1596405682}
@@ -1456,7 +1457,22 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 54c9d60ee55c28240976fba472ae712b, type: 3}
   DefaultMessageSpeed: 0.05
   MessageInterrupt: 1
-  responseOptionsGrid: {fileID: 1049449389}
+  onEndOfDialog:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5812303957190546873}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  responseOptionsGridController: {fileID: 5812303956420232517}
   prereqConditionChecker: {fileID: 0}
   responseOptionEvent:
     m_PersistentCalls:
@@ -1606,7 +1622,7 @@ GameObject:
   - component: {fileID: 4132202981359029722}
   - component: {fileID: 2521418758960133158}
   - component: {fileID: 1049449389}
-  - component: {fileID: 1203133992}
+  - component: {fileID: 5812303956420232517}
   m_Layer: 5
   m_Name: Options
   m_TagString: Untagged
@@ -1655,11 +1671,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  interactable: 1
   optionPrefab: {fileID: 1012626334224394726, guid: b0c93a6c35a2de14695126c69f6eeb97, type: 3}
   container: {fileID: 3558286292222747639}
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 1
+  navigateAudioSource: {fileID: 388629964}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 1602362313}
   backEnabled: 0
@@ -1672,8 +1690,7 @@ MonoBehaviour:
   pauseAudioSource: {fileID: 4386448929879551024}
   selectEnabled: 0
   selectAudioSource: {fileID: 25910084711456097}
-  navigateAudioSource: {fileID: 388629964}
---- !u!114 &1203133992
+--- !u!114 &5812303956420232517
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1682,7 +1699,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6509254057678927013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4aba8a490154465e86e81c6bf67c743, type: 3}
+  m_Script: {fileID: 11500000, guid: 9cbd7a6097ddebb4587b3d3cb6ba73d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   optionsGrid: {fileID: 1049449389}

@@ -1,38 +1,54 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using BF2D;
 
-namespace BF2D.TurnBased
+namespace BF2D.Combat
 {
     public class CombatManager : MonoBehaviour
     {
-        public static CombatManager Instance { get { return instance; } }
-        private static CombatManager instance = null;
-
+        public ComboManager ComboManagerComponent { get { return comboManager; } }
         [SerializeField] private ComboManager comboManager = null;
-        private Action state;
+        public StatsPreviewController StatsPreviewControllerComponent { get { return this.statsPreviewController; } }
+        [SerializeField] private StatsPreviewController statsPreviewController = null;
 
-        private void Awake()
-        {
-            //Setup of Monobehaviour Singleton
-            if (CombatManager.instance != this && CombatManager.instance != null)
+        private List<CombatController> combatControllers = new List<CombatController>();
+
+        /*
+        public CombatState State { 
+            set 
             {
-                Destroy(CombatManager.instance.gameObject);
-            }
-            CombatManager.instance = this;
+                this.state?.End();
+                this.state = value;
+                this.state.Start();
+            } 
         }
+
+        private CombatState state = null;
+        private CSPlayerSelection statePlayerSelection = null;
+
+        public CombatManager()
+        {
+            this.statePlayerSelection = new CSPlayerSelection(this);
+        }
+        */
 
         private void Update()
         {
-            if (state != null)
-            {
-                state();
-            }
+            //this.state?.Update();
         }
 
-        public void InitializeCombat()
+        private void InitializeCombat()
         {
+            //this.state = this.statePlayerSelection;
+        }
+
+        private void UpdateCombatControllers()
+        {
+            this.combatControllers = new List<CombatController>
+            {
+                comboManager,
+                statsPreviewController
+            };
 
         }
     }

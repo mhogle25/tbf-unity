@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 
-public class PlayerStats : Stats
+namespace BF2D.Combat
 {
-    public Job Profession { get { return _profession; } }
-    private Job _profession = null;
-    public int Experience { get { return _experience; } }
-    private int _experience = 0;
-    public int Level { get { return _level; } }
-    private int _level = 0;
-    public List<Item> Inventory { get { return _inventory; } }
-    private List<Item> _inventory = new List<Item>();
+    public class PlayerStats : Stats
+    {
+        public Job Profession { get { return this.profession; } }
+        private Job profession = null;
+        public int Experience { get { return this.experience; } }
+        private int experience = 0;
+        public int Level { get { return this.level; } }
+        private int level = 0;
+        public List<Item> Inventory { get { return this.inventory; } }
+        private List<Item> inventory = new List<Item>();
 
+    }
 }

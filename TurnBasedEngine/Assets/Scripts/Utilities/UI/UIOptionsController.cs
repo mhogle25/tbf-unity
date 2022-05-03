@@ -4,7 +4,7 @@ using BF2D.Enums;
 
 namespace BF2D.UI
 {
-    public class UIOptionsGridController : MonoBehaviour
+    public class UIOptionsController : MonoBehaviour
     {
 
         [SerializeField] private UIOptionsGrid optionsGrid = null;

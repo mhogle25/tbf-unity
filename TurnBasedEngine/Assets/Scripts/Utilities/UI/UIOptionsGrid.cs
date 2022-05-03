@@ -4,6 +4,7 @@ using System;
 using BF2D.Enums;
 using BF2D.Attributes;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace BF2D.UI
 {
@@ -16,7 +17,22 @@ namespace BF2D.UI
         [Tooltip("Determines the direction that elements will be populated in")]
         [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
         [SerializeField] private int gridWidth = 1;
-        [SerializeField] private int gridHeight = 1;
+        [SerializeField] private int gridHeight = 1; 
+
+        public OnNavigate OnNavigateEvent
+        {
+            get
+            {
+                return this.onNavigateEvent;
+            }
+        }
+
+        [Serializable]
+        public class OnNavigate : UnityEvent<string> { }
+        [SerializeField]
+        private OnNavigate onNavigateEvent = new OnNavigate();
+
+
         [SerializeField] private AudioSource navigateAudioSource = null;
         [Tooltip("Enable/disable use of the confirm button with the grid")]
         [SerializeField] private bool confirmEnabled = true;
@@ -85,6 +101,7 @@ namespace BF2D.UI
 
         private UIOption[,] grid;
         private int count = 0;
+        public Vector2Int CursorPosition { get { return this.cursorPosition; } }
         private Vector2Int cursorPosition = new Vector2Int(0, 0);
         private Vector2Int head = new Vector2Int(0, 0);
 
@@ -305,7 +322,7 @@ namespace BF2D.UI
         public void InvokeEvent(InputButton inputButton)
         {
 
-            if (this.interactable && this.gameObject.activeSelf && GetButtonEnabled(inputButton) && this.count > 0)
+            if (this.interactable && this.gameObject.activeSelf && ButtonEnabled(inputButton) && this.count > 0)
             {
                 this.grid[this.cursorPosition.x, this.cursorPosition.y].InvokeEvent(inputButton);
                 PlayAudioSource(GetAudioSource(inputButton));
@@ -325,17 +342,17 @@ namespace BF2D.UI
 
                 switch (direction)
                 {
-                    case InputDirection.Left:
-                        while (this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
-                        break;
                     case InputDirection.Up:
                         while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)] == null);
                         break;
-                    case InputDirection.Right:
-                        while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
+                    case InputDirection.Left:
+                        while (this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
                         break;
                     case InputDirection.Down:
-                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)] == null);
+                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        break;
+                    case InputDirection.Right:
+                        while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
                     default:
                         Debug.LogError("[UIOptionsGrid] Invalid direction");
@@ -345,6 +362,8 @@ namespace BF2D.UI
                 SetCursorAtPosition(this.cursorPosition, true);
 
                 PlayAudioSource(this.navigateAudioSource);
+
+                this.onNavigateEvent.Invoke(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject.name);
             }
         }
         #endregion
@@ -492,7 +511,7 @@ namespace BF2D.UI
             };
         }
 
-        private bool GetButtonEnabled(InputButton inputButton)
+        private bool ButtonEnabled(InputButton inputButton)
         {
             return inputButton switch
             {

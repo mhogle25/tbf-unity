@@ -15,11 +15,11 @@ namespace BF2D
             [JsonProperty] private protected KeyCode confirm = KeyCode.P;
             [JsonIgnore] public KeyCode Back { get { return this.back; } set { this.back = value; } }
             [JsonProperty] private protected KeyCode back = KeyCode.O;
-            [JsonIgnore] public KeyCode Menu { get { return this.menu; } set { this.back = value; } }
+            [JsonIgnore] public KeyCode Menu { get { return this.menu; } set { this.menu = value; } }
             [JsonProperty] private protected KeyCode menu = KeyCode.I;
             [JsonIgnore] public KeyCode Attack { get { return this.attack; } set { this.attack = value; } }
             [JsonProperty] private protected KeyCode attack = KeyCode.U;
-            [JsonIgnore] public KeyCode Pause { get { return this.pause; } set { this.attack = value; } }
+            [JsonIgnore] public KeyCode Pause { get { return this.pause; } set { this.pause = value; } }
             [JsonProperty] private protected KeyCode pause = KeyCode.Escape;
             [JsonIgnore] public KeyCode Select { get { return this.select; } set { this.select = value; } }
             [JsonProperty] private protected KeyCode select = KeyCode.Tab;
@@ -161,12 +161,12 @@ namespace BF2D
             //Initialize Gamepad default values
             public ControlsConfigGamepad()
             {
-                confirm = KeyCode.JoystickButton0;
-                back = KeyCode.JoystickButton1;
-                menu = KeyCode.JoystickButton3;
-                attack = KeyCode.JoystickButton2;
-                pause = KeyCode.JoystickButton7;
-                select = KeyCode.JoystickButton6;
+                this.confirm = KeyCode.JoystickButton0;
+                this.back = KeyCode.JoystickButton1;
+                this.menu = KeyCode.JoystickButton3;
+                this.attack = KeyCode.JoystickButton2;
+                this.pause = KeyCode.JoystickButton7;
+                this.select = KeyCode.JoystickButton6;
             }
 
             private string GetAxisKey(Axis axis)
@@ -362,12 +362,12 @@ namespace BF2D
             return InputManager.currentConfig.ControlType;
         }
 
-        public string SerializeConfig(InputController controllerType)
+        public static string SerializeConfig(InputController controllerType)
         {
             return controllerType switch
             {
-                InputController.Keyboard => JsonConvert.SerializeObject(keyboardConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
-                InputController.Gamepad => JsonConvert.SerializeObject(gamepadConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
+                InputController.Keyboard => JsonConvert.SerializeObject(InputManager.keyboardConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
+                InputController.Gamepad => JsonConvert.SerializeObject(InputManager.gamepadConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
                 _ => throw new ArgumentException("[InputManager] InputController was null or invalid"),
             };
         }
@@ -377,10 +377,10 @@ namespace BF2D
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    keyboardConfig = JsonConvert.DeserializeObject<ControlsConfigKeyboard>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
+                    InputManager.keyboardConfig = JsonConvert.DeserializeObject<ControlsConfigKeyboard>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
                     break;
                 case InputController.Gamepad:
-                    gamepadConfig = JsonConvert.DeserializeObject<ControlsConfigGamepad>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
+                    InputManager.gamepadConfig = JsonConvert.DeserializeObject<ControlsConfigGamepad>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
                     break;
                 default:
                     throw new ArgumentException("[InputManager] InputController was null or invalid");
