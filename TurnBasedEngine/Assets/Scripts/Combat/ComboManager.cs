@@ -6,7 +6,7 @@ using BF2D.Enums;
 
 namespace BF2D.Combat
 {
-    public class ComboManager : CombatController
+    public class ComboManager : MonoBehaviour
     {
         [Serializable]
         private class Combo

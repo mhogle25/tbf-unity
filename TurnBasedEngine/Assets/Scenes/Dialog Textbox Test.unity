@@ -123,27 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!224 &58867918 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 4132202981359029722, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-  m_PrefabInstance: {fileID: 5812303956420232510}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &556453936 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5812303957190546870, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-  m_PrefabInstance: {fileID: 5812303956420232510}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &934188536 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-  m_PrefabInstance: {fileID: 5812303956420232510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9f18f65ca372bb4d9ce8b470b7d5971, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1096256046
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,6 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d0fc183f26ae04092927f898b4d170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dialogTextboxController: {fileID: 5812303956420232511}
   movementSpeed: 5
 --- !u!95 &1986819452
 Animator:
@@ -514,74 +494,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 423787267, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontSize
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 423787267, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
-    - target: {fileID: 423787267, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 423787267, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: view
-      value: 
-      objectReference: {fileID: 58867918}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: backEnabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UnityEngine.GameObject, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onNavigateEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 5812303956115522650, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontSize
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5812303956115522650, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
-    - target: {fileID: 5812303956115522650, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5812303956115522650, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5812303956886749160, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: m_Camera
       value: 
@@ -675,40 +587,19 @@ PrefabInstance:
       value: Textbox Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: view
-      value: 
-      objectReference: {fileID: 556453936}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 934188536}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: PassControlBack
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: responseOptionEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1986819451}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: UIUtility, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: onEndOfDialog.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+--- !u!114 &5812303956420232511 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4746308372484018684, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+  m_PrefabInstance: {fileID: 5812303956420232510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f505070ce6b93fc40aeabbc3f87d383f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace BF2D.Combat
 {
-    public class StatsPreviewController : CombatController
+    public class StatsPreviewController : MonoBehaviour
     {
         [SerializeField] private LayoutGroup container = null;
         [SerializeField] private StatsPreview statsPreviewPrefab = null;

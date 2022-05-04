@@ -133,19 +133,15 @@ namespace BF2D.UI
         /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
-            if (this.interactable)
-            {
-                //Clean up anything that could be left over
-                Clear();
+            //Clean up anything that could be left over
+            Clear();
 
-                //Set the width and height
-                this.gridWidth = width;
-                this.gridHeight = height;
+            //Set the width and height
+            this.gridWidth = width;
+            this.gridHeight = height;
 
-                //Create the element data structure
-                this.grid = new UIOption[this.gridWidth, this.gridHeight];
-
-            }
+            //Create the element data structure
+            this.grid = new UIOption[this.gridWidth, this.gridHeight];
         }
 
         /// <summary>
@@ -157,33 +153,30 @@ namespace BF2D.UI
         {
             UIOption option = null;
 
-            if (this.interactable)
+            //Base case
+            if (this.count + 1 > Size)
             {
-                //Base case
-                if (this.count + 1 > Size)
-                {
-                    Debug.LogWarning("[UIOptionsGrid] Tried to add but the grid was full");
-                    return null;
-                }
-
-                //Create and set up the added element
-                option = Instantiate(this.optionPrefab);
-                this.grid[this.head.x, this.head.y] = option;
-                option.transform.SetParent(this.container.transform);
-                option.transform.localScale = Vector3.one;
-                option.Setup(optionData);
-
-                //If the cursor did not already exist, enable it
-                if (this.count < 1)
-                {
-                    SetCursorAtPosition(this.head, true);
-                }
-
-                this.head = Increment(this.head);
-
-                //Increase the count
-                this.count++;
+                Debug.LogWarning("[UIOptionsGrid] Tried to add but the grid was full");
+                return null;
             }
+
+            //Create and set up the added element
+            option = Instantiate(this.optionPrefab);
+            this.grid[this.head.x, this.head.y] = option;
+            option.transform.SetParent(this.container.transform);
+            option.transform.localScale = Vector3.one;
+            option.Setup(optionData);
+
+            //If the cursor did not already exist, enable it
+            if (this.count < 1)
+            {
+                SetCursorAtPosition(this.head, true);
+            }
+
+            this.head = Increment(this.head);
+
+            //Increase the count
+            this.count++;
 
             return option;
         }
@@ -194,113 +187,102 @@ namespace BF2D.UI
         /// <returns>True if the option was removed successfully, otherwise returns false</returns>
         public bool Remove()
         {
-            if (this.interactable && this.gameObject.activeSelf)
+            //Base Case
+            if (this.count < 1)
             {
-                //Base Case
-                if (this.count < 1)
-                {
-                    Debug.LogWarning("[UIOptionsGrid] Tried to remove but the grid was empty");
-                    return false;
-                }
-
-                Destroy(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject);
-                this.grid[this.cursorPosition.x, this.cursorPosition.y] = null;
-                this.count--;
-
-                if (this.count < 1)
-                {
-                    this.cursorPosition = new Vector2Int(0, 0);
-                    this.head = new Vector2Int(0, 0);
-                    return true;
-                }
-
-
-                int maxi = this.gridHeight;
-                int maxj = this.gridWidth;
-                if (this.instantiationAxis == Axis.Vertical)
-                {
-                    maxi = this.gridWidth;
-                    maxj = this.gridHeight;
-                }
-
-                Queue<UIOption> queue = new Queue<UIOption>();
-                for (int i = 0; i < maxi; i++)
-                {
-                    for (int j = 0; j < maxj; j++)
-                    {
-                        int x = j;
-                        int y = i;
-                        if (this.instantiationAxis == Axis.Vertical)
-                        {
-                            x = i;
-                            y = j;
-                        }
-
-                        if (this.grid[x, y] != null)
-                        {
-                            queue.Enqueue(this.grid[x, y]);
-                        }
-                    }
-                }
-
-                this.grid = new UIOption[this.gridWidth, this.gridHeight];
-
-                for (int i = 0; i < maxi; i++)
-                {
-                    for (int j = 0; j < maxj; j++)
-                    {
-                        int x = j;
-                        int y = i;
-                        if (this.instantiationAxis == Axis.Vertical)
-                        {
-                            x = i;
-                            y = j;
-                        }
-
-                        if (queue.Count > 0)
-                        {
-                            this.grid[x, y] = queue.Dequeue();
-                        }
-                    }
-                }
-
-                this.head = Decrement(this.head);
-
-                if (this.cursorPosition == this.head)
-                {
-                    this.cursorPosition = Decrement(this.cursorPosition);
-                }
-
-                SetCursorAtPosition(this.cursorPosition, true);
-
-                return true;
-            }
-            else
-            {
+                Debug.LogWarning("[UIOptionsGrid] Tried to remove but the grid was empty");
                 return false;
             }
 
+            Destroy(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject);
+            this.grid[this.cursorPosition.x, this.cursorPosition.y] = null;
+            this.count--;
+
+            if (this.count < 1)
+            {
+                this.cursorPosition = new Vector2Int(0, 0);
+                this.head = new Vector2Int(0, 0);
+                return true;
+            }
+
+
+            int maxi = this.gridHeight;
+            int maxj = this.gridWidth;
+            if (this.instantiationAxis == Axis.Vertical)
+            {
+                maxi = this.gridWidth;
+                maxj = this.gridHeight;
+            }
+
+            Queue<UIOption> queue = new Queue<UIOption>();
+            for (int i = 0; i < maxi; i++)
+            {
+                for (int j = 0; j < maxj; j++)
+                {
+                    int x = j;
+                    int y = i;
+                    if (this.instantiationAxis == Axis.Vertical)
+                    {
+                        x = i;
+                        y = j;
+                    }
+
+                    if (this.grid[x, y] != null)
+                    {
+                        queue.Enqueue(this.grid[x, y]);
+                    }
+                }
+            }
+
+            this.grid = new UIOption[this.gridWidth, this.gridHeight];
+
+            for (int i = 0; i < maxi; i++)
+            {
+                for (int j = 0; j < maxj; j++)
+                {
+                    int x = j;
+                    int y = i;
+                    if (this.instantiationAxis == Axis.Vertical)
+                    {
+                        x = i;
+                        y = j;
+                    }
+
+                    if (queue.Count > 0)
+                    {
+                        this.grid[x, y] = queue.Dequeue();
+                    }
+                }
+            }
+
+            this.head = Decrement(this.head);
+
+            if (this.cursorPosition == this.head)
+            {
+                this.cursorPosition = Decrement(this.cursorPosition);
+            }
+
+            SetCursorAtPosition(this.cursorPosition, true);
+
+            return true;
         }
 
         /// <summary>
         /// Clears all options and resets all option dependent data from the grid
         /// </summary>
         public void Clear() {
-            if (this.interactable)
-            {
-                //Remove all elements in the grid
-                for (int i = 0; i < this.gridWidth; i++)
-                    for (int j = 0; j < this.gridHeight; j++)
-                        if (this.grid[i, j] != null)
-                        {
-                            Destroy(this.grid[i, j].gameObject);
-                        }
+            //Remove all elements in the grid
+            for (int i = 0; i < this.gridWidth; i++)
+                for (int j = 0; j < this.gridHeight; j++)
+                    if (this.grid[i, j] != null)
+                    {
+                        Destroy(this.grid[i, j].gameObject);
+                    }
 
-                //Reset all private members that are dependent on grid elements
-                this.count = 0;
-                this.cursorPosition = new Vector2Int(0, 0);
-                this.head = new Vector2Int(0, 0);
-            }
+            //Reset all private members that are dependent on grid elements
+            this.count = 0;
+            this.cursorPosition = new Vector2Int(0, 0);
+            this.head = new Vector2Int(0, 0);
         }
 
         /// <summary>
@@ -308,21 +290,17 @@ namespace BF2D.UI
         /// </summary>
         public void SetCursorAtHead()
         {
-            if (this.interactable)
+            foreach (UIOption option in this.grid)
             {
-                foreach (UIOption option in this.grid)
-                {
-                    option.SetCursor(false);
-                }
-
-                this.grid[0, 0].SetCursor(true);
+                option.SetCursor(false);
             }
+
+            this.grid[0, 0].SetCursor(true);
         }
 
         public void InvokeEvent(InputButton inputButton)
         {
-
-            if (this.interactable && this.gameObject.activeSelf && ButtonEnabled(inputButton) && this.count > 0)
+            if (this.Interactable && this.gameObject.activeSelf && ButtonEnabled(inputButton) && this.count > 0)
             {
                 this.grid[this.cursorPosition.x, this.cursorPosition.y].InvokeEvent(inputButton);
                 PlayAudioSource(GetAudioSource(inputButton));
@@ -335,7 +313,7 @@ namespace BF2D.UI
         /// <param name="direction">The direction of navigation</param>
         public void Navigate(InputDirection direction)
         {
-            if (this.interactable && this.gameObject.activeSelf && this.count > 0)
+            if (this.Interactable && this.gameObject.activeSelf && this.count > 0)
             {
                 if (this.grid[this.cursorPosition.x, this.cursorPosition.y] != null)
                     SetCursorAtPosition(this.cursorPosition, false);

@@ -6,6 +6,7 @@ using BF2D.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] private DialogTextboxControl dialogTextboxController = null;
     [SerializeField] private float movementSpeed = 2;
 
     private float horizontalAxis;
@@ -14,9 +15,11 @@ public class PlayerMovement : MonoBehaviour
     private Action state;
 
     private void Start() {
-        DialogTextbox.Instance.Dialog("test", 2);
-        DialogTextbox.Instance.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
-        DialogTextbox.Instance.Dialog(new List<string> {
+        dialogTextboxController.StartControlChain();
+
+        this.dialogTextboxController.Textbox.Dialog("test", 2);
+        this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
+        this.dialogTextboxController.Textbox.Dialog(new List<string> {
                 "[N:Jim]Hi",
                 "[N:-1]Hello",
                 "[N:Giuseppe]Whaddup[E]"
@@ -25,13 +28,11 @@ public class PlayerMovement : MonoBehaviour
         );
 
         //this.state += Move;
-        this.state += Listen;
 
     }   
 
     private void Update() {
-        if (this.state != null)
-            this.state();
+        this.state?.Invoke();
     }
 
     private void Move() {
@@ -40,14 +41,6 @@ public class PlayerMovement : MonoBehaviour
         Vector3 moveFactor = new Vector3(this.horizontalAxis, this.verticalAxis, 0);
         Vector3 newPosition = transform.localPosition + (moveFactor * movementSpeed * Time.deltaTime);
         transform.localPosition = newPosition;
-    }
-
-    private void Listen()
-    {
-        if (InputManager.ConfirmPress)
-        {
-            DialogTextbox.Instance.Continue();
-        }
     }
 
     public void Print(string text)

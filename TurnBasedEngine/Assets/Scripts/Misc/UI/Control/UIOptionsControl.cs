@@ -4,70 +4,33 @@ using BF2D.Enums;
 
 namespace BF2D.UI
 {
-    public class UIOptionsController : MonoBehaviour
+    public class UIOptionsControl : UIControl
     {
+        public UIOptionsGrid OptionsGrid { get { return this.optionsGrid; } }
+        [SerializeField] private protected UIOptionsGrid optionsGrid = null;
 
-        [SerializeField] private UIOptionsGrid optionsGrid = null;
-
-        public UIOptionsGrid OptionsGrid
-        {
-            get
-            {
-                return this.optionsGrid;
-            }
-
-            set
-            {
-                this.optionsGrid = value;
-            }
-        }
-
+        public float Delay { get { return this.delay; } set { this.delay = value; } }
         [SerializeField] private float delay = 0.5f;
 
-        public float Delay
-        {
-            get
-            {
-                return this.delay;
-            }
-
-            set
-            {
-                this.delay = value;
-            }
-        }
-
+        public float Speed { get { return this.speed; } set { this.speed = value; } }
         [SerializeField] private float speed = 0.1f;
 
-        public float Speed
-        {
-            get
-            {
-                return this.speed;
-            }
-
-            set
-            {
-                this.speed = value;
-            }
-        }
-
-        private Action state = null;
         private InputDirection direction = InputDirection.Left;
         private float timeAccumulator = 0f;
 
-        private void Awake()
+        private Action state = null;
+
+        protected virtual void Awake()
         {
             this.state = StateDirectionInputListener;
         }
 
-        private void Update()
+        protected virtual void Update()
         {
+            if (!this.Interactable)
+                return;
 
-            if (this.state != null)
-            {
-                this.state();
-            }
+            this.state?.Invoke();
 
             if (InputManager.ConfirmPress)
             {
@@ -91,13 +54,24 @@ namespace BF2D.UI
 
             if (InputManager.PausePress)
             {
-                this.OptionsGrid.InvokeEvent(InputButton.Pause);
+                this.optionsGrid.InvokeEvent(InputButton.Pause);
             }
 
             if (InputManager.SelectPress)
             {
-                this.OptionsGrid.InvokeEvent(InputButton.Select);
+                this.optionsGrid.InvokeEvent(InputButton.Select);
             }
+        }
+
+        protected override void ControlInitialize()
+        {
+            this.optionsGrid.View.gameObject.SetActive(true);
+            this.optionsGrid.Interactable = true;
+        }
+
+        protected override void ControlFinalize()
+        {
+            this.optionsGrid.Interactable = false;
         }
 
         private void StateDirectionInputListener()

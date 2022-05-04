@@ -10,8 +10,7 @@ namespace BF2D.UI
         public static bool Paused { get { return PauseUtility.paused; } }
         private static bool paused = false;
 
-        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("m_OnClick")]
-        private UnityEvent onPause = new UnityEvent();
+        [SerializeField] private UnityEvent onPause = new UnityEvent();
 
         private void Update()
         {

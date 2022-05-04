@@ -11,8 +11,6 @@ namespace BF2D.Combat
         public StatsPreviewController StatsPreviewControllerComponent { get { return this.statsPreviewController; } }
         [SerializeField] private StatsPreviewController statsPreviewController = null;
 
-        private List<CombatController> combatControllers = new List<CombatController>();
-
         /*
         public CombatState State { 
             set 
@@ -40,16 +38,6 @@ namespace BF2D.Combat
         private void InitializeCombat()
         {
             //this.state = this.statePlayerSelection;
-        }
-
-        private void UpdateCombatControllers()
-        {
-            this.combatControllers = new List<CombatController>
-            {
-                comboManager,
-                statsPreviewController
-            };
-
         }
     }
 }
