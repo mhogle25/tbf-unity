@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using BF2D;
 using BF2D.UI;
+using System.IO;
+using UnityEngine.Networking;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,8 +17,6 @@ public class PlayerMovement : MonoBehaviour
     private Action state;
 
     private void Start() {
-        dialogTextboxController.StartControlChain();
-
         this.dialogTextboxController.Textbox.Dialog("test", 2);
         this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
         this.dialogTextboxController.Textbox.Dialog(new List<string> {
@@ -28,7 +28,8 @@ public class PlayerMovement : MonoBehaviour
         );
 
         //this.state += Move;
-
+        Debug.Log(Application.persistentDataPath);
+        Debug.Log(Application.streamingAssetsPath);
     }   
 
     private void Update() {

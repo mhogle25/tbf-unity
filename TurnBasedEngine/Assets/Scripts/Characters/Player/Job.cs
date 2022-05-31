@@ -1,6 +1,10 @@
 ﻿using System;
 using UnityEngine;
 
-public class Job {
+namespace BF2D.Game
+{
+    public class Job
+    {
 
+    }
 }

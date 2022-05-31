@@ -17,12 +17,12 @@ namespace BF2D.Combat
             base.Update();
         }
 
-        protected override void ControlInitialize()
+        public override void ControlInitialize()
         {
             base.ControlInitialize();
         }
 
-        protected override void ControlFinalize()
+        public override void ControlFinalize()
         {
             base.ControlFinalize();
         }

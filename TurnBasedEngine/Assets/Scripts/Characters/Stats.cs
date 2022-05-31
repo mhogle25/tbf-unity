@@ -1,37 +1,44 @@
-﻿namespace BF2D.Combat
+﻿using System.Collections.Generic;
+using System;
+using Newtonsoft.Json;
+
+namespace BF2D.Game
 {
+    [Serializable]
     public abstract class Stats
     {
-        public string Name { get { return this.name; } set { this.name = value; } }
-        private string name = string.Empty;
-        public string Description { get { return this.description; } set { this.description = value; } }
-        private string description = string.Empty;
-        public int Health { get { return this.health; } }
-        private protected int health = 0;
-        public int MaxHealth { get { return this.maxHealth; } }
-        private protected int maxHealth = 0;
-        public int Stamina { get { return this.stamina; } }
-        private protected int stamina = 0;
-        public int MaxStamina { get { return this.maxStamina; } }
-        private protected int maxStamina = 0;
-        public int Speed { get { return this.speed + this.swiftness; } }
-        private protected int speed = 0;
-        public int Swiftness { get { return this.swiftness; } }
-        private protected int swiftness = 0;
-        public int Attack { get { return this.attack + this.strength; } }
-        private protected int attack = 0;
-        public int Strength { get { return this.strength; } }
-        private protected int strength = 0;
-        public int Defense { get { return this.defense + this.toughness; } }
-        private protected int defense = 0;
-        public int Toughness { get { return this.toughness; } }
-        private protected int toughness = 0;
-        public int Focus { get { return this.focus + this.will; } }
-        private protected int focus = 0;
-        public int Will { get { return this.will; } }
-        private protected int will = 0;
-        public int Luck { get { return this.luck; } }
-        private protected int luck = 0;
+        [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
+        [JsonProperty] private string name = string.Empty;
+        [JsonIgnore] public string Description { get { return this.description; } set { this.description = value; } }
+        [JsonProperty] private string description = string.Empty;
+        [JsonIgnore] public int Health { get { return this.health; } }
+        [JsonProperty] private int health = 0;
+        [JsonIgnore] public int MaxHealth { get { return this.maxHealth; } }
+        [JsonProperty] private int maxHealth = 0;
+        [JsonIgnore] public int Stamina { get { return this.stamina; } }
+        [JsonProperty] private int stamina = 0;
+        [JsonIgnore] public int MaxStamina { get { return this.maxStamina; } }
+        [JsonProperty] private int maxStamina = 0;
+        [JsonIgnore] public int Speed { get { return this.speed + this.swiftness; } }
+        [JsonProperty] private int speed = 0;
+        [JsonIgnore] public int Swiftness { get { return this.swiftness; } }
+        [JsonProperty] private int swiftness = 0;
+        [JsonIgnore] public int Attack { get { return this.attack + this.strength; } }
+        [JsonProperty] private int attack = 0;
+        [JsonIgnore] public int Strength { get { return this.strength; } }
+        [JsonProperty] private int strength = 0;
+        [JsonIgnore] public int Defense { get { return this.defense + this.toughness; } }
+        [JsonProperty] private int defense = 0;
+        [JsonIgnore] public int Toughness { get { return this.toughness; } }
+        [JsonProperty] private int toughness = 0;
+        [JsonIgnore] public int Focus { get { return this.focus + this.will; } }
+        [JsonProperty] private int focus = 0;
+        [JsonIgnore] public int Will { get { return this.will; } }
+        [JsonProperty] private int will = 0;
+        [JsonIgnore] public int Luck { get { return this.luck; } }
+        [JsonProperty] private int luck = 0;
+        [JsonIgnore] public List<Item> Inventory { get { return this.inventory; } }
+        [JsonProperty] private List<Item> inventory = new List<Item>();
 
         public void Damage(int damage)
         {

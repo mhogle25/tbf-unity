@@ -370,6 +370,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacb4c5bb37b64f449eb8f0caae69152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  iconCollection: {fileID: 0}
+  soundEffectCollection: {fileID: 0}
 --- !u!1 &1986819450
 GameObject:
   m_ObjectHideFlags: 0
@@ -587,6 +589,10 @@ PrefabInstance:
       value: Textbox Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: voiceCollection
+      value: 
+      objectReference: {fileID: 5812303956420232512}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: responseOptionEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1986819451}
@@ -601,5 +607,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f505070ce6b93fc40aeabbc3f87d383f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5812303956420232512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 414872437860467044, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+  m_PrefabInstance: {fileID: 5812303956420232510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b1b57319b00a2c459bb271d4c50c06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

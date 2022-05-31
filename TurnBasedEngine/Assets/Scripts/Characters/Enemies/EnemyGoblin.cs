@@ -1,5 +1,8 @@
-﻿namespace BF2D.Combat
+﻿using System;
+
+namespace BF2D.Game
 {
+    [Serializable]
     public class EnemyGoblin : EnemyStats
     {
 
