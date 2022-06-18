@@ -9,6 +9,7 @@ namespace BF2D.Combat
 {
     public class StatsPreview : MonoBehaviour
     {
+        /*
         public bool AutoRefresh { get { return this.autoRefresh; } set { this.autoRefresh = value; } }
         [SerializeField] private bool autoRefresh = false;
         public string NameKey { get { return this.nameKey; } }
@@ -44,7 +45,7 @@ namespace BF2D.Combat
                 return;
             }
 
-            Stats stats = GameInfo.Instance.GetPlayer(this.nameKey);
+            //CharacterStats stats = GameInfo.Instance.GetPlayer(this.nameKey);
 
             if (stats == null)
             {
@@ -63,5 +64,6 @@ namespace BF2D.Combat
         {
             cursor.enabled = value;
         }
+        */
     }
 }

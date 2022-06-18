@@ -1,0 +1,35 @@
+{                                                                                                                                                                                                                                                                
+    "name":"Lesser Goblin",
+    "description":"A fiend of the dark with a desire for blood.",
+    "health":5,
+    "maxHealth":5,
+    "stamina":1,
+    "maxStamina":1,
+    "swiftness":1,
+    "strength":2,
+    "toughness":1,
+    "will":1,
+    "fortune":1,
+    "head":"",
+    "torso":"",
+    "legs":"",
+    "hands":"",
+    "feet":"",
+    "items":
+    [
+        {
+            "name": "firecracker",
+            "count":10
+        }
+    ],
+    "equipments": 
+    [
+        {
+
+        }
+    ],
+    "statusEffects":
+    [
+        ""
+    ]
+}

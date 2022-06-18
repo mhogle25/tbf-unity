@@ -1,0 +1,23 @@
+{
+    "name":"Firecracker",
+    "icon":"firework_01",
+    "consumeable":true,
+    "description":"A small firecracker that will explode when used.",
+    "useMessage":
+    [
+        "[I:0] launched a firework at [I:1]."
+    ],
+    "onUse":
+    {
+        "statsActions": 
+        [
+            {
+                "target":"Any",
+                "properties":
+                {
+                    "damage":3
+                }
+            }
+        ]
+    }
+}

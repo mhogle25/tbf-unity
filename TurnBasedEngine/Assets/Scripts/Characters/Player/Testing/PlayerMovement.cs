@@ -17,16 +17,6 @@ public class PlayerMovement : MonoBehaviour
     private Action state;
 
     private void Start() {
-        this.dialogTextboxController.Textbox.Dialog("test", 2);
-        this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
-        this.dialogTextboxController.Textbox.Dialog(new List<string> {
-                "[N:Jim]Hi",
-                "[N:-1]Hello",
-                "[N:Giuseppe]Whaddup[E]"
-            },
-            0
-        );
-
         //this.state += Move;
         Debug.Log(Application.persistentDataPath);
         Debug.Log(Application.streamingAssetsPath);
@@ -47,5 +37,18 @@ public class PlayerMovement : MonoBehaviour
     public void Print(string text)
     {
         Debug.Log(text);
+    }
+
+    public void CallTestDialogs()
+    {
+        this.dialogTextboxController.Textbox.Dialog("test", 2);
+        this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
+        this.dialogTextboxController.Textbox.Dialog(new List<string> {
+                "[N:Jim]Hi",
+                "[N:-1]Hello",
+                "[N:Giuseppe]Whaddup[E]"
+            },
+            0
+        );
     }
 }

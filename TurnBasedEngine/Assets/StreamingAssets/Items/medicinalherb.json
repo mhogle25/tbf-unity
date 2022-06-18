@@ -1,0 +1,24 @@
+{
+    "name":"Medicinal Herb",
+    "icon":"herb_01",
+    "consumeable":true,
+    "description":"An herb with healing properties.",
+    "useMessage":
+    [
+        "[I:0] treated [I:1]'s injuries."
+    ],
+    "onUse":
+    {
+        "statsActions": 
+        [
+            {
+                "target":"Any",
+                "description":"heal",
+                "properties":
+                {
+                    "heal":10
+                }
+            }
+        ]
+    }
+}

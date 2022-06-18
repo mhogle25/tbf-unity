@@ -1,0 +1,24 @@
+{
+    "name":"Vorpal Sword",
+    "icon":"sword_01",
+    "consumeable":false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    "description":"An ancient sword of great power.",
+    "useMessage":
+    [
+        "[I:0] performed a calculated strike on [I:1]."
+    ],
+    "onUse":
+    {
+        "statsActions": 
+        [
+            {
+                "target":"Any",
+                "description":"attack",
+                "properties":
+                {
+                    "damage":3
+                }
+            }
+        ]
+    }
+}

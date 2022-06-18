@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using BF2D.Game;
 
 namespace BF2D.Combat
 {
     public class StatsPreviewController : MonoBehaviour
     {
+        /*
         [SerializeField] private LayoutGroup container = null;
         [SerializeField] private StatsPreview statsPreviewPrefab = null;
 
@@ -66,7 +68,6 @@ namespace BF2D.Combat
             }
         }
 
-        /*
         private void LoadStatsPreviews()
         {
             this.statsPreviews.Clear();
@@ -77,7 +78,6 @@ namespace BF2D.Combat
                 this.statsPreviews.Add(s);
             }
         }
-        */
 
         private void RemoveStatsPreview(StatsPreview statsPreview)
         {
@@ -92,5 +92,6 @@ namespace BF2D.Combat
             statsPreview.transform.localScale = Vector3.one;
             return statsPreview;
         }
+        */
     }
 }

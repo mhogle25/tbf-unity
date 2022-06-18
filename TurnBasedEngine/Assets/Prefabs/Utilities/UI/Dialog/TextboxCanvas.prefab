@@ -586,14 +586,13 @@ GameObject:
   - component: {fileID: 4746308372484018684}
   - component: {fileID: 8750406902240700385}
   - component: {fileID: 414872437860467044}
-  - component: {fileID: 5812303956420232513}
   m_Layer: 5
   m_Name: TextboxCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &5812303956886749161
 RectTransform:
   m_ObjectHideFlags: 0
@@ -683,12 +682,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5812303956886749165}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f505070ce6b93fc40aeabbc3f87d383f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: 0
   dialogTextbox: {fileID: 8750406902240700385}
 --- !u!114 &8750406902240700385
 MonoBehaviour:
@@ -702,8 +700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f18f65ca372bb4d9ce8b470b7d5971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: 0
   view: {fileID: 5812303957190546870}
+  interactable: 0
   dialogTextboxControl: {fileID: 4746308372484018684}
   textField: {fileID: 5812303956115522650}
   nametag: {fileID: 1596405682}
@@ -728,6 +726,18 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BF2D.UI.UIControlsManager, Assembly-CSharp
         m_MethodName: PassControlBack
         m_Mode: 1
@@ -737,7 +747,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   dialogResponseFilesPath: Dialog/Responses
   responseOptionsControl: {fileID: 5812303956420232517}
@@ -757,24 +767,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  voiceCollection: {fileID: 5812303956420232513}
+  voiceCollection: {fileID: 414872437860467044}
   confirmAudioSource: {fileID: 7446766149972684135}
   voiceAudioSource: {fileID: 3151541855885726533}
   defaultVoice: {fileID: 0}
 --- !u!114 &414872437860467044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5812303956886749165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b1b57319b00a2c459bb271d4c50c06d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioClips: []
---- !u!114 &5812303956420232513
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -958,12 +955,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6509254057678927013}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: 0
   optionsGrid: {fileID: 1049449389}
   delay: 0.5
   speed: 0.1
@@ -979,8 +975,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  interactable: 0
   view: {fileID: 4132202981359029722}
+  interactable: 0
   optionPrefab: {fileID: 1012626334224394726, guid: b0c93a6c35a2de14695126c69f6eeb97, type: 3}
   container: {fileID: 3558286292222747639}
   instantiationAxis: 1
@@ -1004,15 +1000,15 @@ MonoBehaviour:
   navigateAudioSource: {fileID: 6557732902904020396}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 6557732903463288560}
-  backEnabled: 1
+  backEnabled: 0
   backAudioSource: {fileID: 6557732902080928913}
-  menuEnabled: 1
+  menuEnabled: 0
   menuAudioSource: {fileID: 6557732903374331533}
-  attackEnabled: 1
+  attackEnabled: 0
   attackAudioSource: {fileID: 6557732903548721340}
-  pauseEnabled: 1
+  pauseEnabled: 0
   pauseAudioSource: {fileID: 6557732903870527718}
-  selectEnabled: 1
+  selectEnabled: 0
   selectAudioSource: {fileID: 6557732903438177384}
 --- !u!1 &7268125554183253219
 GameObject:

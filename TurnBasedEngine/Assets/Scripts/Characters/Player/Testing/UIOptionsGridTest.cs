@@ -28,14 +28,6 @@ public class UIOptionsGridTest : MonoBehaviour
         */
     }
 
-    private void Update()
-    {
-        if (InputManager.AttackPress)
-        {
-            this.optionsGrid.Remove();
-        }
-    }
-
     public void HellYeah()
     {
         Debug.Log("hell fuckin yeah bruther");

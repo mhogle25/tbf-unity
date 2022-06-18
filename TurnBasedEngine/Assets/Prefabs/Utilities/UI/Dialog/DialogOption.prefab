@@ -168,30 +168,6 @@ MonoBehaviour:
   textMesh: {fileID: 9047699793556775555}
   image: {fileID: 1286603530}
   cursor: {fileID: 939872128}
-  confirmEnabled: 1
-  confirmEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  backEnabled: 1
-  backEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  menuEnabled: 1
-  menuEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  attackEnabled: 1
-  attackEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  pauseEnabled: 1
-  pauseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  selectEnabled: 1
-  selectEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &4021248496372531499
 GameObject:
   m_ObjectHideFlags: 0
