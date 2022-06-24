@@ -8,18 +8,18 @@ using UnityEngine.Events;
 
 namespace BF2D.UI
 {
-    public class UIOptionsGrid : UIUtility {
-
+    public class UIOptionsGrid : UIUtility
+    {
+        [SerializeField] private bool staticContent = true;
         [Header("Grid")]
         [SerializeField] private UIOption optionPrefab = null;
         [Tooltip("The container for grid options")]
         [SerializeField] private LayoutGroup container = null;
         [Tooltip("Determines the direction that elements will be populated in")]
         [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
-        [SerializeField] private bool staticContent = true;
         [SerializeField] private int gridWidth = 1;
         [SerializeField] private int gridHeight = 1; 
-
+        
         public OnNavigate OnNavigateEvent
         {
             get
@@ -29,7 +29,7 @@ namespace BF2D.UI
         }
 
         [Serializable]
-        public class OnNavigate : UnityEvent<string> { }
+        public class OnNavigate : UnityEvent<int> { }
         [SerializeField]
         private OnNavigate onNavigateEvent = new OnNavigate();
 
@@ -61,17 +61,22 @@ namespace BF2D.UI
         [SerializeField] private AudioSource selectAudioSource = null;
 
         /// <summary>
+        /// Whether this options grid is meant to handle statically defined options. If false, this grid is used for dynamically populating options.
+        /// </summary>
+        public bool StaticContent { get { return this.staticContent; } }
+
+        /// <summary>
         /// The area of the grid (width * height)
         /// </summary>
         public int Size { get { return this.gridWidth * this.gridHeight; } }
 
         /// <summary>
-        /// The area of the grid (width * height)
+        /// Width of the grid
         /// </summary>
         public int Width { get { return this.gridWidth; } }
 
         /// <summary>
-        /// The area of the grid (width * height)
+        /// Height of the grid
         /// </summary>
         public int Height { get { return this.gridHeight; } }
 
@@ -110,9 +115,24 @@ namespace BF2D.UI
         /// </summary>
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 
-        private UIOption[,] grid;
+        private UIOption[,] grid = null;
         private int count = 0;
         public Vector2Int CursorPosition { get { return this.cursorPosition; } }
+        public int OneDimensionalIndex
+        {
+            get
+            {
+                switch (this.instantiationAxis)
+                {
+                    case Axis.Horizontal:
+                        return (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x;
+                    case Axis.Vertical:
+                        return (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y;
+                    default:
+                        throw new Exception($"[UIOptionsGrid] The instantiation axis is set to an invalid value: {this.instantiationAxis}");
+                }
+            }
+        }
         private Vector2Int cursorPosition = new Vector2Int(0, 0);
         private Vector2Int head = new Vector2Int(0, 0);
 
@@ -380,7 +400,7 @@ namespace BF2D.UI
 
                 BF2D.Utilities.Audio.PlayAudioSource(this.navigateAudioSource);
 
-                this.onNavigateEvent.Invoke(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject.name);
+                this.onNavigateEvent.Invoke(OneDimensionalIndex);
             }
         }
         #endregion

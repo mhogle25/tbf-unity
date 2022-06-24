@@ -24,6 +24,7 @@ namespace BF2D.UI {
             public InputButtonCollection<Action> actions;
         };
 
+        public Data GetData { get { return this.data; } }
         private Data data;
 
         /// <summary>

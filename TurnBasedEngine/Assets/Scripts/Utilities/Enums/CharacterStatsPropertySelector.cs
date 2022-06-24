@@ -8,28 +8,34 @@ namespace BF2D.Enums
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum CharacterType
+    public enum CharacterStatsProperty
     {
         [EnumMember]
-        Player,
+        None,
         [EnumMember]
-        Enemy,
+        Speed,
         [EnumMember]
-        NPC
+        Attack,
+        [EnumMember]
+        Defense,
+        [EnumMember]
+        Focus,
+        [EnumMember]
+        Luck
     }
 
-    public class CharacterTypeCollection<T>
+    public class CharacterStatsPropertyCollection<T>
     {
-        private readonly T[] collection;
+        private T[] collection;
         private readonly int enumSize = 0;
 
-        public CharacterTypeCollection()
+        public CharacterStatsPropertyCollection()
         {
-            enumSize = Enum.GetValues(typeof(CharacterType)).Length;
+            enumSize = Enum.GetValues(typeof(CharacterStatsProperty)).Length;
             collection = new T[enumSize];
         }
 
-        public T this[CharacterType index]
+        public T this[CharacterStatsProperty index]
         {
             get
             {
@@ -43,8 +49,8 @@ namespace BF2D.Enums
         }
     }
 
-    public class CharacterTypeSelector : MonoBehaviour
+    public class CharacterStatsPropertySelector : MonoBehaviour
     {
-        public CharacterType characterType;
+        public CharacterStatsProperty characterStatsProperty;
     }
 }

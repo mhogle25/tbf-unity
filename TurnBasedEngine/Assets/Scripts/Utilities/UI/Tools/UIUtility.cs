@@ -14,13 +14,13 @@ namespace BF2D.UI
         public bool Interactable { get { return this.interactable; } set { this.interactable = value; } }
         [SerializeField] protected bool interactable = false;
 
-        public void UtilityInitialize()
+        public virtual void UtilityInitialize()
         {
             this.View.gameObject.SetActive(true);
             this.Interactable = true;
         }
 
-        public void UtilityFinalize()
+        public virtual void UtilityFinalize()
         {
             this.Interactable = false;
         }

@@ -21,6 +21,8 @@ namespace BF2D.Enums
         [EnumMember]
         Psychic,
         [EnumMember]
+        Healing,
+        [EnumMember]
         Evil
     }
 

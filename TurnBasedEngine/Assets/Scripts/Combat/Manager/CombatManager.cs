@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using BF2D.Game;
 using DataStructures.PriorityQueue;
-using BF2D.Actions;
 using System;
 using BF2D.UI;
+using BF2D.Game.Actions;
 
 namespace BF2D.Combat
 {
@@ -19,7 +19,7 @@ namespace BF2D.Combat
         [SerializeField] private UIOptionsControl mainMenu = null;
         [SerializeField] private ComboManager comboManager = null;
         [SerializeField] private StatsPreviewController statsPreviewController = null;
-        [SerializeField] private CharacterTargetManager targetManager = null;
+        [SerializeField] private CharacterTargeter targetManager = null;
         [SerializeField] private DialogTextboxControl textboxControl = null;
 
         public List<CharacterStats> Characters
@@ -119,7 +119,7 @@ namespace BF2D.Combat
             CombatManager.instance = this;
         }
 
-        #region 
+        #region LISTENERS
         private void CombatInfoListen()
         {
             InitializeInfo combatInfo = GameInfo.Instance.CombatInfo;
@@ -172,7 +172,7 @@ namespace BF2D.Combat
         {
             Item item = itemInfo.Get();
 
-            SetupGameAction(item.OnUse, () => this.state.Begin());
+            SetupGameActionTargets(item.OnUse, () => this.state.Begin());
 
             this.state = new StateHandleItem
             {
@@ -193,7 +193,7 @@ namespace BF2D.Combat
         }
         */
 
-        private void SetupGameAction(GameAction gameAction, Action callback)
+        private void SetupGameActionTargets(GameAction gameAction, Action callback)
         {
             foreach (CharacterStatsAction statsAction in gameAction.StatsActions)
             {

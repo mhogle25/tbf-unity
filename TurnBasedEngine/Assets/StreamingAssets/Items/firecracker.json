@@ -15,7 +15,14 @@
                 "target":"Any",
                 "properties":
                 {
-                    "damage":3
+                    "damage": 
+                    {
+                        "value":3,
+                        "modifiers": 
+                        [
+                            "None"
+                        ]
+                    }
                 }
             }
         ]

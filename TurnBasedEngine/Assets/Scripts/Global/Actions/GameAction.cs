@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace BF2D.Actions
+namespace BF2D.Game.Actions
 {
     [Serializable]
     public class GameAction

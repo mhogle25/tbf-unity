@@ -1,5 +1,5 @@
 using System;
-using BF2D.Actions;
+using BF2D.Game.Actions;
 
 namespace BF2D.Combat
 {

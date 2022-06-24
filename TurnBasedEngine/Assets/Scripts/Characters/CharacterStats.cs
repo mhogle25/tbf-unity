@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using BF2D.Actions;
 using BF2D.Enums;
 
 namespace BF2D.Game
@@ -132,12 +131,12 @@ namespace BF2D.Game
         [JsonIgnore] public string Feet { get { return this.feet; } }
         [JsonProperty] private string feet = string.Empty;
 
-        [JsonIgnore] public LinkedList<ItemInfo> Items { get { return this.items; } }
-        [JsonProperty] private LinkedList<ItemInfo> items = new LinkedList<ItemInfo>();
-        [JsonIgnore] public LinkedList<EquipmentInfo> Equipments { get { return this.equipments; } }
-        [JsonProperty] private LinkedList<EquipmentInfo> equipments = new LinkedList<EquipmentInfo>();
-        [JsonIgnore] public LinkedList<string> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private LinkedList<string> statusEffects = new LinkedList<string>();
+        [JsonIgnore] public List<ItemInfo> Items { get { return this.items; } }
+        [JsonProperty] private List<ItemInfo> items = new List<ItemInfo>();
+        [JsonIgnore] public List<EquipmentInfo> Equipments { get { return this.equipments; } }
+        [JsonProperty] private List<EquipmentInfo> equipments = new List<EquipmentInfo>();
+        [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
+        [JsonProperty] private List<string> statusEffects = new List<string>();
 
         public void Damage(int damage)
         {
@@ -215,10 +214,18 @@ namespace BF2D.Game
             LuckModifier.RemoveStatusEffect(statusEffect);
         }
 
-        public void ResetStats()
+        public uint GetStatsProperty(CharacterStatsProperty property)
         {
-            ResetHealth();
-            ResetStamina();
+            return property switch
+            {
+                CharacterStatsProperty.None => 0,
+                CharacterStatsProperty.Speed => this.Speed,
+                CharacterStatsProperty.Attack => this.Attack,
+                CharacterStatsProperty.Defense => this.Defense,
+                CharacterStatsProperty.Focus => this.Focus,
+                CharacterStatsProperty.Luck => this.Luck,
+                _ => throw new ArgumentException("[CharacterStats] The given property was null or invalid"),
+            };
         }
     }
 }

@@ -2,7 +2,7 @@
     "name":"Vorpal Sword",
     "icon":"sword_01",
     "consumeable":false,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-    "description":"An ancient sword of great power.",
+    "description":"An ancient sword of great power. Damages a single target.",
     "useMessage":
     [
         "[I:0] performed a calculated strike on [I:1]."
@@ -16,7 +16,14 @@
                 "description":"attack",
                 "properties":
                 {
-                    "damage":3
+                    "damage":
+                    {
+                        "value":3,
+                        "modifiers":
+                        [
+                            "Attack"
+                        ]
+                    }
                 }
             }
         ]

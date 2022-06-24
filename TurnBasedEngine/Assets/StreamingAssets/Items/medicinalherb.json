@@ -2,7 +2,7 @@
     "name":"Medicinal Herb",
     "icon":"herb_01",
     "consumeable":true,
-    "description":"An herb with healing properties.",
+    "description":"An herb with restorative properties. Heal base 10 Health to a single target.",
     "useMessage":
     [
         "[I:0] treated [I:1]'s injuries."
@@ -16,7 +16,14 @@
                 "description":"heal",
                 "properties":
                 {
-                    "heal":10
+                    "heal": 
+                    {
+                        "value":10,
+                        "modifiers":
+                        [
+                            "Focus"
+                        ]
+                    }
                 }
             }
         ]

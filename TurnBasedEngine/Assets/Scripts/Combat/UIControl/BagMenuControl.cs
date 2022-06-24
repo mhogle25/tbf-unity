@@ -1,42 +1,36 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
 using BF2D.Game;
 using System;
 using BF2D.Enums;
-using BF2D.Actions;
+using TMPro;
+using BF2D.Game.Actions;
 
 namespace BF2D.Combat
 {
     public class BagMenuControl : UIOptionsControl
     {
+        [Header("Information")]
+        [SerializeField] private TextMeshProUGUI nameText = null;
+        [SerializeField] private TextMeshProUGUI descriptionText = null;
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-        }
+        private readonly List<Item> items = new List<Item>();
 
         public override void ControlInitialize()
         {
-            Debug.Log(CombatManager.Instance.CurrentCharacter);
-            Debug.Log("Made it");
-
+            this.items.Clear();
             this.optionsGrid.Setup(this.optionsGrid.Width, this.optionsGrid.Height);
 
             foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Items)
             {
-                Debug.Log("Inside the loop");
-                
+                this.items.Add(GameInfo.Instance.GetItem(itemInfo.Name));
+
                 this.optionsGrid.Add(new UIOption.Data
                 {
                     name = itemInfo.Name,
                     icon = GameInfo.Instance.GetIcon(itemInfo.Get().Icon),
+                    text = itemInfo.Count.ToString(),
                     actions = new InputButtonCollection<Action>
                     {
                         [InputButton.Confirm] = () =>
@@ -54,13 +48,19 @@ namespace BF2D.Combat
             }
 
             this.optionsGrid.SetCursorAtHead();
-
+            OnNavigate(this.optionsGrid.OneDimensionalIndex);
             base.ControlInitialize();
         }
 
-        public override void ControlFinalize()
+        public void OnNavigate(int index)
         {
-            base.ControlFinalize();
+            Item item = this.items[index];
+            this.nameText.text = item.Name;
+            this.descriptionText.text = $"{item.Description}\n";
+            foreach(CharacterStatsAction statsAction in item.OnUse.StatsActions)
+            {
+                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter);
+            }
         }
     }
 }

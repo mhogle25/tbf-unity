@@ -8,6 +8,7 @@ namespace BF2D.Combat
 {
     public class ComboManager : MonoBehaviour
     {
+        /*
         [Serializable]
         private class Combo
         {
@@ -104,5 +105,6 @@ namespace BF2D.Combat
             int x = this.comboActions["foo"]("test");
             Debug.Log(x);
         }
+    */
     }
 }

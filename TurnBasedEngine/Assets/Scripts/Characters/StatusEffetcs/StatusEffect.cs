@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 using BF2D.Enums;
-using BF2D.Actions;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
@@ -14,8 +14,8 @@ namespace BF2D.Game
         [JsonProperty] protected string description = string.Empty;
         [JsonIgnore] public int Duration { get { return this.duration; } }
         [JsonProperty] private int duration = -1;
-        [JsonIgnore] public EffectType Type { get { return this.type; } }
-        [JsonProperty] private EffectType type = EffectType.Generic;
+        [JsonIgnore] public EffectType Effect { get { return this.effect; } }
+        [JsonProperty] private EffectType effect = EffectType.Generic;
         [JsonIgnore] public int SpeedModifier { get { return this.speedModifier; } }
         [JsonProperty] private int speedModifier = 0;
         [JsonIgnore] public int AttackModifier { get { return this.attackModifier; } }
