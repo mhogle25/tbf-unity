@@ -1031,16 +1031,16 @@ Font:
     uv:
       serializedVersion: 2
       x: 0.5
-      y: 0.5390625
-      width: 0.0234375
-      height: -0.0859375
+      y: 0.546875
+      width: 0.03125
+      height: -0.09375
     vert:
       serializedVersion: 2
       x: -1
-      y: -1
-      width: 11
-      height: -3
-    advance: 9
+      y: 3
+      width: 12
+      height: -4
+    advance: 12
     flipped: 1
   - serializedVersion: 2
     index: 96

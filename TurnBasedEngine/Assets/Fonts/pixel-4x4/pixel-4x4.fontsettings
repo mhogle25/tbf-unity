@@ -1031,16 +1031,16 @@ Font:
     uv:
       serializedVersion: 2
       x: 0.046875
-      y: 0.640625
+      y: 0.671875
       width: 0.046875
-      height: -0.0625
+      height: -0.09375
     vert:
       serializedVersion: 2
       x: -1
-      y: 1
-      width: 4
+      y: 2
+      width: 6
       height: -3
-    advance: 2
+    advance: 5
     flipped: 1
   - serializedVersion: 2
     index: 96
@@ -1094,8 +1094,8 @@ Font:
     index: 125
     uv:
       serializedVersion: 2
-      x: 0.046875
-      y: 0.734375
+      x: 0.09375
+      y: 0.703125
       width: 0.046875
       height: -0.09375
     vert:
@@ -1110,8 +1110,8 @@ Font:
     index: 126
     uv:
       serializedVersion: 2
-      x: 0.09375
-      y: 0.671875
+      x: 0.203125
+      y: 0.5625
       width: 0.046875
       height: -0.0625
     vert:
