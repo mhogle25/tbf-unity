@@ -39,7 +39,7 @@ namespace BF2D.UI {
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
         public bool AutoPass = false;
-        [SerializeField] private UnityEvent onEndOfQueuedDialogs = new UnityEvent();
+        [SerializeField] private UnityEvent onEndOfQueuedDialogs = new();
 
         [Header("Dialog Responses")]
         public bool ResponseOptionsEnabled = true;
@@ -48,7 +48,7 @@ namespace BF2D.UI {
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
-        [SerializeField] private ResponseOptionEvent responseOptionEvent = new ResponseOptionEvent();
+        [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
 
         [Header("Audio")]
         [SerializeField] private AudioClipCollection voiceCollection;
@@ -62,15 +62,15 @@ namespace BF2D.UI {
         public string DialogResponseFilesPath { set { this.responseOptionsFilesPath = value; } }
 
         //Loaded dialogs
-        private readonly Dictionary<string, List<string>> dialogs = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> dialogs = new();
         //Loaded dialog options
-        private readonly Dictionary<string, string> dialogResponses = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> dialogResponses = new();
 
         //The state delegate
         private Action state;
 
         //The dialog queue
-        private readonly Queue<DialogData> dialogQueue = new Queue<DialogData>();
+        private readonly Queue<DialogData> dialogQueue = new();
 
         //The current callback function
         private Action callback = null;
@@ -157,30 +157,30 @@ namespace BF2D.UI {
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
-        public void Dialog(string key, int dialogIndex) 
+        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
+        public void Dialog(string key, int startingLineIndex) 
         {
-            Dialog(key, dialogIndex, null);
+            Dialog(key, startingLineIndex, null);
         }
 
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
+        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(string key, int dialogIndex, Action callbackFunction)
+        public void Dialog(string key, int startingLineIndex, Action callbackFunction)
         {
-            Dialog(key, dialogIndex, callbackFunction, null);
+            Dialog(key, startingLineIndex, callbackFunction, null);
         }
 
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="dialogIndex">The line the dialog will start from (0 is the first line)</param>
+        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(string key, int dialogIndex, Action callbackFunction, List<string> inserts)
+        public void Dialog(string key, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
             //Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
 
@@ -197,7 +197,7 @@ namespace BF2D.UI {
             DialogData dialogData = new DialogData
             {
                 dialog = lines,
-                index = dialogIndex,
+                index = startingLineIndex,
                 callback = callbackFunction
             };
 
@@ -218,26 +218,31 @@ namespace BF2D.UI {
         /// Pushes a dialog to the dialog queue
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
+        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int dialogIndex, Action callbackFunction)
+        public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction)
         {
-            Dialog(lines, dialogIndex, callbackFunction, null);
+            Dialog(lines, startingLineIndex, callbackFunction, null);
         }
 
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
+        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int dialogIndex, Action callbackFunction, List<string> inserts)
+        public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
+            if (lines is null)
+            {
+                Debug.LogError("[DialogTextbox] Tried to queue a dialog but the dialog was null");
+            }
+
             List<string> newLines = ReplaceInsertTags(lines, inserts);
             DialogData dialogData = new DialogData
             {
                 dialog = newLines,
-                index = dialogIndex,
+                index = startingLineIndex,
                 callback = callbackFunction
             };
 
@@ -272,6 +277,23 @@ namespace BF2D.UI {
         {
             this.dialogResponses.Clear();
             BF2D.Utilities.TextFile.LoadTextFiles(this.dialogResponses, Path.Combine(Application.streamingAssetsPath, this.responseOptionsFilesPath));
+        }
+        #endregion
+
+        #region Public Static Utilities
+        public static List<string> ReplaceInsertTags(List<string> dialog, List<string> inserts)
+        {
+            if (inserts is null)
+                return dialog;
+            if (inserts.Count < 1)
+                return dialog;
+
+            List<string> newDialog = dialog;
+            for (int i = 0; i < newDialog.Count; i++)
+            {
+                newDialog[i] = ReplaceInsertTags(newDialog[i], inserts);
+            }
+            return newDialog;
         }
         #endregion
 
@@ -529,46 +551,6 @@ namespace BF2D.UI {
             return valueString;                 
         }
 
-        public List<string> ReplaceInsertTags(List<string> dialog, List<string> inserts)
-        {
-            if (inserts is null)
-                return dialog;
-            if (inserts.Count < 1)
-                return dialog;
-
-            List<string> newDialog = dialog;
-            for (int i = 0; i < newDialog.Count; i++)
-            {
-                newDialog[i] = ReplaceInsertTags(newDialog[i], inserts);
-            }
-            return newDialog;
-        }
-
-        private string ReplaceInsertTags(string message, List<string> inserts)
-        {
-            if (inserts is null)
-                return message;
-            if (inserts.Count < 1)
-                return message;
-
-            string newMessage = message;
-            for (int i = 0; i < inserts.Count; i++)
-            {
-                newMessage = ReplaceInsertTags(message, inserts[i], i);
-            }
-            return newMessage;
-        }
-
-        private string ReplaceInsertTags(string message, string insert, int index)
-        {
-            if (insert is null)
-                return message;
-
-            string newMessage = message;
-            newMessage = newMessage.Replace($"[{DialogTextbox.insertTag}:{index}]", insert);
-            return newMessage;
-        }
-
         private void NametagEnable(string name) {
             this.nametag.gameObject.SetActive(true);
             this.nametagTextField.text = name;
@@ -659,6 +641,33 @@ namespace BF2D.UI {
             this.pass = true;
             this.state = MessageParseAndDisplayClocked;
             UIControlsManager.Instance.PassControlBack();
+        }
+        #endregion
+
+        #region Private Static Utilities
+        private static string ReplaceInsertTags(string message, List<string> inserts)
+        {
+            if (inserts is null)
+                return message;
+            if (inserts.Count < 1)
+                return message;
+
+            string newMessage = message;
+            for (int i = 0; i < inserts.Count; i++)
+            {
+                newMessage = ReplaceInsertTags(message, inserts[i], i);
+            }
+            return newMessage;
+        }
+
+        private static string ReplaceInsertTags(string message, string insert, int index)
+        {
+            if (insert is null)
+                return message;
+
+            string newMessage = message;
+            newMessage = newMessage.Replace($"[{DialogTextbox.insertTag}:{index}]", insert);
+            return newMessage;
         }
         #endregion
     }

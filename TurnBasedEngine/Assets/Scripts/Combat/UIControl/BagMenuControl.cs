@@ -15,14 +15,14 @@ namespace BF2D.Combat
         [SerializeField] private TextMeshProUGUI nameText = null;
         [SerializeField] private TextMeshProUGUI descriptionText = null;
 
-        private readonly List<Item> items = new List<Item>();
+        private readonly List<Item> items = new();
 
         public override void ControlInitialize()
         {
             this.items.Clear();
             this.optionsGrid.Setup(this.optionsGrid.Width, this.optionsGrid.Height);
 
-            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Items)
+            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentPlayer.Items)
             {
                 this.items.Add(GameInfo.Instance.GetItem(itemInfo.Name));
 
@@ -35,7 +35,7 @@ namespace BF2D.Combat
                     {
                         [InputButton.Confirm] = () =>
                         {
-                            CombatManager.Instance.ExecuteItem(itemInfo);
+                            CombatManager.Instance.ExecuteCombatAction(itemInfo);
                             UIControlsManager.Instance.ResetControlChain(false);
                         },
                         [InputButton.Back] = () =>
@@ -59,7 +59,7 @@ namespace BF2D.Combat
             this.descriptionText.text = $"{item.Description}\n";
             foreach(CharacterStatsAction statsAction in item.OnUse.StatsActions)
             {
-                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter);
+                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentPlayer);
             }
         }
     }

@@ -17,7 +17,7 @@ namespace BF2D.UI
         private void Awake()
         {
             //Setup of Monobehaviour Singleton
-            if (UIControlsManager.instance != null)
+            if (UIControlsManager.instance is not null)
             {
                 if (UIControlsManager.instance != this)
                 {
@@ -30,7 +30,7 @@ namespace BF2D.UI
 
         void Start()
         {
-            if (!(this.initializeOnStart is null))
+            if (this.initializeOnStart is not null)
             {
                 TakeControl(this.initializeOnStart);
             }
@@ -44,7 +44,7 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            if (!(this.currentControl is null))
+            if (this.currentControl is not null)
                 EndControl(this.currentControl);
 
             if (this.controlChainHistory.Count > 0)
@@ -119,7 +119,7 @@ namespace BF2D.UI
             if (Object.ReferenceEquals(this.currentControl, uiControl))
                 return;
 
-            if (!(this.currentControl is null))
+            if (this.currentControl is not null)
             {
                 this.controlChainHistory.Push(this.currentControl);
                 EndControl(this.currentControl);

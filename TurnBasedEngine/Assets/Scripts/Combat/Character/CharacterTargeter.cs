@@ -16,9 +16,9 @@ namespace BF2D.Combat
 
         [SerializeField] private DialogTextbox textbox = null;
 
-        private readonly CharacterTargetCollection<Action<CharacterStatsAction>> targeterSetupActionCollection = new CharacterTargetCollection<Action<CharacterStatsAction>>();
+        private readonly CharacterTargetCollection<Action<CharacterStatsAction>> targeterSetupActionCollection = new();
 
-        private readonly Queue<CharacterStatsAction> statsActionQueue = new Queue<CharacterStatsAction>();
+        private readonly Queue<CharacterStatsAction> statsActionQueue = new();
 
         private Action state = null;
         private Action callback = null;
@@ -27,7 +27,7 @@ namespace BF2D.Combat
         {
             this.targeterSetupActionCollection[CharacterTarget.Self] = (statsAction) =>
             {
-                statsAction.AddTarget(CombatManager.Instance.CurrentCharacter);
+                statsAction.AddTarget(CombatManager.Instance.CurrentPlayer);
                 this.state = StateEnd;
             };
 
@@ -72,7 +72,7 @@ namespace BF2D.Combat
             this.statsActionQueue.Enqueue(statsAction);
         }
 
-        public void Execute(Action callback)
+        public void Run(Action callback)
         {
             this.state = StateCheckQueue;
             this.callback = callback;

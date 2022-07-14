@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using BF2D.Enums;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -37,6 +38,8 @@ namespace BF2D.Game
         }
 
         [JsonIgnore] public abstract CharacterType Type { get; }
+        [JsonIgnore] public string ID { get { return this.id; } }
+        [JsonProperty] private string id = string.Empty;
         [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
         [JsonProperty] private string name = string.Empty;
         [JsonIgnore] public string Description { get { return this.description; } set { this.description = value; } }
@@ -155,12 +158,28 @@ namespace BF2D.Game
 
         public void Heal(int healing)
         {
-            this.health += healing > 0 ? healing : 1;
+            int value = healing > 0 ? healing : 1;
+
+            if (this.health + value > this.maxHealth)
+            {
+                this.health = this.maxHealth;
+                return;
+            }
+
+            this.health += value;
         }
 
         public void Recover(int recovery)
         {
-            this.stamina += recovery > 0 ? recovery : 1;
+            int value = recovery > 0 ? recovery : 1;
+
+            if (this.stamina + value > this.maxStamina)
+            {
+                this.stamina = this.maxStamina;
+                return;
+            }
+
+            this.stamina += value;
         }
 
         public void Exert(int exertion)
@@ -180,6 +199,12 @@ namespace BF2D.Game
 
         public void Equip(Equipment equipment)
         {
+            if (equipment is null)
+            {
+                Debug.LogWarning($"[CharacterStats] Tried to equip to {this.name} but the equipment given was null");
+                return;
+            }
+
             SpeedModifier.Equip(equipment);
             AttackModifier.Equip(equipment);
             DefenseModifier.Equip(equipment);
@@ -189,6 +214,12 @@ namespace BF2D.Game
 
         public void Unequip(Equipment equipment)
         {
+            if (equipment is null)
+            {
+                Debug.LogWarning($"[CharacterStats] Tried to equip to {this.name} but the equipment given was null");
+                return;
+            }
+
             SpeedModifier.Unequip(equipment);
             AttackModifier.Unequip(equipment);
             DefenseModifier.Unequip(equipment);
@@ -198,6 +229,12 @@ namespace BF2D.Game
 
         public void ApplyStatusEffect(StatusEffect statusEffect)
         {
+            if (statusEffect is null)
+            {
+                Debug.LogWarning($"[CharacterStats] Tried to apply a status effect to {this.name} but the status effect given was null");
+                return;
+            }
+
             SpeedModifier.ApplyStatusEffect(statusEffect);
             AttackModifier.ApplyStatusEffect(statusEffect);
             DefenseModifier.ApplyStatusEffect(statusEffect);
@@ -207,6 +244,12 @@ namespace BF2D.Game
 
         public void RemoveStatusEffect(StatusEffect statusEffect)
         {
+            if (statusEffect is null)
+            {
+                Debug.LogWarning($"[CharacterStats] Tried to apply a status effect to {this.name} but the status effect given was null");
+                return;
+            }
+
             SpeedModifier.RemoveStatusEffect(statusEffect);
             AttackModifier.RemoveStatusEffect(statusEffect);
             DefenseModifier.RemoveStatusEffect(statusEffect);
@@ -224,7 +267,7 @@ namespace BF2D.Game
                 CharacterStatsProperty.Defense => this.Defense,
                 CharacterStatsProperty.Focus => this.Focus,
                 CharacterStatsProperty.Luck => this.Luck,
-                _ => throw new ArgumentException("[CharacterStats] The given property was null or invalid"),
+                _ => throw new ArgumentException("[CharacterStats] The given property was null or invalid")
             };
         }
     }

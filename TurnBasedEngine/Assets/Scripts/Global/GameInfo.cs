@@ -13,6 +13,7 @@ namespace BF2D.Game
         public static GameInfo Instance { get { return GameInfo.instance; } }
         private static GameInfo instance;
 
+        [Header("Data File Paths")]
         [SerializeField] private string savesPath = "Saves";
 
         [SerializeField] private string playersPath = "Players";
@@ -29,6 +30,7 @@ namespace BF2D.Game
         private readonly JsonCache<StatusEffect> statusEffects = new JsonCache<StatusEffect>();
 
         //AssetCollections
+        [Header("Asset Collections")]
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
 
