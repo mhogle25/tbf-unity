@@ -3,32 +3,24 @@ using BF2D.Game;
 using BF2D.Game.Actions;
 using BF2D.Enums;
 using System;
+using System.IO;
 using BF2D.UI;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace BF2D.Combat
 {
     public abstract class CharacterCombat : MonoBehaviour
     {
-        public class StateData
-        {
-            public DialogTextboxControl textboxControl = null;
-            public GameAction gameAction = null;
-            public List<string> dialog = null;
-        }
-
-        public class ItemStateData : StateData
-        {
-            public Item item = null;
-            public ItemInfo itemInfo = null;
-        }
-
         public abstract CharacterType Type { get; }
+
+        public DialogTextboxControl TextboxControl { get { return this.textboxControl; } set { this.textboxControl = value; } }
+        [SerializeField] private DialogTextboxControl textboxControl = null;
 
         [SerializeField] protected SpriteRenderer spriteRenderer;
         [SerializeField] protected Animator animator;
 
-        protected StateData state = null;
+        private readonly Queue<CharacterStatsAction> incomingStatsActions = new();
 
         private void Awake()
         {
@@ -36,24 +28,24 @@ namespace BF2D.Combat
         }
 
         #region Public Methods
+        public void ExecuteCombatAction(Item item, ItemInfo itemInfo)
+        {
+            if (item.Consumeable)
+                itemInfo.Count--;
+
+            SendUseMessage(item.Name, item.UseMessage);
+        }
+
         public void EndCombatAction()
         {
-            this.state.textboxControl.Textbox.Dialog(this.state.dialog, 0, () =>
+            /*
+            this.textboxControl.Textbox.Dialog(this.state.gameActionInfo.postActionDialog, 0, () =>
             {
 
             });
             UIControlsManager.Instance.TakeControl(this.state.textboxControl);
             this.state = null;
-        }
-
-        public void ExecuteCombatAction(ItemStateData itemStateData)
-        {
-            if (itemStateData.item.Consumeable)
-                itemStateData.itemInfo.Count--;
-
-            this.state = itemStateData;
-
-            SendUseMessage(itemStateData.item.Name, itemStateData.item.UseMessage);
+            */
         }
 
         public void TriggerAnimationSwap()
@@ -62,11 +54,26 @@ namespace BF2D.Combat
         }
 
         public abstract void TriggerGameAction();
+
+        public void EnqueueStatsAction(CharacterStatsAction statsAction)
+        {
+            this.incomingStatsActions.Enqueue(statsAction);
+        }
         #endregion
 
         #region Private Methods
+        protected void TriggerGameAction(CharacterStats source)
+        {
+            /*
+            if (this.state.gameAction is null)
+                return;
+            this.state.gameActionInfo = this.state.gameAction.Run(source, this.state.targets);
+            */
+        }
+
         private void SendUseMessage(string subjectName, List<string> useMessage)
         {
+            /*
             List<string> dialog = new()
             {
                 $"{CombatManager.Instance.CurrentCharacter.Name} used {subjectName}."
@@ -82,17 +89,10 @@ namespace BF2D.Combat
                 });
             }
 
-            this.state.textboxControl.Textbox.Dialog
-            (
-                dialog,
-                0,
-                () =>
-                {
-                    TriggerAnimationSwap();
-                }
-            );
+            this.textboxControl.Textbox.Dialog(dialog, 0, TriggerAnimationSwap);
 
-            UIControlsManager.Instance.TakeControl(this.state.textboxControl);
+            UIControlsManager.Instance.TakeControl(this.textboxControl);
+            */
         }
         #endregion
     }

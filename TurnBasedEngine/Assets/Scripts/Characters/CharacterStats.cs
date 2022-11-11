@@ -141,6 +141,9 @@ namespace BF2D.Game
         [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
         [JsonProperty] private List<string> statusEffects = new List<string>();
 
+        [JsonIgnore] public int GridPosition { get { return this.gridPosition; } set { this.gridPosition = value; } }
+        [JsonProperty] private int gridPosition = 0;
+
         public void Damage(int damage)
         {
             this.health -= (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;

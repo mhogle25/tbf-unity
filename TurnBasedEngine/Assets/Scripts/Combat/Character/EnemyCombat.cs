@@ -17,13 +17,7 @@ namespace BF2D.Combat
 
         public override void TriggerGameAction()
         {
-            if (this.state.gameAction is null)
-                return;
-
-            foreach (CharacterStatsAction statsAction in this.state.gameAction.StatsActions)
-            {
-                this.state.dialog = statsAction.Run(this.stats);
-            }
+            TriggerGameAction(this.stats);
         }
     }
 }

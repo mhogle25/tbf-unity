@@ -8,8 +8,8 @@ namespace BF2D.UI
 {
     public abstract class UIUtility : UIComponent
     {
-        public RectTransform View { get { return this.view; } }
-        [SerializeField] protected RectTransform view = null;
+        public Transform View { get { return this.view; } }
+        [SerializeField] protected Transform view = null;
 
         public bool Interactable { get { return this.interactable; } set { this.interactable = value; } }
         [SerializeField] protected bool interactable = false;

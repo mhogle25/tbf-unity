@@ -9,7 +9,7 @@ namespace BF2D
     public class JsonCache<T>
     {
 
-        private readonly Dictionary<string, T> objects = new Dictionary<string, T>();
+        private readonly Dictionary<string, T> objects = new();
 
         public int Count { get { return this.count; } }
         private int count = 0;

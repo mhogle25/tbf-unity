@@ -14,42 +14,17 @@ namespace BF2D.Game.Actions
         [JsonProperty] private CharacterTarget target = CharacterTarget.Self;
         [JsonIgnore] public string Description { get { return this.description; } }
         [JsonProperty] private string description = "target";
-        /*
-        [JsonIgnore] public InputDirection Direction { get { return this.direction; } }
-        [JsonProperty] public InputDirection direction = InputDirection.Right;
-        [JsonIgnore] public EffectType Effect { get { return this.effect; } }
-        [JsonProperty] private EffectType effect = EffectType.Generic;
-        */
         [JsonIgnore] public CharacterStatsActionProperties Properties { get { return this.properties; } }
         [JsonProperty] private CharacterStatsActionProperties properties = new CharacterStatsActionProperties();
 
-        [JsonIgnore] public List<CharacterStats> Targets { get { return this.targets; } }
-        [JsonIgnore] private readonly List<CharacterStats> targets = new List<CharacterStats>();
-
-        public void AddTarget(CharacterStats character)
+        public string Run(CharacterStats source, CharacterStats target)
         {
-            this.targets.Add(character);
-        }
-
-        public List<string> Run(CharacterStats source)
-        {
-            List<string> dialog = new();
-            foreach (CharacterStats target in this.targets)
+            string message = string.Empty;
+            foreach (string s in this.properties.Run(source, target))
             {
-                string message = string.Empty;
-                int i = 0;
-                foreach (string s in this.properties.Run(source, target))
-                {
-                    if (i > 4)
-                    {
-                        dialog.Add(message);
-                    }
-                    message += $"{s}\n";
-                    i++;
-                };
-            }
-            this.targets.Clear();
-            return dialog;
+                message += $"{s}\n";
+            };
+            return message;
         }
 
         public string TextBreakdown(CharacterStats character)

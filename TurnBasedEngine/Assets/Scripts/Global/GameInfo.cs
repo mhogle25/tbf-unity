@@ -13,6 +13,11 @@ namespace BF2D.Game
         public static GameInfo Instance { get { return GameInfo.instance; } }
         private static GameInfo instance;
 
+        public float ClockSpeed { get { return this.clockSpeed; } }
+
+        [Header("Global Game Settings")]
+        [SerializeField] private float clockSpeed = 0.03125f;
+
         [Header("Data File Paths")]
         [SerializeField] private string savesPath = "Saves";
 
@@ -25,25 +30,24 @@ namespace BF2D.Game
         public List<PlayerStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
 
-        private readonly JsonCache<Item> items = new JsonCache<Item>();
-        private readonly JsonCache<Equipment> equipments = new JsonCache<Equipment>();
-        private readonly JsonCache<StatusEffect> statusEffects = new JsonCache<StatusEffect>();
+        private readonly JsonCache<Item> items = new();
+        private readonly JsonCache<Equipment> equipments = new();
+        private readonly JsonCache<StatusEffect> statusEffects = new();
 
         //AssetCollections
         [Header("Asset Collections")]
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
 
-        public CombatManager.InitializeInfo CombatInfo 
+        public CombatManager.InitializeInfo UnstageCombatInfo()
         { 
-            get 
+            if (this.combatInfos.Count < 1)
             {
-                if (this.combatInfos.Count < 1)
-                    return null;
-                return this.combatInfos.Dequeue(); 
-            } 
+                return null;
+            }
+            return this.combatInfos.Dequeue(); 
         }
-        private Queue<CombatManager.InitializeInfo> combatInfos = new Queue<CombatManager.InitializeInfo>();
+        private readonly Queue<CombatManager.InitializeInfo> combatInfos = new();
 
         private void Awake()
         {
@@ -64,8 +68,11 @@ namespace BF2D.Game
         private void TEST_INITIALIZE()
         {
             this.currentSave = LoadSaveData("save1");
-            List<EnemyStats> enemies = new List<EnemyStats>();
-            enemies.Add(LoadEnemy("lessergoblin"));
+            List<EnemyStats> enemies = new()
+            {
+                LoadEnemy("lessergoblin")
+            };
+
             this.combatInfos.Enqueue(new CombatManager.InitializeInfo
             {
                 players = this.Players,

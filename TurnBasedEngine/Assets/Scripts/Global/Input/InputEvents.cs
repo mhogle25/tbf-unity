@@ -13,27 +13,27 @@ namespace BF2D
         public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
         [SerializeField] protected bool confirmEnabled = true;
         [Tooltip("The actions that will be called on confirm")]
-        [SerializeField] protected UnityEvent confirmEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent confirmEvent = new();
         public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
         [SerializeField] protected bool backEnabled = true;
         [Tooltip("The actions that will be called on back")]
-        [SerializeField] protected UnityEvent backEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent backEvent = new();
         public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
         [SerializeField] protected bool menuEnabled = true;
         [Tooltip("The actions that will be called on menu")]
-        [SerializeField] protected UnityEvent menuEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent menuEvent = new();
         public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
         [SerializeField] protected bool attackEnabled = true;
         [Tooltip("The actions that will be called on attack")]
-        [SerializeField] protected UnityEvent attackEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent attackEvent = new();
         public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
         [SerializeField] protected bool pauseEnabled = true;
         [Tooltip("The actions that will be performed on pause")]
-        [SerializeField] protected UnityEvent pauseEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent pauseEvent = new();
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
         [SerializeField] protected bool selectEnabled = true;
         [Tooltip("The actions that will be performed on select")]
-        [SerializeField] protected UnityEvent selectEvent = new UnityEvent();
+        [SerializeField] protected UnityEvent selectEvent = new();
 
         public UnityEvent GetInputEvent(InputButton inputButton)
         {

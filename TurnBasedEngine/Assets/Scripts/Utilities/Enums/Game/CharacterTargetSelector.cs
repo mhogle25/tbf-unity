@@ -23,6 +23,8 @@ namespace BF2D.Enums
         [EnumMember]
         Any,
         [EnumMember]
+        AllOfAny,
+        [EnumMember]
         All
     }
 

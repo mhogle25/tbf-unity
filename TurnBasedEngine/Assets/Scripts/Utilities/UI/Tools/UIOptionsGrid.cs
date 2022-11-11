@@ -10,11 +10,12 @@ namespace BF2D.UI
 {
     public class UIOptionsGrid : UIUtility
     {
-        [SerializeField] private bool staticContent = true;
+        [SerializeField] private bool staticGrid = true;
         [Header("Grid")]
-        [SerializeField] private UIOption optionPrefab = null;
+        [ShowIf(ActionOnConditionFail.JustDisable, ConditionOperator.NAND, nameof(staticGrid))]
+        [SerializeField] private GridOption optionPrefab = null;
         [Tooltip("The container for grid options")]
-        [SerializeField] private LayoutGroup container = null;
+        [SerializeField] private Transform container = null;
         [Tooltip("Determines the direction that elements will be populated in")]
         [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
         [SerializeField] private int gridWidth = 1;
@@ -31,39 +32,39 @@ namespace BF2D.UI
         [Serializable]
         public class OnNavigate : UnityEvent<int> { }
         [SerializeField]
-        private OnNavigate onNavigateEvent = new OnNavigate();
+        private OnNavigate onNavigateEvent = new();
 
 
         [SerializeField] private AudioSource navigateAudioSource = null;
         [Tooltip("Enable/disable use of the confirm button with the grid")]
-        [SerializeField] private bool confirmEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(confirmEnabled))]
+        [SerializeField] private bool confirmEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(confirmEnabled))]
         [SerializeField] private AudioSource confirmAudioSource = null;
         [Tooltip("Enable/disable use of the back button with the grid")]
-        [SerializeField] private bool backEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(backEnabled))]
+        [SerializeField] private bool backEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(backEnabled))]
         [SerializeField] private AudioSource backAudioSource = null;
         [Tooltip("Enable/disable use of the menu button with the grid")]
-        [SerializeField] private bool menuEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(menuEnabled))]
+        [SerializeField] private bool menuEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(menuEnabled))]
         [SerializeField] private AudioSource menuAudioSource = null;
         [Tooltip("Enable/disable use of the attack button with the grid")]
-        [SerializeField] private bool attackEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(attackEnabled))]
+        [SerializeField] private bool attackEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(attackEnabled))]
         [SerializeField] private AudioSource attackAudioSource = null;
         [Tooltip("Enable/disable use of the pause button with the grid")]
-        [SerializeField] private bool pauseEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(pauseEnabled))]
+        [SerializeField] private bool pauseEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(pauseEnabled))]
         [SerializeField] private AudioSource pauseAudioSource = null;
         [Tooltip("Enable/disable use of the select button with the grid")]
-        [SerializeField] private bool selectEnabled = true;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.And, nameof(selectEnabled))]
+        [SerializeField] private bool selectEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(selectEnabled))]
         [SerializeField] private AudioSource selectAudioSource = null;
 
         /// <summary>
         /// Whether this options grid is meant to handle statically defined options. If false, this grid is used for dynamically populating options.
         /// </summary>
-        public bool StaticContent { get { return this.staticContent; } }
+        public bool StaticContent { get { return this.staticGrid; } }
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -115,10 +116,10 @@ namespace BF2D.UI
         /// </summary>
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 
-        private UIOption[,] grid = null;
+        private GridOption[,] grid = null;
         private int count = 0;
         public Vector2Int CursorPosition { get { return this.cursorPosition; } }
-        public int OneDimensionalIndex
+        public int CursorPosition1D
         {
             get
             {
@@ -133,12 +134,12 @@ namespace BF2D.UI
                 }
             }
         }
-        private Vector2Int cursorPosition = new Vector2Int(0, 0);
-        private Vector2Int head = new Vector2Int(0, 0);
+        private Vector2Int cursorPosition = new(0, 0);
+        private Vector2Int head = new(0, 0);
 
         private void Awake()
         {
-            if (!this.staticContent)
+            if (!this.staticGrid)
                 return;
 
             UIOption[] options = this.container.GetComponentsInChildren<UIOption>();
@@ -167,9 +168,9 @@ namespace BF2D.UI
         /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
-            if (this.staticContent)
+            if (this.staticGrid)
             {
-                Debug.LogWarning("[UIOptionsGrid] Tried to dynamically set up the options grid when it was set to static");
+                Debug.LogWarning($"[UIOptionsGrid] Tried to dynamically set up the options grid '{this.gameObject.name}' when it was set to static");
                 return;
             }
 
@@ -189,16 +190,16 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="optionData">The data for the option</param>
         /// <returns>The UI option object</returns>
-        public UIOption Add(UIOption.Data optionData)
+        public GridOption Add(GridOption.Data optionData)
         {
 
-            if (this.staticContent)
+            if (this.staticGrid)
             {
                 Debug.LogWarning("[UIOptionsGrid] Tried to add an option to the options grid while it was set to static");
                 return null;
             }
 
-            UIOption option = null;
+            GridOption option = null;
 
             //Base case
             if (this.count + 1 > Size)
@@ -259,7 +260,7 @@ namespace BF2D.UI
                 maxj = this.gridHeight;
             }
 
-            Queue<UIOption> queue = new Queue<UIOption>();
+            Queue<GridOption> queue = new Queue<GridOption>();
             for (int i = 0; i < maxi; i++)
             {
                 for (int j = 0; j < maxj; j++)
@@ -400,7 +401,7 @@ namespace BF2D.UI
 
                 BF2D.Utilities.Audio.PlayAudioSource(this.navigateAudioSource);
 
-                this.onNavigateEvent.Invoke(OneDimensionalIndex);
+                this.onNavigateEvent.Invoke(CursorPosition1D);
             }
         }
         #endregion

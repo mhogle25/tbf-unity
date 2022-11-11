@@ -1,11 +1,12 @@
-using System.Collections.Generic;
-using UnityEngine;
-using BF2D.UI;
-using BF2D.Game;
-using System;
 using BF2D.Enums;
-using TMPro;
+using BF2D.Game;
 using BF2D.Game.Actions;
+using BF2D.UI;
+using System;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace BF2D.Combat
 {
@@ -14,6 +15,8 @@ namespace BF2D.Combat
         [Header("Information")]
         [SerializeField] private TextMeshProUGUI nameText = null;
         [SerializeField] private TextMeshProUGUI descriptionText = null;
+        [Serializable] private class ItemCombatAction : UnityEvent<ItemInfo> { }
+        [SerializeField] private ItemCombatAction itemEvent;
 
         private readonly List<Item> items = new();
 
@@ -22,7 +25,7 @@ namespace BF2D.Combat
             this.items.Clear();
             this.optionsGrid.Setup(this.optionsGrid.Width, this.optionsGrid.Height);
 
-            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentPlayer.Items)
+            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentPlayer.Stats.Items)
             {
                 this.items.Add(GameInfo.Instance.GetItem(itemInfo.Name));
 
@@ -35,7 +38,7 @@ namespace BF2D.Combat
                     {
                         [InputButton.Confirm] = () =>
                         {
-                            CombatManager.Instance.ExecuteCombatAction(itemInfo);
+                            this.itemEvent.Invoke(itemInfo);
                             UIControlsManager.Instance.ResetControlChain(false);
                         },
                         [InputButton.Back] = () =>
@@ -48,7 +51,7 @@ namespace BF2D.Combat
             }
 
             this.optionsGrid.SetCursorAtHead();
-            OnNavigate(this.optionsGrid.OneDimensionalIndex);
+            OnNavigate(this.optionsGrid.CursorPosition1D);
             base.ControlInitialize();
         }
 
@@ -59,7 +62,7 @@ namespace BF2D.Combat
             this.descriptionText.text = $"{item.Description}\n";
             foreach(CharacterStatsAction statsAction in item.OnUse.StatsActions)
             {
-                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentPlayer);
+                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentPlayer.Stats);
             }
         }
     }

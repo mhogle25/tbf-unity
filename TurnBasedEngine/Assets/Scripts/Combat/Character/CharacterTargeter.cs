@@ -11,10 +11,11 @@ namespace BF2D.Combat
 {
     public class CharacterTargeter : MonoBehaviour
     {
-        [SerializeField] private UIOptionsControl textGridControl = null;
-        [SerializeField] private UIOptionsControl iconGridControl = null;
+        [SerializeField] private UIOptionsControl enemyOptionsControl = null;
+        [SerializeField] private UIOptionsControl playerOptionsControl = null;
+        [SerializeField] private UIOptionsControl anyOptionsControl = null;
 
-        [SerializeField] private DialogTextbox textbox = null;
+        [SerializeField] private DialogTextboxControl textboxControl = null;
 
         private readonly CharacterTargetCollection<Action<CharacterStatsAction>> targeterSetupActionCollection = new();
 
@@ -27,8 +28,7 @@ namespace BF2D.Combat
         {
             this.targeterSetupActionCollection[CharacterTarget.Self] = (statsAction) =>
             {
-                statsAction.AddTarget(CombatManager.Instance.CurrentPlayer);
-                this.state = StateEnd;
+
             };
 
             this.targeterSetupActionCollection[CharacterTarget.Player] = (statsAction) =>
@@ -56,6 +56,11 @@ namespace BF2D.Combat
 
             };
 
+            this.targeterSetupActionCollection[CharacterTarget.AllOfAny] = (statsAction) =>
+            {
+
+            };
+
             this.targeterSetupActionCollection[CharacterTarget.All] = (statsAction) =>
             {
 
@@ -64,7 +69,7 @@ namespace BF2D.Combat
 
         private void Update()
         {
-            state?.Invoke();
+            this.state?.Invoke();
         }
 
         public void Enqueue(CharacterStatsAction statsAction)
@@ -74,44 +79,22 @@ namespace BF2D.Combat
 
         public void Run(Action callback)
         {
-            this.state = StateCheckQueue;
             this.callback = callback;
+            this.state = StateStandby;
         }
 
-        #region STATES
-        private void StateCheckQueue()
-        {
-            if (this.statsActionQueue.Count < 1)
-                return;
-
-            CharacterStatsAction statsAction = this.statsActionQueue.Dequeue();
-
-            SetupCharacterStatsAction(statsAction);
-            this.state = null;
-        }
-
-        private void StateEnd()
+        private void StateStandby()
         {
             if (this.statsActionQueue.Count > 0)
-                this.state = StateCheckQueue;
-
-            this.callback?.Invoke();
-            this.state = null;
+            {
+                ActionInit(this.statsActionQueue.Dequeue());
+                this.state = null;
+            }
         }
-        #endregion
         
-        private void SetupCharacterStatsAction(CharacterStatsAction statsAction)
+        private void ActionInit(CharacterStatsAction statsAction)
         {
-            this.textbox.UtilityInitialize();
-
-            this.textbox.Message
-            (
-                $"Who do you want to {statsAction.Description}?",
-                () =>
-                {
-                    this.targeterSetupActionCollection[statsAction.Target](statsAction);
-                }
-            );
+            this.targeterSetupActionCollection[statsAction.Target](statsAction);
         }
     }
 }

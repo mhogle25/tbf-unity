@@ -11,9 +11,10 @@ namespace BF2D.Attributes
     public enum ConditionOperator
     {
         // A field is visible/enabled only if all conditions are true.
-        And,
+        AND,
         // A field is visible/enabled if at least ONE condition is true.
-        Or,
+        OR,
+        NAND
     }
 
     public enum ActionOnConditionFail

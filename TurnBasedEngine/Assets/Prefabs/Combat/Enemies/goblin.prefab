@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1343732547579918862}
   - component: {fileID: 6548339578013975057}
   m_Layer: 0
-  m_Name: lessergoblin
+  m_Name: goblin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,12 +75,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 568e5e8f15bea6d4ea736201caac92fe, type: 3}
+  m_Sprite: {fileID: 79830168, guid: 568e5e8f15bea6d4ea736201caac92fe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.32, y: 0.32}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -96,7 +96,7 @@ Animator:
   m_GameObject: {fileID: 1343732547579918856}
   m_Enabled: 0
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2801a6ec9ebb81045994cd6896ba06aa, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -118,5 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c518181f9ae562a4fa2fcfa09b48b8c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textboxControl: {fileID: 0}
   spriteRenderer: {fileID: 1343732547579918863}
   animator: {fileID: 1343732547579918862}

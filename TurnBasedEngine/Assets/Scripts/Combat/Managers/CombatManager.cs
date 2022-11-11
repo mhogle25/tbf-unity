@@ -9,7 +9,7 @@ using BF2D.Enums;
 
 namespace BF2D.Combat
 {
-    public class CombatManager : SceneManager
+    public class CombatManager : MonoBehaviour
     {
         public class InitializeInfo
         {
@@ -18,10 +18,9 @@ namespace BF2D.Combat
         }
 
         [SerializeField] private UIOptionsControl mainMenu = null;
-        [SerializeField] private ComboManager comboManager = null;
-        [SerializeField] private StatsPreviewController statsPreviewController = null;
-        [SerializeField] private CharacterTargeter targetManager = null;
         [SerializeField] private DialogTextboxControl textboxControl = null;
+        [SerializeField] private CombatGrid combatGrid = null;
+        [SerializeField] private CharacterTargeter characterTargeter = null;
         [Header("Prefabs")]
         [SerializeField] private List<PlayerCombat> playerCombatPrefabs = new();
         [SerializeField] private List<EnemyCombat> enemyCombatPrefabs = new();
@@ -29,58 +28,32 @@ namespace BF2D.Combat
         private readonly Dictionary<string, PlayerCombat> playerCombatDict = new();
         private readonly Dictionary<string, EnemyCombat> enemyCombatDict = new();
 
-        public List<CharacterStats> Characters
+        public List<CharacterCombat> Characters
         {
             get
             {
-                List<CharacterStats> statsList = new();
+                List<CharacterCombat> characterCombats = new();
 
                 foreach (PlayerCombat playerCombat in this.players)
                 {
-                    statsList.Add(playerCombat.Stats);
+                    characterCombats.Add(playerCombat);
                 }
 
                 foreach (EnemyCombat enemyCombat in this.enemies)
                 {
-                    statsList.Add(enemyCombat.Stats);
+                    characterCombats.Add(enemyCombat);
                 }
 
-                return statsList;
+                return characterCombats;
             }
         }
-        public List<PlayerStats> Players 
-        { 
-            get
-            {
-                List<PlayerStats> statsList = new();
-
-                foreach (PlayerCombat playerCombat in this.players)
-                {
-                    statsList.Add(playerCombat.Stats);
-                }
-
-                return statsList;
-            } 
-        }
+        public List<PlayerCombat> Players { get { return this.players; } }
         private List<PlayerCombat> players = new();
 
-        public List<EnemyStats> Enemies 
-        { 
-            get
-            {
-                List<EnemyStats> statsList = new();
-
-                foreach (EnemyCombat enemyCombat in this.enemies)
-                {
-                    statsList.Add(enemyCombat.Stats);
-                }
-
-                return statsList;
-            } 
-        }
+        public List<EnemyCombat> Enemies { get { return this.enemies; } }
         private List<EnemyCombat> enemies = new();
 
-        public PlayerStats CurrentPlayer 
+        public PlayerCombat CurrentPlayer 
         { 
             get
             {
@@ -90,7 +63,7 @@ namespace BF2D.Combat
                 try
                 {
                     PlayerCombat playerCombat = (PlayerCombat)this.currentCharacter;
-                    return playerCombat.Stats;
+                    return playerCombat;
 
                 }
                 catch (Exception x)
@@ -101,7 +74,7 @@ namespace BF2D.Combat
             }
         }
 
-        public EnemyStats CurrentEnemy
+        public EnemyCombat CurrentEnemy
         {
             get
             {
@@ -110,7 +83,7 @@ namespace BF2D.Combat
                 try
                 {
                     EnemyCombat enemyCombat = (EnemyCombat)this.currentCharacter;
-                    return enemyCombat.Stats;
+                    return enemyCombat;
 
                 }
                 catch (Exception x)
@@ -121,22 +94,7 @@ namespace BF2D.Combat
             }
         }
 
-        public CharacterStats CurrentCharacter
-        {
-            get
-            {
-                switch(CurrentCharacterType)
-                {
-                    case CharacterType.Player:
-                        return CurrentPlayer;
-                    case CharacterType.Enemy:
-                        return CurrentEnemy;
-                    default:
-                        Debug.LogError($"[CombatManager] Tried to get the current character but the current character type '{CurrentCharacterType}' was invalid");
-                        return null;
-                }
-            }
-        }
+        public CharacterCombat CurrentCharacter { get { return this.currentCharacter; } }
 
         public CharacterType CurrentCharacterType { get { return this.currentCharacter.Type; } }
         private CharacterCombat currentCharacter = null;
@@ -161,27 +119,31 @@ namespace BF2D.Combat
 
 
         #region Public Utilities
-        public void ExecuteCombatAction(ItemInfo itemInfo)
+        public void ExecuteItem(ItemInfo itemInfo)
         {
             Item item = itemInfo.Get();
-
-            SetupGameActionTargets(item.OnUse, () => this.currentCharacter.ExecuteCombatAction(new CharacterCombat.ItemStateData
+            foreach (CharacterStatsAction statsAction in item.OnUse.StatsActions)
             {
-                item = item,
-                itemInfo = itemInfo,
-                gameAction = item.OnUse,
-                textboxControl = this.textboxControl,
-                dialog = new List<string> { "Stuff happened." }
-            })); 
+                this.characterTargeter.Enqueue(statsAction);
+            }
+            this.characterTargeter.Run(() =>
+            {
+
+            });
         }
         #endregion
 
         #region Listeners
         private void CombatInfoListen()
         {
-            InitializeInfo combatInfo = GameInfo.Instance.CombatInfo;
+            InitializeInfo combatInfo = GameInfo.Instance.UnstageCombatInfo();
             if (combatInfo is null)
                 return;
+
+            foreach (EnemyStats stats in combatInfo.enemies)
+            {
+                Debug.Log(stats.Name);
+            }
 
             Initialize(combatInfo.players, combatInfo.enemies);
             this.listener = null;
@@ -207,6 +169,12 @@ namespace BF2D.Combat
 
             UIControlsManager.Instance.TakeControl(this.textboxControl);
             this.textboxControl.Textbox.Message("Enemies approach.", () => BeginCombat());
+        }
+
+        private void BeginCombat()
+        {
+            this.currentCharacter = PopCharacterQueue();
+            UIControlsManager.Instance.TakeControl(this.mainMenu);
         }
 
         private void LoadCharacterPrefabs()
@@ -237,6 +205,8 @@ namespace BF2D.Combat
 
             PlayerCombat playerCombat = Instantiate(this.playerCombatDict[playerStats.ID]);
             playerCombat.Stats = playerStats;
+            playerCombat.TextboxControl = this.textboxControl;
+            this.combatGrid.UpdatePlayerPosition(playerCombat, playerCombat.Stats.GridPosition);
             return playerCombat;
         }
 
@@ -244,24 +214,20 @@ namespace BF2D.Combat
         {
             if (enemyStats is null)
             {
-                Debug.LogWarning("[CombatManager] Tried to instantiate a PlayerCombat but the stats given were null");
+                Debug.LogWarning("[CombatManager] Tried to instantiate a EnemyCombat but the stats given were null");
                 return null;
             }
 
             if (!this.enemyCombatDict.ContainsKey(enemyStats.ID))
             {
-                Debug.LogError($"[CombatManager] Tried to instantiate the PlayerCombat at ID {enemyStats.ID} but the ID could not be found");
+                Debug.LogError($"[CombatManager] Tried to instantiate the EnemyCombat at ID {enemyStats.ID} but the ID could not be found");
             }
 
             EnemyCombat enemyCombat = Instantiate(this.enemyCombatDict[enemyStats.ID]);
             enemyCombat.Stats = enemyStats;
+            enemyCombat.TextboxControl = this.textboxControl;
+            this.combatGrid.UpdateEnemyPosition(enemyCombat, enemyCombat.Stats.GridPosition);
             return enemyCombat;
-        }
-
-        private void BeginCombat()
-        {
-            this.currentCharacter = PopCharacterQueue();
-            UIControlsManager.Instance.TakeControl(this.mainMenu);
         }
 
         private void FillCharacterQueue()
@@ -282,16 +248,6 @@ namespace BF2D.Combat
             if (this.characterQueue.Top() is null)
                 return null;
             return this.characterQueue.Pop();
-        }
-
-        private void SetupGameActionTargets(GameAction gameAction, Action callback)
-        {
-            foreach (CharacterStatsAction statsAction in gameAction.StatsActions)
-            {
-                this.targetManager.Enqueue(statsAction);
-            }
-
-            this.targetManager.Run(callback);
         }
 
         private void SingletonSetup()

@@ -6,8 +6,6 @@ namespace BF2D.UI
 {
     public class UIControlsManager : MonoBehaviour
     {
-        [SerializeField] private UIControl initializeOnStart = null;
-
         public InputEventsControl EventsControl { get { return this.inputEventsControl; } }
         [SerializeField] private InputEventsControl inputEventsControl = null;
 
@@ -26,14 +24,6 @@ namespace BF2D.UI
             }
 
             UIControlsManager.instance = this;
-        }
-
-        void Start()
-        {
-            if (this.initializeOnStart is not null)
-            {
-                TakeControl(this.initializeOnStart);
-            }
         }
 
         private readonly Stack<UIControl> controlChainHistory = new Stack<UIControl>();

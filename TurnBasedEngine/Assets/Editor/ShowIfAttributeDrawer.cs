@@ -85,21 +85,29 @@ namespace BF2D.Editor
 
             if (conditionValues.Count > 0)
             {
-                bool met;
-                if (showIfAttribute.Operator == ConditionOperator.And)
+                bool met = false;
+                if (showIfAttribute.Operator == ConditionOperator.AND)
                 {
                     met = true;
                     foreach (var value in conditionValues)
                     {
-                        met = met && value;
+                        met &= value;
                     }
                 }
-                else
+                else if (showIfAttribute.Operator == ConditionOperator.OR)
                 {
                     met = false;
                     foreach (var value in conditionValues)
                     {
-                        met = met || value;
+                        met |= value;
+                    }
+                }
+                else if (showIfAttribute.Operator == ConditionOperator.NAND)
+                {
+                    met = true;
+                    foreach (var value in conditionValues)
+                    {
+                        met = !(met & value);
                     }
                 }
                 return met;
