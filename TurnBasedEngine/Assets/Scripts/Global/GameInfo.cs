@@ -27,7 +27,7 @@ namespace BF2D.Game
         [SerializeField] private string equipmentsPath = "Equipments";
         [SerializeField] private string statusEffectsPath = "StatusEffects";
 
-        public List<PlayerStats> Players { get { return this.currentSave.Players; } }
+        public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
 
         private readonly JsonCache<Item> items = new();
@@ -68,7 +68,7 @@ namespace BF2D.Game
         private void TEST_INITIALIZE()
         {
             this.currentSave = LoadSaveData("save1");
-            List<EnemyStats> enemies = new()
+            List<CharacterStats> enemies = new()
             {
                 LoadEnemy("lessergoblin")
             };
@@ -111,23 +111,23 @@ namespace BF2D.Game
             return statusEffect;
         }
 
-        public EnemyStats LoadEnemy(string key)
+        public CharacterStats LoadEnemy(string key)
         {
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, key + ".json"));
-            return BF2D.Utilities.TextFile.DeserializeString<EnemyStats>(content);
+            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content);
         }
 
         public void AddPlayer(string playerKey, string newName)
         {
-            PlayerStats newPlayer = LoadPlayer(playerKey);
+            CharacterStats newPlayer = LoadPlayer(playerKey);
             newPlayer.Name = newName;
             this.currentSave.AddPlayer(newPlayer);
         }
 
-        private PlayerStats LoadPlayer(string key)
+        private CharacterStats LoadPlayer(string key)
         {
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, key + ".json"));
-            return BF2D.Utilities.TextFile.DeserializeString<PlayerStats>(content);
+            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content);
         }
 
         private SaveData LoadSaveData(string saveKey)

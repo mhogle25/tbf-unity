@@ -10,7 +10,7 @@ using UnityEngine.Events;
 
 namespace BF2D.Combat
 {
-    public class BagMenuControl : UIOptionsControl
+    public class BagMenuControl : OptionsGridControl
     {
         [Header("Information")]
         [SerializeField] private TextMeshProUGUI nameText = null;
@@ -25,7 +25,7 @@ namespace BF2D.Combat
             this.items.Clear();
             this.optionsGrid.Setup(this.optionsGrid.Width, this.optionsGrid.Height);
 
-            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentPlayer.Stats.Items)
+            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
             {
                 this.items.Add(GameInfo.Instance.GetItem(itemInfo.Name));
 
@@ -62,7 +62,7 @@ namespace BF2D.Combat
             this.descriptionText.text = $"{item.Description}\n";
             foreach(CharacterStatsAction statsAction in item.OnUse.StatsActions)
             {
-                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentPlayer.Stats);
+                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
             }
         }
     }

@@ -13,6 +13,8 @@ namespace BF2D.UI {
         [SerializeField] private Image icon = null;
         [Tooltip("Reference to the Image component of the option's cursor (required)")]
         [SerializeField] private Image cursor = null;
+        [Tooltip("Reference to the TextMeshPro component of the option (optional)")]
+        [SerializeField] private TextMeshProUGUI textMesh = null;
 
         /// <summary>
         /// Sets up an instantiated option

@@ -9,9 +9,6 @@ namespace BF2D.UI
 {
     public abstract class GridOption : InputEvents
     {
-        [Tooltip("Reference to the TextMeshPro component of the option (optional)")]
-        [SerializeField] protected TextMeshProUGUI textMesh = null;
-
         public struct Data
         {
             public string name;
@@ -27,7 +24,7 @@ namespace BF2D.UI
 
         public abstract void SetCursor(bool status);
 
-        public void InvokeEvent(InputButton inputButton)
+        public virtual void InvokeEvent(InputButton inputButton)
         {
             if (InputEventEnabled(inputButton))
                 GetInputEvent(inputButton)?.Invoke();

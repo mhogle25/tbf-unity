@@ -1,13 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BF2D.UI;
+using BF2D.Enums;
 
 namespace BF2D.Combat
 {
-    public class CombatGridTile : MonoBehaviour
+    public class CombatGridTile : GridOption
     {
+        [SerializeField] private SpriteRenderer cursor = null;
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
         private CharacterCombat assignedCharacter = null;
+
+        public override bool Setup(Data optionData)
+        {
+            Debug.LogError($"[CombatGridTile:Setup()] Setup should not be called on a static grid option");
+            throw new System.NotImplementedException();
+        }
+
+        public override void SetCursor(bool status)
+        {
+            this.cursor.enabled = status;
+        }
 
         public void AssignCharacter(CharacterCombat characterCombat)
         {
@@ -21,6 +35,11 @@ namespace BF2D.Combat
         public void ResetTile()
         {
             this.assignedCharacter = null;
+        }
+
+        public override void InvokeEvent(InputButton inputButton)
+        {
+            base.InvokeEvent(inputButton);
         }
     }
 }

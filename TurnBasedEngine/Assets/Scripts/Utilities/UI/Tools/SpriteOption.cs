@@ -1,3 +1,4 @@
+using BF2D.Enums;
 using UnityEngine;
 
 namespace BF2D.UI
@@ -14,6 +15,11 @@ namespace BF2D.UI
         public override void SetCursor(bool status)
         {
             this.cursor.enabled = status;
+        }
+
+        public override void InvokeEvent(InputButton inputButton)
+        {
+            base.InvokeEvent(inputButton);
         }
     }
 }

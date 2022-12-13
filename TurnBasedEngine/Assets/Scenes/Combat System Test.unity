@@ -813,6 +813,8 @@ MonoBehaviour:
   optionsGrid: {fileID: 234798720}
   delay: 0.5
   speed: 0.1
+  direction: 1
+  timeAccumulator: 0
 --- !u!114 &234798722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,7 +1046,6 @@ GameObject:
   - component: {fileID: 404035413}
   - component: {fileID: 404035412}
   - component: {fileID: 404035414}
-  - component: {fileID: 404035415}
   m_Layer: 0
   m_Name: Inner North
   m_TagString: Untagged
@@ -1129,71 +1130,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 404035411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 1274203691}
---- !u!114 &404035415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 404035411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1001 &455573173
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1734,9 +1698,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
   icon: {fileID: 0}
   cursor: {fileID: 0}
+  textMesh: {fileID: 0}
 --- !u!114 &485182815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2250,9 +2214,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
   icon: {fileID: 0}
   cursor: {fileID: 0}
+  textMesh: {fileID: 0}
 --- !u!114 &579221034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2481,6 +2445,8 @@ MonoBehaviour:
   optionsGrid: {fileID: 607298861}
   delay: 0.5
   speed: 0.1
+  direction: 1
+  timeAccumulator: 0
 --- !u!1 &704968160
 GameObject:
   m_ObjectHideFlags: 0
@@ -2525,9 +2491,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89881a01bdb94114c95a5cee9094dee5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyOptionsControl: {fileID: 1567430471}
-  playerOptionsControl: {fileID: 1316870474}
-  anyOptionsControl: {fileID: 1435185833}
+  playerPlatforms: {fileID: 0}
+  enemyPlatforms: {fileID: 0}
+  anyPlatforms: {fileID: 0}
   textboxControl: {fileID: 262309522}
 --- !u!1 &726882009
 GameObject:
@@ -3920,7 +3886,6 @@ GameObject:
   - component: {fileID: 1121190680}
   - component: {fileID: 1121190679}
   - component: {fileID: 1121190681}
-  - component: {fileID: 1121190682}
   m_Layer: 0
   m_Name: Inner North
   m_TagString: Untagged
@@ -4005,71 +3970,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1121190678}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 177414669}
---- !u!114 &1121190682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1121190678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1 &1151682087
 GameObject:
   m_ObjectHideFlags: 0
@@ -4081,7 +4009,6 @@ GameObject:
   - component: {fileID: 1151682089}
   - component: {fileID: 1151682088}
   - component: {fileID: 1151682090}
-  - component: {fileID: 1151682091}
   m_Layer: 0
   m_Name: Outer South
   m_TagString: Untagged
@@ -4166,71 +4093,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1151682087}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 73004141}
---- !u!114 &1151682091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1151682087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1 &1172171967
 GameObject:
   m_ObjectHideFlags: 0
@@ -5200,6 +5090,8 @@ MonoBehaviour:
   optionsGrid: {fileID: 1316870473}
   delay: 0.5
   speed: 0.1
+  direction: 1
+  timeAccumulator: 0
 --- !u!1 &1319794018
 GameObject:
   m_ObjectHideFlags: 0
@@ -5787,6 +5679,8 @@ MonoBehaviour:
   optionsGrid: {fileID: 1435185832}
   delay: 0.5
   speed: 0.1
+  direction: 1
+  timeAccumulator: 0
 --- !u!1001 &1453942720
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6200,7 +6094,6 @@ GameObject:
   - component: {fileID: 1484935519}
   - component: {fileID: 1484935518}
   - component: {fileID: 1484935520}
-  - component: {fileID: 1484935521}
   m_Layer: 0
   m_Name: Outer South
   m_TagString: Untagged
@@ -6285,95 +6178,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1484935517}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 1238863219}
---- !u!114 &1484935521
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1484935517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1 &1508071450
 GameObject:
   m_ObjectHideFlags: 0
@@ -6506,15 +6338,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPlatforms:
-  - {fileID: 1121190682}
-  - {fileID: 1987051020}
-  - {fileID: 1755146901}
-  - {fileID: 1484935521}
+  - {fileID: 1121190681}
+  - {fileID: 1987051019}
+  - {fileID: 1755146900}
+  - {fileID: 1484935520}
   enemyPlatforms:
-  - {fileID: 404035415}
-  - {fileID: 2143075867}
-  - {fileID: 1613403331}
-  - {fileID: 1151682091}
+  - {fileID: 404035414}
+  - {fileID: 2143075866}
+  - {fileID: 1613403330}
+  - {fileID: 1151682090}
 --- !u!4 &1516352436
 Transform:
   m_ObjectHideFlags: 0
@@ -6673,6 +6505,8 @@ MonoBehaviour:
   optionsGrid: {fileID: 1567430470}
   delay: 0.5
   speed: 0.1
+  direction: 1
+  timeAccumulator: 0
 --- !u!1 &1572219068
 GameObject:
   m_ObjectHideFlags: 0
@@ -6770,7 +6604,6 @@ GameObject:
   - component: {fileID: 1613403329}
   - component: {fileID: 1613403328}
   - component: {fileID: 1613403330}
-  - component: {fileID: 1613403331}
   m_Layer: 0
   m_Name: Outer North
   m_TagString: Untagged
@@ -6855,71 +6688,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1613403327}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 255178420}
---- !u!114 &1613403331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1613403327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1 &1648984294
 GameObject:
   m_ObjectHideFlags: 0
@@ -7022,9 +6818,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
   icon: {fileID: 0}
   cursor: {fileID: 0}
+  textMesh: {fileID: 0}
 --- !u!114 &1648984297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7218,7 +7014,6 @@ GameObject:
   - component: {fileID: 1755146899}
   - component: {fileID: 1755146898}
   - component: {fileID: 1755146900}
-  - component: {fileID: 1755146901}
   m_Layer: 0
   m_Name: Outer North
   m_TagString: Untagged
@@ -7303,71 +7098,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1755146897}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmEnabled: 0
-  confirmEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  backEnabled: 0
-  backEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
-  menuEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  attackEnabled: 0
-  attackEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  pauseEnabled: 0
-  pauseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  selectEnabled: 0
-  selectEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 189690261}
---- !u!114 &1755146901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755146897}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  confirmEnabled: 1
+  confirmEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  backEnabled: 1
+  backEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  menuEnabled: 1
+  menuEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  attackEnabled: 1
+  attackEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  pauseEnabled: 1
+  pauseEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  selectEnabled: 1
+  selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  cursor: {fileID: 0}
 --- !u!1 &1786660592
 GameObject:
   m_ObjectHideFlags: 0
@@ -8254,7 +8012,6 @@ GameObject:
   - component: {fileID: 1987051018}
   - component: {fileID: 1987051017}
   - component: {fileID: 1987051019}
-  - component: {fileID: 1987051020}
   m_Layer: 0
   m_Name: Inner South
   m_TagString: Untagged
@@ -8339,71 +8096,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 1987051016}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 892674210}
---- !u!114 &1987051020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987051016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1 &2010510556
 GameObject:
   m_ObjectHideFlags: 0
@@ -8822,9 +8542,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
   icon: {fileID: 0}
   cursor: {fileID: 0}
+  textMesh: {fileID: 0}
 --- !u!114 &2035690127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9010,7 +8730,6 @@ GameObject:
   - component: {fileID: 2143075865}
   - component: {fileID: 2143075864}
   - component: {fileID: 2143075866}
-  - component: {fileID: 2143075867}
   m_Layer: 0
   m_Name: Inner South
   m_TagString: Untagged
@@ -9095,71 +8814,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 2143075863}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2415b9272c619d54784300e556e0b7f0, type: 3}
+  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 0
+      m_Calls: []
+  menuEnabled: 1
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 0
+  attackEnabled: 1
   attackEvent:
     m_PersistentCalls:
       m_Calls: []
-  pauseEnabled: 0
+  pauseEnabled: 1
   pauseEvent:
     m_PersistentCalls:
       m_Calls: []
-  selectEnabled: 0
+  selectEnabled: 1
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
-  cursor: {fileID: 898060752}
---- !u!114 &2143075867
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2143075863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03eb1b59a84b48842a1e8875fbc8678c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  cursor: {fileID: 0}
 --- !u!1001 &326542518909501781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9640,9 +9322,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 0}
   icon: {fileID: 0}
   cursor: {fileID: 0}
+  textMesh: {fileID: 0}
 --- !u!114 &3617679648611074593
 MonoBehaviour:
   m_ObjectHideFlags: 0

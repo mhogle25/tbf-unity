@@ -44,7 +44,7 @@ namespace BF2D.UI {
         [Header("Dialog Responses")]
         public bool ResponseOptionsEnabled = true;
         [SerializeField] private string responseOptionsFilesPath = string.Empty;
-        [SerializeField] private UIOptionsControl responseOptionsControl = null;
+        [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
@@ -57,7 +57,7 @@ namespace BF2D.UI {
         [SerializeField] private AudioClip defaultVoice = null;
 
         //Getter Setters and their private variables
-        public UIOptionsControl ResponseOptionsControl { get { return this.responseOptionsControl; } set { this.responseOptionsControl = value; } }
+        public OptionsGridControl ResponseOptionsControl { get { return this.responseOptionsControl; } set { this.responseOptionsControl = value; } }
         public string DialogFilesPath { set { this.dialogFilesPath = value; } }
         public string DialogResponseFilesPath { set { this.responseOptionsFilesPath = value; } }
 

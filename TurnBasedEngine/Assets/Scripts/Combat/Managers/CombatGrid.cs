@@ -7,7 +7,7 @@ namespace BF2D.Combat
         [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[4];
         [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[4];
 
-        public void UpdatePlayerPosition(PlayerCombat playerCombat, int gridPosition)
+        public void UpdatePlayerPosition(CharacterCombat playerCombat, int gridPosition)
         {
             if (!GridPositionValid(gridPosition, this.playerPlatforms.Length))
             {
@@ -18,7 +18,7 @@ namespace BF2D.Combat
             PositionPlayer(playerCombat, gridPosition);
         }
 
-        public void UpdateEnemyPosition(EnemyCombat enemyCombat, int gridPosition)
+        public void UpdateEnemyPosition(CharacterCombat enemyCombat, int gridPosition)
         {
             if (!GridPositionValid(gridPosition, this.enemyPlatforms.Length))
             {
@@ -40,14 +40,14 @@ namespace BF2D.Combat
             return true;
         }
 
-        private void PositionPlayer(PlayerCombat playerCombat, int newPosition)
+        private void PositionPlayer(CharacterCombat playerCombat, int newPosition)
         {
             this.enemyPlatforms[playerCombat.Stats.GridPosition].ResetTile();
             playerCombat.Stats.GridPosition = newPosition;
             this.playerPlatforms[playerCombat.Stats.GridPosition].AssignCharacter(playerCombat);
         }
 
-        private void PositionEnemy(EnemyCombat enemyCombat, int newPosition)
+        private void PositionEnemy(CharacterCombat enemyCombat, int newPosition)
         {
             this.enemyPlatforms[enemyCombat.Stats.GridPosition].ResetTile();
             enemyCombat.Stats.GridPosition = newPosition;

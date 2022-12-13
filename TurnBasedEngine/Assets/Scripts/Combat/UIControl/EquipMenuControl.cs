@@ -5,7 +5,7 @@ using BF2D.UI;
 
 namespace BF2D.Combat
 {
-    public class EquipMenuControl : UIOptionsControl
+    public class EquipMenuControl : OptionsGridControl
     {
         protected override void Awake()
         {

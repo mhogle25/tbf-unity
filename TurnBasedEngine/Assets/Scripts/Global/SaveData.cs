@@ -8,10 +8,10 @@ namespace BF2D.Game
     [Serializable]
     public class SaveData
     {
-        [JsonIgnore] public List<PlayerStats> Players { get { return this.players; } }
-        [JsonProperty] private List<PlayerStats> players = new List<PlayerStats>();
+        [JsonIgnore] public List<CharacterStats> Players { get { return this.players; } }
+        [JsonProperty] private List<CharacterStats> players = new List<CharacterStats>();
 
-        public void AddPlayer(PlayerStats newPlayer)
+        public void AddPlayer(CharacterStats newPlayer)
         {
             if (newPlayer is null)
             {

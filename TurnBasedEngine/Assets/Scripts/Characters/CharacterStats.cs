@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BF2D.Game
 {
     [Serializable]
-    public abstract class CharacterStats
+    public class CharacterStats
     {
         public class StatModifier
         {
@@ -37,7 +37,8 @@ namespace BF2D.Game
             }
         }
 
-        [JsonIgnore] public abstract CharacterType Type { get; }
+        [JsonIgnore] public CharacterType Type { get { return this.type; } }
+        [JsonProperty] private CharacterType type = CharacterType.NPC;
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private string id = string.Empty;
         [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
@@ -122,6 +123,10 @@ namespace BF2D.Game
         [JsonIgnore] private StatModifier luckModifier = new StatModifier();
         [JsonIgnore] public int Fortune { get { return this.fortune; } }
         [JsonProperty] private int fortune = 0;
+        [JsonIgnore] public int Experience { get { return this.experience; } }
+        [JsonProperty] private int experience = 0;
+        [JsonIgnore] public int Level { get { return this.level; } }
+        [JsonProperty] private int level = 1;
 
         [JsonIgnore] public string Head { get { return this.head; } }
         [JsonProperty] private string head = string.Empty;

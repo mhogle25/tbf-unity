@@ -4,10 +4,10 @@ using BF2D.Enums;
 
 namespace BF2D.UI
 {
-    public class UIOptionsControl : UIControl
+    public class OptionsGridControl : UIControl
     {
-        public UIOptionsGrid OptionsGrid { get { return this.optionsGrid; } }
-        [SerializeField] protected UIOptionsGrid optionsGrid = null;
+        public OptionsGrid OptionsGrid { get { return this.optionsGrid; } }
+        [SerializeField] protected OptionsGrid optionsGrid = null;
 
         public float Delay { get { return this.delay; } set { this.delay = value; } }
         [SerializeField] private float delay = 0.5f;

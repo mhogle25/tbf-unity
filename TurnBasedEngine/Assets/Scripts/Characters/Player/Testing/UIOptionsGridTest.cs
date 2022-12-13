@@ -6,7 +6,7 @@ using BF2D;
 
 public class UIOptionsGridTest : MonoBehaviour
 {
-    [SerializeField] private UIOptionsGrid optionsGrid;
+    [SerializeField] private OptionsGrid optionsGrid;
     [SerializeField] private Sprite iconSprite;
     [SerializeField] private Sprite cursorSprite;
 
