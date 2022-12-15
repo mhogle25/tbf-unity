@@ -115,9 +115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1343732547579918856}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c518181f9ae562a4fa2fcfa09b48b8c0, type: 3}
+  m_Script: {fileID: 11500000, guid: 43715c6c3533964458ab75b5feab495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   textboxControl: {fileID: 0}
-  spriteRenderer: {fileID: 1343732547579918863}
-  animator: {fileID: 1343732547579918862}

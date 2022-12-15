@@ -810,11 +810,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 234798720}
-  delay: 0.5
-  speed: 0.1
-  direction: 1
-  timeAccumulator: 0
 --- !u!114 &234798722
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2442,11 +2437,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 607298861}
-  delay: 0.5
-  speed: 0.1
-  direction: 1
-  timeAccumulator: 0
 --- !u!1 &704968160
 GameObject:
   m_ObjectHideFlags: 0
@@ -5087,11 +5077,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1316870473}
-  delay: 0.5
-  speed: 0.1
-  direction: 1
-  timeAccumulator: 0
 --- !u!1 &1319794018
 GameObject:
   m_ObjectHideFlags: 0
@@ -5676,11 +5661,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1435185832}
-  delay: 0.5
-  speed: 0.1
-  direction: 1
-  timeAccumulator: 0
 --- !u!1001 &1453942720
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6502,11 +6482,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1567430470}
-  delay: 0.5
-  speed: 0.1
-  direction: 1
-  timeAccumulator: 0
 --- !u!1 &1572219068
 GameObject:
   m_ObjectHideFlags: 0

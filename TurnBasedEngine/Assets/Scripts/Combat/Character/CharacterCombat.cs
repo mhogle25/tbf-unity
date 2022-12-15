@@ -15,8 +15,8 @@ namespace BF2D.Combat
     {
         public CharacterType Type { get { return this.stats.Type; } }
 
-        public DialogTextboxControl TextboxControl { get { return this.textboxControl; } set { this.textboxControl = value; } }
-        [SerializeField] private DialogTextboxControl textboxControl = null;
+        public DialogTextboxControl TextboxControl { set { this.textboxControl = value; } }
+        private DialogTextboxControl textboxControl = null;
 
         public CharacterStats Stats
         {
