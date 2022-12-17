@@ -20,9 +20,6 @@ public class PlayerMovement : MonoBehaviour
         //this.state += Move;
         Debug.Log(Application.persistentDataPath);
         Debug.Log(Application.streamingAssetsPath);
-
-        Debug.Log(DEBUGGER.MyAtoi("    -4000000011bloobloo  bleeblah"));
-        Debug.Log(DEBUGGER.MaxArea(new int[] { 1, 8, 6, 2, 5, 4, 8, 3, 7 }));
     }   
 
     private void Update() {

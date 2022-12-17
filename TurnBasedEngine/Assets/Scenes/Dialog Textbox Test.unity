@@ -373,6 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dacb4c5bb37b64f449eb8f0caae69152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clockSpeed: 0.03125
   savesPath: Saves
   playersPath: Players
   enemiesPath: Enemies
@@ -874,7 +875,7 @@ SpriteRenderer:
   m_Size: {x: 0.32, y: 0.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &1986819454
@@ -899,18 +900,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 423787267, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
     - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: staticContent
+      propertyPath: staticGrid
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5812303956115522650, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
+    - target: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: interactable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2651871797278263957, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 5812303956420232517, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5812303956886749160, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1003,22 +1008,50 @@ PrefabInstance:
       propertyPath: m_Name
       value: Textbox Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5812303957190546873, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6509254057678927013, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: responseOptionsFilesPath
       value: Dialog/Responses
       objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
-      propertyPath: responseOptionEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1986819451}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 1885557466}
+      objectReference: {fileID: 1885557465}
     - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 1885557465}
+      objectReference: {fileID: 1885557466}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: PassControlBack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: set_enabled
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: BF2D.UI.UIControlsManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 8750406902240700385, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: onEndOfQueuedDialogs.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: UnityEngine.Behaviour, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
 --- !u!114 &5812303956420232511 stripped

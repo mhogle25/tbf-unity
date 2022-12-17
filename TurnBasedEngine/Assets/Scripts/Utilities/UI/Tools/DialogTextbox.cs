@@ -51,7 +51,7 @@ namespace BF2D.UI {
         [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
 
         [Header("Audio")]
-        [SerializeField] private AudioClipCollection voiceCollection;
+        [SerializeField] private AudioClipCollection voiceCollection = null;
         [SerializeField] private AudioSource confirmAudioSource = null;
         [SerializeField] private AudioSource voiceAudioSource = null;
         [SerializeField] private AudioClip defaultVoice = null;
@@ -67,7 +67,7 @@ namespace BF2D.UI {
         private readonly Dictionary<string, string> dialogResponses = new();
 
         //The state delegate
-        private Action state;
+        private Action state = null;
 
         //The dialog queue
         private readonly Queue<DialogData> dialogQueue = new();
@@ -76,7 +76,7 @@ namespace BF2D.UI {
         private Action callback = null;
 
         //Control Variables
-        private List<string> activeLines;
+        private List<string> activeLines = null;
         private float timeAccumulator = 0f;
         private float messageSpeed = 0f;
         private int dialogIndex = 0;

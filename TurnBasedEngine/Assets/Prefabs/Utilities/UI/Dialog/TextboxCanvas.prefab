@@ -928,7 +928,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &4132202981359029722
 RectTransform:
   m_ObjectHideFlags: 0
@@ -966,9 +966,9 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6509254057678927013}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b113dfe0a768a8f4d8e2710613434dca, type: 3}
+  m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   optionsGrid: {fileID: 1049449389}
@@ -987,8 +987,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 4132202981359029722}
-  interactable: 0
-  loadChildrenOnAwake: 0
+  interactable: 1
+  staticGrid: 1
   optionPrefab: {fileID: 1012626334224394726, guid: b0c93a6c35a2de14695126c69f6eeb97, type: 3}
   container: {fileID: 2651871797278263957}
   instantiationAxis: 1
