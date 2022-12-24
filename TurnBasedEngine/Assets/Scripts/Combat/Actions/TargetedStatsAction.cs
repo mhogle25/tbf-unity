@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using BF2D.Game;
 
-namespace BF2D.Combat
+namespace BF2D.Combat.Actions
 {
-    public class CombatAction
+    public class TargetedStatsAction
     {
         public CharacterStatsAction StatsAction { get { return this.statsAction; } set { this.statsAction = value; } }
         private CharacterStatsAction statsAction = null;

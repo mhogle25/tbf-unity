@@ -916,6 +916,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5812303956420232517, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: controlledOptionsGrid
+      value: 
+      objectReference: {fileID: 5812303956420232512}
     - target: {fileID: 5812303956886749160, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: m_Camera
       value: 
@@ -1063,5 +1067,16 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f505070ce6b93fc40aeabbc3f87d383f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5812303956420232512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+  m_PrefabInstance: {fileID: 5812303956420232510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

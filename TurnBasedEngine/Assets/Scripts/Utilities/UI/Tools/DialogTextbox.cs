@@ -57,9 +57,9 @@ namespace BF2D.UI {
         [SerializeField] private AudioClip defaultVoice = null;
 
         //Getter Setters and their private variables
-        public OptionsGridControl ResponseOptionsControl { get { return this.responseOptionsControl; } set { this.responseOptionsControl = value; } }
-        public string DialogFilesPath { set { this.dialogFilesPath = value; } }
-        public string DialogResponseFilesPath { set { this.responseOptionsFilesPath = value; } }
+        //public OptionsGridControl ResponseOptionsControl { get { return this.responseOptionsControl; } set { this.responseOptionsControl = value; } }
+        //public string DialogFilesPath { set { this.dialogFilesPath = value; } }
+        //public string DialogResponseFilesPath { set { this.responseOptionsFilesPath = value; } }
 
         //Loaded dialogs
         private readonly Dictionary<string, List<string>> dialogs = new();
@@ -393,7 +393,7 @@ namespace BF2D.UI {
         }
 
         private void MessageParseAndDisplayInstantaneous() {
-            while (MessageParseAndDisplay());   //Run parse and display until end of line, end of dialog, or option response is called
+            while (MessageParseAndDisplay());   //Setup parse and display until end of line, end of dialog, or option response is called
             this.timeAccumulator = 0f;
         }
 
@@ -591,7 +591,7 @@ namespace BF2D.UI {
 
         private void SetupResponses(List<ResponseData> options)
         {
-            this.responseOptionsControl.OptionsGrid.Setup(1, options.Count);
+            this.responseOptionsControl.ControlledOptionsGrid.Setup(1, options.Count);
 
             foreach (ResponseData option in options)
             {
@@ -605,7 +605,7 @@ namespace BF2D.UI {
                         }
                     }
 
-                    this.responseOptionsControl.OptionsGrid.Add(new UIOption.Data
+                    this.responseOptionsControl.ControlledOptionsGrid.Add(new UIOption.Data
                     {
                         text = option.text,
                         actions = new InputButtonCollection<Action>
@@ -628,7 +628,7 @@ namespace BF2D.UI {
             }
 
             UIControlsManager.Instance.TakeControl(this.responseOptionsControl);
-            this.responseOptionsControl.OptionsGrid.SetCursorAtHead();
+            this.responseOptionsControl.ControlledOptionsGrid.SetCursorAtHead();
         }
 
         private void FinalizeResponse(int dialogIndex)

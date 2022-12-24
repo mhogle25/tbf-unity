@@ -8,6 +8,7 @@ using BF2D.UI;
 using System.Collections.Generic;
 using UnityEditor;
 using Newtonsoft.Json.Linq;
+using BF2D.Combat.Actions;
 
 namespace BF2D.Combat
 {
@@ -15,8 +16,8 @@ namespace BF2D.Combat
     {
         public CharacterType Type { get { return this.stats.Type; } }
 
-        public DialogTextboxControl TextboxControl { set { this.textboxControl = value; } }
-        private DialogTextboxControl textboxControl = null;
+        public CombatAction CurrentCombatAction { get { return this.combatAction; } }
+        private CombatAction combatAction = null;
 
         public CharacterStats Stats
         {
@@ -26,14 +27,15 @@ namespace BF2D.Combat
             }
             set
             {
-                this.Stats = value;
+                this.stats = value;
             }
         }
         private CharacterStats stats;
 
-        public void RunItemAction(ItemCombatAction combatActions)
+        public void SetupCombatAction(CombatAction combatAction)
         {
-            throw new NotImplementedException();
+            this.combatAction = combatAction;
+            this.combatAction.Setup();
         }
     }
 }

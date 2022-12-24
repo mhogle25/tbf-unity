@@ -4,7 +4,7 @@ using BF2D.Game;
 using DataStructures.PriorityQueue;
 using System;
 using BF2D.UI;
-using BF2D.Game.Actions;
+using BF2D.Combat.Actions;
 using BF2D.Enums;
 
 namespace BF2D.Combat
@@ -20,7 +20,7 @@ namespace BF2D.Combat
         [SerializeField] private OptionsGridControl mainMenu = null;
         [SerializeField] private DialogTextboxControl textboxControl = null;
         [SerializeField] private CombatGrid combatGrid = null;
-        [SerializeField] private CharacterTargeter characterTargeter = null;
+        [SerializeField] private CharacterTargetControl characterTargeter = null;
         [Header("Prefabs")]
         [SerializeField] private List<CharacterCombat> playerCombatPrefabs = new();
         [SerializeField] private List<CharacterCombat> enemyCombatPrefabs = new();
@@ -28,12 +28,16 @@ namespace BF2D.Combat
         private readonly Dictionary<string, CharacterCombat> playerCombatDict = new();
         private readonly Dictionary<string, CharacterCombat> enemyCombatDict = new();
 
-        public List<CharacterCombat> Players { get { return this.players; } }
         private List<CharacterCombat> players = new();
-
-        public List<CharacterCombat> Enemies { get { return this.enemies; } }
         private List<CharacterCombat> enemies = new();
+        private CharacterCombat currentCharacter = null;
+        private readonly PriorityQueue<CharacterCombat, uint> characterQueue = new(0);
+        private Action listener = null;
+        private static CombatManager instance = null;
 
+        public CharacterCombat CurrentCharacter { get { return this.currentCharacter; } }
+        public List<CharacterCombat> Players { get { return this.players; } }
+        public List<CharacterCombat> Enemies { get { return this.enemies; } }
         public List<CharacterCombat> Characters
         {
             get
@@ -54,17 +58,10 @@ namespace BF2D.Combat
             }
         }
 
-        public CharacterCombat CurrentCharacter { get { return this.currentCharacter; } }
-        private CharacterCombat currentCharacter = null;
-
-        private readonly PriorityQueue<CharacterCombat, uint> characterQueue = new(0);
-
-        private readonly Queue<CombatAction> combatActionQueue = new();
-
-        private Action listener = null;
+        public CombatGrid Grid { get { return this.combatGrid; } }
+        public CharacterTargetControl CharacterTargeter { get { return this.characterTargeter; } }
 
         public static CombatManager Instance { get { return CombatManager.instance; } }
-        private static CombatManager instance = null;
 
         private void Awake()
         {
@@ -81,19 +78,19 @@ namespace BF2D.Combat
         #region Public Utilities
         public void ExecuteItem(ItemInfo itemInfo)
         {
-            Item item = itemInfo.Get();
-            foreach (CharacterStatsAction statsAction in item.OnUse.StatsActions)
+            this.currentCharacter.SetupCombatAction(new CombatAction
             {
-                this.characterTargeter.Enqueue(statsAction);
-            }
-            this.characterTargeter.Run((combatActions) =>
-            {
-                this.currentCharacter.RunItemAction(new ItemCombatAction
+                CombatActionType = CombatActionType.Item,
+                Item = new ItemCombatActionInfo
                 {
-                    CombatActions = combatActions,
-                    Item = item
-                });
+                    Info = itemInfo
+                }
             });
+        }
+
+        public void RunCombat()
+        {
+            //TODO
         }
         #endregion
 
@@ -168,7 +165,7 @@ namespace BF2D.Combat
                 return null;
             }
 
-            return InstantiateCharacterCombat(playerStats);
+            return InstantiateCharacterCombat(this.playerCombatDict, playerStats);
         }
 
         private CharacterCombat InstantiateEnemyCombat(CharacterStats enemyStats)
@@ -185,17 +182,16 @@ namespace BF2D.Combat
                 return null;
             }
 
-            return InstantiateCharacterCombat(enemyStats);
+            return InstantiateCharacterCombat(this.enemyCombatDict, enemyStats);
         }
 
-        private CharacterCombat InstantiateCharacterCombat(CharacterStats playerStats)
+        private CharacterCombat InstantiateCharacterCombat(Dictionary<string, CharacterCombat> characterCombatDict, CharacterStats characterStats)
         {
-
-            CharacterCombat playerCombat = Instantiate(this.playerCombatDict[playerStats.ID]);
-            playerCombat.Stats = playerStats;
-            playerCombat.TextboxControl = this.textboxControl;
-            this.combatGrid.UpdatePlayerPosition(playerCombat, playerCombat.Stats.GridPosition);
-            return playerCombat;
+            //TODO
+            CharacterCombat characterCombat = Instantiate(characterCombatDict[characterStats.ID]);
+            characterCombat.Stats = characterStats;
+            this.combatGrid.UpdatePlayerPosition(characterCombat);
+            return characterCombat;
         }
 
         private void FillCharacterQueue()

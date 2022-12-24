@@ -92,21 +92,21 @@ namespace BF2D.Game
 
         public Item GetItem(string key)
         {
-            this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
+            this.items.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.itemsPath);
             Item item = this.items[key];
             return item;
         }
 
         public Equipment GetEquipment(string key)
         {
-            this.equipments.Datapath = Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
+            this.equipments.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
             Equipment equipment = this.equipments[key];
             return equipment;
         }
 
         public StatusEffect GetStatusEffect(string key)
         {
-            this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
+            this.statusEffects.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
             StatusEffect statusEffect = this.statusEffects[key];
             return statusEffect;
         }

@@ -10,11 +10,11 @@ namespace BF2D.Combat
     {
         [SerializeField] private SpriteRenderer cursor = null;
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
-        private CharacterCombat assignedCharacter = null;
+        [SerializeField] private CharacterCombat assignedCharacter = null;
 
         public override bool Setup(Data optionData)
         {
-            Debug.LogError($"[CombatGridTile:Setup()] Setup should not be called on a static grid option");
+            Debug.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");
             throw new System.NotImplementedException();
         }
 
@@ -37,9 +37,9 @@ namespace BF2D.Combat
             this.assignedCharacter = null;
         }
 
-        public override void InvokeEvent(InputButton inputButton)
+        public void TargetAssignedCharacter()
         {
-            base.InvokeEvent(inputButton);
+            CombatManager.Instance.CharacterTargeter.SetTargets(new List<CharacterCombat>{ this.assignedCharacter });
         }
     }
 }

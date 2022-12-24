@@ -23,13 +23,13 @@ namespace BF2D.Combat
         public override void ControlInitialize()
         {
             this.items.Clear();
-            this.optionsGrid.Setup(this.optionsGrid.Width, this.optionsGrid.Height);
+            this.controlledOptionsGrid.Setup(this.controlledOptionsGrid.Width, this.controlledOptionsGrid.Height);
 
             foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
             {
                 this.items.Add(GameInfo.Instance.GetItem(itemInfo.Name));
 
-                this.optionsGrid.Add(new UIOption.Data
+                this.controlledOptionsGrid.Add(new UIOption.Data
                 {
                     name = itemInfo.Name,
                     icon = GameInfo.Instance.GetIcon(itemInfo.Get().Icon),
@@ -44,14 +44,14 @@ namespace BF2D.Combat
                         [InputButton.Back] = () =>
                         {
                             UIControlsManager.Instance.PassControlBack();
-                            this.optionsGrid.View.gameObject.SetActive(false);
+                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
                         }
                     }
                 });
             }
 
-            this.optionsGrid.SetCursorAtHead();
-            OnNavigate(this.optionsGrid.CursorPosition1D);
+            this.controlledOptionsGrid.SetCursorAtHead();
+            OnNavigate(this.controlledOptionsGrid.CursorPosition1D);
             base.ControlInitialize();
         }
 

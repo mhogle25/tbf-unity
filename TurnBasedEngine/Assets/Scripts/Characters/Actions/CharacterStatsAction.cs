@@ -11,11 +11,11 @@ namespace BF2D.Game.Actions
     public class CharacterStatsAction
     {
         [JsonIgnore] public CharacterTarget Target { get { return this.target; } }
-        [JsonProperty] private CharacterTarget target = CharacterTarget.Self;
+        [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonIgnore] public string Description { get { return this.description; } }
-        [JsonProperty] private string description = "target";
+        [JsonProperty] private readonly string description = "target";
         [JsonIgnore] public CharacterStatsActionProperties Properties { get { return this.properties; } }
-        [JsonProperty] private CharacterStatsActionProperties properties = new CharacterStatsActionProperties();
+        [JsonProperty] private readonly CharacterStatsActionProperties properties = new();
 
         public string Run(CharacterStats source, CharacterStats target)
         {

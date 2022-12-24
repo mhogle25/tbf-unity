@@ -9,23 +9,23 @@ namespace BF2D.Game.Actions
     public class CharacterStatsActionProperties
     {
         [JsonIgnore] public CharacterStatsActionProperty Damage { get { return this.damage; } }
-        [JsonProperty] private CharacterStatsActionProperty damage = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty damage = null;
         [JsonIgnore] public CharacterStatsActionProperty CriticalDamage { get { return this.criticalDamage; } }
-        [JsonProperty] private CharacterStatsActionProperty criticalDamage = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty criticalDamage = null;
         [JsonIgnore] public CharacterStatsActionProperty PsychicDamage { get { return this.psychicDamage; } }
-        [JsonProperty] private CharacterStatsActionProperty psychicDamage = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty psychicDamage = null;
         [JsonIgnore] public CharacterStatsActionProperty Heal { get { return this.heal; } }
-        [JsonProperty] private CharacterStatsActionProperty heal = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty heal = null;
         [JsonIgnore] public CharacterStatsActionProperty Recover { get { return this.recover; } }
-        [JsonProperty] private CharacterStatsActionProperty recover = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty recover = null;
         [JsonIgnore] public CharacterStatsActionProperty Exert { get { return this.exert; } }
-        [JsonProperty] private CharacterStatsActionProperty exert = null;
+        [JsonProperty] private readonly CharacterStatsActionProperty exert = null;
         [JsonIgnore] public bool ResetHealth { get { return this.resetHealth; } }
-        [JsonProperty] private bool resetHealth = false;
+        [JsonProperty] private readonly bool resetHealth = false;
         [JsonIgnore] public bool ResetStamina { get { return this.resetStamina; } }
-        [JsonProperty] private bool resetStamina = false;
+        [JsonProperty] private readonly bool resetStamina = false;
         [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
-        [JsonProperty] private string statusEffect = null;
+        [JsonProperty] private readonly string statusEffect = null;
 
         public List<string> Run(CharacterStats source, CharacterStats target)
         {

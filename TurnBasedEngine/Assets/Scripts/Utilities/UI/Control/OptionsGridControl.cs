@@ -6,8 +6,8 @@ namespace BF2D.UI
 {
     public class OptionsGridControl : UIControl
     {
-        public OptionsGrid OptionsGrid { get { return this.optionsGrid; } }
-        [SerializeField] protected OptionsGrid optionsGrid = null;
+        public OptionsGrid ControlledOptionsGrid { get { return this.controlledOptionsGrid; } }
+        [SerializeField] protected OptionsGrid controlledOptionsGrid = null;
 
         public float Delay { get { return this.delay; } set { this.delay = value; } }
         [SerializeField] private float delay = 0.5f;
@@ -31,43 +31,43 @@ namespace BF2D.UI
 
             if (InputManager.ConfirmPress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Confirm);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Confirm);
             }
 
             if (InputManager.MenuPress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Menu);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Menu);
             }
 
             if (InputManager.AttackPress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Attack);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Attack);
             }
 
             if (InputManager.BackPress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Back);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Back);
             }
 
             if (InputManager.PausePress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Pause);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Pause);
             }
 
             if (InputManager.SelectPress)
             {
-                this.optionsGrid.InvokeEvent(InputButton.Select);
+                this.controlledOptionsGrid.InvokeEvent(InputButton.Select);
             }
         }
 
         public override void ControlInitialize()
         {
-            this.optionsGrid.UtilityInitialize();
+            this.controlledOptionsGrid.UtilityInitialize();
         }
 
         public override void ControlFinalize()
         {
-            this.optionsGrid.UtilityFinalize();
+            this.controlledOptionsGrid.UtilityFinalize();
         }
 
         private void StateDirectionInputListener()
@@ -111,7 +111,7 @@ namespace BF2D.UI
             if (Time.time > this.timeAccumulator)
             {
                 this.timeAccumulator = Time.time + this.speed;
-                this.optionsGrid.Navigate(this.direction);
+                this.controlledOptionsGrid.Navigate(this.direction);
             }
         }
 
@@ -125,7 +125,7 @@ namespace BF2D.UI
 
         private void DirectionalCall(InputDirection direction)
         {
-            this.optionsGrid.Navigate(direction);
+            this.controlledOptionsGrid.Navigate(direction);
             this.direction = direction;
             this.timeAccumulator = Time.time;
             this.state = StateDelay;

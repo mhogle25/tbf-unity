@@ -810,7 +810,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 234798720}
+  controlledOptionsGrid: {fileID: 234798720}
   delay: 0.5
   speed: 0.1
 --- !u!114 &234798722
@@ -1134,7 +1134,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 404035414}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -1155,7 +1167,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 1274203691}
+  assignedCharacter: {fileID: 0}
 --- !u!1001 &455573173
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1182,7 +1195,7 @@ PrefabInstance:
     - target: {fileID: 265752706806580430, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -7599793126021194774, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
+      objectReference: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
     - target: {fileID: 8084618712108961707, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: backEnabled
       value: 1
@@ -2440,7 +2453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 607298861}
+  controlledOptionsGrid: {fileID: 607298861}
   delay: 0.5
   speed: 0.1
 --- !u!1 &704968160
@@ -2484,13 +2497,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 704968160}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89881a01bdb94114c95a5cee9094dee5, type: 3}
+  m_Script: {fileID: 11500000, guid: ce4d50ceadd61094098450dbfdc74d57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlledOptionsGrid: {fileID: 0}
+  delay: 0.5
+  speed: 0.1
   playerPlatforms: {fileID: 0}
   enemyPlatforms: {fileID: 0}
   anyPlatforms: {fileID: 0}
-  textboxControl: {fileID: 262309522}
+  allOfAnyMenu: {fileID: 0}
+  textbox: {fileID: 0}
 --- !u!1 &726882009
 GameObject:
   m_ObjectHideFlags: 0
@@ -2689,7 +2706,7 @@ PrefabInstance:
     - target: {fileID: 265752706806580430, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -7599793126021194774, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
+      objectReference: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
     - target: {fileID: 8084618712108961707, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: backEnabled
       value: 1
@@ -3135,7 +3152,7 @@ PrefabInstance:
     - target: {fileID: 265752706806580430, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -7599793126021194774, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
+      objectReference: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
     - target: {fileID: 8084618712108961707, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: backEnabled
       value: 1
@@ -3526,7 +3543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26c6cad8a7198fa4fb30c02b3ba738c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 878866176}
+  controlledOptionsGrid: {fileID: 878866176}
   delay: 0.5
   speed: 0.1
 --- !u!1 &892674208
@@ -3972,7 +3989,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1121190681}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -3993,7 +4022,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 177414669}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &1151682087
 GameObject:
   m_ObjectHideFlags: 0
@@ -4095,7 +4125,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1151682090}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -4116,7 +4158,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 73004141}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &1172171967
 GameObject:
   m_ObjectHideFlags: 0
@@ -4304,7 +4347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a104f203eb7334e84cd715d24db2c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1210305978}
+  controlledOptionsGrid: {fileID: 1210305978}
   delay: 0.5
   speed: 0.1
   nameText: {fileID: 160502882}
@@ -4991,7 +5034,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1316870472}
-  - component: {fileID: 1316870474}
   - component: {fileID: 1316870473}
   m_Layer: 0
   m_Name: Player Platforms
@@ -5055,21 +5097,6 @@ MonoBehaviour:
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
   selectAudioSource: {fileID: 0}
---- !u!114 &1316870474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1316870471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1316870473}
-  delay: 0.5
-  speed: 0.1
 --- !u!1 &1319794018
 GameObject:
   m_ObjectHideFlags: 0
@@ -5580,7 +5607,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1435185831}
-  - component: {fileID: 1435185833}
   - component: {fileID: 1435185832}
   m_Layer: 0
   m_Name: All Platforms
@@ -5642,21 +5668,6 @@ MonoBehaviour:
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
   selectAudioSource: {fileID: 0}
---- !u!114 &1435185833
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1435185830}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1435185832}
-  delay: 0.5
-  speed: 0.1
 --- !u!1001 &1453942720
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6160,7 +6171,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1484935520}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -6181,7 +6204,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 1238863219}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &1508071450
 GameObject:
   m_ObjectHideFlags: 0
@@ -6402,7 +6426,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1567430469}
-  - component: {fileID: 1567430471}
   - component: {fileID: 1567430470}
   m_Layer: 0
   m_Name: Enemy Platforms
@@ -6466,21 +6489,6 @@ MonoBehaviour:
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
   selectAudioSource: {fileID: 0}
---- !u!114 &1567430471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1567430468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1567430470}
-  delay: 0.5
-  speed: 0.1
 --- !u!1 &1572219068
 GameObject:
   m_ObjectHideFlags: 0
@@ -6668,7 +6676,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1613403330}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -6689,7 +6709,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 255178420}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &1648984294
 GameObject:
   m_ObjectHideFlags: 0
@@ -7078,7 +7099,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1755146900}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -7099,7 +7132,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 189690261}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &1786660592
 GameObject:
   m_ObjectHideFlags: 0
@@ -7334,7 +7368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cc68289c5d19b44cb4274d42fbb2134, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionsGrid: {fileID: 1832631540}
+  controlledOptionsGrid: {fileID: 0}
   delay: 0.5
   speed: 0.1
 --- !u!1 &1839415919
@@ -7548,7 +7582,7 @@ PrefabInstance:
     - target: {fileID: 265752706806580430, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: -7599793126021194774, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
+      objectReference: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
     - target: {fileID: 8084618712108961707, guid: 185115ed0ec9b72409261d25c26f66da, type: 3}
       propertyPath: backEnabled
       value: 1
@@ -8076,7 +8110,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1987051019}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -8097,7 +8143,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 892674210}
+  assignedCharacter: {fileID: 0}
 --- !u!1 &2010510556
 GameObject:
   m_ObjectHideFlags: 0
@@ -8794,7 +8841,19 @@ MonoBehaviour:
   confirmEnabled: 1
   confirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2143075866}
+        m_TargetAssemblyTypeName: BF2D.Combat.CombatGridTile, Assembly-CSharp
+        m_MethodName: TargetAssignedCharacter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   backEnabled: 1
   backEvent:
     m_PersistentCalls:
@@ -8815,7 +8874,8 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  cursor: {fileID: 0}
+  cursor: {fileID: 898060752}
+  assignedCharacter: {fileID: 0}
 --- !u!1001 &326542518909501781
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9459,6 +9519,10 @@ PrefabInstance:
       propertyPath: m_hasFontAssetChanged
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5812303956420232517, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+      propertyPath: controlledOptionsGrid
+      value: 
+      objectReference: {fileID: 5812303956420232512}
     - target: {fileID: 5812303956886749160, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
       propertyPath: m_Camera
       value: 
@@ -9606,6 +9670,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b1b57319b00a2c459bb271d4c50c06d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5812303956420232512 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1049449389, guid: b909b694bc6b5b94e9f635b03dca0430, type: 3}
+  m_PrefabInstance: {fileID: 5812303956420232510}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2d592fd87df0244fa456ff98077bd12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5977457606022870576

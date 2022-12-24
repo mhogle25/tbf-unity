@@ -13,7 +13,7 @@ public class UIOptionsGridTest : MonoBehaviour
     private void Start()
     {
         /*
-        optionsGrid.Setup(10, 4);
+        controlledOptionsGrid.Setup(10, 4);
         UIOptionData optionData = new UIOptionData
         {
             icon = iconSprite,
@@ -23,7 +23,7 @@ public class UIOptionsGridTest : MonoBehaviour
 
         for (int i = 0; i < 20; i++)
         {
-            optionsGrid.Add(optionData);
+            controlledOptionsGrid.Add(optionData);
         }
         */
     }
