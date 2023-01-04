@@ -11,6 +11,12 @@ namespace BF2D.Combat
     {
         [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[4];
         [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[4];
+        [Header("Prefabs")]
+        [SerializeField] private List<CharacterCombat> playerCombatPrefabs = new();
+        [SerializeField] private List<CharacterCombat> enemyCombatPrefabs = new();
+
+        private readonly Dictionary<string, CharacterCombat> playerCombatPrefabsDict = new();
+        private readonly Dictionary<string, CharacterCombat> enemyCombatPrefabsDict = new();
 
         private readonly List<CharacterCombat> characterQueue = new();
 
@@ -27,7 +33,7 @@ namespace BF2D.Combat
                 List<CharacterCombat> list = new();
                 foreach (CombatGridTile tile in this.playerPlatforms)
                 {
-                    if (tile)
+                    if (tile.AssignedCharacter)
                         list.Add(tile.AssignedCharacter);
                 }
                 return list;
@@ -40,7 +46,7 @@ namespace BF2D.Combat
                 List<CharacterCombat> list = new();
                 foreach (CombatGridTile tile in this.enemyPlatforms)
                 {
-                    if (tile)
+                    if (tile.AssignedCharacter)
                         list.Add(tile.AssignedCharacter);
                 }
                 return list;
@@ -76,6 +82,9 @@ namespace BF2D.Combat
 
         public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
         {
+            if (!DictsLoaded())
+                LoadCharacterPrefabs();
+
             players.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
             enemies.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
 
@@ -83,7 +92,7 @@ namespace BF2D.Combat
             {
                 if (IsEnemyGridFull())
                 {
-                    Debug.LogWarning("[CombatManager] Tried to instantiate an EnemyCombat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate an EnemyCombat but the grid was full");
                     return;
                 }
                 CharacterCombat playerCombat = InstantiatePlayerCombat(playerStats);
@@ -96,7 +105,7 @@ namespace BF2D.Combat
             {
                 if (IsPlayerGridFull())
                 {
-                    Debug.LogWarning("[CombatManager] Tried to instantiate a PlayerCombat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate a PlayerCombat but the grid was full");
                     return;
                 }
                 CharacterCombat enemyCombat = InstantiateEnemyCombat(enemyStats);
@@ -110,16 +119,29 @@ namespace BF2D.Combat
         #endregion
 
         #region Private Methods
+        private void LoadCharacterPrefabs()
+        {
+            foreach (CharacterCombat combatPrefab in this.playerCombatPrefabs)
+            {
+                this.playerCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
+            }
+
+            foreach (CharacterCombat combatPrefab in this.enemyCombatPrefabs)
+            {
+                this.enemyCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
+            }
+        }
+        
         private CharacterCombat InstantiatePlayerCombat(CharacterStats playerStats)
         {
-            CharacterCombat player = Instantiate(CombatManager.Instance.GetPlayerPrefab(playerStats.ID));
+            CharacterCombat player = Instantiate(this.playerCombatPrefabsDict[playerStats.ID]);
             player.Stats = playerStats;
             return player;
         }
 
         private CharacterCombat InstantiateEnemyCombat(CharacterStats enemyStats)
         {
-            CharacterCombat player = Instantiate(CombatManager.Instance.GetEnemyPrefab(enemyStats.ID));
+            CharacterCombat player = Instantiate(this.enemyCombatPrefabsDict[enemyStats.ID]);
             player.Stats = enemyStats;
             return player;
         }
@@ -132,6 +154,11 @@ namespace BF2D.Combat
         private bool IsEnemyGridFull()
         {
             return this.enemiesCount >= this.enemyPlatforms.Length;
+        }
+
+        private bool DictsLoaded()
+        {
+            return this.playerCombatPrefabsDict.Count > 0 && this.enemyCombatPrefabsDict.Count > 0;
         }
         #endregion
     }

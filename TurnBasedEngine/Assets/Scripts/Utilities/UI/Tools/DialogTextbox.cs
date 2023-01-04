@@ -44,7 +44,7 @@ namespace BF2D.UI {
         [Header("Dialog Responses")]
         public bool ResponseOptionsEnabled = true;
         [SerializeField] private string responseOptionsFilesPath = string.Empty;
-        [SerializeField] private OptionsGridControlInit responseOptionsControl = null;
+        [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
@@ -55,11 +55,6 @@ namespace BF2D.UI {
         [SerializeField] private AudioSource confirmAudioSource = null;
         [SerializeField] private AudioSource voiceAudioSource = null;
         [SerializeField] private AudioClip defaultVoice = null;
-
-        //Getter Setters and their private variables
-        //public OptionsGridControlInit ResponseOptionsControl { get { return this.responseOptionsControl; } set { this.responseOptionsControl = value; } }
-        //public string DialogFilesPath { set { this.dialogFilesPath = value; } }
-        //public string DialogResponseFilesPath { set { this.responseOptionsFilesPath = value; } }
 
         //Loaded dialogs
         private readonly Dictionary<string, List<string>> dialogs = new();
@@ -239,7 +234,7 @@ namespace BF2D.UI {
             }
 
             List<string> newLines = ReplaceInsertTags(lines, inserts);
-            DialogData dialogData = new DialogData
+            DialogData dialogData = new()
             {
                 dialog = newLines,
                 index = startingLineIndex,

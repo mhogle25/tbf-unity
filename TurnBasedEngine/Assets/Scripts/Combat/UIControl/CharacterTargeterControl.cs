@@ -50,6 +50,16 @@ namespace BF2D.Combat
             LoadOptionsIntoGrid(this.anyPlatforms, this.initAnyOptions);
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            if (InputManager.ConfirmPress)
+            {
+                this.textbox.Continue();
+            }
+        }
+
         protected void LoadOptionsIntoGrid(OptionsGrid grid, List<CombatGridTile> initGridOptions)
         {
             if (grid.Width > 0 && grid.Height > 0)

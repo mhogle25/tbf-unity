@@ -5327,10 +5327,6 @@ MonoBehaviour:
   textboxControl: {fileID: 262309522}
   combatGrid: {fileID: 1516352435}
   characterTargeter: {fileID: 704968162}
-  playerCombatPrefabs:
-  - {fileID: 1796095672597679171, guid: d92e5554cf84c3c4088e78a973472ef1, type: 3}
-  enemyCombatPrefabs:
-  - {fileID: 6548339578013975057, guid: e35c1c297f07ceb42816b03625d322a1, type: 3}
 --- !u!4 &1319794020
 Transform:
   m_ObjectHideFlags: 0
@@ -6588,6 +6584,10 @@ MonoBehaviour:
   - {fileID: 2143075866}
   - {fileID: 1613403330}
   - {fileID: 1151682090}
+  playerCombatPrefabs:
+  - {fileID: 1796095672597679171, guid: d92e5554cf84c3c4088e78a973472ef1, type: 3}
+  enemyCombatPrefabs:
+  - {fileID: 6548339578013975057, guid: e35c1c297f07ceb42816b03625d322a1, type: 3}
 --- !u!4 &1516352436
 Transform:
   m_ObjectHideFlags: 0
@@ -11300,7 +11300,7 @@ MonoBehaviour:
       m_Calls: []
   ResponseOptionsEnabled: 1
   responseOptionsFilesPath: Dialog/Responses
-  responseOptionsControl: {fileID: 0}
+  responseOptionsControl: {fileID: 2158157276703626550}
   prereqConditionChecker: {fileID: 0}
   responseOptionEvent:
     m_PersistentCalls:
