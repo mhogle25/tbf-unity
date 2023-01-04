@@ -43,12 +43,17 @@ namespace BF2D.UI {
             return true;
         }
 
+        public override void SetCursor(bool status)
+        {
+            this.cursor.enabled = status;
+        }
+
         private void SetupIcon(Sprite icon)
         {
-            if (this.icon is null)
+            if (!this.icon)
                 return;
 
-            if (icon != null)
+            if (icon)
             {
                 this.icon.sprite = icon;
             }
@@ -63,7 +68,7 @@ namespace BF2D.UI {
 
         private void SetupText(string text)
         {
-            if (this.textMesh is null)
+            if (!this.textMesh)
                 return;
 
             if (text != null || text != string.Empty)
@@ -77,11 +82,6 @@ namespace BF2D.UI {
                     this.textMesh.enabled = false;
                 }
             }
-        }
-
-        public override void SetCursor(bool status)
-        {
-            this.cursor.enabled = status;
         }
     }
 }

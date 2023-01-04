@@ -122,10 +122,10 @@ namespace BF2D.UI
 
         private void StartControl(UIControl uiControl)
         {
-            uiControl.ControlInitialize();
             uiControl.gameObject.SetActive(true);
             uiControl.enabled = true;
             this.currentControl = uiControl;
+            uiControl.ControlInitialize();
         }
 
         private static void EndControl(UIControl uiControl)

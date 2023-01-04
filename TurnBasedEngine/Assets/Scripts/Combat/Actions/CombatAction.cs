@@ -48,12 +48,12 @@ namespace BF2D.Combat.Actions
             }
         }
 
-        public void SetTargetedStatsActions(Queue<TargetedStatsAction> targetedActions)
+        public void EnqueueTargetedStatsActions(TargetedStatsAction targetedActions)
         {
             switch (this.combatActionType)
             {
                 case CombatActionType.Act: return; //TODO
-                case CombatActionType.Item: this.itemCombatAction.TargetedActions = targetedActions; return;
+                case CombatActionType.Item: this.itemCombatAction.TargetedActions.Enqueue(targetedActions); return;
                 default: Debug.LogError("[CombatAction:SetTargetedStatsAction] Tried to set the list of TargetedStatsActions but the CombatAction was a type other than Act or Item."); return;
             }
         }

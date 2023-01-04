@@ -41,13 +41,13 @@ namespace BF2D.Game
 
         public CombatManager.InitializeInfo UnstageCombatInfo()
         { 
-            if (this.combatInfos.Count < 1)
+            if (this.queuedCombats.Count < 1)
             {
                 return null;
             }
-            return this.combatInfos.Dequeue(); 
+            return this.queuedCombats.Dequeue(); 
         }
-        private readonly Queue<CombatManager.InitializeInfo> combatInfos = new();
+        private readonly Queue<CombatManager.InitializeInfo> queuedCombats = new();
 
         private void Awake()
         {
@@ -67,13 +67,16 @@ namespace BF2D.Game
 
         private void TEST_INITIALIZE()
         {
+            Debug.Log($"Streaming Assets Path: {Application.streamingAssetsPath}");
+            Debug.Log($"Persistent Data Path: {Application.persistentDataPath}");
+
             this.currentSave = LoadSaveData("save1");
             List<CharacterStats> enemies = new()
             {
                 LoadEnemy("lessergoblin")
             };
 
-            this.combatInfos.Enqueue(new CombatManager.InitializeInfo
+            this.queuedCombats.Enqueue(new CombatManager.InitializeInfo
             {
                 players = this.Players,
                 enemies = enemies
@@ -92,21 +95,21 @@ namespace BF2D.Game
 
         public Item GetItem(string key)
         {
-            this.items.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.itemsPath);
+            this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
             Item item = this.items[key];
             return item;
         }
 
         public Equipment GetEquipment(string key)
         {
-            this.equipments.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
+            this.equipments.Datapath = Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
             Equipment equipment = this.equipments[key];
             return equipment;
         }
 
         public StatusEffect GetStatusEffect(string key)
         {
-            this.statusEffects.Datapath ??= Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
+            this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
             StatusEffect statusEffect = this.statusEffects[key];
             return statusEffect;
         }

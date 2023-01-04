@@ -15,8 +15,7 @@ namespace BF2D.Combat
         [Header("Information")]
         [SerializeField] private TextMeshProUGUI nameText = null;
         [SerializeField] private TextMeshProUGUI descriptionText = null;
-        [Serializable] private class ItemCombatAction : UnityEvent<ItemInfo> { }
-        [SerializeField] private ItemCombatAction itemEvent;
+        [SerializeField] private UnityEvent<ItemInfo> itemEvent;
 
         private readonly List<Item> items = new();
 
@@ -39,7 +38,7 @@ namespace BF2D.Combat
                         [InputButton.Confirm] = () =>
                         {
                             this.itemEvent.Invoke(itemInfo);
-                            UIControlsManager.Instance.ResetControlChain(false);
+                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
                         },
                         [InputButton.Back] = () =>
                         {

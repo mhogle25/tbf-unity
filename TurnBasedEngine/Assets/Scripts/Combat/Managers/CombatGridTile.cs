@@ -10,7 +10,7 @@ namespace BF2D.Combat
     {
         [SerializeField] private SpriteRenderer cursor = null;
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
-        [SerializeField] private CharacterCombat assignedCharacter = null;
+        [SerializeField] private CharacterCombat assignedCharacter;
 
         public override bool Setup(Data optionData)
         {
@@ -30,6 +30,8 @@ namespace BF2D.Combat
             characterCombat.transform.SetParent(this.transform);
             characterCombat.transform.localPosition = Vector3.zero;
             characterCombat.transform.localScale = Vector3.one;
+
+            characterCombat.Tile = this;
         }
 
         public void ResetTile()
@@ -39,7 +41,7 @@ namespace BF2D.Combat
 
         public void TargetAssignedCharacter()
         {
-            CombatManager.Instance.CharacterTargeter.SetTargets(new List<CharacterCombat>{ this.assignedCharacter });
+            CombatManager.Instance.CharacterTargeter.SetTargets(new List<CharacterCombat>{ assignedCharacter });
         }
     }
 }

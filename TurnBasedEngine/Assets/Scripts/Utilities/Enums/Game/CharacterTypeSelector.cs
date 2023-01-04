@@ -13,9 +13,7 @@ namespace BF2D.Enums
         [EnumMember]
         Player,
         [EnumMember]
-        Enemy,
-        [EnumMember]
-        NPC
+        Enemy
     }
 
     public class CharacterTypeCollection<T>

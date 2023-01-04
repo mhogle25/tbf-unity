@@ -7,7 +7,7 @@ namespace BF2D.Combat.Actions
     {
         public ItemInfo Info { get { return this.info; } set { this.info = value; } }
         private ItemInfo info = null;
-        public Queue<TargetedStatsAction> TargetedActions { get { return this.targetedActions; } set { this.targetedActions = value; } }
-        private Queue<TargetedStatsAction> targetedActions = new();
+        public Queue<TargetedStatsAction> TargetedActions { get { return this.targetedActions; } }
+        private readonly Queue<TargetedStatsAction> targetedActions = new();
     }
 }

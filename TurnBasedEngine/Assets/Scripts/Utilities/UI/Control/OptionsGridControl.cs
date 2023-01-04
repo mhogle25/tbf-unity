@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 using BF2D.Enums;
+using System.Collections.Generic;
 
-namespace BF2D.UI
-{
+namespace BF2D.UI 
+{ 
     public class OptionsGridControl : UIControl
     {
         public OptionsGrid ControlledOptionsGrid { get { return this.controlledOptionsGrid; } }
@@ -27,6 +28,9 @@ namespace BF2D.UI
 
         protected virtual void Update()
         {
+            if (!this.controlledOptionsGrid)
+                return;
+
             this.state?.Invoke();
 
             if (InputManager.ConfirmPress)
@@ -68,6 +72,23 @@ namespace BF2D.UI
         public override void ControlFinalize()
         {
             this.controlledOptionsGrid.UtilityFinalize();
+        }
+
+        protected void LoadOptionsIntoGrid(OptionsGrid grid, List<GridOption> initGridOptions)
+        {
+            if (grid.Width > 0 && grid.Height > 0)
+            {
+                //Create the element data structure
+                grid.Setup(grid.Width, grid.Height);
+            }
+
+            if (initGridOptions.Count > 0)
+            {
+                foreach (GridOption option in initGridOptions)
+                {
+                    grid.Add(option);
+                }
+            }
         }
 
         private void StateDirectionInputListener()

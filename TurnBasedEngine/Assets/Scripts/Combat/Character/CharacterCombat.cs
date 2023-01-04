@@ -14,10 +14,13 @@ namespace BF2D.Combat
 {
     public class CharacterCombat : MonoBehaviour
     {
-        public CharacterType Type { get { return this.stats.Type; } }
+        //public CharacterType Type { get { return this.stats.Type; } }
 
         public CombatAction CurrentCombatAction { get { return this.combatAction; } }
         private CombatAction combatAction = null;
+
+        public CombatGridTile Tile { set { this.assignedTile = value; } }
+        private CombatGridTile assignedTile = null;
 
         public CharacterStats Stats
         {
@@ -36,6 +39,12 @@ namespace BF2D.Combat
         {
             this.combatAction = combatAction;
             this.combatAction.Setup();
+        }
+
+        public void Destroy()
+        {
+            this.assignedTile.ResetTile();
+            Destroy(this.gameObject);
         }
     }
 }

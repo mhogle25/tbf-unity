@@ -9,7 +9,7 @@ namespace BF2D.Combat.Actions
     {
         public CharacterStatsAction StatsAction { get { return this.statsAction; } set { this.statsAction = value; } }
         private CharacterStatsAction statsAction = null;
-        public List<CharacterCombat> Targets { get { return this.targets; } set { this.targets = value; } }
-        private List<CharacterCombat> targets = null;
+        public IEnumerable<CharacterCombat> Targets { get { return this.targets; } set { this.targets = value; } }
+        private IEnumerable<CharacterCombat> targets = null;
     }
 }

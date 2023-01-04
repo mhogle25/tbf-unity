@@ -32,27 +32,27 @@ namespace BF2D.Game.Actions
             List<string> message = new();
             if (this.resetHealth)
             {
-                message.Add($"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} goes up to full");
+                message.Add($"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} went up to full");
                 target.ResetHealth();
             }
             if (this.resetStamina)
             {
-                message.Add($"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} goes up to full");
+                message.Add($"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} went up to full");
                 target.ResetStamina();
             }
 
             if (this.damage is not null)
-                message.Add($"{target.Name} takes {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}");
+                message.Add($"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}");
             if (this.criticalDamage is not null)
-                message.Add($"{BF2D.Game.Strings.CharacterStats.CriticalDamage}. {target.Name} takes {RunCharacterStatsActionProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}");
+                message.Add($"{BF2D.Game.Strings.CharacterStats.CriticalDamage}. {target.Name} took {RunCharacterStatsActionProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}");
             if (this.psychicDamage is not null)
-                message.Add($"{target.Name} takes {RunCharacterStatsActionProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}.");
+                message.Add($"{target.Name} took {RunCharacterStatsActionProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}.");
             if (this.heal is not null)
-                message.Add($"{target.Name} gains {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}");
+                message.Add($"{target.Name} gained {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}");
             if (this.recover is not null)
-                message.Add($"{target.Name} recovers {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
+                message.Add($"{target.Name} recovered {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
             if (this.Exert is not null)
-                message.Add($"{target.Name} exerts {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
+                message.Add($"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
 
             return message;
         }

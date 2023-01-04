@@ -36,9 +36,6 @@ namespace BF2D.Game
 
             }
         }
-
-        [JsonIgnore] public CharacterType Type { get { return this.type; } }
-        [JsonProperty] private CharacterType type = CharacterType.NPC;
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private string id = string.Empty;
         [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
@@ -139,6 +136,9 @@ namespace BF2D.Game
         [JsonIgnore] public string Feet { get { return this.feet; } }
         [JsonProperty] private string feet = string.Empty;
 
+        [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
+        [JsonProperty] private int gridPosition = 0;
+
         [JsonIgnore] public List<ItemInfo> Items { get { return this.items; } }
         [JsonProperty] private List<ItemInfo> items = new List<ItemInfo>();
         [JsonIgnore] public List<EquipmentInfo> Equipments { get { return this.equipments; } }
@@ -146,8 +146,6 @@ namespace BF2D.Game
         [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
         [JsonProperty] private List<string> statusEffects = new List<string>();
 
-        [JsonIgnore] public int GridPosition { get { return this.gridPosition; } set { this.gridPosition = value; } }
-        [JsonProperty] private int gridPosition = 0;
 
         public void Damage(int damage)
         {

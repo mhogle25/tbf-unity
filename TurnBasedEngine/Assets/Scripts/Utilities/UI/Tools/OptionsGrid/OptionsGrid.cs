@@ -10,17 +10,15 @@ namespace BF2D.UI
 {
     public class OptionsGrid : UIUtility
     {
-        [SerializeField] private bool staticGrid = true;
         [Header("Grid")]
-        [ShowIf(ActionOnConditionFail.JustDisable, ConditionOperator.NAND, nameof(staticGrid))]
         [SerializeField] private GridOption optionPrefab = null;
         [Tooltip("The container for grid options")]
-        [SerializeField] private Transform container = null;
+        [SerializeField] protected Transform container = null;
         [Tooltip("Determines the direction that elements will be populated in")]
         [SerializeField] private Axis instantiationAxis = Axis.Horizontal;
-        [SerializeField] private int gridWidth = 1;
-        [SerializeField] private int gridHeight = 1; 
-        
+        [SerializeField] protected int gridWidth = 1;
+        [SerializeField] protected int gridHeight = 1;
+
         public OnNavigate OnNavigateEvent
         {
             get
@@ -60,11 +58,6 @@ namespace BF2D.UI
         [SerializeField] private bool selectEnabled = false;
         [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(selectEnabled))]
         [SerializeField] private AudioSource selectAudioSource = null;
-
-        /// <summary>
-        /// Whether this options grid is meant to handle statically defined options. If false, this grid is used for dynamically populating options.
-        /// </summary>
-        public bool StaticContent { get { return this.staticGrid; } }
 
         /// <summary>
         /// The area of the grid (width * height)
@@ -116,8 +109,8 @@ namespace BF2D.UI
         /// </summary>
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 
-        private GridOption[,] grid = null;
-        private int count = 0;
+        protected GridOption[,] grid = null;
+        protected int count = 0;
         public Vector2Int CursorPosition { get { return this.cursorPosition; } }
         public int CursorPosition1D
         {
@@ -130,37 +123,14 @@ namespace BF2D.UI
                     case Axis.Vertical:
                         return (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y;
                     default:
-                        throw new Exception($"[ControlledOptionsGrid] The instantiation axis is set to an invalid value: {this.instantiationAxis}");
+                        throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}");
                 }
             }
         }
         private Vector2Int cursorPosition = new(0, 0);
-        private Vector2Int head = new(0, 0);
-
-        private void Awake()
-        {
-            if (!this.staticGrid)
-                return;
-
-            UIOption[] options = this.container.GetComponentsInChildren<UIOption>();
-
-            if (this.gridWidth > 0 && this.gridHeight > 0)
-            {
-                //Create the element data structure
-                this.grid = new UIOption[this.gridWidth, this.gridHeight];
-            }
-
-            if (options != null && options.Length > 0)
-            {
-                foreach (UIOption option in options)
-                {
-                    Add(option);
-                }
-            }
-        }
+        protected Vector2Int head = new(0, 0);
 
         #region Public Methods
-
         /// <summary>
         /// Sets up a new grid, clearing any previous data
         /// </summary>
@@ -168,12 +138,6 @@ namespace BF2D.UI
         /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
-            if (this.staticGrid)
-            {
-                Debug.LogWarning($"[ControlledOptionsGrid] Tried to dynamically set up the options grid '{this.gameObject.name}' when it was set to static");
-                return;
-            }
-
             //Clean up anything that could be left over
             Clear();
 
@@ -182,7 +146,7 @@ namespace BF2D.UI
             this.gridHeight = height;
 
             //Create the element data structure
-            this.grid = new UIOption[this.gridWidth, this.gridHeight];
+            this.grid = new GridOption[this.gridWidth, this.gridHeight];
         }
 
         /// <summary>
@@ -190,36 +154,29 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="optionData">The data for the option</param>
         /// <returns>The UI option object</returns>
+        /// 
         public GridOption Add(GridOption.Data optionData)
         {
 
-            if (this.staticGrid)
+            //Base case
+            if (!this.optionPrefab)
             {
-                Debug.LogWarning("[ControlledOptionsGrid] Tried to add an option to the options grid while it was set to static");
+                Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefab was null");
                 return null;
             }
 
-            GridOption option = null;
-
-            //Base case
             if (this.count + 1 > Size)
             {
-                Debug.LogWarning("[ControlledOptionsGrid] Tried to add but the grid was full");
+                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return null;
             }
 
             //Create and set up the added element
-            option = Instantiate(this.optionPrefab);
+            GridOption option = Instantiate(this.optionPrefab);
             this.grid[this.head.x, this.head.y] = option;
             option.transform.SetParent(this.container.transform);
             option.transform.localScale = Vector3.one;
             option.Setup(optionData);
-
-            //If the cursor wasn't already enabled, enable it
-            if (this.count < 1)
-            {
-                SetCursorAtPosition(this.head, true);
-            }
 
             this.head = Increment(this.head);
 
@@ -228,6 +185,28 @@ namespace BF2D.UI
 
             return option;
         }
+
+        public bool Add(GridOption option)
+        {
+
+            //Base case
+            if (this.count + 1 > Size)
+            {
+                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
+                return false;
+            }
+
+            //Create and set up the added element
+            this.grid[this.head.x, this.head.y] = option;
+
+            this.head = Increment(this.head);
+
+            //Increase the count
+            this.count++;
+
+            return true;
+        }
+
 
         /// <summary>
         /// Removes the option selected by the cursor from the grid
@@ -238,7 +217,8 @@ namespace BF2D.UI
             //Base Case
             if (this.count < 1)
             {
-                Debug.LogWarning("[ControlledOptionsGrid] Tried to remove but the grid was empty");
+                Debug.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");
+                return;
             }
 
             Destroy(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject);
@@ -280,7 +260,7 @@ namespace BF2D.UI
                 }
             }
 
-            this.grid = new UIOption[this.gridWidth, this.gridHeight];
+            this.grid = new GridOption[this.gridWidth, this.gridHeight];
 
             for (int i = 0; i < maxi; i++)
             {
@@ -339,12 +319,13 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Debug.LogError("[ControlledOptionsGrid] Tried to set the cursor at head but the grid was null");
+                Debug.LogError("[OptionsGrid:SetCursorAtHead] Tried to set the cursor at head but the grid was null");
+                return;
             }
 
-            foreach (UIOption option in this.grid)
+            foreach (GridOption option in this.grid)
             {
-                if (option is null)
+                if (!option)
                     continue;
                 option.SetCursor(false);
             }
@@ -352,11 +333,22 @@ namespace BF2D.UI
             this.grid[0, 0].SetCursor(true);
         }
 
+        public void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
+        {
+            if (this.grid is null)
+            {
+                Debug.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
+                return;
+            }
+
+            this.grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
+        }
+
         public void InvokeEvent(InputButton inputButton)
         {
             if (this.grid is null)
             {
-                Debug.LogError($"[ControlledOptionsGrid] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
+                Debug.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
                 return;
             }
 
@@ -393,7 +385,7 @@ namespace BF2D.UI
                         while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
                         break;
                     default:
-                        Debug.LogError("[ControlledOptionsGrid] Invalid direction");
+                        Debug.LogError("[OptionsGrid:Navigate] Invalid direction");
                         break;
                 }
 
@@ -406,33 +398,15 @@ namespace BF2D.UI
         }
         #endregion
 
-        #region Private Methods
-        private bool Add(UIOption option)
+        #region Public Overrides
+        public override void UtilityInitialize()
         {
-            //Base case
-            if (this.count + 1 > Size)
-            {
-                Debug.LogWarning("[ControlledOptionsGrid] Tried to add but the grid was full");
-                return false;
-            }
-
-            //Create and set up the added element
-            this.grid[this.head.x, this.head.y] = option;
-
-            //If the cursor did not already exist, enable it
-            if (this.count < 1)
-            {
-                SetCursorAtPosition(this.head, true);
-            }
-
-            this.head = Increment(this.head);
-
-            //Increase the count
-            this.count++;
-
-            return true;
+            base.UtilityInitialize();
+            SetCursorAtPosition(this.cursorPosition, true);
         }
+        #endregion
 
+        #region Private Methods
         private int Increment(int value, int size)
         {
             int field = value;
@@ -449,7 +423,7 @@ namespace BF2D.UI
             return field;
         }
 
-        private Vector2Int Increment(Vector2Int vector)
+        protected Vector2Int Increment(Vector2Int vector)
         {
             Vector2Int v = vector;
             switch (this.instantiationAxis)
@@ -530,17 +504,6 @@ namespace BF2D.UI
             return v;
         }
 
-        private void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
-        {
-            if (this.grid is null)
-            {
-                Debug.LogWarning($"[ControlledOptionsGrid] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
-                return;
-            }
-
-            this.grid[cursorPosition.x, cursorPosition.y].SetCursor(value);
-        }
-
         private AudioSource GetAudioSource(InputButton inputButton)
         {
             return inputButton switch
@@ -551,7 +514,7 @@ namespace BF2D.UI
                 InputButton.Attack => this.attackAudioSource,
                 InputButton.Pause => this.pauseAudioSource,
                 InputButton.Select => this.selectAudioSource,
-                _ => throw new ArgumentException("[ControlledOptionsGrid] InputButton was null or invalid")
+                _ => throw new ArgumentException("[OptionsGrid:GetAudioSource] InputButton was null or invalid")
             };
         }
 
@@ -565,7 +528,7 @@ namespace BF2D.UI
                 InputButton.Attack => this.attackEnabled,
                 InputButton.Pause => this.pauseEnabled,
                 InputButton.Select => this.selectEnabled,
-                _ => throw new ArgumentException("[ControlledOptionsGrid] InputButton was null or invalid")
+                _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputButton was null or invalid")
             };
         }
         #endregion
