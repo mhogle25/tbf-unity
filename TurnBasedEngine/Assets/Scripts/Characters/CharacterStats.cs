@@ -36,6 +36,7 @@ namespace BF2D.Game
 
             }
         }
+
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private string id = string.Empty;
         [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
@@ -61,7 +62,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier SpeedModifier { get { return this.speedModifier; }}
-        [JsonIgnore] private StatModifier speedModifier = new StatModifier();
+        [JsonIgnore] private readonly StatModifier speedModifier = new();
         [JsonIgnore] public int Swiftness { get { return this.swiftness; } }
         [JsonProperty] private int swiftness = 0;
 
@@ -75,7 +76,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier AttackModifier { get { return this.attackModifier; } }
-        [JsonIgnore] private StatModifier attackModifier = new StatModifier();
+        [JsonIgnore] private     StatModifier attackModifier = new();
         [JsonIgnore] public int Strength { get { return this.strength; } }
         [JsonProperty] private int strength = 0;
 
@@ -89,7 +90,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier DefenseModifier { get { return this.defenseModifier; }}
-        [JsonIgnore] private StatModifier defenseModifier = new StatModifier();
+        [JsonIgnore] private readonly StatModifier defenseModifier = new();
         [JsonIgnore] public int Toughness { get { return this.toughness; } }
         [JsonProperty] private int toughness = 0;
 
@@ -103,7 +104,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier FocusModifier { get { return this.focusModifier; } }
-        [JsonIgnore] private StatModifier focusModifier = new StatModifier();
+        [JsonIgnore] private readonly StatModifier focusModifier = new();
         [JsonIgnore] public int Will { get { return this.will; } }
         [JsonProperty] private int will = 0;
 
@@ -117,7 +118,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier LuckModifier { get { return this.luckModifier; } }
-        [JsonIgnore] private StatModifier luckModifier = new StatModifier();
+        [JsonIgnore] private readonly StatModifier luckModifier = new();
         [JsonIgnore] public int Fortune { get { return this.fortune; } }
         [JsonProperty] private int fortune = 0;
         [JsonIgnore] public int Experience { get { return this.experience; } }
@@ -140,11 +141,11 @@ namespace BF2D.Game
         [JsonProperty] private int gridPosition = 0;
 
         [JsonIgnore] public List<ItemInfo> Items { get { return this.items; } }
-        [JsonProperty] private List<ItemInfo> items = new List<ItemInfo>();
+        [JsonProperty] private readonly List<ItemInfo> items = new();
         [JsonIgnore] public List<EquipmentInfo> Equipments { get { return this.equipments; } }
-        [JsonProperty] private List<EquipmentInfo> equipments = new List<EquipmentInfo>();
+        [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
         [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private List<string> statusEffects = new List<string>();
+        [JsonProperty] private readonly List<string> statusEffects = new();
 
 
         public void Damage(int damage)

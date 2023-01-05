@@ -21,12 +21,6 @@ namespace BF2D.Combat
         [SerializeField] private DialogTextboxControl textboxControl = null;
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
-        [Header("Prefabs")]
-        [SerializeField] private List<CharacterCombat> playerCombatPrefabs = new();
-        [SerializeField] private List<CharacterCombat> enemyCombatPrefabs = new();
-
-        private readonly Dictionary<string, CharacterCombat> playerCombatPrefabsDict = new();
-        private readonly Dictionary<string, CharacterCombat> enemyCombatPrefabsDict = new();
 
         private static CombatManager instance = null;
 
@@ -53,16 +47,6 @@ namespace BF2D.Combat
 
 
         #region Public Utilities
-        public CharacterCombat GetPlayerPrefab(string key)
-        {
-            return this.playerCombatPrefabsDict[key];
-        }
-
-        public CharacterCombat GetEnemyPrefab(string key)
-        {
-            return this.enemyCombatPrefabsDict[key];
-        }
-
         public void ExecuteItem(ItemInfo itemInfo)
         {
             this.CurrentCharacter.SetupCombatAction(new CombatAction
@@ -96,8 +80,6 @@ namespace BF2D.Combat
         #region Private Methods
         private void Initialize(List<CharacterStats> players, List<CharacterStats> enemies)
         {
-            LoadCharacterPrefabs();
-
             this.combatGrid.Setup(players, enemies);
 
             this.textboxControl.Textbox.Message("Enemies approach.", () => BeginCombat());
@@ -107,19 +89,6 @@ namespace BF2D.Combat
         private void BeginCombat()
         {
             UIControlsManager.Instance.TakeControl(this.mainMenu);
-        }
-
-        private void LoadCharacterPrefabs()
-        {
-            foreach (CharacterCombat combatPrefab in this.playerCombatPrefabs)
-            {
-                this.playerCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
-            }
-
-            foreach (CharacterCombat combatPrefab in this.enemyCombatPrefabs)
-            {
-                this.enemyCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
-            }
         }
 
         private void SingletonSetup()

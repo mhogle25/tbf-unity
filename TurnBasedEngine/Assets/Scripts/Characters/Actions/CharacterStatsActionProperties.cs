@@ -51,7 +51,7 @@ namespace BF2D.Game.Actions
                 message.Add($"{target.Name} gained {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}");
             if (this.recover is not null)
                 message.Add($"{target.Name} recovered {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
-            if (this.Exert is not null)
+            if (this.exert is not null)
                 message.Add($"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}");
 
             return message;
