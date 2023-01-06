@@ -47,7 +47,7 @@ namespace BF2D.Combat
 
 
         #region Public Utilities
-        public void ExecuteItem(ItemInfo itemInfo)
+        public void SetupItemCombat(ItemInfo itemInfo)
         {
             this.CurrentCharacter.SetupCombatAction(new CombatAction
             {
@@ -61,7 +61,6 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
-            //TODO
         }
         #endregion
 
@@ -82,13 +81,8 @@ namespace BF2D.Combat
         {
             this.combatGrid.Setup(players, enemies);
 
-            this.textboxControl.Textbox.Message("Enemies approach.", () => BeginCombat());
+            this.textboxControl.Textbox.Message("Enemies approach.", () => UIControlsManager.Instance.TakeControl(this.mainMenu));
             UIControlsManager.Instance.TakeControl(this.textboxControl);
-        }
-
-        private void BeginCombat()
-        {
-            UIControlsManager.Instance.TakeControl(this.mainMenu);
         }
 
         private void SingletonSetup()

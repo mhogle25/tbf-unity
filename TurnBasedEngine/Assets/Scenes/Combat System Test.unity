@@ -4550,12 +4550,12 @@ MonoBehaviour:
   speed: 0.1
   nameText: {fileID: 160502882}
   descriptionText: {fileID: 1224905529}
-  itemEvent:
+  onSelectItem:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1319794019}
         m_TargetAssemblyTypeName: BF2D.Combat.CombatManager, Assembly-CSharp
-        m_MethodName: ExecuteItem
+        m_MethodName: SetupItemCombat
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

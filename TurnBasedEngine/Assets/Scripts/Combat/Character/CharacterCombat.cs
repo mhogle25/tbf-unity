@@ -14,10 +14,8 @@ namespace BF2D.Combat
 {
     public class CharacterCombat : MonoBehaviour
     {
-        //public CharacterType Type { get { return this.stats.Type; } }
-
-        public CombatAction CurrentCombatAction { get { return this.combatAction; } }
-        private CombatAction combatAction = null;
+        public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } }
+        private CombatAction currentCombatAction = null;
 
         public CombatGridTile Tile { set { this.assignedTile = value; } }
         private CombatGridTile assignedTile = null;
@@ -37,8 +35,8 @@ namespace BF2D.Combat
 
         public void SetupCombatAction(CombatAction combatAction)
         {
-            this.combatAction = combatAction;
-            this.combatAction.Setup();
+            this.currentCombatAction = combatAction;
+            this.currentCombatAction.Setup();
         }
 
         public void Destroy()

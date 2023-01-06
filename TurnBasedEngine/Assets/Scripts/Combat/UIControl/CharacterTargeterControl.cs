@@ -156,6 +156,16 @@ namespace BF2D.Combat
         {
             if (this.stagedStatsActions.Count < 1) 
             {
+                if (this.controlledOptionsGrid)
+                {
+                    this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
+                    this.controlledOptionsGrid.UtilityFinalize();
+                }
+                if (this.textbox)
+                {
+                    this.textbox.UtilityFinalize();
+                    this.textbox.View.gameObject.SetActive(false);
+                }
                 CombatManager.Instance.RunCombat();
                 return;
             }
