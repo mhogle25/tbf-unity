@@ -20,7 +20,6 @@ namespace BF2D.Game
 
         [Header("Data File Paths")]
         [SerializeField] private string savesPath = "Saves";
-
         [SerializeField] private string playersPath = "Players";
         [SerializeField] private string enemiesPath = "Enemies";
         [SerializeField] private string itemsPath = "Items";

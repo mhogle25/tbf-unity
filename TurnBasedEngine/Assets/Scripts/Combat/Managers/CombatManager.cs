@@ -15,10 +15,12 @@ namespace BF2D.Combat
         {
             public List<CharacterStats> players = new();
             public List<CharacterStats> enemies = new();
+            public string openingMessage = "Enemies approach.";
         }
 
         [SerializeField] private OptionsGridControlInit mainMenu = null;
-        [SerializeField] private DialogTextboxControl textboxControl = null;
+        [SerializeField] private DialogTextboxControl standaloneTextboxControl = null;
+        [SerializeField] private DialogTextboxControl controlledTextboxControl = null;
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
 
@@ -71,24 +73,24 @@ namespace BF2D.Combat
             if (combatInfo is null)
                 return;
 
-            Initialize(combatInfo.players, combatInfo.enemies);
+            Initialize(combatInfo);
             this.listener = null;
         }
         #endregion
 
         #region Private Methods
-        private void Initialize(List<CharacterStats> players, List<CharacterStats> enemies)
+        private void Initialize(InitializeInfo initInfo)
         {
-            this.combatGrid.Setup(players, enemies);
+            this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
-            this.textboxControl.Textbox.Message("Enemies approach.", () => UIControlsManager.Instance.TakeControl(this.mainMenu));
-            UIControlsManager.Instance.TakeControl(this.textboxControl);
+            this.standaloneTextboxControl.Textbox.Message(initInfo.openingMessage, () => UIControlsManager.Instance.TakeControl(this.mainMenu));
+            UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
         }
 
         private void SingletonSetup()
         {
             //Setup of Monobehaviour Singleton
-            if (CombatManager.instance is not null)
+            if (CombatManager.instance)
             {
                 if (CombatManager.instance != this)
                 {
@@ -98,7 +100,6 @@ namespace BF2D.Combat
 
             CombatManager.instance = this;
         }
-
         #endregion
     }
 }

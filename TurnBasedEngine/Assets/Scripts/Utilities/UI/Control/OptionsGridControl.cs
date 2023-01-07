@@ -8,6 +8,7 @@ namespace BF2D.UI
     public class OptionsGridControl : UIControl
     {
         public OptionsGrid ControlledOptionsGrid { get { return this.controlledOptionsGrid; } }
+        [Header("Options Grid")]
         [SerializeField] protected OptionsGrid controlledOptionsGrid = null;
 
         public float Delay { get { return this.delay; } set { this.delay = value; } }

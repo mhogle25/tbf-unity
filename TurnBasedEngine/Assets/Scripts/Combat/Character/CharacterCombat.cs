@@ -1,13 +1,5 @@
 using UnityEngine;
 using BF2D.Game;
-using BF2D.Game.Actions;
-using BF2D.Enums;
-using System;
-using System.IO;
-using BF2D.UI;
-using System.Collections.Generic;
-using UnityEditor;
-using Newtonsoft.Json.Linq;
 using BF2D.Combat.Actions;
 
 namespace BF2D.Combat
@@ -41,7 +33,9 @@ namespace BF2D.Combat
 
         public void Destroy()
         {
-            this.assignedTile.ResetTile();
+            if (this.assignedTile)
+                this.assignedTile.ResetTile();
+
             Destroy(this.gameObject);
         }
     }
