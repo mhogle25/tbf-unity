@@ -21,7 +21,7 @@ namespace BF2D.Combat
         [SerializeField] private OptionsGridControlInit mainMenu = null;
 
         [SerializeField] private DialogTextboxControl standaloneTextboxControl = null;
-        [SerializeField] private DialogTextboxControl controlledTextboxControl = null;
+        [SerializeField] private DialogTextbox orphanedTextbox = null;
 
 
         [SerializeField] private CombatGrid combatGrid = null;
@@ -86,8 +86,11 @@ namespace BF2D.Combat
         #region States
         private void StateUpkeep()
         {
-            //Run upkeep actions for Status Effects and Equipments
-            //Utilize new State getter in the dialog textbox
+            //Run upkeep actions for Status Effects and Equipments.
+            //Utilize new Standby state getter in the orphaned dialog textbox
+            //and control it using the CombatManager. Track the standby in
+            //conjunction with the state of the current character to
+            //determine when to continue
             //
 
             this.state = StateCombatInit;

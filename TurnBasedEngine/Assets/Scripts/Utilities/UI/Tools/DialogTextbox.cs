@@ -26,6 +26,25 @@ namespace BF2D.UI {
             public object prereq;
         };
 
+        //Getters and Setters
+        public bool OnStandby
+        {
+            get
+            {
+                if (!this.interactable)
+                    return false;
+                if (this.state == DialogQueueHandler)
+                    return true;
+                if (this.state == MessageParseAndDisplayClocked)
+                    return false;
+                if (this.state == EndOfLine)
+                    return true;
+                if (this.state == EndOfDialog)
+                    return true;
+                return false;
+            }
+        }
+
         [Header("Private References")]
         //Serialized private variables
         [SerializeField] private TextMeshProUGUI textField = null;
@@ -61,21 +80,6 @@ namespace BF2D.UI {
         //Loaded dialog options
         private readonly Dictionary<string, string> dialogResponses = new();
 
-        public Enums.UIState State
-        {
-            get
-            {
-                if (!this.interactable)
-                    return Enums.UIState.Idle;
-                if (this.state == DialogQueueHandler)
-                    return Enums.UIState.Standby;
-                if (this.state == MessageParseAndDisplayClocked)
-                    return Enums.UIState.Running;
-                if (this.state == EndOfLine)
-                    return Enums.UIState.Standby;
-                return Enums.UIState.Idle;
-            }
-        }
         //The state delegate
         private Action state = null;
 
@@ -310,20 +314,20 @@ namespace BF2D.UI {
         #region States
         private void DialogQueueHandler()
         {
-            if (this.dialogQueue.Count > 0) {
+            if (this.dialogQueue.Count < 1)
+                return;
 
-                DialogData dialogData = this.dialogQueue.Dequeue();
+            DialogData dialogData = this.dialogQueue.Dequeue();
 
-                ResetControlVariables(dialogData.index);
-                this.voiceAudioSource.clip = this.defaultVoice;
-                this.activeLines = dialogData.dialog;
-                this.callback = dialogData.callback;
-                this.textField.text = "";
+            ResetControlVariables(dialogData.index);
+            this.voiceAudioSource.clip = this.defaultVoice;
+            this.activeLines = dialogData.dialog;
+            this.callback = dialogData.callback;
+            this.textField.text = "";
 
-                //Debug.Log("[DialogTextbox] Dialog Loaded\n" + this.activeLines.Count + " lines");
+            //Debug.Log("[DialogTextbox] Dialog Loaded\n" + this.activeLines.Count + " lines");
 
-                this.state = MessageParseAndDisplayClocked;
-            }
+            this.state = MessageParseAndDisplayClocked;
         }
 
         private void MessageParseAndDisplayClocked() {
@@ -351,7 +355,8 @@ namespace BF2D.UI {
                 {
                     this.dialogIndex = this.nextDialogIndex;
                     this.nextDialogIndex = DialogTextbox.defaultValue;
-                } else
+                } 
+                else
                 {
                     this.dialogIndex++;                     //Increment dialog index to the next line of dialog
                 }

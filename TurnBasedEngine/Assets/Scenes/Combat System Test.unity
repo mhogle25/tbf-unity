@@ -5611,7 +5611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenu: {fileID: 234798721}
   standaloneTextboxControl: {fileID: 1258533951842669762}
-  controlledTextboxControl: {fileID: 5232003489841320216}
+  orphanedTextbox: {fileID: 0}
   combatGrid: {fileID: 1516352435}
   characterTargeter: {fileID: 704968162}
 --- !u!4 &1319794020
@@ -12267,7 +12267,7 @@ GameObject:
   - component: {fileID: 3762075292545349522}
   - component: {fileID: 5232003489841320215}
   m_Layer: 5
-  m_Name: Controlled Textbox Canvas
+  m_Name: Orphaned Textbox Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
