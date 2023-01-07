@@ -87,8 +87,8 @@ namespace BF2D.Combat
         private void StateUpkeep()
         {
             //Run upkeep actions for Status Effects and Equipments.
-            //Utilize new Standby state getter in the orphaned dialog textbox
-            //and control it using the CombatManager. Track the standby in
+            //Utilize the Interactable getter in the orphaned dialog textbox
+            //and control it using the CombatManager. Track Interactable in
             //conjunction with the state of the current character to
             //determine when to continue
             //

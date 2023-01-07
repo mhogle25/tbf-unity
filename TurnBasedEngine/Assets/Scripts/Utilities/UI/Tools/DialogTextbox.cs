@@ -26,25 +26,6 @@ namespace BF2D.UI {
             public object prereq;
         };
 
-        //Getters and Setters
-        public bool OnStandby
-        {
-            get
-            {
-                if (!this.interactable)
-                    return false;
-                if (this.state == DialogQueueHandler)
-                    return true;
-                if (this.state == MessageParseAndDisplayClocked)
-                    return false;
-                if (this.state == EndOfLine)
-                    return true;
-                if (this.state == EndOfDialog)
-                    return true;
-                return false;
-            }
-        }
-
         [Header("Private References")]
         //Serialized private variables
         [SerializeField] private TextMeshProUGUI textField = null;
