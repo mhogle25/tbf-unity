@@ -61,6 +61,21 @@ namespace BF2D.UI {
         //Loaded dialog options
         private readonly Dictionary<string, string> dialogResponses = new();
 
+        public Enums.UIState State
+        {
+            get
+            {
+                if (!this.interactable)
+                    return Enums.UIState.Idle;
+                if (this.state == DialogQueueHandler)
+                    return Enums.UIState.Standby;
+                if (this.state == MessageParseAndDisplayClocked)
+                    return Enums.UIState.Running;
+                if (this.state == EndOfLine)
+                    return Enums.UIState.Standby;
+                return Enums.UIState.Idle;
+            }
+        }
         //The state delegate
         private Action state = null;
 

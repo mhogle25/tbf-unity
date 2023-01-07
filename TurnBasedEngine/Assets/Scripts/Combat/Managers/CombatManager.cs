@@ -19,14 +19,18 @@ namespace BF2D.Combat
         }
 
         [SerializeField] private OptionsGridControlInit mainMenu = null;
+
         [SerializeField] private DialogTextboxControl standaloneTextboxControl = null;
         [SerializeField] private DialogTextboxControl controlledTextboxControl = null;
+
+
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
 
         private static CombatManager instance = null;
 
         private Action listener = null;
+        private Action state = null;
 
         public static CombatManager Instance { get { return CombatManager.instance; } }
 
@@ -45,6 +49,7 @@ namespace BF2D.Combat
         private void Update()
         {
             this.listener?.Invoke();
+            this.state?.Invoke();
         }
 
 
@@ -53,7 +58,6 @@ namespace BF2D.Combat
         {
             this.CurrentCharacter.SetupCombatAction(new CombatAction
             {
-                CombatActionType = CombatActionType.Item,
                 Item = new ItemCombatActionInfo
                 {
                     Info = itemInfo
@@ -63,6 +67,7 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
+            this.state = StateUpkeep;
         }
         #endregion
 
@@ -75,6 +80,30 @@ namespace BF2D.Combat
 
             Initialize(combatInfo);
             this.listener = null;
+        }
+        #endregion
+
+        #region States
+        private void StateUpkeep()
+        {
+            //Run upkeep actions for Status Effects and Equipments
+            //Utilize new State getter in the dialog textbox
+            //
+
+            this.state = StateCombatInit;
+        }
+
+        private void StateCombatInit()
+        {
+
+        }
+
+        private void StateEOT()
+        {
+            //Run EOT actions for Status Effects and Equipments
+            //
+
+
         }
         #endregion
 
