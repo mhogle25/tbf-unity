@@ -4680,8 +4680,8 @@ RectTransform:
   m_Father: {fileID: 1314138997}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0, y: 1}
@@ -5611,7 +5611,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenu: {fileID: 234798721}
   standaloneTextboxControl: {fileID: 1258533951842669762}
-  orphanedTextbox: {fileID: 0}
+  orphanedTextbox: {fileID: 3762075292545349522}
   combatGrid: {fileID: 1516352435}
   characterTargeter: {fileID: 704968162}
 --- !u!4 &1319794020
@@ -12263,7 +12263,6 @@ GameObject:
   - component: {fileID: 2158157277294129051}
   - component: {fileID: 2158157277294129049}
   - component: {fileID: 2158157277294129048}
-  - component: {fileID: 5232003489841320216}
   - component: {fileID: 3762075292545349522}
   - component: {fileID: 5232003489841320215}
   m_Layer: 5
@@ -13106,19 +13105,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioClips: []
---- !u!114 &5232003489841320216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2158157277294129054}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f505070ce6b93fc40aeabbc3f87d383f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogTextbox: {fileID: 3762075292545349522}
 --- !u!114 &5573806231696239472
 MonoBehaviour:
   m_ObjectHideFlags: 0
