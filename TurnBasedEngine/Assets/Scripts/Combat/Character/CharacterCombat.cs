@@ -45,6 +45,11 @@ namespace BF2D.Combat
         {
             OrphanedTextboxDialog(textbox, this.currentCombatAction.CurrentInfo.GetOpeningMessage());
         }
+
+        public void PerformActionAnimation()
+        {
+
+        }
         #endregion
 
         #region Private Methods

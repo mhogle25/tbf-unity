@@ -65,7 +65,6 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
-            this.CurrentCharacter.PlayOpeningMessage(this.orphanedTextbox);
             this.state = StateUpkeep;
         }
         #endregion
@@ -92,6 +91,8 @@ namespace BF2D.Combat
             //determine when to continue
             //
 
+            this.CurrentCharacter.PlayOpeningMessage(this.orphanedTextbox);
+            this.CurrentCharacter.PerformActionAnimation();
             this.state = StateCombatInit;
         }
 
