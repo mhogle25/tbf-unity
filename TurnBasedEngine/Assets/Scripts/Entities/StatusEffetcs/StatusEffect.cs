@@ -1,17 +1,13 @@
 using Newtonsoft.Json;
 using BF2D.Enums;
 using BF2D.Game.Actions;
+using System;
 
 namespace BF2D.Game
 {
-    public class StatusEffect
+    [Serializable]
+    public class StatusEffect : Entity
     {
-        [JsonIgnore] public string Name { get { return this.name; } }
-        [JsonProperty] protected readonly string name = string.Empty;
-        [JsonIgnore] public string Icon { get { return this.icon; } }
-        [JsonProperty] protected readonly string icon = string.Empty;
-        [JsonIgnore] public string Description { get { return this.description; } }
-        [JsonProperty] protected readonly string description = string.Empty;
         [JsonIgnore] public int Duration { get { return this.duration; } }
         [JsonProperty] private readonly int duration = -1;
         [JsonIgnore] public EffectType Effect { get { return this.effect; } }

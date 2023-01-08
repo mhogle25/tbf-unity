@@ -18,6 +18,10 @@
     "legs":"",
     "hands":"",
     "feet":"",
+    "statusEffects":
+    [
+        ""
+    ],
     "gridPosition":0,
     "items":
     [
@@ -31,9 +35,5 @@
         {
 
         }
-    ],
-    "statusEffects":
-    [
-        ""
     ]
 }

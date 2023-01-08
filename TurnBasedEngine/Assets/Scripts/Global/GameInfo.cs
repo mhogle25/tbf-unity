@@ -122,7 +122,7 @@ namespace BF2D.Game
         public void AddPlayer(string playerKey, string newName)
         {
             CharacterStats newPlayer = LoadPlayer(playerKey);
-            newPlayer.Name = newName;
+            newPlayer.SetName(newName);
             this.currentSave.AddPlayer(newPlayer);
         }
 

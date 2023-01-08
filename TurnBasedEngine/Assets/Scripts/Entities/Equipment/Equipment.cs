@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BF2D.Game
 {
-    public class Equipment : Item
+    public class Equipment
     {
 
     }

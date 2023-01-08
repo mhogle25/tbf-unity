@@ -1,14 +1,14 @@
 {
     "name":"Medicinal Herb",
-    "icon":"herb_01",
-    "consumeable":true,
+    "id":"herb_01",
     "description":"An herb with restorative properties. Heal base 10 Health to a single target.",
-    "useMessage":
-    [
-        "[I:0] used the medicinal herb's healing properties.[E]"
-    ],
+    "consumeable":true,
     "onUse":
     {
+        "useMessage":
+        [
+            "[I:0] used the medicinal herb's healing properties.[E]"
+        ],
         "statsActions": 
         [
             {

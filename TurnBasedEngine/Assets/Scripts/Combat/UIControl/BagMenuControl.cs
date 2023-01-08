@@ -31,7 +31,7 @@ namespace BF2D.Combat
                 this.controlledOptionsGrid.Add(new UIOption.Data
                 {
                     name = itemInfo.Name,
-                    icon = GameInfo.Instance.GetIcon(itemInfo.Get().Icon),
+                    icon = GameInfo.Instance.GetIcon(itemInfo.Get().ID),
                     text = itemInfo.Count.ToString(),
                     actions = new InputButtonCollection<Action>
                     {

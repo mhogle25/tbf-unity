@@ -12,7 +12,7 @@ namespace BF2D.Combat.Actions
         private readonly Queue<TargetedStatsAction> targetedActions = new();
         public List<string> GetOpeningMessage()
         {
-            return this.info.Get().UseMessage;
+            return this.info.Get().OnUse.UseMessage;
         }
     }
 }

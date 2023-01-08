@@ -7,7 +7,7 @@ using UnityEngine;
 namespace BF2D.Game
 {
     [Serializable]
-    public class CharacterStats
+    public class CharacterStats : Entity
     {
         public class StatModifier
         {
@@ -36,13 +36,6 @@ namespace BF2D.Game
 
             }
         }
-
-        [JsonIgnore] public string ID { get { return this.id; } }
-        [JsonProperty] private string id = string.Empty;
-        [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
-        [JsonProperty] private string name = string.Empty;
-        [JsonIgnore] public string Description { get { return this.description; } set { this.description = value; } }
-        [JsonProperty] private string description = string.Empty;
         [JsonIgnore] public int Health { get { return this.health; } }
         [JsonProperty] private int health = 0;
         [JsonIgnore] public int MaxHealth { get { return this.maxHealth; } }
@@ -136,6 +129,8 @@ namespace BF2D.Game
         [JsonProperty] private string hands = string.Empty;
         [JsonIgnore] public string Feet { get { return this.feet; } }
         [JsonProperty] private string feet = string.Empty;
+        [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
+        [JsonProperty] private readonly List<string> statusEffects = new();
 
         [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
         [JsonProperty] private int gridPosition = 0;
@@ -144,8 +139,6 @@ namespace BF2D.Game
         [JsonProperty] private readonly List<ItemInfo> items = new();
         [JsonIgnore] public List<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
-        [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private readonly List<string> statusEffects = new();
 
 
         public void Damage(int damage)
@@ -276,6 +269,11 @@ namespace BF2D.Game
                 CharacterStatsProperty.Luck => this.Luck,
                 _ => throw new ArgumentException("[CharacterStats] The given property was null or invalid")
             };
+        }
+
+        public void SetName(string newName)
+        {
+            this.name = newName;
         }
     }
 }
