@@ -5,7 +5,7 @@
     "description":"An herb with restorative properties. Heal base 10 Health to a single target.",
     "useMessage":
     [
-        "[I:0] treated [I:1]'s injuries."
+        "[I:0] used the medicinal herb's healing properties.[E]"
     ],
     "onUse":
     {

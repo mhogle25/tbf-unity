@@ -1,6 +1,8 @@
 using UnityEngine;
 using BF2D.Game;
 using BF2D.Combat.Actions;
+using BF2D.UI;
+using System.Collections.Generic;
 
 namespace BF2D.Combat
 {
@@ -11,7 +13,6 @@ namespace BF2D.Combat
 
         public CombatGridTile Tile { set { this.assignedTile = value; } }
         private CombatGridTile assignedTile = null;
-
         public CharacterStats Stats
         {
             get
@@ -25,6 +26,7 @@ namespace BF2D.Combat
         }
         private CharacterStats stats;
 
+        #region Public Utilities
         public void SetupCombatAction(CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
@@ -38,5 +40,26 @@ namespace BF2D.Combat
 
             Destroy(this.gameObject);
         }
+
+        public void PlayOpeningMessage(DialogTextbox textbox)
+        {
+            OrphanedTextboxDialog(textbox, this.currentCombatAction.CurrentInfo.GetOpeningMessage());
+        }
+        #endregion
+
+        #region Private Methods
+        private void OrphanedTextboxDialog(DialogTextbox textbox, List<string> dialog)
+        {
+            textbox.Dialog(dialog, 0, () =>
+            {
+                textbox.UtilityFinalize();
+            }, new List<string>
+            {
+               this.stats.Name
+            });
+            textbox.View.gameObject.SetActive(true);
+            textbox.UtilityInitialize();
+        }
+        #endregion
     }
 }

@@ -394,6 +394,12 @@ namespace BF2D.UI {
         }
 
         private bool MessageParseAndDisplay() {
+            if (this.dialogIndex >= this.activeLines.Count)
+            {
+                Debug.LogError("[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag?");
+                return false;
+            }
+
             string message = this.activeLines[this.dialogIndex];    //Set message to the current line of dialog
 
             //If our message index is greater than the length of the message

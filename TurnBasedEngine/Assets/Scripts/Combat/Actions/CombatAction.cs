@@ -108,10 +108,27 @@ namespace BF2D.Combat.Actions
 
                 this.combatActionType = CombatActionType.Roster;
                 ResetInfos();
-                this.rosterCombatAction = value; 
+                this.rosterCombatAction = value;
             } 
         }
         private RosterCombatActionInfo rosterCombatAction = null;
+
+        public ICombatActionInfo CurrentInfo
+        {
+            get
+            {
+                return this.combatActionType switch
+                {
+                    CombatActionType.Flee => this.Flee,
+                    CombatActionType.Act => this.Act,
+                    CombatActionType.Item => this.Item,
+                    CombatActionType.Roster => this.Roster,
+                    CombatActionType.Equip => this.Equip,
+                    CombatActionType.Event => this.Event,
+                    _ => null,
+                };
+            }
+        }
 
         public void Setup()
         {

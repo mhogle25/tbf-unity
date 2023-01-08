@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using BF2D.Game;
-using DataStructures.PriorityQueue;
 using System;
 using BF2D.UI;
 using BF2D.Combat.Actions;
-using BF2D.Enums;
 
 namespace BF2D.Combat
 {
@@ -67,6 +65,7 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
+            this.CurrentCharacter.PlayOpeningMessage(this.orphanedTextbox);
             this.state = StateUpkeep;
         }
         #endregion
