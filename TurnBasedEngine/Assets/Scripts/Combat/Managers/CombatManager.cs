@@ -89,9 +89,6 @@ namespace BF2D.Combat
             //and control it using the CombatManager. Track Interactable in
             //conjunction with the state of the current character to
             //determine when to continue
-
-            //Need to completely rethink Json Cacheing, which will affect Status Effects and their structure in Character Stats, as well as
-            //setting targets for CharacterStatsActions (have json cache store the text instead of the object)
             //
 
             this.CurrentCharacter.PlayOpeningMessage(this.orphanedTextbox);
