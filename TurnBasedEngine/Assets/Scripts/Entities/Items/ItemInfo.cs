@@ -7,12 +7,12 @@ namespace BF2D.Game
     [Serializable]
     public class ItemInfo
     {
-        [JsonIgnore] public string ID { get { return this.id; } }
+        [JsonIgnore] public string ID { get { return this.id; } set { this.id = value; } }
         [JsonProperty] protected string id = string.Empty;
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] protected int count = 1;
 
-        private Item staged = null;
+        [JsonIgnore] private Item staged = null;
 
         public Item Get()
         {
@@ -20,20 +20,24 @@ namespace BF2D.Game
             return this.staged;
         }
 
-        public void UseItem()
+        public void Increment()
         {
-            if (this.count < 1)
-            {
-                Debug.LogWarning("[ItemInfo:UseItem] Tried to use the staged item but the item count was less than 1");
-                return;
-            }
-            this.count--;
-            ResetStagedItem();
+            this.count++;
         }
 
-        public void ResetStagedItem()
+        public Item Use()
         {
+            Get();
+            if (this.staged.Consumeable)
+                this.count--;
+            return ResetStaged();
+        }
+
+        public Item ResetStaged()
+        {
+            Item item = this.staged;
             this.staged = null;
+            return item;
         }
     }
 }

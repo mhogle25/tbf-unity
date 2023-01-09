@@ -17,11 +17,28 @@
                 {
                     "damage": 
                     {
-                        "value":3,
-                        "modifiers": 
-                        [
-                            "None"
-                        ]
+                        "value":3
+                    },
+                    "statusEffect":
+                    {
+                        "effect":"Fire",
+                        "duration":3,
+                        "onEOT":
+                        {
+                            "useMessage":
+                            [
+                                "[I:0] was burned."
+                            ],
+                            "statsActionProperties":
+                            [
+                                {
+                                    "damage":
+                                    {
+                                        "value":1
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
             }

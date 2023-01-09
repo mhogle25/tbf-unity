@@ -5,7 +5,7 @@ namespace BF2D.Game.Actions
 {
     public class UntargetedGameAction : GameAction
     {
-        [JsonIgnore] public List<CharacterStatsActionProperties> StatsActions { get { return this.statsActions; } }
-        [JsonProperty] private readonly List<CharacterStatsActionProperties> statsActions = new();
+        [JsonIgnore] public List<CharacterStatsActionProperties> StatsActionProperties { get { return this.statsActionProperties; } }
+        [JsonProperty] private readonly List<CharacterStatsActionProperties> statsActionProperties = new();
     }
 }

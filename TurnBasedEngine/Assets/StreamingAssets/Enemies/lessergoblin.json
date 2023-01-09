@@ -20,7 +20,9 @@
     "feet":"",
     "statusEffects":
     [
-        ""
+        {
+            
+        }
     ],
     "gridPosition":0,
     "items":

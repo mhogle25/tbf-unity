@@ -24,8 +24,8 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetHealth = false;
         [JsonIgnore] public bool ResetStamina { get { return this.resetStamina; } }
         [JsonProperty] private readonly bool resetStamina = false;
-        [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
-        [JsonProperty] private readonly string statusEffect = null;
+        [JsonIgnore] public StatusEffect StatusEffect { get { return this.statusEffect; } }
+        [JsonProperty] private readonly StatusEffect statusEffect = null;
 
         public List<string> Run(CharacterStats source, CharacterStats target)
         {

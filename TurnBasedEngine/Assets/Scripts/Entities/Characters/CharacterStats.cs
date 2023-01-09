@@ -132,8 +132,8 @@ namespace BF2D.Game
         [JsonProperty] private string hands = string.Empty;
         [JsonIgnore] public string Feet { get { return this.feet; } }
         [JsonProperty] private string feet = string.Empty;
-        [JsonIgnore] public List<string> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private readonly List<string> statusEffects = new();
+        [JsonIgnore] public List<StatusEffect> StatusEffects { get { return this.statusEffects; } }
+        [JsonProperty] private readonly List<StatusEffect> statusEffects = new();
 
         [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
         [JsonProperty] private int gridPosition = 0;
