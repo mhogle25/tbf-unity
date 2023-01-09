@@ -410,7 +410,7 @@ namespace BF2D
         /// <summary>
         /// Creates a copy of a Keyboard Config
         /// </summary>
-        /// <param name="config">The Keyboard Config to be copied</param>
+        /// <param iconID="config">The Keyboard Config to be copied</param>
         /// <returns>The copy of the Keyboard Config</returns>
         private static ControlsConfigKeyboard CloneKeyboardConfig(ControlsConfigKeyboard config)
         {
@@ -432,7 +432,7 @@ namespace BF2D
         /// <summary>
         /// Creates a copy of a Gamepad Config
         /// </summary>
-        /// <param name="config">The Gamepad Config to be copied</param>
+        /// <param iconID="config">The Gamepad Config to be copied</param>
         /// <returns>The copy of the Gamepad Config</returns>
         private static ControlsConfigGamepad CloneGamepadConfig(ControlsConfigGamepad config)
         {

@@ -1,6 +1,6 @@
 {
     "name":"Vorpal Sword",
-    "id":"sword_01",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    "iconID":"sword_01",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
     "description":"An ancient sword of great power. Damages a single target.",
     "consumeable":false,
     "onUse":

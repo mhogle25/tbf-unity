@@ -8,6 +8,8 @@ namespace BF2D.Game
     [Serializable]
     public class Item : Entity
     {
+        [JsonIgnore] public string IconID { get { return this.iconID; } }
+        [JsonProperty] protected readonly string iconID = string.Empty;
         [JsonIgnore] public bool Consumeable { get { return this.consumeable; } }
         [JsonProperty] protected readonly bool consumeable = false;
         [JsonIgnore] public TargetedGameAction OnUse { get { return this.onUse; } }

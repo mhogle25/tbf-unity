@@ -9,31 +9,25 @@ namespace BF2D
     public class JsonCache<T>
     {
 
-        private readonly Dictionary<string, T> objects = new();
-        private int count = 0;
+        private readonly Dictionary<string, string> objects = new();
 
         public string Datapath { get { return this.datapath; } set { this.datapath = value; } }
         private string datapath = string.Empty;
 
-        public T this[string key]
+        public T Get(string key)
         {
-            get
+            if (this.objects.ContainsKey(key))
+                return BF2D.Utilities.TextFile.DeserializeString<T>(this.objects[key]);
+
+            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"{key}.json"));
+            this.objects[key] = content;
+
+            if (this.objects.ContainsKey(key))
             {
-                if (this.objects.ContainsKey(key))
-                    return this.objects[key];
-
-                string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"${key}.json"));
-                T t = BF2D.Utilities.TextFile.DeserializeString<T>(content);
-                this.objects[key] = t;
-
-                if (this.objects.ContainsKey(key))
-                {
-                    this.count++;
-                    return this.objects[key];
-                }
-
-                return default;
+                return BF2D.Utilities.TextFile.DeserializeString<T>(this.objects[key]);
             }
+
+            return default;
         }
     }
 }

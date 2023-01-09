@@ -135,14 +135,14 @@ namespace BF2D.Combat
         
         private CharacterCombat InstantiatePlayerCombat(CharacterStats playerStats)
         {
-            CharacterCombat player = Instantiate(this.playerCombatPrefabsDict[playerStats.ID]);
+            CharacterCombat player = Instantiate(this.playerCombatPrefabsDict[playerStats.PrefabID]);
             player.Stats = playerStats;
             return player;
         }
 
         private CharacterCombat InstantiateEnemyCombat(CharacterStats enemyStats)
         {
-            CharacterCombat player = Instantiate(this.enemyCombatPrefabsDict[enemyStats.ID]);
+            CharacterCombat player = Instantiate(this.enemyCombatPrefabsDict[enemyStats.PrefabID]);
             player.Stats = enemyStats;
             return player;
         }

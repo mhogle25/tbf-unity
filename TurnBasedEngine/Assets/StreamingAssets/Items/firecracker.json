@@ -1,6 +1,6 @@
 {
     "name":"Firecracker",
-    "id":"firework_01",
+    "iconID":"firework_01",
     "description":"A small firecracker that will explode when used.",
     "consumeable":true,
     "onUse":

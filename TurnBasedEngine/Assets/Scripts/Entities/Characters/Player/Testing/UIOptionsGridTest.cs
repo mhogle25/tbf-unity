@@ -16,7 +16,7 @@ public class UIOptionsGridTest : MonoBehaviour
         controlledOptionsGrid.Setup(10, 4);
         UIOptionData optionData = new UIOptionData
         {
-            icon = iconSprite,
+            iconID = iconSprite,
             cursor = cursorSprite
         };
 

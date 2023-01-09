@@ -108,7 +108,7 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a single message to the dialog queue
         /// </summary>
-        /// <param name="message">The message to be displayed</param>
+        /// <param iconID="message">The message to be displayed</param>
         public void Message(string message) 
         {
             Message(message, null);
@@ -117,8 +117,8 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a single message to the dialog queue with a callback function
         /// </summary>
-        /// <param name="message">The message to be displayed</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="message">The message to be displayed</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Message(string message, Action callbackFunction)
         {
             Message(message, callbackFunction, null);
@@ -127,8 +127,8 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a single message to the dialog queue with a callback function
         /// </summary>
-        /// <param name="message">The message to be displayed</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="message">The message to be displayed</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Message(string message, Action callbackFunction, List<string> inserts)
         {
             List<string> lines = new List<string>
@@ -151,8 +151,8 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue
         /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
+        /// <param iconID="key">The filename of the desired dialog</param>
+        /// <param iconID="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
         public void Dialog(string key, int startingLineIndex) 
         {
             Dialog(key, startingLineIndex, null);
@@ -161,9 +161,9 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="key">The filename of the desired dialog</param>
+        /// <param iconID="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Dialog(string key, int startingLineIndex, Action callbackFunction)
         {
             Dialog(key, startingLineIndex, callbackFunction, null);
@@ -172,9 +172,9 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="key">The filename of the desired dialog</param>
+        /// <param iconID="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Dialog(string key, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
             //Debug.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
@@ -202,8 +202,8 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
-        /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
+        /// <param iconID="lines">The dialog to be displayed</param>
+        /// <param iconID="dialogIndex">The line the dialog starts from (0 is the first line)</param>
         public void Dialog(List<string> lines, int dialogIndex) 
         {
             Dialog(lines, dialogIndex, null);
@@ -212,9 +212,9 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
-        /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="lines">The dialog to be displayed</param>
+        /// <param iconID="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction)
         {
             Dialog(lines, startingLineIndex, callbackFunction, null);
@@ -223,9 +223,9 @@ namespace BF2D.UI {
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
-        /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
+        /// <param iconID="lines">The dialog to be displayed</param>
+        /// <param iconID="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
+        /// <param iconID="callbackFunction">Called at the end of dialog</param>
         public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
             if (lines is null)
@@ -427,7 +427,7 @@ namespace BF2D.UI {
                         this.messageSpeed = newSpeed;
                         this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
                         break;
-                    case DialogTextbox.nameTag:                                                     //Case: Orator name
+                    case DialogTextbox.nameTag:                                                     //Case: Orator iconID
                         string name = ParseTag(message, ref newMessageIndex);
                         if (name == DialogTextbox.defaultValue.ToString())
                         {

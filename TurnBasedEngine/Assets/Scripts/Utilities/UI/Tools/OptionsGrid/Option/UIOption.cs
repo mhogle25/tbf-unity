@@ -19,7 +19,7 @@ namespace BF2D.UI {
         /// <summary>
         /// Sets up an instantiated option
         /// </summary>
-        /// <param name="optionData">The data in the option</param>
+        /// <param iconID="optionData">The data in the option</param>
         /// <returns>True if setup is successful, otherwise returns false</returns>
         public override bool Setup(Data optionData)
         {

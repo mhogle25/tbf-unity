@@ -1,6 +1,6 @@
 {                                                                                                                                                                                                                                                                
     "name":"Lesser Goblin",
-    "id":"goblin",
+    "prefabID":"goblin",
     "description":"A fiend of the dark with a desire for blood.",
     "experience":0,
     "level":1,
@@ -26,7 +26,7 @@
     "items":
     [
         {
-            "name": "firecracker",
+            "id": "firecracker",
             "count":10
         }
     ],

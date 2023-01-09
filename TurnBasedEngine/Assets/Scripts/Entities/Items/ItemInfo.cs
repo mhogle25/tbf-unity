@@ -1,19 +1,39 @@
 using System;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class ItemInfo
     {
-        [JsonIgnore] public string Name { get { return this.name; } set { this.name = value; } }
-        [JsonProperty] protected string name = string.Empty;
-        [JsonIgnore] public int Count { get { return this.count; } set { this.count = value; } }
+        [JsonIgnore] public string ID { get { return this.id; } }
+        [JsonProperty] protected string id = string.Empty;
+        [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] protected int count = 1;
 
-        public virtual Item Get()
+        private Item staged = null;
+
+        public Item Get()
         {
-            return GameInfo.Instance.GetItem(this.name);
+            this.staged ??= GameInfo.Instance.GetItem(this.id);
+            return this.staged;
+        }
+
+        public void UseItem()
+        {
+            if (this.count < 1)
+            {
+                Debug.LogWarning("[ItemInfo:UseItem] Tried to use the staged item but the item count was less than 1");
+                return;
+            }
+            this.count--;
+            ResetStagedItem();
+        }
+
+        public void ResetStagedItem()
+        {
+            this.staged = null;
         }
     }
 }

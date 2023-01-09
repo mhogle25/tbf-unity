@@ -1,6 +1,6 @@
 {
     "name":"Medicinal Herb",
-    "id":"herb_01",
+    "iconID":"herb_01",
     "description":"An herb with restorative properties. Heal base 10 Health to a single target.",
     "consumeable":true,
     "onUse":

@@ -41,7 +41,7 @@ namespace BF2D.Combat
         {
             if (this.nameKey == string.Empty)
             {
-                Debug.LogWarning($"[StatsPreview] The name key for GameObject '{this.gameObject.name}' was empty");
+                Debug.LogWarning($"[StatsPreview] The iconID key for GameObject '{this.gameObject.iconID}' was empty");
                 return;
             }
 
@@ -49,11 +49,11 @@ namespace BF2D.Combat
 
             if (stats == null)
             {
-                Debug.LogWarning($"[StatsPreview] No player character with the name key '{this.nameKey}' was found in GlobalGameManager");
+                Debug.LogWarning($"[StatsPreview] No player character with the iconID key '{this.nameKey}' was found in GlobalGameManager");
                 return;
             }
 
-            nameTextGUI.text = stats.Name;
+            nameTextGUI.text = stats.PrefabID;
             healthTextGUI.text = $"{stats.Health}/{stats.MaxHealth}";
             healthBar.value = stats.Health / stats.MaxHealth;
             staminaTextGUI.text = $"{stats.Stamina}/{stats.MaxStamina}";

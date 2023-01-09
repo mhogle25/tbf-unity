@@ -9,6 +9,9 @@ namespace BF2D.Game
     [Serializable]
     public class CharacterStats : Entity
     {
+        [JsonIgnore] public string PrefabID { get { return this.prefabID; } }
+        [JsonProperty] private readonly string prefabID = string.Empty;
+
         public class StatModifier
         {
             public int Equipment { get { return this.equipment; } }

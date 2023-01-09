@@ -134,8 +134,8 @@ namespace BF2D.UI
         /// <summary>
         /// Sets up a new grid, clearing any previous data
         /// </summary>
-        /// <param name="width">The new grid width</param>
-        /// <param name="height">The new grid height</param>
+        /// <param iconID="width">The new grid width</param>
+        /// <param iconID="height">The new grid height</param>
         public void Setup(int width, int height)
         {
             //Clean up anything that could be left over
@@ -152,7 +152,7 @@ namespace BF2D.UI
         /// <summary>
         /// Instantiates and adds an option to the grid
         /// </summary>
-        /// <param name="optionData">The data for the option</param>
+        /// <param iconID="optionData">The data for the option</param>
         /// <returns>The UI option object</returns>
         /// 
         public GridOption Add(GridOption.Data optionData)
@@ -161,7 +161,7 @@ namespace BF2D.UI
             //Base case
             if (!this.optionPrefab)
             {
-                Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefab was null");
+                Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
                 return null;
             }
 
@@ -362,7 +362,7 @@ namespace BF2D.UI
         /// <summary>
         /// Navigate through the grid
         /// </summary>
-        /// <param name="direction">The direction of navigation</param>
+        /// <param iconID="direction">The direction of navigation</param>
         public void Navigate(InputDirection direction)
         {
             if (this.Interactable && this.gameObject.activeSelf && this.count > 0)

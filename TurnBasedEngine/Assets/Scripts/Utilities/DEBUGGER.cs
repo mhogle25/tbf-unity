@@ -165,7 +165,7 @@ namespace BF2D
         /// string testString = "au";
         /// Debug.Log($"SOLUTION FOR {testString}: {BF2D.DEBUGGER.LengthOfLongestSubstring(testString)}");
         /// </summary>
-        /// <param name="s"></param>
+        /// <param iconID="s"></param>
         /// <returns></returns>
         ///
         public static int LengthOfLongestSubstring(string s)
