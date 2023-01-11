@@ -26,8 +26,7 @@ namespace BF2D.Combat
 
         public override void ControlInitialize()
         {
-            List<CharacterStatsAction> characterStatsActions = CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetStatsActions();
-            foreach (CharacterStatsAction statsAction in characterStatsActions)
+            foreach (CharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetStatsActions())
             {
                 this.stagedStatsActions.Enqueue(statsAction);
             }
@@ -79,11 +78,7 @@ namespace BF2D.Combat
 
         public void SetTargets(List<CharacterCombat> targets)
         {
-            CombatManager.Instance.CurrentCharacter.CurrentCombatAction.EnqueueTargetedStatsActions(new TargetedStatsAction
-            {
-                StatsAction = this.stagedStatsAction,
-                Targets = targets
-            });
+            this.stagedStatsAction.TargetInfo.CombatTargets = targets;
 
             this.controlledOptionsGrid.UtilityFinalize();
             Continue();
@@ -93,11 +88,8 @@ namespace BF2D.Combat
         {
             this.targeterSetupActionCollection[CharacterTarget.Self] = () =>
             {
-                CombatManager.Instance.CurrentCharacter.CurrentCombatAction.EnqueueTargetedStatsActions(new TargetedStatsAction
-                {
-                    StatsAction = this.stagedStatsAction,
-                    Targets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter }
-                });
+
+                this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
                 Continue();
             };
 
@@ -108,11 +100,7 @@ namespace BF2D.Combat
 
             this.targeterSetupActionCollection[CharacterTarget.AllPlayers] = () =>
             {
-                CombatManager.Instance.CurrentCharacter.CurrentCombatAction.EnqueueTargetedStatsActions(new TargetedStatsAction
-                {
-                    StatsAction = this.stagedStatsAction,
-                    Targets = CombatManager.Instance.Players
-                });
+                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Players;
                 Continue();
             };
 
@@ -123,11 +111,7 @@ namespace BF2D.Combat
 
             this.targeterSetupActionCollection[CharacterTarget.AllEnemies] = () =>
             {
-                CombatManager.Instance.CurrentCharacter.CurrentCombatAction.EnqueueTargetedStatsActions(new TargetedStatsAction
-                {
-                    StatsAction = this.stagedStatsAction,
-                    Targets = CombatManager.Instance.Enemies
-                });
+                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
                 Continue();
             };
 
@@ -143,11 +127,7 @@ namespace BF2D.Combat
 
             this.targeterSetupActionCollection[CharacterTarget.All] = () =>
             {
-                CombatManager.Instance.CurrentCharacter.CurrentCombatAction.EnqueueTargetedStatsActions(new TargetedStatsAction
-                {
-                    StatsAction = this.stagedStatsAction,
-                    Targets = CombatManager.Instance.Characters
-                });
+                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
                 Continue();
             };
         }
