@@ -5,7 +5,7 @@ namespace BF2D.Game.Actions
 {
     public class GameAction
     {
-        [JsonIgnore] public List<string> UseMessage { get { return this.useMessage; } }
-        [JsonProperty] protected readonly List<string> useMessage = new();
+        [JsonIgnore] public List<string> Message { get { return this.message; } }
+        [JsonProperty] protected readonly List<string> message = new();
     }
 }

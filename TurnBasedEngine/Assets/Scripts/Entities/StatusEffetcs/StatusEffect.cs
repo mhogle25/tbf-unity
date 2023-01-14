@@ -9,7 +9,7 @@ namespace BF2D.Game
     public class StatusEffect : Entity
     {
         [JsonIgnore] public int Duration { get { return this.duration; } }
-        [JsonProperty] private readonly int duration = -1;
+        [JsonProperty] private int duration = -1;
         [JsonIgnore] public EffectType Effect { get { return this.effect; } }
         [JsonProperty] private readonly EffectType effect = EffectType.Generic;
         [JsonIgnore] public int SpeedModifier { get { return this.speedModifier; } }
@@ -26,5 +26,10 @@ namespace BF2D.Game
         [JsonProperty] private readonly UntargetedGameAction onUpkeep = null;
         [JsonIgnore] public UntargetedGameAction OnEOT { get { return this.onEOT; } }
         [JsonProperty] private readonly UntargetedGameAction onEOT = null;
+
+        public void Use()
+        {
+            this.duration--;
+        }
     }
 }

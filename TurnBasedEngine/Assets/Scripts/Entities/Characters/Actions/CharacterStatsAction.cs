@@ -20,16 +20,6 @@ namespace BF2D.Game.Actions
         [JsonIgnore] public CharacterTargetInfo TargetInfo { get { return this.targetInfo; } }
         [JsonIgnore] private readonly CharacterTargetInfo targetInfo = new();
 
-        public string Run(CharacterStats source, CharacterStats target)
-        {
-            string message = string.Empty;
-            foreach (string s in this.properties.Run(source, target))
-            {
-                message += $"{s}\n";
-            };
-            return message;
-        }
-
         public string TextBreakdown(CharacterStats character)
         {
             string text = "-\n";

@@ -4,6 +4,7 @@ using BF2D.Game;
 using System;
 using BF2D.UI;
 using BF2D.Combat.Actions;
+using BF2D.Game.Actions;
 
 namespace BF2D.Combat
 {
@@ -21,14 +22,12 @@ namespace BF2D.Combat
         [SerializeField] private DialogTextboxControl standaloneTextboxControl = null;
         [SerializeField] private DialogTextbox orphanedTextbox = null;
 
-
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
 
         private static CombatManager instance = null;
 
         private Action listener = null;
-        private Action state = null;
 
         public static CombatManager Instance { get { return CombatManager.instance; } }
 
@@ -37,6 +36,7 @@ namespace BF2D.Combat
         public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.Enemies; } }
         public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.Characters; } }
         public CharacterTargeterControl CharacterTargeter { get { return this.characterTargeter; } }
+        public DialogTextbox OrphanedTextbox { get { return this.orphanedTextbox; } }
 
         private void Awake()
         {
@@ -47,7 +47,6 @@ namespace BF2D.Combat
         private void Update()
         {
             this.listener?.Invoke();
-            this.state?.Invoke();
         }
 
 
@@ -65,7 +64,7 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
-            this.state = StateUpkeep;
+            this.CurrentCharacter.UpkeepInit();
         }
         #endregion
 
@@ -82,32 +81,6 @@ namespace BF2D.Combat
         #endregion
 
         #region States
-        private void StateUpkeep()
-        {
-            //Run upkeep actions for Status Effects and Equipments.
-            //Utilize the Interactable getter in the orphaned dialog textbox
-            //and control it using the CombatManager. Track Interactable in
-            //conjunction with the state of the current character to
-            //determine when to continue
-            //
-
-            this.CurrentCharacter.PlayOpeningMessage(this.orphanedTextbox);
-            this.CurrentCharacter.PerformActionAnimation();
-            this.state = StateCombatInit;
-        }
-
-        private void StateCombatInit()
-        {
-
-        }
-
-        private void StateEOT()
-        {
-            //Run EOT actions for Status Effects and Equipments
-            //
-
-
-        }
         #endregion
 
         #region Private Methods

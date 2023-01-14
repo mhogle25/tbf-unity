@@ -28,8 +28,8 @@ namespace BF2D.Game
         #region AnimationPropertyTerms
         public static class Animation
         {
-            public const string Entry = "Entry";
-            public const string Swap = "swap";
+            public const string AttackTrigger = "attack";
+            public const string FlashingTrigger = "flashing";
         }
         #endregion
     }

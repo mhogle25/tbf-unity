@@ -27,7 +27,17 @@ namespace BF2D.Game.Actions
         [JsonIgnore] public StatusEffect StatusEffect { get { return this.statusEffect; } }
         [JsonProperty] private readonly StatusEffect statusEffect = null;
 
-        public List<string> Run(CharacterStats source, CharacterStats target)
+        public string Run(CharacterStats source, CharacterStats target)
+        {
+            string message = string.Empty;
+            foreach (string s in RunHelper(source, target))
+            {
+                message += $"{s}\n";
+            };
+            return message;
+        }
+         
+        private List<string> RunHelper(CharacterStats source, CharacterStats target)
         {
             List<string> message = new();
             if (this.resetHealth)

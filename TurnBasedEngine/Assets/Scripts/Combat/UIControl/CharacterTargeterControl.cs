@@ -20,7 +20,6 @@ namespace BF2D.Combat
         [Header("Misc")]
         [SerializeField] private DialogTextbox textbox = null;
 
-        private readonly CharacterTargetCollection<Action> targeterSetupActionCollection = new();
         private readonly Queue<CharacterStatsAction> stagedStatsActions = new();
         private CharacterStatsAction stagedStatsAction = null;
 
@@ -43,7 +42,6 @@ namespace BF2D.Combat
         protected override void Awake()
         {
             base.Awake();
-            SetupTargeterActionsCollection();
             LoadOptionsIntoGrid(this.playerPlatforms, this.initPlayerOptions);
             LoadOptionsIntoGrid(this.enemyPlatforms, this.initEnemyOptions);
             LoadOptionsIntoGrid(this.anyPlatforms, this.initAnyOptions);
@@ -84,52 +82,42 @@ namespace BF2D.Combat
             Continue();
         }
 
-        private void SetupTargeterActionsCollection()
+        private void TargeterSetup(CharacterTarget target)
         {
-            this.targeterSetupActionCollection[CharacterTarget.Self] = () =>
+            switch (target)
             {
-
-                this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
-                Continue();
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.Player] = () =>
-            {
-                SetupDialog(this.playerPlatforms);
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.AllPlayers] = () =>
-            {
-                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Players;
-                Continue();
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.Enemy] = () =>
-            {
-                SetupDialog(this.enemyPlatforms);
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.AllEnemies] = () =>
-            {
-                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
-                Continue();
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.Any] = () =>
-            {
-                SetupDialog(this.anyPlatforms);
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.AllOfAny] = () =>
-            {
-                //TODO
-            };
-
-            this.targeterSetupActionCollection[CharacterTarget.All] = () =>
-            {
-                this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
-                Continue();
-            };
+                case CharacterTarget.Self:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
+                    Continue();
+                    return;
+                case CharacterTarget.Player:
+                    SetupDialog(this.playerPlatforms);
+                    return;
+                case CharacterTarget.AllPlayers:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Players;
+                    Continue();
+                    return;
+                case CharacterTarget.Enemy:
+                    SetupDialog(this.enemyPlatforms);
+                    return;
+                case CharacterTarget.AllEnemies:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
+                    Continue();
+                    return;
+                case CharacterTarget.Any:
+                    SetupDialog(this.anyPlatforms);
+                    return;
+                case CharacterTarget.AllOfAny:
+                    //TODO
+                    return;
+                case CharacterTarget.All:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
+                    Continue();
+                    return;
+                default:
+                    Debug.LogError("[CharacterTargeterControl:TargeterSetup] The provided value for a character target was invalid");
+                    return;
+            }
         }
 
         private void Continue()
@@ -150,7 +138,7 @@ namespace BF2D.Combat
                 return;
             }
             this.stagedStatsAction = this.stagedStatsActions.Dequeue();
-            this.targeterSetupActionCollection[this.stagedStatsAction.Target]();
+            TargeterSetup(this.stagedStatsAction.Target);
         }
 
         private void SetupDialog(OptionsGrid followUp)

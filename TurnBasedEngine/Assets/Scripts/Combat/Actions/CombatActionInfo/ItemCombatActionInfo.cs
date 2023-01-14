@@ -10,7 +10,7 @@ namespace BF2D.Combat.Actions
         private ItemInfo info = null;
         public List<string> GetOpeningMessage()
         {
-            return this.info.Get().OnUse.UseMessage;
+            return this.info.Get().OnUse.Message;
         }
     }
 }

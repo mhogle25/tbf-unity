@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using BF2D.UI;
 using Newtonsoft.Json;
 
 namespace BF2D.Game.Actions
@@ -7,5 +8,6 @@ namespace BF2D.Game.Actions
     {
         [JsonIgnore] public List<CharacterStatsActionProperties> StatsActionProperties { get { return this.statsActionProperties; } }
         [JsonProperty] private readonly List<CharacterStatsActionProperties> statsActionProperties = new();
+
     }
 }
