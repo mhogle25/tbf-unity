@@ -4,7 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace BF2D.Enums
+namespace BF2D.Combat.Enums
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]

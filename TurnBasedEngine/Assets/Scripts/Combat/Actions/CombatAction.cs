@@ -3,6 +3,7 @@ using BF2D.UI;
 using BF2D.Game.Actions;
 using System.Collections.Generic;
 using UnityEngine;
+using BF2D.Combat.Enums;
 
 namespace BF2D.Combat.Actions
 {

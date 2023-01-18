@@ -18,7 +18,7 @@ namespace BF2D.Combat
         private string animState = CharacterCombat.IDLE;
         private delegate string RunEvent();
         private RunEvent animEvent = null;
-
+        
         public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } }
         private CombatAction currentCombatAction = null;
 
@@ -27,18 +27,7 @@ namespace BF2D.Combat
 
         private readonly Queue<CharacterStatsActionProperties> stagedUntargetedStatsActions = new();
 
-
-        public CharacterStats Stats
-        {
-            get
-            {
-                return this.stats;
-            }
-            set
-            {
-                this.stats = value;
-            }
-        }
+        public CharacterStats Stats { get { return this.stats; } set { this.stats = value; } }
         private CharacterStats stats;
 
         #region Public Utilities
@@ -58,18 +47,26 @@ namespace BF2D.Combat
 
         public void UpkeepInit()
         {
-            CombatManager.Instance.OrphanedTextbox.OnEndOfStackedDialogs.AddListener(() =>
-            {
-                //CombatInit
-                CombatManager.Instance.OrphanedTextbox.OnEndOfStackedDialogs.RemoveAllListeners();
+            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet", () => 
+            { 
+                Debug.Log("This is when the action is triggered"); 
             });
 
             foreach (StatusEffect statusEffect in this.Stats.StatusEffects)
             {
+                if (!statusEffect.UpkeepEventExists())
+                    continue;
+
                 CombatManager.Instance.OrphanedTextbox.Dialog(statusEffect.OnUpkeep.Message, 0, () =>
                 {
                     CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-                    RunStatusEffect(statusEffect);
+
+                    if (statusEffect.Duration > 0)
+                        statusEffect.Use();
+                    if (statusEffect.Duration == 0)
+                        this.Stats.RemoveStatusEffect(statusEffect);
+
+                    RunPersistentEffect(statusEffect);
                 }, new List<string>
                 {
                     this.Stats.Name
@@ -99,15 +96,9 @@ namespace BF2D.Combat
         }
         #endregion
 
-        private void RunStatusEffect(StatusEffect statusEffect)
+        private void RunPersistentEffect(PersistentEffect persistentEffect)
         {
-            if (statusEffect.Duration > 0)
-                statusEffect.Use();
-            if (statusEffect.Duration == 0)
-            {
-                this.Stats.StatusEffects.Remove(statusEffect);
-            }
-            RunUntargetedStatsActions(statusEffect.OnUpkeep.StatsActionProperties);
+            RunUntargetedStatsActions(persistentEffect.OnUpkeep.StatsActionProperties);
         }
 
         private void RunUntargetedStatsActions(IEnumerable<CharacterStatsActionProperties> actions)
@@ -119,6 +110,7 @@ namespace BF2D.Combat
 
             PlayStatsActionAnimation();
         }
+
         private void PlayStatsActionAnimation()
         {
             if (this.stagedUntargetedStatsActions.Count < 1)

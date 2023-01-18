@@ -84,16 +84,31 @@ namespace BF2D.Game
 
         public Sprite GetIcon(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetIcon] String was empty");
+                return null;
+            }
             return this.iconCollection[key];
         }
 
         public AudioClip GetSoundEffect(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetSoundEffect] String was empty");
+                return null;
+            }
             return this.soundEffectCollection[key];
         }
 
         public Item GetItem(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetItem] String was empty");
+                return null;
+            }
             this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
             Item item = this.items.Get(key);
             return item;
@@ -101,6 +116,11 @@ namespace BF2D.Game
 
         public Equipment GetEquipment(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetEquipment] String was empty");
+                return null;
+            }
             this.equipments.Datapath = Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
             Equipment equipment = this.equipments.Get(key);
             return equipment;
@@ -108,6 +128,11 @@ namespace BF2D.Game
 
         public StatusEffect GetStatusEffect(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetStatusEffect] String was empty");
+                return null;
+            }
             this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
             StatusEffect statusEffect = this.statusEffects.Get(key);
             return statusEffect;
@@ -115,27 +140,54 @@ namespace BF2D.Game
 
         public CharacterStats LoadEnemy(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:LoadEnemy] String was empty");
+                return null;
+            }
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, key + ".json"));
-            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content);
+            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
         public void AddPlayer(string playerKey, string newName)
         {
             CharacterStats newPlayer = LoadPlayer(playerKey);
+            if (newPlayer == null)
+            {
+                Debug.LogWarning("[GameInfo:AddPlayer] LoadPlayer failed");
+                return;
+            }
             newPlayer.SetName(newName);
             this.currentSave.AddPlayer(newPlayer);
         }
 
         private CharacterStats LoadPlayer(string key)
         {
+            if (key == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:LoadPlayer] String was empty");
+                return null;
+            }
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, key + ".json"));
             return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content);
         }
 
         private SaveData LoadSaveData(string saveKey)
         {
+            if (saveKey == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:LoadEnemy] String was empty");
+                return null;
+            }
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.persistentDataPath, this.savesPath, saveKey + ".json"));
-            return BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
+            SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
+
+            foreach (CharacterStats character in saveData.Players)
+            {
+                character.Setup();
+            }
+
+            return saveData;
         }
     }
 

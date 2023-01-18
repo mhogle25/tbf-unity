@@ -64,6 +64,7 @@ namespace BF2D.Combat
 
         public void RunCombat()
         {
+            UIControlsManager.Instance.ResetControlChain(false);
             this.CurrentCharacter.UpkeepInit();
         }
         #endregion

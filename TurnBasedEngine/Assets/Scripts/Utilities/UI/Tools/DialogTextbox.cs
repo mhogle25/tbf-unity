@@ -40,7 +40,7 @@ namespace BF2D.UI {
         public bool MessageInterrupt = false;
         public bool AutoPass = false;
         public UnityEvent OnEndOfStackedDialogs { get { return this.onEndOfStackedDialogs; } }
-        [SerializeField] private readonly UnityEvent onEndOfStackedDialogs = new();
+        [SerializeField] private UnityEvent onEndOfStackedDialogs = new();
 
         [Header("Dialog Responses")]
         public bool ResponseOptionsEnabled = true;
@@ -92,11 +92,10 @@ namespace BF2D.UI {
         private const char responseTag = 'R';
         private const char insertTag = 'I';
 
-        private void Awake() {
+        private void Awake() 
+        {
             LoadDialogFiles();
             LoadDialogResponseFiles();
-
-            this.state = DialogStackHandler;
         }
 
         private void Update()
@@ -104,6 +103,14 @@ namespace BF2D.UI {
             if (this.Interactable)
                 this.state?.Invoke();
         }
+
+        #region Public Overrides
+        public override void UtilityInitialize()
+        {
+            base.UtilityInitialize();
+            this.state = DialogStackHandler;
+        }
+        #endregion
 
         #region Public Methods
         /// <summary>
@@ -367,10 +374,7 @@ namespace BF2D.UI {
                 this.callback = null;
                 //Call the EOD event
                 if (this.dialogStack.Count < 1)
-                {
                     this.onEndOfStackedDialogs?.Invoke();
-                    return;
-                }
                 //Reset the State
                 this.state = DialogStackHandler;
             }
@@ -512,7 +516,7 @@ namespace BF2D.UI {
                 }
 
                 string currentMessage = this.textField.text;
-                currentMessage = currentMessage + message[this.messageIndex];
+                currentMessage += message[this.messageIndex];
                 this.textField.text = currentMessage;
 
                 this.messageIndex++;                                                                    //Increment message index to move to next character
@@ -615,10 +619,7 @@ namespace BF2D.UI {
                         {
                             [InputButton.Confirm] = () =>
                             {
-                                if (this.responseOptionEvent != null)
-                                {
-                                    this.responseOptionEvent.Invoke(option.action.ToString());
-                                }
+                                this.responseOptionEvent?.Invoke(option.action.ToString());
                                 FinalizeResponse(option.dialogIndex);
                             }
                         }

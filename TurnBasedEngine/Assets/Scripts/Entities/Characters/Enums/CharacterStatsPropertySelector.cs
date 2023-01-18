@@ -11,8 +11,6 @@ namespace BF2D.Enums
     public enum CharacterStatsProperty
     {
         [EnumMember]
-        None,
-        [EnumMember]
         Speed,
         [EnumMember]
         Attack,

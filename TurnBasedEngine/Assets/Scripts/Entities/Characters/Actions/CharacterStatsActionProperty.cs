@@ -9,11 +9,14 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly int value = 0;
 
         [JsonIgnore] public CharacterStatsProperty[] Modifiers { get { return this.modifiers; } }
-        [JsonProperty] private readonly CharacterStatsProperty[] modifiers = new CharacterStatsProperty[] { CharacterStatsProperty.None };
+        [JsonProperty] private readonly CharacterStatsProperty[] modifiers = null;
 
         public int Calculate(CharacterStats character)
         {
             int total = this.value;
+            if (this.modifiers == null)
+                return total;
+
             foreach (CharacterStatsProperty property in this.modifiers)
             {
                 total += (int)character.GetStatsProperty(property);
