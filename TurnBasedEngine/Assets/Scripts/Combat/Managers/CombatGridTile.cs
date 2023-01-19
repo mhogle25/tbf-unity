@@ -12,6 +12,14 @@ namespace BF2D.Combat
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
         [SerializeField] private CharacterCombat assignedCharacter;
 
+        public override bool Interactable
+        {
+            get
+            {
+                return this.interactable && assignedCharacter != null;
+            }
+        }
+
         public override bool Setup(Data optionData)
         {
             Debug.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");

@@ -24,18 +24,18 @@ namespace BF2D.UI {
         public override bool Setup(Data optionData)
         {
             this.gameObject.name = optionData.name;
-            this.data = optionData;
+            Data data = optionData;
 
-            SetupText(this.data.text);
-            SetupIcon(this.data.icon);
+            SetupText(data.text);
+            SetupIcon(data.icon);
 
             foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
             {
-                if (this.data.actions[inputButton] != null)
+                if (data.actions[inputButton] != null)
                 {
                     GetInputEvent(inputButton).AddListener(() =>
                     {
-                        this.data.actions[inputButton]();
+                        data.actions[inputButton]();
                     });
                 }
             }

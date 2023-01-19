@@ -632,7 +632,7 @@ namespace BF2D.UI {
             }
 
             UIControlsManager.Instance.TakeControl(this.responseOptionsControl);
-            this.responseOptionsControl.ControlledOptionsGrid.SetCursorAtHead();
+            this.responseOptionsControl.ControlledOptionsGrid.SetCursorToFirst();
         }
 
         private void FinalizeResponse(int dialogIndex)

@@ -109,6 +109,8 @@ namespace BF2D.UI
         /// </summary>
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 
+        private GridOption CurrentOption { get { return this.grid[this.cursorPosition.x, this.cursorPosition.y]; } set { this.grid[this.cursorPosition.x, this.cursorPosition.y] = value; } }
+
         protected GridOption[,] grid = null;
         protected int count = 0;
         public Vector2Int CursorPosition { get { return this.cursorPosition; } }
@@ -221,8 +223,8 @@ namespace BF2D.UI
                 return;
             }
 
-            Destroy(this.grid[this.cursorPosition.x, this.cursorPosition.y].gameObject);
-            this.grid[this.cursorPosition.x, this.cursorPosition.y] = null;
+            Destroy(this.CurrentOption.gameObject);
+            this.CurrentOption = null;
             this.count--;
 
             if (this.count < 1)
@@ -315,7 +317,7 @@ namespace BF2D.UI
         /// <summary>
         /// Reset the cursor to be at the head of the grid
         /// </summary>
-        public void SetCursorAtHead()
+        public void SetCursorToFirst()
         {
             if (this.grid is null)
             {
@@ -330,7 +332,9 @@ namespace BF2D.UI
                 option.SetCursor(false);
             }
 
-            this.grid[0, 0].SetCursor(true);
+            SetCursorToFirstInternal();
+
+            this.CurrentOption.SetCursor(true);
         }
 
         public void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
@@ -354,7 +358,7 @@ namespace BF2D.UI
 
             if (this.Interactable && this.gameObject.activeSelf && ButtonEnabled(inputButton) && this.count > 0)
             {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y].InvokeEvent(inputButton);
+                this.CurrentOption.InvokeEvent(inputButton);
                 BF2D.Utilities.Audio.PlayAudioSource(GetAudioSource(inputButton));
             }
         }
@@ -367,22 +371,28 @@ namespace BF2D.UI
         {
             if (this.Interactable && this.gameObject.activeSelf && this.count > 0)
             {
-                if (this.grid[this.cursorPosition.x, this.cursorPosition.y] != null)
+                if (this.CurrentOption != null)
                     SetCursorAtPosition(this.cursorPosition, false);
 
+
+                GridOption option = null;
                 switch (direction)
                 {
                     case InputDirection.Up:
-                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)] == null);
+                        while (option == null || !option.Interactable)
+                            option = this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)];
                         break;
                     case InputDirection.Left:
-                        while (this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null) ;
+                        while (option == null || !option.Interactable)
+                            option = this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y];
                         break;
                     case InputDirection.Down:
-                        while (this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)] == null) ;
+                        while (option == null || !option.Interactable)
+                            option = this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)];
                         break;
                     case InputDirection.Right:
-                        while (this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y] == null);
+                        while (option == null || !option.Interactable)
+                            option = this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y];
                         break;
                     default:
                         Debug.LogError("[OptionsGrid:Navigate] Invalid direction");
@@ -402,7 +412,7 @@ namespace BF2D.UI
         public override void UtilityInitialize()
         {
             base.UtilityInitialize();
-            SetCursorAtPosition(this.cursorPosition, true);
+            SetCursorToFirst();
         }
         #endregion
 
@@ -423,7 +433,7 @@ namespace BF2D.UI
             return field;
         }
 
-        protected Vector2Int Increment(Vector2Int vector)
+        private Vector2Int Increment(Vector2Int vector)
         {
             Vector2Int v = vector;
             switch (this.instantiationAxis)
@@ -502,6 +512,17 @@ namespace BF2D.UI
             }
 
             return v;
+        }
+
+        private void SetCursorToFirstInternal()
+        {
+            this.cursorPosition = new Vector2Int(0, 0);
+            GridOption option = this.CurrentOption;
+            while (option == null || !option.Interactable)
+            {
+                this.cursorPosition = Increment(this.cursorPosition);
+                option = this.CurrentOption;
+            }
         }
 
         private AudioSource GetAudioSource(InputButton inputButton)

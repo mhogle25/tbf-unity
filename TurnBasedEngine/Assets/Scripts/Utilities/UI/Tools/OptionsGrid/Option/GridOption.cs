@@ -17,8 +17,8 @@ namespace BF2D.UI
             public InputButtonCollection<Action> actions;
         };
 
-        public Data GetData { get { return this.data; } }
-        protected Data data;
+        public virtual bool Interactable { get { return this.interactable; } set { this.interactable = value; } }
+        protected bool interactable = true;
 
         public abstract bool Setup(Data optionData);
 

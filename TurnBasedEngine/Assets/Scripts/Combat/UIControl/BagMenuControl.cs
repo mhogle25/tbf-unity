@@ -49,7 +49,7 @@ namespace BF2D.Combat
                 });
             }
 
-            this.controlledOptionsGrid.SetCursorAtHead();
+            this.controlledOptionsGrid.SetCursorToFirst();
             OnNavigate(this.controlledOptionsGrid.CursorPosition1D);
             base.ControlInitialize();
         }
