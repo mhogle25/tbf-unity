@@ -16,7 +16,7 @@ namespace BF2D.Combat
         {
             get
             {
-                return this.interactable && assignedCharacter != null;
+                return this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
             }
         }
 
