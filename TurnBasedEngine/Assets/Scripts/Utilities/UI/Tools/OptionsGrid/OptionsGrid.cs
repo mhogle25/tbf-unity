@@ -325,6 +325,9 @@ namespace BF2D.UI
                 return;
             }
 
+            if (this.Count < 1)
+                return;
+
             foreach (GridOption option in this.grid)
             {
                 if (!option)
@@ -516,9 +519,12 @@ namespace BF2D.UI
 
         private void SetCursorToFirstInternal()
         {
+            if (this.Count < 1)
+                return;
+
             this.cursorPosition = new Vector2Int(0, 0);
             GridOption option = this.CurrentOption;
-            while (option == null || !option.Interactable)
+            while (!option.Interactable)
             {
                 this.cursorPosition = Increment(this.cursorPosition);
                 option = this.CurrentOption;

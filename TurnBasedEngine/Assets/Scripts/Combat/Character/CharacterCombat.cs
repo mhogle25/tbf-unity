@@ -47,7 +47,7 @@ namespace BF2D.Combat
 
         public void UpkeepInit()
         {
-            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet", () => 
+            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet.", () => 
             { 
                 Debug.Log("This is when the action is triggered"); 
             });
