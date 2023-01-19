@@ -304,9 +304,7 @@ namespace BF2D.UI
             for (int i = 0; i < this.gridWidth; i++)
                 for (int j = 0; j < this.gridHeight; j++)
                     if (this.grid[i, j] != null)
-                    {
                         Destroy(this.grid[i, j].gameObject);
-                    }
 
             //Reset all private members that are dependent on grid elements
             this.count = 0;
