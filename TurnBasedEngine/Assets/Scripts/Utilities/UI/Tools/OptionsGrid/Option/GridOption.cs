@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace BF2D.UI
 {
-    public abstract class GridOption : InputEvents
+    public abstract class GridOption : InputEvents, IUIComponent
     {
         public struct Data
         {

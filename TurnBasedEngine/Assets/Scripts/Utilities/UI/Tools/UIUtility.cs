@@ -6,7 +6,7 @@ using System;
 
 namespace BF2D.UI
 {
-    public abstract class UIUtility : UIComponent
+    public abstract class UIUtility : MonoBehaviour, IUIComponent
     {
         public Transform View { get { return this.view; } }
         [SerializeField] protected Transform view = null;
