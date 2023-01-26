@@ -15,7 +15,6 @@ namespace BF2D.Combat
         [Header("Information")]
         [SerializeField] private TextMeshProUGUI nameText = null;
         [SerializeField] private TextMeshProUGUI descriptionText = null;
-        [SerializeField] private UnityEvent<ItemInfo> onSelectItem;
 
         private readonly List<Item> items = new();
 
@@ -37,7 +36,7 @@ namespace BF2D.Combat
                     {
                         [InputButton.Confirm] = () =>
                         {
-                            this.onSelectItem.Invoke(itemInfo);
+                            CombatManager.Instance.SetupItemCombat(itemInfo);
                             this.controlledOptionsGrid.View.gameObject.SetActive(false);
                         },
                         [InputButton.Back] = () =>

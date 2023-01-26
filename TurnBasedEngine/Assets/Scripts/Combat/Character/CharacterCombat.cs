@@ -6,20 +6,53 @@ using System.Collections.Generic;
 using BF2D.Game.Actions;
 using System;
 using BF2D.Game.Enums;
+using System.Runtime.CompilerServices;
 
 namespace BF2D.Combat
 {
+    [RequireComponent(typeof(Animator))]
     public class CharacterCombat : MonoBehaviour
     {
-        private const string IDLE = "idle";
-        private const string ATTACK = "attack";
-        private const string FLASHING = "flashing";
+        private class AnimatorController
+        {
+            public const string IDLE = "idle";
+            public const string ATTACK = "attack";
+            public const string FLASHING = "flashing";
 
-        [SerializeField] private Animator animator = null;
-        private string animState = CharacterCombat.IDLE;
-        private delegate string RunEvent();
-        private RunEvent animEvent = null;
-        
+            private string animState = AnimatorController.IDLE;
+            public delegate string RunEvent();
+            private RunEvent animEvent = null;
+
+            private readonly Animator animator = null;
+
+            public AnimatorController(Animator animator)
+            {
+                this.animator = animator;
+            }
+
+            public void ChangeAnimState(string newState)
+            {
+                ChangeAnimState(newState, null);
+            }
+
+            public void ChangeAnimState(string newState, RunEvent callback)
+            {
+                if (this.animState == newState) return;
+                this.animator.Play(newState);
+                this.animState = newState;
+                this.animEvent = callback;
+            }
+
+            public string InvokeAnimEvent()
+            {
+                string message = this.animEvent?.Invoke();
+                this.animEvent = null;
+                return message;
+            }
+        }
+
+        private AnimatorController animatorController = null;
+
         public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } }
         private CombatAction currentCombatAction = null;
 
@@ -30,6 +63,11 @@ namespace BF2D.Combat
 
         public CharacterStats Stats { get { return this.stats; } set { this.stats = value; } }
         private CharacterStats stats;
+
+        private void Awake()
+        {
+            this.animatorController = new AnimatorController(GetComponent<Animator>());
+        }
 
         #region Public Utilities
         public void SetupCombatAction(CombatAction combatAction)
@@ -87,7 +125,7 @@ namespace BF2D.Combat
         #region Animation Events
         public void AnimTrigger()
         {
-            string message = InvokeAnimEvent();
+            string message = this.animatorController.InvokeAnimEvent();
             CombatManager.Instance.OrphanedTextbox.Message(message, () => 
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
@@ -98,7 +136,7 @@ namespace BF2D.Combat
 
         public void AnimSwitchIdle()
         {
-            ChangeAnimState(CharacterCombat.IDLE);
+            this.animatorController.ChangeAnimState(AnimatorController.IDLE);
         }
         #endregion
 
@@ -155,30 +193,10 @@ namespace BF2D.Combat
 
             //Play Animation
             //Animation triggers animEvent which runs the action and gives the message it creates to the orphaned textbox
-            ChangeAnimState(CharacterCombat.FLASHING, () =>
+            this.animatorController.ChangeAnimState(AnimatorController.FLASHING, () =>
             {
-                return action.Run(this.Stats, this.Stats);
+                return action.MessageRun(this.Stats, this.Stats);
             });
-        }
-
-        private void ChangeAnimState(string newState)
-        {
-            ChangeAnimState(newState, null);
-        }
-
-        private void ChangeAnimState(string newState, RunEvent callback)
-        {
-            if (this.animState == newState) return;
-            this.animator.Play(newState);
-            this.animState = newState;
-            this.animEvent = callback;
-        }
-
-        private string InvokeAnimEvent()
-        {
-            string message = this.animEvent?.Invoke();
-            this.animEvent = null;
-            return message;
         }
     }
 }
