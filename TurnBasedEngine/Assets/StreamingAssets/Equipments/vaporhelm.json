@@ -1,7 +1,7 @@
 {
     "name":"Vapor Helm",
     "description":"The helm of Vapor Knight.",
-    "iconID":"helm_01",
+    "spriteID":"helm_01",
     "type":"Head",
     "onUpkeep":
     {
@@ -16,7 +16,7 @@
                 {
                     "value":1
                 }
-            },
+            }
         ]
     }
 }
