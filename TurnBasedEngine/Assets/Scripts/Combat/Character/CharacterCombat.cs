@@ -5,6 +5,7 @@ using BF2D.UI;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using System;
+using BF2D.Game.Enums;
 
 namespace BF2D.Combat
 {
@@ -73,6 +74,11 @@ namespace BF2D.Combat
                 });
             }
 
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                StageEquipmentUpkeepEvent(this.Stats.GetEquipped(equipmentType));
+            }
+
             CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
             CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
         }
@@ -95,6 +101,32 @@ namespace BF2D.Combat
             ChangeAnimState(CharacterCombat.IDLE);
         }
         #endregion
+
+        private void StageEquipmentUpkeepEvent(string equipmentID)
+        {
+            if (equipmentID == string.Empty || equipmentID is null)
+                return;
+
+            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+
+            if (equipment is null)
+            {
+                Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
+                return;
+            }
+
+            if (!equipment.UpkeepEventExists())
+                return;
+
+            CombatManager.Instance.OrphanedTextbox.Dialog(equipment.OnUpkeep.Message, 0, () =>
+            {
+                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
+                RunPersistentEffect(equipment);
+            }, new List<string>
+            {
+                this.Stats.Name
+            });
+        }
 
         private void RunPersistentEffect(PersistentEffect persistentEffect)
         {
@@ -120,7 +152,8 @@ namespace BF2D.Combat
             }
 
             CharacterStatsActionProperties action = this.stagedUntargetedStatsActions.Dequeue();
-            //PLAY ANIMATION
+
+            //Play Animation
             //Animation triggers animEvent which runs the action and gives the message it creates to the orphaned textbox
             ChangeAnimState(CharacterCombat.FLASHING, () =>
             {

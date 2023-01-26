@@ -16,7 +16,7 @@ namespace BF2D.Game
 
         public Item Get()
         {
-            this.staged ??= GameInfo.Instance.GetItem(this.id);
+            this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
             return this.staged;
         }
 

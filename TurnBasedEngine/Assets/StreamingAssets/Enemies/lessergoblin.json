@@ -18,6 +18,7 @@
     "legs":"",
     "hands":"",
     "feet":"",
+    "accessory":"",
     "statusEffects":
     [
         {

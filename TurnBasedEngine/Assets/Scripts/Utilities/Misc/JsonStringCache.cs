@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace BF2D
 {
-    public class JsonCache<T>
+    public class JsonStringCache<T>
     {
 
         private readonly Dictionary<string, string> objects = new();

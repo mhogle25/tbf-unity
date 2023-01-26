@@ -29,6 +29,11 @@ namespace BF2D.Game.Actions
                 text += TextBreakdownHelper(character, this.Properties.Damage, this.Properties.Damage.Modifiers, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
             }
 
+            if (this.Properties.DirectDamage != null)
+            {
+                text += TextBreakdownHelper(character, this.Properties.DirectDamage, this.Properties.DirectDamage.Modifiers, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
+            }
+
             if (this.Properties.CriticalDamage != null)
             {
                 text += TextBreakdownHelper(character, this.Properties.CriticalDamage, this.Properties.CriticalDamage.Modifiers, BF2D.Game.Strings.CharacterStats.CriticalDamage, BF2D.Game.Colors.yellow);

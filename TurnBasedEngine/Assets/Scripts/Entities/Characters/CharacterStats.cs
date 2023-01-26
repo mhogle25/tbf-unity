@@ -139,6 +139,7 @@ namespace BF2D.Game
         [JsonProperty] private string feet = string.Empty;
         [JsonIgnore] public string Accessory { get { return this.accessory; } }
         [JsonProperty] private string accessory = string.Empty;
+
         [JsonIgnore] public IEnumerable<StatusEffect> StatusEffects { get { return this.statusEffects; } }
         [JsonProperty] private readonly List<StatusEffect> statusEffects = new();
 
@@ -152,12 +153,10 @@ namespace BF2D.Game
 
         public CharacterStats Setup()
         {
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.accessory));
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.head));
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.torso));
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.legs));
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.hands));
-            EquipModifierUpdate(GameInfo.Instance.GetEquipment(this.feet));
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                EquipModifierUpdate(GetEquipped(equipmentType));
+            }
 
             foreach (StatusEffect statusEffect in this.statusEffects)
             {
@@ -172,9 +171,14 @@ namespace BF2D.Game
             this.health -= (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
         }
 
-        public void CriticalDamage(int damage)
+        public void DirectDamage(int damage)
         {
             this.health -= damage > 0 ? damage : 1;
+        }
+
+        public void CriticalDamage(int damage)
+        {
+            this.health -= damage > 0 ? damage * CritMultiplier() : 1;
         }
 
         public void PsychicDamage(int damage)
@@ -223,21 +227,15 @@ namespace BF2D.Game
             this.stamina = this.maxStamina;
         }
 
-        public void Equip(Equipment equipment)
+        public void Equip(string id)
         {
-            if (equipment is null)
-            {
-                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
-                return;
-            }
-            EquipModifierUpdate(equipment);
-            EquipByType(equipment.Type, equipment.ID);
+            Equip(GameInfo.Instance.GetEquipment(id), id);
         }
 
         public void Unequip(EquipmentType equipmentType)
         {
-            Equipment equipment = GetEquipment(equipmentType);
-            UnequipModifierUpdate(equipment);
+            string id = GetEquipped(equipmentType);
+            UnequipModifierUpdate(id);
             EquipByType(equipmentType, null);
         }
 
@@ -278,9 +276,34 @@ namespace BF2D.Game
             };
         }
 
+        public string GetEquipped(EquipmentType equipmentType)
+        {
+            return equipmentType switch
+            {
+                EquipmentType.Accessory => this.Accessory,
+                EquipmentType.Head => this.Head,
+                EquipmentType.Torso => this.Torso,
+                EquipmentType.Hands => this.Hands,
+                EquipmentType.Legs => this.Legs,
+                EquipmentType.Feet => this.Feet,
+                _ => null,
+            };
+        }
+
         public void SetName(string newName)
         {
             this.name = newName;
+        }
+
+        private void Equip(Equipment equipment, string id)
+        {
+            if (equipment is null)
+            {
+                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                return;
+            }
+            EquipModifierUpdate(id);
+            EquipByType(equipment.Type, id);
         }
 
         private void EquipByType(EquipmentType equipmentType, string equipmentID)
@@ -297,22 +320,13 @@ namespace BF2D.Game
             }
         }
 
-        private Equipment GetEquipment(EquipmentType equipmentType)
+        private void EquipModifierUpdate(string equipmentID)
         {
-            return equipmentType switch
-            {
-                EquipmentType.Accessory => GameInfo.Instance.GetEquipment(this.accessory),
-                EquipmentType.Head => GameInfo.Instance.GetEquipment(this.head),
-                EquipmentType.Torso => GameInfo.Instance.GetEquipment(this.torso),
-                EquipmentType.Hands => GameInfo.Instance.GetEquipment(this.hands),
-                EquipmentType.Legs => GameInfo.Instance.GetEquipment(this.legs),
-                EquipmentType.Feet => GameInfo.Instance.GetEquipment(this.feet),
-                _ => null,
-            };
-        }
+            if (equipmentID == string.Empty || equipmentID is null)
+                return;
 
-        private void EquipModifierUpdate(Equipment equipment)
-        {
+            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+
             if (equipment == null)
                 return;
             this.speedModifier.Equip(equipment);
@@ -322,8 +336,13 @@ namespace BF2D.Game
             this.luckModifier.Equip(equipment);
         }
 
-        private void UnequipModifierUpdate(Equipment equipment)
+        private void UnequipModifierUpdate(string equipmentID)
         {
+            if (equipmentID == string.Empty || equipmentID is null)
+                return;
+
+            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+
             if (equipment == null)
                 return;
             this.speedModifier.Unequip(equipment);
@@ -353,6 +372,11 @@ namespace BF2D.Game
             this.defenseModifier.RemoveStatusEffect(statusEffect);
             this.focusModifier.RemoveStatusEffect(statusEffect);
             this.luckModifier.RemoveStatusEffect(statusEffect);
+        }
+
+        private int CritMultiplier()
+        {
+            return 2;   //
         }
     }
 }

@@ -1,0 +1,22 @@
+{
+    "name":"Vapor Helm",
+    "description":"The helm of Vapor Knight.",
+    "iconID":"helm_01",
+    "type":"Head",
+    "onUpkeep":
+    {
+        "message":
+        [
+            "The Vapor Helm shimmers magically on [I:0]'s head.[E]"
+        ],
+        "statsActionProperties":
+        [
+            {
+                "heal":
+                {
+                    "value":1
+                }
+            },
+        ]
+    }
+}

@@ -29,9 +29,9 @@ namespace BF2D.Game
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
 
-        private readonly JsonCache<Item> items = new();
-        private readonly JsonCache<Equipment> equipments = new();
-        private readonly JsonCache<StatusEffect> statusEffects = new();
+        private readonly JsonStringCache<Item> items = new();
+        private readonly JsonObjectCache<Equipment> equipments = new();
+        private readonly JsonStringCache<StatusEffect> statusEffects = new();
 
         //AssetCollections
         [Header("Asset Collections")]
@@ -102,11 +102,11 @@ namespace BF2D.Game
             return this.soundEffectCollection[key];
         }
 
-        public Item GetItem(string key)
+        public Item InstantiateItem(string key)
         {
             if (key == string.Empty)
             {
-                Debug.LogWarning("[GameInfo:GetItem] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiateItem] String was empty");
                 return null;
             }
             this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
@@ -126,11 +126,11 @@ namespace BF2D.Game
             return equipment;
         }
 
-        public StatusEffect GetStatusEffect(string key)
+        public StatusEffect InstantiateStatusEffect(string key)
         {
             if (key == string.Empty)
             {
-                Debug.LogWarning("[GameInfo:GetStatusEffect] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiateStatusEffect] String was empty");
                 return null;
             }
             this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
@@ -169,7 +169,7 @@ namespace BF2D.Game
                 return null;
             }
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, key + ".json"));
-            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content);
+            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
         private SaveData LoadSaveData(string saveKey)
