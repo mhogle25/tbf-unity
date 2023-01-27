@@ -24,14 +24,12 @@ namespace BF2D.Game
         [SerializeField] private string enemiesPath = "Enemies";
         [SerializeField] private string itemsPath = "Items";
         [SerializeField] private string equipmentsPath = "Equipments";
-        [SerializeField] private string statusEffectsPath = "StatusEffects";
 
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
 
         private readonly JsonStringCache<Item> items = new();
         private readonly JsonObjectCache<Equipment> equipments = new();
-        private readonly JsonStringCache<StatusEffect> statusEffects = new();
 
         //AssetCollections
         [Header("Asset Collections")]
@@ -82,76 +80,64 @@ namespace BF2D.Game
             });
         }
 
-        public Sprite GetIcon(string key)
+        public Sprite GetIcon(string id)
         {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:GetIcon] String was empty");
                 return null;
             }
-            return this.iconCollection[key];
+            return this.iconCollection[id];
         }
 
-        public AudioClip GetSoundEffect(string key)
+        public AudioClip GetSoundEffect(string id)
         {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:GetSoundEffect] String was empty");
                 return null;
             }
-            return this.soundEffectCollection[key];
+            return this.soundEffectCollection[id];
         }
 
-        public Item InstantiateItem(string key)
+        public Item InstantiateItem(string id)
         {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:InstantiateItem] String was empty");
                 return null;
             }
             this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
-            Item item = this.items.Get(key);
+            Item item = this.items.Get(id);
             return item;
         }
 
-        public Equipment GetEquipment(string key)
+        public Equipment GetEquipment(string id)
         {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:GetEquipment] String was empty");
                 return null;
             }
             this.equipments.Datapath = Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
-            Equipment equipment = this.equipments.Get(key);
+            Equipment equipment = this.equipments.Get(id);
             return equipment;
         }
 
-        public StatusEffect InstantiateStatusEffect(string key)
+        public CharacterStats LoadEnemy(string id)
         {
-            if (key == string.Empty)
-            {
-                Debug.LogWarning("[GameInfo:InstantiateStatusEffect] String was empty");
-                return null;
-            }
-            this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
-            StatusEffect statusEffect = this.statusEffects.Get(key);
-            return statusEffect;
-        }
-
-        public CharacterStats LoadEnemy(string key)
-        {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:LoadEnemy] String was empty");
                 return null;
             }
-            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, key + ".json"));
+            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, id + ".json"));
             return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
-        public void AddPlayer(string playerKey, string newName)
+        public void AddPlayer(string playerID, string newName)
         {
-            CharacterStats newPlayer = LoadPlayer(playerKey);
+            CharacterStats newPlayer = LoadPlayer(playerID);
             if (newPlayer == null)
             {
                 Debug.LogWarning("[GameInfo:AddPlayer] LoadPlayer failed");
@@ -161,25 +147,25 @@ namespace BF2D.Game
             this.currentSave.AddPlayer(newPlayer);
         }
 
-        private CharacterStats LoadPlayer(string key)
+        private CharacterStats LoadPlayer(string id)
         {
-            if (key == string.Empty)
+            if (id == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:LoadPlayer] String was empty");
                 return null;
             }
-            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, key + ".json"));
+            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, id + ".json"));
             return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
-        private SaveData LoadSaveData(string saveKey)
+        private SaveData LoadSaveData(string saveID)
         {
-            if (saveKey == string.Empty)
+            if (saveID == string.Empty)
             {
                 Debug.LogWarning("[GameInfo:LoadEnemy] String was empty");
                 return null;
             }
-            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.persistentDataPath, this.savesPath, saveKey + ".json"));
+            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.persistentDataPath, this.savesPath, saveID + ".json"));
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
 
             foreach (CharacterStats character in saveData.Players)

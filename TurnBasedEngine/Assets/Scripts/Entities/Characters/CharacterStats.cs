@@ -43,6 +43,7 @@ namespace BF2D.Game
                 this.equipment -= equipment.GetModifier(this.property);
             }
         }
+        
         [JsonIgnore] public bool Dead { get { return this.health < 1; } }
         [JsonIgnore] public int Health { get { return this.health; } }
         [JsonProperty] private int health = 0;
@@ -155,7 +156,8 @@ namespace BF2D.Game
         {
             foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
             {
-                EquipModifierUpdate(GetEquipped(equipmentType));
+                if (IsEquipped(equipmentType))
+                    EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
             }
 
             foreach (StatusEffect statusEffect in this.statusEffects)
@@ -229,13 +231,22 @@ namespace BF2D.Game
 
         public void Equip(string id)
         {
-            Equip(GameInfo.Instance.GetEquipment(id), id);
+            Equipment equipment = GameInfo.Instance.GetEquipment(id);
+
+            if (equipment is null)
+            {
+                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                return;
+            }
+
+            EquipModifierUpdate(equipment);
+            EquipByType(equipment.Type, id);
         }
 
         public void Unequip(EquipmentType equipmentType)
         {
             string id = GetEquipped(equipmentType);
-            UnequipModifierUpdate(id);
+            UnequipModifierUpdate(GameInfo.Instance.GetEquipment(id));
             EquipByType(equipmentType, null);
         }
 
@@ -276,6 +287,11 @@ namespace BF2D.Game
             };
         }
 
+        public bool IsEquipped(EquipmentType equipmentType)
+        {
+            return GetEquipped(equipmentType) != null && GetEquipped(equipmentType) != string.Empty;
+        }
+
         public string GetEquipped(EquipmentType equipmentType)
         {
             return equipmentType switch
@@ -295,17 +311,6 @@ namespace BF2D.Game
             this.name = newName;
         }
 
-        private void Equip(Equipment equipment, string id)
-        {
-            if (equipment is null)
-            {
-                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
-                return;
-            }
-            EquipModifierUpdate(id);
-            EquipByType(equipment.Type, id);
-        }
-
         private void EquipByType(EquipmentType equipmentType, string equipmentID)
         {
             switch (equipmentType)
@@ -320,15 +325,11 @@ namespace BF2D.Game
             }
         }
 
-        private void EquipModifierUpdate(string equipmentID)
+        private void EquipModifierUpdate(Equipment equipment)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
             if (equipment == null)
                 return;
+
             this.speedModifier.Equip(equipment);
             this.attackModifier.Equip(equipment);
             this.defenseModifier.Equip(equipment);
@@ -336,15 +337,11 @@ namespace BF2D.Game
             this.luckModifier.Equip(equipment);
         }
 
-        private void UnequipModifierUpdate(string equipmentID)
+        private void UnequipModifierUpdate(Equipment equipment)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
             if (equipment == null)
                 return;
+
             this.speedModifier.Unequip(equipment);
             this.attackModifier.Unequip(equipment);
             this.defenseModifier.Unequip(equipment);
@@ -356,6 +353,7 @@ namespace BF2D.Game
         {
             if (statusEffect == null)
                 return;
+
             this.speedModifier.ApplyStatusEffect(statusEffect);
             this.attackModifier.ApplyStatusEffect(statusEffect);
             this.defenseModifier.ApplyStatusEffect(statusEffect);
@@ -367,6 +365,7 @@ namespace BF2D.Game
         {
             if (statusEffect == null)
                 return;
+
             this.speedModifier.RemoveStatusEffect(statusEffect);
             this.attackModifier.RemoveStatusEffect(statusEffect);
             this.defenseModifier.RemoveStatusEffect(statusEffect);

@@ -76,49 +76,38 @@ namespace BF2D.Combat
             this.currentCombatAction.Setup();
         }
 
+        public void RunCombat()
+        {
+            //End Of Turn Cleanup Event
+            CombatManager.Instance.OrphanedTextbox.OnEndOfStackedDialogs.AddListener(() =>
+            {
+                Debug.Log("This event will clean up the game based on the information delta of the turn and pass the turn to the next character");
+                CombatManager.Instance.OrphanedTextbox.OnEndOfStackedDialogs.RemoveAllListeners();
+            });
+
+            //Stage End Of Turn Events
+            StagePersistentEffectEvent(StagePersistentEffectEOTEvent);
+
+            //Stage Combat Events
+            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet.", () =>
+            {
+                Debug.Log("This is when the action is triggered");
+            });
+
+            //Stage Upkeep Events
+            StagePersistentEffectEvent(StagePersistentEffectUpkeepEvent);
+
+            //Run Staged Events
+            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
+            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+        }
+
         public void Destroy()
         {
             if (this.assignedTile)
                 this.assignedTile.ResetTile();
 
             Destroy(this.gameObject);
-        }
-
-        public void UpkeepInit()
-        {
-            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet.", () => 
-            { 
-                Debug.Log("This is when the action is triggered"); 
-            });
-
-            foreach (StatusEffect statusEffect in this.Stats.StatusEffects)
-            {
-                if (!statusEffect.UpkeepEventExists())
-                    continue;
-
-                CombatManager.Instance.OrphanedTextbox.Dialog(statusEffect.OnUpkeep.Message, 0, () =>
-                {
-                    CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-
-                    if (statusEffect.Duration > 0)
-                        statusEffect.Use();
-                    if (statusEffect.Duration == 0)
-                        this.Stats.RemoveStatusEffect(statusEffect);
-
-                    RunPersistentEffect(statusEffect);
-                }, new List<string>
-                {
-                    this.Stats.Name
-                });
-            }
-
-            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
-            {
-                StageEquipmentUpkeepEvent(this.Stats.GetEquipped(equipmentType));
-            }
-
-            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
-            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
         }
         #endregion
 
@@ -140,35 +129,58 @@ namespace BF2D.Combat
         }
         #endregion
 
-        private void StageEquipmentUpkeepEvent(string equipmentID)
+        private void StagePersistentEffectEvent(Action<PersistentEffect> stagingAction)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
-            if (equipment is null)
+            //Status Effect Event
+            foreach (StatusEffect statusEffect in this.Stats.StatusEffects)
             {
-                Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
-                return;
+                stagingAction(statusEffect);
             }
 
-            if (!equipment.UpkeepEventExists())
-                return;
+            //Equipment Event
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                string equipmentID = this.Stats.GetEquipped(equipmentType);
 
-            CombatManager.Instance.OrphanedTextbox.Dialog(equipment.OnUpkeep.Message, 0, () =>
+                if (equipmentID == string.Empty || equipmentID is null)
+                    continue;
+
+                Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+
+                if (equipment is null)
+                {
+                    Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
+                    continue;
+                }
+
+                stagingAction(equipment);
+            }
+        }
+
+        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect)
+        {
+            if (persistentEffect.UpkeepEventExists())
+                StagePersistentEffectEventDialog(persistentEffect.OnUpkeep);
+        }
+
+        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect)
+        {
+            if (persistentEffect.EOTEventExists())
+                StagePersistentEffectEventDialog(persistentEffect.OnEOT);
+        }
+
+        private void StagePersistentEffectEventDialog(UntargetedGameAction gameAction)
+        {
+            CombatManager.Instance.OrphanedTextbox.Dialog(gameAction.Message, 0, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-                RunPersistentEffect(equipment);
+
+                RunUntargetedStatsActions(gameAction.StatsActionProperties);
+                //Add possible actions other than StatsActionProperties
             }, new List<string>
             {
                 this.Stats.Name
             });
-        }
-
-        private void RunPersistentEffect(PersistentEffect persistentEffect)
-        {
-            RunUntargetedStatsActions(persistentEffect.OnUpkeep.StatsActionProperties);
         }
 
         private void RunUntargetedStatsActions(IEnumerable<CharacterStatsActionProperties> actions)
