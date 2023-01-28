@@ -59,6 +59,16 @@ namespace BF2D.Game.Actions
                 text += TextBreakdownHelper(character, this.Properties.Exert, this.Properties.Exert.Modifiers, BF2D.Game.Strings.CharacterStats.Exert, BF2D.Game.Colors.blue);
             }
 
+            if (this.Properties.ResetHealth)
+            {
+                text += $"Fully restore {Strings.CharacterStats.Health} ({character.MaxHealth})\n";
+            }
+
+            if (this.Properties.ResetStamina)
+            {
+                text += $"Fully restore {Strings.CharacterStats.Stamina} ({character.MaxStamina})\n";
+            }
+
             text += "-";
 
             return text;

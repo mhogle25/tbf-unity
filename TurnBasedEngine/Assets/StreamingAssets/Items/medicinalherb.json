@@ -5,7 +5,7 @@
     "consumeable":true,
     "onUse":
     {
-        "useMessage":
+        "message":
         [
             "[I:0] used the medicinal herb's healing properties.[E]"
         ],

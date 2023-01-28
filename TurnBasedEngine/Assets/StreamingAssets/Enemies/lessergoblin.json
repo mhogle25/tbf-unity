@@ -5,9 +5,7 @@
     "experience":0,
     "level":1,
     "health":5,
-    "maxHealth":5,
     "stamina":1,
-    "maxStamina":1,
     "swiftness":1,
     "strength":2,
     "toughness":1,
@@ -22,7 +20,32 @@
     "statusEffects":
     [
         {
-            
+            "name":"Burning",
+            "description":"Burns the target for 1 damage twice every turn",
+            "effect":"Fire",
+            "duration":3,
+            "onEOT": 
+            {
+                "message":
+                [
+                    "The flames continue to sear [I:0]'s flesh.[E]"
+                ],
+                "statsActionProperties":
+                [
+                    {
+                        "directDamage":
+                        {
+                            "value":1
+                        }
+                    },
+                    {
+                        "directDamage":
+                        {
+                            "value":1
+                        }
+                    }
+                ]
+            }
         }
     ],
     "gridPosition":0,

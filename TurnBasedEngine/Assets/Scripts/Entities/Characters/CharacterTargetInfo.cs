@@ -3,11 +3,14 @@ using UnityEngine;
 using BF2D.Game;
 using BF2D.Combat;
 using System;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
     public class CharacterTargetInfo
     {
+        public delegate string RunAction(CharacterStats source, CharacterStats target);
+
         public IEnumerable<CharacterCombat> CombatTargets { get { return this.combatTargets; } set { this.combatTargets = value; } }
         private IEnumerable<CharacterCombat> combatTargets = null;
 

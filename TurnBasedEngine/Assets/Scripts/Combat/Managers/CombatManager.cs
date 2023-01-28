@@ -25,10 +25,9 @@ namespace BF2D.Combat
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
 
-        private static CombatManager instance = null;
-
         private Action listener = null;
 
+        private static CombatManager instance = null;
         public static CombatManager Instance { get { return CombatManager.instance; } }
 
         public CharacterCombat CurrentCharacter { get { return this.combatGrid.CurrentCharacter; } }
@@ -79,9 +78,6 @@ namespace BF2D.Combat
             Initialize(combatInfo);
             this.listener = null;
         }
-        #endregion
-
-        #region States
         #endregion
 
         #region Private Methods
