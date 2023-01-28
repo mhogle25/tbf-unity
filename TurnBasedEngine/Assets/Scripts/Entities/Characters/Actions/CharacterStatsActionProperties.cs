@@ -60,7 +60,7 @@ namespace BF2D.Game.Actions
                 actionMessage += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. ";
             if (this.statusEffect is not null)
             {
-                actionMessage += source == target ? $"{source.Name} {this.statusEffect.Description} themself with {this.statusEffect.Name}" : $"";
+                actionMessage += source == target ? $"{source.Name} {this.statusEffect.Description} themself with {this.statusEffect.Name}" : $"{source.Name} {this.statusEffect.Description} {target.Name} with {this.statusEffect.Name}";
                 target.ApplyStatusEffect(this.statusEffect);
             }
 
