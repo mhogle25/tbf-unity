@@ -12,7 +12,7 @@
         "statsActions": 
         [
             {
-                "target":"Any",
+                "target":"Enemy",
                 "description":"attack",
                 "properties":
                 {
