@@ -26,37 +26,37 @@ namespace BF2D.Game.Actions
 
             if (this.Properties.Damage != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.Damage, this.Properties.Damage.Modifiers, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
+                text += TextBreakdownHelper(character, this.Properties.Damage, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
             }
 
             if (this.Properties.DirectDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.DirectDamage, this.Properties.DirectDamage.Modifiers, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
+                text += TextBreakdownHelper(character, this.Properties.DirectDamage, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.red);
             }
 
             if (this.Properties.CriticalDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.CriticalDamage, this.Properties.CriticalDamage.Modifiers, BF2D.Game.Strings.CharacterStats.CriticalDamage, BF2D.Game.Colors.yellow);
+                text += TextBreakdownHelper(character, this.Properties.CriticalDamage, BF2D.Game.Strings.CharacterStats.CriticalDamage, BF2D.Game.Colors.yellow);
             }
 
             if (this.Properties.PsychicDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.PsychicDamage, this.Properties.PsychicDamage.Modifiers, BF2D.Game.Strings.CharacterStats.PsychicDamage, BF2D.Game.Colors.magenta);
+                text += TextBreakdownHelper(character, this.Properties.PsychicDamage, BF2D.Game.Strings.CharacterStats.PsychicDamage, BF2D.Game.Colors.magenta);
             }
 
             if (this.Properties.Heal != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.Heal, this.Properties.Heal.Modifiers, BF2D.Game.Strings.CharacterStats.Heal, BF2D.Game.Colors.green);
+                text += TextBreakdownHelper(character, this.Properties.Heal, BF2D.Game.Strings.CharacterStats.Heal, BF2D.Game.Colors.green);
             }
 
             if (this.Properties.Recover != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.Recover, this.Properties.Recover.Modifiers, BF2D.Game.Strings.CharacterStats.Recover, BF2D.Game.Colors.cyan);
+                text += TextBreakdownHelper(character, this.Properties.Recover, BF2D.Game.Strings.CharacterStats.Recover, BF2D.Game.Colors.cyan);
             }
 
             if (this.Properties.Exert != null)
             {
-                text += TextBreakdownHelper(character, this.Properties.Exert, this.Properties.Exert.Modifiers, BF2D.Game.Strings.CharacterStats.Exert, BF2D.Game.Colors.blue);
+                text += TextBreakdownHelper(character, this.Properties.Exert, BF2D.Game.Strings.CharacterStats.Exert, BF2D.Game.Colors.blue);
             }
 
             if (this.Properties.ResetHealth)
@@ -74,10 +74,10 @@ namespace BF2D.Game.Actions
             return text;
         }
 
-        private string TextBreakdownHelper(CharacterStats character, CharacterStatsActionProperty actionProperty, CharacterStatsProperty[] modifiers, string statsActionName, Color32 color)
+        private string TextBreakdownHelper(CharacterStats character, CharacterStatsActionProperty actionProperty, string statsActionName, Color32 color)
         {
             string text = $"{statsActionName} ";
-            foreach (CharacterStatsProperty modifier in modifiers)
+            foreach (CharacterStatsProperty modifier in actionProperty.Modifiers)
             {
                 text += $"{actionProperty.Value}<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}</color>";
             }
