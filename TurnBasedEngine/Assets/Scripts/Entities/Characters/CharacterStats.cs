@@ -166,83 +166,88 @@ namespace BF2D.Game
             return this;
         }
 
-        public void Damage(int damage)
+        public int Damage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
+            this.health -= value;
+            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void DirectDamage(int damage)
+        public int DirectDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= damage > 0 ? damage : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = damage > 0 ? damage : 1;
+            this.health -= value;
+            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void CriticalDamage(int damage)
+        public int CriticalDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= damage > 0 ? damage * CritMultiplier() : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = damage > 0 ? damage * CritMultiplier() : 1;
+            this.health -= value;
+            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void PsychicDamage(int damage)
+        public int PsychicDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
+            this.health -= value;
+            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void Heal(int healing)
+        public int Heal(int healing)
         {
-            int healthBefore = this.Health;
             int value = healing > 0 ? healing : 1;
 
             if (this.health + value > this.MaxHealth)
             {
-                ResetHealth();
-                return;
+                return ResetHealth();
             }
 
             this.health += value;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
+            return value;
         }
 
-        public void Recover(int recovery)
+        public int Recover(int recovery)
         {
-            int staminaBefore = this.Stamina;
             int value = recovery > 0 ? recovery : 1;
 
             if (this.stamina + value > this.MaxStamina)
             {
-                ResetStamina();
-                return;
+                return ResetStamina();
             }
 
             this.stamina += value;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
+            return value;
         }
 
-        public void Exert(int exertion)
+        public int Exert(int exertion)
         {
-            int staminaBefore = this.Stamina;
-            this.stamina -= exertion > 0 ? exertion : 1;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            int value = exertion > 0 ? exertion : 1;
+            this.stamina -= value;
+            Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
+            return value;
         }
 
-        public void ResetHealth()
+        public int ResetHealth()
         {
             int healthBefore = this.Health;
             this.health = this.MaxHealth;
             Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            return this.Health - healthBefore;
         }
 
-        public void ResetStamina()
+        public int ResetStamina()
         {
             int staminaBefore = this.Stamina;
             this.stamina = this.MaxStamina;
             Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            return this.Stamina - staminaBefore;
         }
 
         public void Equip(string id)

@@ -8,6 +8,8 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class CharacterStatsActionProperties
     {
+        private delegate int CalculatedAction(int value);
+
         [JsonIgnore] public CharacterStatsActionProperty Damage { get { return this.damage; } }
         [JsonProperty] private readonly CharacterStatsActionProperty damage = null;
         [JsonIgnore] public CharacterStatsActionProperty DirectDamage { get { return this.directDamage; } }
@@ -67,13 +69,13 @@ namespace BF2D.Game.Actions
             return actionMessage;
         }
 
-        private int RunCharacterStatsActionProperty(CharacterStatsActionProperty statsActionProperty, CharacterStats source, Action<int> targetAction)
+        private int RunCharacterStatsActionProperty(CharacterStatsActionProperty statsActionProperty, CharacterStats source, CalculatedAction targetAction)
         {
             int value = statsActionProperty.Calculate(source);
 
-            targetAction(value);
+            int result = targetAction(value);
 
-            return value;
+            return result;
         }
 
         public string GetAnimationKey()
