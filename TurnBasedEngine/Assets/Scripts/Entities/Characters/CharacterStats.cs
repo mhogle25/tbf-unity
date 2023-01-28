@@ -18,6 +18,8 @@ namespace BF2D.Game
             public CharacterStatsProperty Property { get { return this.property; } set { this.property = value; } }
             private CharacterStatsProperty property = CharacterStatsProperty.Speed;
 
+            public int Total { get { return this.Equipment + this.StatusEffect; } }
+
             public int Equipment { get { return this.equipment; } }
             private int equipment = 0;
             public int StatusEffect { get { return this.statusEffect; } }
@@ -56,7 +58,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.speedModifier.Equipment + this.speedModifier.StatusEffect + this.swiftness;
+                int value = this.speedModifier.Total + this.swiftness;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -70,7 +72,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.attackModifier.Equipment + this.attackModifier.StatusEffect + this.strength;
+                int value = this.attackModifier.Total + this.strength;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -84,7 +86,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.defenseModifier.Equipment + this.defenseModifier.StatusEffect + this.toughness;
+                int value = this.defenseModifier.Total + this.toughness;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -98,7 +100,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.focusModifier.Equipment + this.focusModifier.StatusEffect + this.will;
+                int value = this.focusModifier.Total + this.will;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -112,7 +114,7 @@ namespace BF2D.Game
         { 
             get 
             { 
-                int value = this.luckModifier.Equipment + this.luckModifier.StatusEffect + this.fortune;
+                int value = this.luckModifier.Total + this.fortune;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
