@@ -153,12 +153,15 @@ namespace BF2D.Combat
         #endregion
 
         #region Stage Persistent Effect Events
-        private void StagePersistentEffectEvents(Action<PersistentEffect> stagingAction)
+        private void StagePersistentEffectEvents(Action<PersistentEffect, Action> stagingAction)
         {
             //Status Effect Event
-            foreach (StatusEffect statusEffect in this.Stats.StatusEffects)
+            foreach (StatusEffectInfo info in this.Stats.StatusEffects)
             {
-                stagingAction(statusEffect);
+                stagingAction(info.Get(), () => 
+                {
+                    info.Use(this.Stats);
+                });
             }
 
             //Equipment Event
@@ -177,24 +180,26 @@ namespace BF2D.Combat
                     continue;
                 }
 
-                stagingAction(equipment);
+                stagingAction(equipment, null);
             }
         }
 
-        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect)
+        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect, Action callback)
         {
             if (persistentEffect.UpkeepEventExists())
                 PushEvent(() =>
                 {
+                    callback?.Invoke();
                     PlayPersistentEffectEvent(persistentEffect.OnUpkeep);
                 });
         }
 
-        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect)
+        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect, Action callback)
         {
             if (persistentEffect.EOTEventExists())
                 PushEvent(() =>
                 {
+                    callback?.Invoke();
                     PlayPersistentEffectEvent(persistentEffect.OnEOT);
                 });
         }
@@ -218,7 +223,7 @@ namespace BF2D.Combat
                     switch (this.CurrentCombatAction.CombatActionType)
                     {
                         case Enums.CombatActionType.Item:
-                            RunTargetedStatsActions(this.CurrentCombatAction.GetStatsActions());
+                            RunTargetedStatsActions(this.CurrentCombatAction.UseTargetedStatsActions());
                             break;
                         default:
                             throw new NotImplementedException();

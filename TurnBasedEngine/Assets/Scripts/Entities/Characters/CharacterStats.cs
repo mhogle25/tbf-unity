@@ -139,8 +139,8 @@ namespace BF2D.Game
         [JsonIgnore] public string Accessory { get { return this.accessory; } }
         [JsonProperty] private string accessory = string.Empty;
 
-        [JsonIgnore] public IEnumerable<StatusEffect> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private readonly List<StatusEffect> statusEffects = new();
+        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get { return this.statusEffects; } }
+        [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
 
         [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
         [JsonProperty] private int gridPosition = 0;
@@ -158,9 +158,9 @@ namespace BF2D.Game
                     EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
             }
 
-            foreach (StatusEffect statusEffect in this.statusEffects)
+            foreach (StatusEffectInfo info in this.statusEffects)
             {
-                ApplyStatusEffectModifierUpdate(statusEffect);
+                ApplyStatusEffectModifierUpdate(info.Get());
             }
 
             return this;
@@ -266,28 +266,30 @@ namespace BF2D.Game
             EquipByType(equipmentType, null);
         }
 
-        public void ApplyStatusEffect(StatusEffect statusEffect)
+        public void ApplyStatusEffect(string id)
         {
-            if (statusEffect is null)
+            StatusEffectInfo info = AddStatusEffect(id);
+
+            if (info is null)
             {
                 Debug.LogWarning($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
                 return;
             }
 
-            ApplyStatusEffectModifierUpdate(statusEffect);
-            this.statusEffects.Add(statusEffect);
+            info.Increment();
+            ApplyStatusEffectModifierUpdate(info.Get());
         }
 
-        public void RemoveStatusEffect(StatusEffect statusEffect)
+        public void RemoveStatusEffect(StatusEffectInfo info)
         {
-            if (statusEffect is null)
+            if (info is null)
             {
                 Debug.LogWarning($"[CharacterStats:RemoveStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
                 return;
             }
 
-            RemoveStatusEffectModifierUpdate(statusEffect);
-            this.statusEffects.Remove(statusEffect);
+            RemoveStatusEffectModifierUpdate(info.Get());
+            this.statusEffects.Remove(info);
         }
 
         public uint GetStatsProperty(CharacterStatsProperty property)
@@ -387,6 +389,22 @@ namespace BF2D.Game
             this.defenseModifier.RemoveStatusEffect(statusEffect);
             this.focusModifier.RemoveStatusEffect(statusEffect);
             this.luckModifier.RemoveStatusEffect(statusEffect);
+        }
+
+        private StatusEffectInfo AddStatusEffect(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (StatusEffectInfo info in this.statusEffects)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            StatusEffectInfo newInfo = new(id);
+            this.statusEffects.Add(newInfo);
+            return newInfo;
         }
 
         private int CritMultiplier()

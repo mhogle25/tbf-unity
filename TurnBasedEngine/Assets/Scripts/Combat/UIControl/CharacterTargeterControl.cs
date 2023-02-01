@@ -25,7 +25,7 @@ namespace BF2D.Combat
 
         public override void ControlInitialize()
         {
-            foreach (CharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetStatsActions())
+            foreach (CharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedStatsActions())
             {
                 this.stagedStatsActions.Enqueue(statsAction);
             }

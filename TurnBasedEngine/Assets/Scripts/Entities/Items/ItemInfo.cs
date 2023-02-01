@@ -25,7 +25,7 @@ namespace BF2D.Game
             this.count++;
         }
 
-        public Item Use()
+        public Item Use(CharacterStats owner)
         {
             Get();
             if (this.staged.Consumeable)
