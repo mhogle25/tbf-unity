@@ -15,11 +15,9 @@ namespace BF2D.Combat
     {
         private class AnimatorController
         {
-            public const string IDLE = "idle";
-            public const string ATTACK = "attack";
-            public const string FLASHING = "flashing";
+            public bool HasEvent { get { return this.animEvent is not null; } }
 
-            private string animState = AnimatorController.IDLE;
+            private string animState = Strings.Animation.Idle;
             public delegate string RunEvent();
             private RunEvent animEvent = null;
 
@@ -45,7 +43,8 @@ namespace BF2D.Combat
 
             public string InvokeAnimEvent()
             {
-                string message = this.animEvent?.Invoke();
+                string message = string.Empty;
+                message = this.animEvent?.Invoke();
                 this.animEvent = null;
                 return message;
             }
@@ -53,13 +52,13 @@ namespace BF2D.Combat
 
         private AnimatorController animatorController = null;
 
+        private readonly Stack<Action> eventStack = new();
+
         public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } }
         private CombatAction currentCombatAction = null;
 
         public CombatGridTile Tile { set { this.assignedTile = value; } }
         private CombatGridTile assignedTile = null;
-
-        private readonly Queue<CharacterStatsActionProperties> stagedUntargetedStatsActions = new();
 
         public CharacterStats Stats { get { return this.stats; } set { this.stats = value; } }
         private CharacterStats stats;
@@ -69,11 +68,59 @@ namespace BF2D.Combat
             this.animatorController = new AnimatorController(GetComponent<Animator>());
         }
 
+        #region Combat Event Stack
+        private void Continue()
+        {
+            if (this.eventStack.Count > 0)
+                this.eventStack.Pop()?.Invoke();
+        }
+
+        private void PushEvent(Action action)
+        {
+            this.eventStack.Push(() =>
+            {
+                Debug.Log("Event Trigger");
+                if (this.Stats.Dead)
+                {
+                    DeathEvent();
+                    return;
+                }
+
+                action?.Invoke();
+            });
+        }
+
+        private void FlushEvents()
+        {
+            this.eventStack.Clear();
+        }
+        #endregion
+
         #region Public Utilities
         public void SetupCombatAction(CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
             this.currentCombatAction.Setup();
+        }
+
+        public void RunCombat()
+        {
+            PushEvent(() =>
+            {
+                PlayMessage("This is when the final event of this character's turn should be triggered", () =>
+                {
+                    Debug.Log("Trigger");
+                });
+            });
+
+            StagePersistentEffectEvents(StagePersistentEffectEOTEvent);     //Stage EOT events
+
+            StageCombatEvents();
+
+            StagePersistentEffectEvents(StagePersistentEffectUpkeepEvent);  //Stage Upkeep Events
+
+            //Run Combat
+            Continue();
         }
 
         public void Destroy()
@@ -84,119 +131,213 @@ namespace BF2D.Combat
             Destroy(this.gameObject);
         }
 
-        public void UpkeepInit()
+        public void PlayAnimation(string key)
         {
-            CombatManager.Instance.OrphanedTextbox.Message("This should be an introductory message to whatever combat action is currently staged, but I haven't gotten to that functionality yet.", () => 
-            { 
-                Debug.Log("This is when the action is triggered"); 
-            });
-
-            foreach (StatusEffect statusEffect in this.Stats.StatusEffects)
-            {
-                if (!statusEffect.UpkeepEventExists())
-                    continue;
-
-                CombatManager.Instance.OrphanedTextbox.Dialog(statusEffect.OnUpkeep.Message, 0, () =>
-                {
-                    CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-
-                    if (statusEffect.Duration > 0)
-                        statusEffect.Use();
-                    if (statusEffect.Duration == 0)
-                        this.Stats.RemoveStatusEffect(statusEffect);
-
-                    RunPersistentEffect(statusEffect);
-                }, new List<string>
-                {
-                    this.Stats.Name
-                });
-            }
-
-            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
-            {
-                StageEquipmentUpkeepEvent(this.Stats.GetEquipped(equipmentType));
-            }
-
-            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
-            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+            this.animatorController.ChangeAnimState(key);
         }
         #endregion
 
         #region Animation Events
         public void AnimTrigger()
         {
+            if (!this.animatorController.HasEvent)
+                return;
+
             string message = this.animatorController.InvokeAnimEvent();
-            CombatManager.Instance.OrphanedTextbox.Message(message, () => 
-            {
-                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-                PlayStatsActionAnimation();
-            });
-            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+            PlayMessage(message, Continue);
         }
 
         public void AnimSwitchIdle()
         {
-            this.animatorController.ChangeAnimState(AnimatorController.IDLE);
+            this.animatorController.ChangeAnimState(BF2D.Game.Strings.Animation.Idle);
         }
         #endregion
 
-        private void StageEquipmentUpkeepEvent(string equipmentID)
+        #region Stage Persistent Effect Events
+        private void StagePersistentEffectEvents(Action<PersistentEffect, Action> stagingAction)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
-            if (equipment is null)
+            //Status Effect Event
+            foreach (StatusEffectInfo info in this.Stats.StatusEffects)
             {
-                Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
-                return;
+                stagingAction(info.Get(), () => 
+                {
+                    info.Use(this.Stats);
+                });
             }
 
-            if (!equipment.UpkeepEventExists())
-                return;
+            //Equipment Event
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                string equipmentID = this.Stats.GetEquipped(equipmentType);
 
-            CombatManager.Instance.OrphanedTextbox.Dialog(equipment.OnUpkeep.Message, 0, () =>
+                if (equipmentID == string.Empty || equipmentID is null)
+                    continue;
+
+                Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+
+                if (equipment is null)
+                {
+                    Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
+                    continue;
+                }
+
+                stagingAction(equipment, null);
+            }
+        }
+
+        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect, Action callback)
+        {
+            if (persistentEffect.UpkeepEventExists())
+                PushEvent(() =>
+                {
+                    callback?.Invoke();
+                    PlayPersistentEffectEvent(persistentEffect.OnUpkeep);
+                });
+        }
+
+        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect, Action callback)
+        {
+            if (persistentEffect.EOTEventExists())
+                PushEvent(() =>
+                {
+                    callback?.Invoke();
+                    PlayPersistentEffectEvent(persistentEffect.OnEOT);
+                });
+        }
+
+        private void PlayPersistentEffectEvent(UntargetedGameAction gameAction)
+        {
+            PlayDialog(gameAction.Message, () =>
             {
-                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
-                RunPersistentEffect(equipment);
-            }, new List<string>
-            {
-                this.Stats.Name
+                RunUntargetedStatsActions(gameAction.StatsActionProperties);
             });
         }
+        #endregion
 
-        private void RunPersistentEffect(PersistentEffect persistentEffect)
+        #region Stage Combat Events
+        private void StageCombatEvents()
         {
-            RunUntargetedStatsActions(persistentEffect.OnUpkeep.StatsActionProperties);
+            PushEvent(() =>
+            {
+                PlayDialog(this.CurrentCombatAction.CurrentInfo.GetOpeningMessage(), () =>
+                {
+                    switch (this.CurrentCombatAction.CombatActionType)
+                    {
+                        case Enums.CombatActionType.Item:
+                            RunTargetedStatsActions(this.CurrentCombatAction.UseTargetedStatsActions());
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                });
+            });
         }
+        #endregion
 
         private void RunUntargetedStatsActions(IEnumerable<CharacterStatsActionProperties> actions)
         {
             foreach (CharacterStatsActionProperties action in actions)
             {
-                this.stagedUntargetedStatsActions.Enqueue(action);
+                StageUntargetedStatsAction(action);
             }
 
-            PlayStatsActionAnimation();
+            Continue();
         }
 
-        private void PlayStatsActionAnimation()
+        private void StageUntargetedStatsAction(CharacterStatsActionProperties action)
         {
-            if (this.stagedUntargetedStatsActions.Count < 1)
+            PushEvent(() =>
             {
-                CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
-                return;
+                this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
+                {
+                    return action.Run(this.Stats, this.Stats);
+                });
+            });
+        }
+
+        private void RunTargetedStatsActions(IEnumerable<CharacterStatsAction> actions)
+        {
+            foreach (CharacterStatsAction action in actions)
+            {
+                StageTargetedStatsAction(action);
             }
 
-            CharacterStatsActionProperties action = this.stagedUntargetedStatsActions.Dequeue();
+            Continue();
+        }
 
-            //Play Animation
-            //Animation triggers animEvent which runs the action and gives the message it creates to the orphaned textbox
-            this.animatorController.ChangeAnimState(AnimatorController.FLASHING, () =>
+        private void StageTargetedStatsAction(CharacterStatsAction action)
+        {
+            PushEvent(() =>
             {
-                return action.MessageRun(this.Stats, this.Stats);
+                const string DEFAULT_MESSAGE = "But no one was affected.";
+
+                this.animatorController.ChangeAnimState(Strings.Animation.Attack, () =>
+                {
+                    string message = DEFAULT_MESSAGE;
+                    foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
+                    {
+                        if (target.Stats.Dead)
+                            continue;
+
+                        target.PlayAnimation(action.Properties.GetAnimationKey());
+
+                        if (message == DEFAULT_MESSAGE)
+                            message = string.Empty;
+                        message += action.Properties.Run(this.stats, target.Stats);
+                    }
+                    return message;
+                });
             });
+        }
+
+        private void DeathEvent()
+        {
+            PlayDeathMessage();
+            FlushEvents();
+            //End the turn and pass it to the next target
+        }
+
+        private void PlayDeathMessage()
+        {
+            PlayMessage($"{this.Stats.Name} died.");
+        }
+
+        private void PlayDialog(List<string> dialog)
+        {
+            PlayDialog(dialog, null);
+        }
+
+        private void PlayDialog(List<string> dialog, Action callback)
+        {
+            CombatManager.Instance.OrphanedTextbox.Dialog(dialog, 0, () =>
+            {
+                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
+                callback?.Invoke();
+            }, new List<string>
+            {
+                this.Stats.Name
+            });
+            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
+            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+        }
+
+        private void PlayMessage(string message)
+        {
+            PlayMessage(message, null);
+        }
+
+        private void PlayMessage(string message, Action callback)
+        {
+            CombatManager.Instance.OrphanedTextbox.Message(message, () =>
+            {
+                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
+                callback?.Invoke();
+            }, new List<string>
+            {
+                this.Stats.Name
+            });
+            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
+            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
         }
     }
 }

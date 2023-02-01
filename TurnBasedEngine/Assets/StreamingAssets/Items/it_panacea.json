@@ -1,0 +1,24 @@
+{
+    "name":"Panacea",
+    "spriteID":"herb_02",
+    "description":"A mixture of herbs that restores a character to full health.",
+    "consumeable":true,
+    "onUse":
+    {
+        "message":
+        [
+            "[I:0] used the panacea's healing properties.[E]"
+        ],
+        "statsActions": 
+        [
+            {
+                "target":"Any",
+                "description":"heal",
+                "properties":
+                {
+                    "resetHealth":true
+                }
+            }
+        ]
+    }
+}

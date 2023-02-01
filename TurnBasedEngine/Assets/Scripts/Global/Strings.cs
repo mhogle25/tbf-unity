@@ -15,7 +15,7 @@ namespace BF2D.Game
             public const string Health = "Health";
             public const string MaxHealth = "Max Health";
             public const string Stamina = "Stamina";
-            public const string MaxStamina = "MaxStamina";
+            public const string MaxStamina = "Max Stamina";
 
             public const string Speed = "Speed";
             public const string Attack = "Attack";
@@ -28,8 +28,10 @@ namespace BF2D.Game
         #region AnimationPropertyTerms
         public static class Animation
         {
-            public const string AttackTrigger = "attack";
-            public const string FlashingTrigger = "flashing";
+            public const string Idle = "idle";
+            public const string Attack = "attack";
+            public const string Flashing = "flashing";
+            public const string Damaged = "damaged";
         }
         #endregion
     }

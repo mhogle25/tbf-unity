@@ -7,12 +7,17 @@ namespace BF2D.Game
     [Serializable]
     public class ItemInfo
     {
-        [JsonIgnore] public string ID { get { return this.id; } set { this.id = value; } }
+        [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] protected string id = string.Empty;
         [JsonIgnore] public int Count { get { return this.count; } }
-        [JsonProperty] protected int count = 1;
+        [JsonProperty] protected int count = 0;
 
         [JsonIgnore] private Item staged = null;
+
+        public ItemInfo(string id)
+        {
+            this.id = id;
+        }
 
         public Item Get()
         {
@@ -25,11 +30,15 @@ namespace BF2D.Game
             this.count++;
         }
 
-        public Item Use()
+        public Item Use(CharacterStats owner)
         {
             Get();
             if (this.staged.Consumeable)
+            {
                 this.count--;
+                if (this.count < 1)
+                    owner.RemoveItem(this);
+            }
             return ResetStaged();
         }
 

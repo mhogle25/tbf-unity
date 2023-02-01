@@ -18,6 +18,8 @@ namespace BF2D.Game
             public CharacterStatsProperty Property { get { return this.property; } set { this.property = value; } }
             private CharacterStatsProperty property = CharacterStatsProperty.Speed;
 
+            public int Total { get { return this.Equipment + this.StatusEffect; } }
+
             public int Equipment { get { return this.equipment; } }
             private int equipment = 0;
             public int StatusEffect { get { return this.statusEffect; } }
@@ -43,21 +45,20 @@ namespace BF2D.Game
                 this.equipment -= equipment.GetModifier(this.property);
             }
         }
+        
         [JsonIgnore] public bool Dead { get { return this.health < 1; } }
         [JsonIgnore] public int Health { get { return this.health; } }
         [JsonProperty] private int health = 0;
-        [JsonIgnore] public int MaxHealth { get { return this.maxHealth; } }
-        [JsonIgnore] private int maxHealth = 0;
+        [JsonIgnore] public int MaxHealth { get { return 10; } }
         [JsonIgnore] public int Stamina { get { return this.stamina; } }
         [JsonProperty] private int stamina = 0;
-        [JsonIgnore] public int MaxStamina { get { return this.maxStamina; } }
-        [JsonIgnore] private int maxStamina = 0;
+        [JsonIgnore] public int MaxStamina { get { return 5; } }
 
         [JsonIgnore] public uint Speed 
         { 
             get 
             {
-                int value = this.speedModifier.Equipment + this.speedModifier.StatusEffect + this.swiftness;
+                int value = this.speedModifier.Total + this.swiftness;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -71,7 +72,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.attackModifier.Equipment + this.attackModifier.StatusEffect + this.strength;
+                int value = this.attackModifier.Total + this.strength;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -85,7 +86,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.defenseModifier.Equipment + this.defenseModifier.StatusEffect + this.toughness;
+                int value = this.defenseModifier.Total + this.toughness;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -99,7 +100,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.focusModifier.Equipment + this.focusModifier.StatusEffect + this.will;
+                int value = this.focusModifier.Total + this.will;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -113,7 +114,7 @@ namespace BF2D.Game
         { 
             get 
             { 
-                int value = this.luckModifier.Equipment + this.luckModifier.StatusEffect + this.fortune;
+                int value = this.luckModifier.Total + this.fortune;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -140,8 +141,8 @@ namespace BF2D.Game
         [JsonIgnore] public string Accessory { get { return this.accessory; } }
         [JsonProperty] private string accessory = string.Empty;
 
-        [JsonIgnore] public IEnumerable<StatusEffect> StatusEffects { get { return this.statusEffects; } }
-        [JsonProperty] private readonly List<StatusEffect> statusEffects = new();
+        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get { return this.statusEffects; } }
+        [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
 
         [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
         [JsonProperty] private int gridPosition = 0;
@@ -151,118 +152,7 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
-        public CharacterStats Setup()
-        {
-            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
-            {
-                EquipModifierUpdate(GetEquipped(equipmentType));
-            }
-
-            foreach (StatusEffect statusEffect in this.statusEffects)
-            {
-                ApplyStatusEffectModifierUpdate(statusEffect);
-            }
-
-            return this;
-        }
-
-        public void Damage(int damage)
-        {
-            this.health -= (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
-        }
-
-        public void DirectDamage(int damage)
-        {
-            this.health -= damage > 0 ? damage : 1;
-        }
-
-        public void CriticalDamage(int damage)
-        {
-            this.health -= damage > 0 ? damage * CritMultiplier() : 1;
-        }
-
-        public void PsychicDamage(int damage)
-        {
-            this.health -= (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
-        }
-
-        public void Heal(int healing)
-        {
-            int value = healing > 0 ? healing : 1;
-
-            if (this.health + value > this.maxHealth)
-            {
-                this.health = this.maxHealth;
-                return;
-            }
-
-            this.health += value;
-        }
-
-        public void Recover(int recovery)
-        {
-            int value = recovery > 0 ? recovery : 1;
-
-            if (this.stamina + value > this.maxStamina)
-            {
-                this.stamina = this.maxStamina;
-                return;
-            }
-
-            this.stamina += value;
-        }
-
-        public void Exert(int exertion)
-        {
-            this.stamina -= exertion > 0 ? exertion : 1;
-        }
-
-        public void ResetHealth()
-        {
-            this.health = this.maxHealth;
-        }
-
-        public void ResetStamina()
-        {
-            this.stamina = this.maxStamina;
-        }
-
-        public void Equip(string id)
-        {
-            Equip(GameInfo.Instance.GetEquipment(id), id);
-        }
-
-        public void Unequip(EquipmentType equipmentType)
-        {
-            string id = GetEquipped(equipmentType);
-            UnequipModifierUpdate(id);
-            EquipByType(equipmentType, null);
-        }
-
-        public void ApplyStatusEffect(StatusEffect statusEffect)
-        {
-            if (statusEffect is null)
-            {
-                Debug.LogWarning($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
-                return;
-            }
-
-            ApplyStatusEffectModifierUpdate(statusEffect);
-            this.statusEffects.Add(statusEffect);
-        }
-
-        public void RemoveStatusEffect(StatusEffect statusEffect)
-        {
-            if (statusEffect is null)
-            {
-                Debug.LogWarning($"[CharacterStats:RemoveStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
-                return;
-            }
-
-            RemoveStatusEffectModifierUpdate(statusEffect);
-            this.statusEffects.Remove(statusEffect);
-        }
-
+        #region Stats Properties
         public uint GetStatsProperty(CharacterStatsProperty property)
         {
             return property switch
@@ -274,6 +164,185 @@ namespace BF2D.Game
                 CharacterStatsProperty.Luck => this.Luck,
                 _ => 0
             };
+        }
+
+        public int Damage(int damage)
+        {
+            int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
+        }
+
+        public int DirectDamage(int damage)
+        {
+            int value = damage > 0 ? damage : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
+        }
+
+        public int CriticalDamage(int damage)
+        {
+            int value = damage > 0 ? damage * CritMultiplier() : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
+        }
+
+        public int PsychicDamage(int damage)
+        {
+            int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
+        }
+
+        public int Heal(int healing)
+        {
+            int value = healing > 0 ? healing : 1;
+
+            if (this.health + value > this.MaxHealth)
+            {
+                return ResetHealth();
+            }
+
+            this.health += value;
+            //Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
+            return value;
+        }
+
+        public int Recover(int recovery)
+        {
+            int value = recovery > 0 ? recovery : 1;
+
+            if (this.stamina + value > this.MaxStamina)
+            {
+                return ResetStamina();
+            }
+
+            this.stamina += value;
+            //Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
+            return value;
+        }
+
+        public int Exert(int exertion)
+        {
+            int value = exertion > 0 ? exertion : 1;
+            this.stamina -= value;
+            //Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
+            return value;
+        }
+
+        public int ResetHealth()
+        {
+            int healthBefore = this.Health;
+            this.health = this.MaxHealth;
+            //Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            return this.Health - healthBefore;
+        }
+
+        public int ResetStamina()
+        {
+            int staminaBefore = this.Stamina;
+            this.stamina = this.MaxStamina;
+            //Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            return this.Stamina - staminaBefore;
+        }
+        #endregion
+
+        #region Generic Public Utilities
+        public CharacterStats Setup()
+        {
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                if (IsEquipped(equipmentType))
+                    EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
+            }
+
+            foreach (StatusEffectInfo info in this.statusEffects)
+            {
+                ApplyStatusEffectModifierUpdate(info.Get());
+            }
+
+            return this;
+        }
+
+        public void SetName(string newName)
+        {
+            this.name = newName;
+        }
+        #endregion
+
+        #region Items
+        public void AcquireItem(string id)
+        {
+            ItemInfo info = AddItem(id);
+
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s items bag but the item id given was invalid");
+                return;
+            }
+
+            info.Increment();
+        }
+
+        public void RemoveItem(ItemInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an item from {this.name}'s item bag but the item info given was null");
+                return;
+            }
+
+            this.items.Remove(info);
+        }
+
+        private ItemInfo AddItem(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (ItemInfo info in this.items)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            ItemInfo newInfo = new(id);
+            this.items.Add(newInfo);
+            return newInfo;
+        }
+        #endregion
+
+        #region Equipments
+        public void Equip(EquipmentInfo info)
+        {
+            Equipment equipment = info.Get();
+
+            if (equipment is null)
+            {
+                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                return;
+            }
+
+            EquipModifierUpdate(equipment);
+            info.Decrement(this);
+            EquipByType(equipment.Type, info.ID);
+        }
+
+        public void Unequip(EquipmentType equipmentType)
+        {
+            string id = GetEquipped(equipmentType);
+            UnequipModifierUpdate(GameInfo.Instance.GetEquipment(id));
+            EquipByType(equipmentType, null);
+            AcquireEquipment(id);
+        }
+
+        public bool IsEquipped(EquipmentType equipmentType)
+        {
+            return GetEquipped(equipmentType) != null && GetEquipped(equipmentType) != string.Empty;
         }
 
         public string GetEquipped(EquipmentType equipmentType)
@@ -290,20 +359,45 @@ namespace BF2D.Game
             };
         }
 
-        public void SetName(string newName)
+        public void AcquireEquipment(string id)
         {
-            this.name = newName;
-        }
-
-        private void Equip(Equipment equipment, string id)
-        {
-            if (equipment is null)
+            EquipmentInfo info = AddEquipment(id);
+            
+            if (info is null)
             {
-                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
                 return;
             }
-            EquipModifierUpdate(id);
-            EquipByType(equipment.Type, id);
+
+            info.Increment();
+        }
+
+        public void RemoveEquipment(EquipmentInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
+                return;
+            }
+
+            UnequipModifierUpdate(info.Get());
+            this.equipments.Remove(info);
+        }
+
+        private EquipmentInfo AddEquipment(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (EquipmentInfo info in this.equipments)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            EquipmentInfo newInfo = new(id);
+            this.equipments.Add(newInfo);
+            return newInfo;
         }
 
         private void EquipByType(EquipmentType equipmentType, string equipmentID)
@@ -320,15 +414,11 @@ namespace BF2D.Game
             }
         }
 
-        private void EquipModifierUpdate(string equipmentID)
+        private void EquipModifierUpdate(Equipment equipment)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
             if (equipment == null)
                 return;
+
             this.speedModifier.Equip(equipment);
             this.attackModifier.Equip(equipment);
             this.defenseModifier.Equip(equipment);
@@ -336,26 +426,51 @@ namespace BF2D.Game
             this.luckModifier.Equip(equipment);
         }
 
-        private void UnequipModifierUpdate(string equipmentID)
+        private void UnequipModifierUpdate(Equipment equipment)
         {
-            if (equipmentID == string.Empty || equipmentID is null)
-                return;
-
-            Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
-
             if (equipment == null)
                 return;
+
             this.speedModifier.Unequip(equipment);
             this.attackModifier.Unequip(equipment);
             this.defenseModifier.Unequip(equipment);
             this.focusModifier.Unequip(equipment);
             this.luckModifier.Unequip(equipment);
         }
+        #endregion
+
+        #region Status Effects
+        public void ApplyStatusEffect(string id)
+        {
+            StatusEffectInfo info = AddStatusEffect(id);
+
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
+                return;
+            }
+
+            info.Increment();
+            ApplyStatusEffectModifierUpdate(info.Get());
+        }
+
+        public void RemoveStatusEffect(StatusEffectInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.name} but the status effect info given was null");
+                return;
+            }
+
+            RemoveStatusEffectModifierUpdate(info.Get());
+            this.statusEffects.Remove(info);
+        }
 
         private void ApplyStatusEffectModifierUpdate(StatusEffect statusEffect)
         {
             if (statusEffect == null)
                 return;
+
             this.speedModifier.ApplyStatusEffect(statusEffect);
             this.attackModifier.ApplyStatusEffect(statusEffect);
             this.defenseModifier.ApplyStatusEffect(statusEffect);
@@ -367,12 +482,30 @@ namespace BF2D.Game
         {
             if (statusEffect == null)
                 return;
+
             this.speedModifier.RemoveStatusEffect(statusEffect);
             this.attackModifier.RemoveStatusEffect(statusEffect);
             this.defenseModifier.RemoveStatusEffect(statusEffect);
             this.focusModifier.RemoveStatusEffect(statusEffect);
             this.luckModifier.RemoveStatusEffect(statusEffect);
         }
+
+        private StatusEffectInfo AddStatusEffect(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (StatusEffectInfo info in this.statusEffects)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            StatusEffectInfo newInfo = new(id);
+            this.statusEffects.Add(newInfo);
+            return newInfo;
+        }
+        #endregion
 
         private int CritMultiplier()
         {

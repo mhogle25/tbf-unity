@@ -1,0 +1,23 @@
+{
+    "name":"Holy Blessing",
+    "description":"blessed",
+    "effect":"Healing",
+    "duration":5,
+    "onUpkeep": 
+    {
+        "message":
+        [
+            "The light of the gods shines upon [I:0].[E]"
+        ],
+        "statsActionProperties":
+        [
+            {
+                "heal":
+                {
+                    "value":2
+                },
+                "resetStamina":true
+            }
+        ]
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "name":"Burning",
+    "description":"hexed",
+    "effect":"Fire",
+    "duration":3,
+    "onUpkeep": 
+    {
+        "message":
+        [
+            "The flames continue to sear [I:0]'s flesh.[E]"
+        ],
+        "statsActionProperties":
+        [
+            {
+                "directDamage":
+                {
+                    "value":1
+                }
+            },
+            {
+                "directDamage":
+                {
+                    "value":1
+                }
+            }
+        ]
+    }
+}

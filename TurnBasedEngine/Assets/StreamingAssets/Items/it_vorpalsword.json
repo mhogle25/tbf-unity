@@ -5,14 +5,14 @@
     "consumeable":false,
     "onUse":
     {
-        "useMessage":
+        "message":
         [
             "[I:0] performed a calculated strike.[E]"
         ],
         "statsActions": 
         [
             {
-                "target":"Any",
+                "target":"Enemy",
                 "description":"attack",
                 "properties":
                 {
