@@ -18,6 +18,8 @@ namespace BF2D.Game
             public CharacterStatsProperty Property { get { return this.property; } set { this.property = value; } }
             private CharacterStatsProperty property = CharacterStatsProperty.Speed;
 
+            public int Total { get { return this.Equipment + this.StatusEffect; } }
+
             public int Equipment { get { return this.equipment; } }
             private int equipment = 0;
             public int StatusEffect { get { return this.statusEffect; } }
@@ -56,7 +58,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.speedModifier.Equipment + this.speedModifier.StatusEffect + this.swiftness;
+                int value = this.speedModifier.Total + this.swiftness;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -70,7 +72,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.attackModifier.Equipment + this.attackModifier.StatusEffect + this.strength;
+                int value = this.attackModifier.Total + this.strength;
                 if (value < 0) value = 0;
                 return (uint)value; 
             } 
@@ -84,7 +86,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.defenseModifier.Equipment + this.defenseModifier.StatusEffect + this.toughness;
+                int value = this.defenseModifier.Total + this.toughness;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -98,7 +100,7 @@ namespace BF2D.Game
         { 
             get 
             {
-                int value = this.focusModifier.Equipment + this.focusModifier.StatusEffect + this.will;
+                int value = this.focusModifier.Total + this.will;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -112,7 +114,7 @@ namespace BF2D.Game
         { 
             get 
             { 
-                int value = this.luckModifier.Equipment + this.luckModifier.StatusEffect + this.fortune;
+                int value = this.luckModifier.Total + this.fortune;
                 if (value < 0) value = 0;
                 return (uint)value;
             } 
@@ -166,83 +168,88 @@ namespace BF2D.Game
             return this;
         }
 
-        public void Damage(int damage)
+        public int Damage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void DirectDamage(int damage)
+        public int DirectDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= damage > 0 ? damage : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = damage > 0 ? damage : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void CriticalDamage(int damage)
+        public int CriticalDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= damage > 0 ? damage * CritMultiplier() : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = damage > 0 ? damage * CritMultiplier() : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void PsychicDamage(int damage)
+        public int PsychicDamage(int damage)
         {
-            int healthBefore = this.Health;
-            this.health -= (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
+            this.health -= value;
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            return value;
         }
 
-        public void Heal(int healing)
+        public int Heal(int healing)
         {
-            int healthBefore = this.Health;
             int value = healing > 0 ? healing : 1;
 
             if (this.health + value > this.MaxHealth)
             {
-                ResetHealth();
-                return;
+                return ResetHealth();
             }
 
             this.health += value;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
+            return value;
         }
 
-        public void Recover(int recovery)
+        public int Recover(int recovery)
         {
-            int staminaBefore = this.Stamina;
             int value = recovery > 0 ? recovery : 1;
 
             if (this.stamina + value > this.MaxStamina)
             {
-                ResetStamina();
-                return;
+                return ResetStamina();
             }
 
             this.stamina += value;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            //Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
+            return value;
         }
 
-        public void Exert(int exertion)
+        public int Exert(int exertion)
         {
-            int staminaBefore = this.Stamina;
-            this.stamina -= exertion > 0 ? exertion : 1;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            int value = exertion > 0 ? exertion : 1;
+            this.stamina -= value;
+            //Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
+            return value;
         }
 
-        public void ResetHealth()
+        public int ResetHealth()
         {
             int healthBefore = this.Health;
             this.health = this.MaxHealth;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            return this.Health - healthBefore;
         }
 
-        public void ResetStamina()
+        public int ResetStamina()
         {
             int staminaBefore = this.Stamina;
             this.stamina = this.MaxStamina;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            //Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            return this.Stamina - staminaBefore;
         }
 
         public void Equip(string id)
