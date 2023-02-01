@@ -12833,7 +12833,7 @@ MonoBehaviour:
   nametagTextField: {fileID: 5573806231696239472}
   continueIcon: {fileID: 2158157277367825122}
   dialogFilesPath: Dialog/Dialogs
-  DefaultMessageSpeed: 0.025
+  DefaultMessageSpeed: 0.05
   MessageInterrupt: 1
   AutoPass: 1
   onEndOfStackedDialogs:

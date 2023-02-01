@@ -16,7 +16,6 @@ namespace BF2D.Game
         public StatusEffectInfo(string id)
         {
             this.id = id;
-            this.count = 0;
             this.remainingDuration = GameInfo.Instance.GetStatusEffect(id).Duration;
         }
 

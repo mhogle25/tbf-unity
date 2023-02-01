@@ -20,39 +20,16 @@
     "statusEffects":
     [
         {
-            "name":"Burning",
-            "description":"Burns the target for 1 damage twice every turn",
-            "effect":"Fire",
-            "duration":3,
-            "onEOT": 
-            {
-                "message":
-                [
-                    "The flames continue to sear [I:0]'s flesh.[E]"
-                ],
-                "statsActionProperties":
-                [
-                    {
-                        "directDamage":
-                        {
-                            "value":1
-                        }
-                    },
-                    {
-                        "directDamage":
-                        {
-                            "value":1
-                        }
-                    }
-                ]
-            }
+            "id":"se_burning_01",
+            "remainingDuration":3,
+            "count":1
         }
     ],
     "gridPosition":0,
     "items":
     [
         {
-            "id": "firecracker",
+            "id": "it_firecracker",
             "count":10
         }
     ],

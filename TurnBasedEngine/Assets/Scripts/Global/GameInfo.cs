@@ -72,7 +72,7 @@ namespace BF2D.Game
             this.currentSave = LoadSaveData("save1");
             List<CharacterStats> enemies = new()
             {
-                InstantiateEnemy("lessergoblin")
+                InstantiateEnemy("en_lessergoblin")
             };
 
             this.queuedCombats.Enqueue(new CombatManager.InitializeInfo

@@ -28,8 +28,8 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetHealth = false;
         [JsonIgnore] public bool ResetStamina { get { return this.resetStamina; } }
         [JsonProperty] private readonly bool resetStamina = false;
-        [JsonIgnore] public StatusEffect StatusEffect { get { return this.statusEffect; } }
-        [JsonProperty] private readonly StatusEffect statusEffect = null;
+        [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
+        [JsonProperty] private readonly string statusEffect = null;
          
         public string Run(CharacterStats source, CharacterStats target)
         {
@@ -62,7 +62,10 @@ namespace BF2D.Game.Actions
                 actionMessage += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.1]";
             if (this.statusEffect is not null)
             {
-                actionMessage += source == target ? $"{source.Name} {this.statusEffect.Description} themself with {this.statusEffect.Name}. [P:0.1]" : $"{source.Name} {this.statusEffect.Description} {target.Name} with {this.statusEffect.Name}. [P:0.1]";
+                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect);
+                actionMessage += source == target ? 
+                    $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.1]" : 
+                    $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.1]";
                 target.ApplyStatusEffect(this.statusEffect);
             }
 

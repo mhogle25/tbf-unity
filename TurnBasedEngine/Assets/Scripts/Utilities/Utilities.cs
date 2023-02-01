@@ -87,8 +87,7 @@ namespace BF2D.Utilities
             }
             catch (Exception x)
             {
-                Debug.LogWarning($"[BF2D.Utilities.TextFile] The file was not valid JSON");
-                Debug.LogError(x.ToString());
+                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
                 return default;
             }
             return t;

@@ -152,20 +152,18 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
-        public CharacterStats Setup()
+        #region Stats Properties
+        public uint GetStatsProperty(CharacterStatsProperty property)
         {
-            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            return property switch
             {
-                if (IsEquipped(equipmentType))
-                    EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
-            }
-
-            foreach (StatusEffectInfo info in this.statusEffects)
-            {
-                ApplyStatusEffectModifierUpdate(info.Get());
-            }
-
-            return this;
+                CharacterStatsProperty.Speed => this.Speed,
+                CharacterStatsProperty.Attack => this.Attack,
+                CharacterStatsProperty.Defense => this.Defense,
+                CharacterStatsProperty.Focus => this.Focus,
+                CharacterStatsProperty.Luck => this.Luck,
+                _ => 0
+            };
         }
 
         public int Damage(int damage)
@@ -251,10 +249,77 @@ namespace BF2D.Game
             //Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
+        #endregion
 
-        public void Equip(string id)
+        #region Generic Public Utilities
+        public CharacterStats Setup()
         {
-            Equipment equipment = GameInfo.Instance.GetEquipment(id);
+            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
+            {
+                if (IsEquipped(equipmentType))
+                    EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
+            }
+
+            foreach (StatusEffectInfo info in this.statusEffects)
+            {
+                ApplyStatusEffectModifierUpdate(info.Get());
+            }
+
+            return this;
+        }
+
+        public void SetName(string newName)
+        {
+            this.name = newName;
+        }
+        #endregion
+
+        #region Items
+        public void AcquireItem(string id)
+        {
+            ItemInfo info = AddItem(id);
+
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s items bag but the item id given was invalid");
+                return;
+            }
+
+            info.Increment();
+        }
+
+        public void RemoveItem(ItemInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an item from {this.name}'s item bag but the item info given was null");
+                return;
+            }
+
+            this.items.Remove(info);
+        }
+
+        private ItemInfo AddItem(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (ItemInfo info in this.items)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            ItemInfo newInfo = new(id);
+            this.items.Add(newInfo);
+            return newInfo;
+        }
+        #endregion
+
+        #region Equipments
+        public void Equip(EquipmentInfo info)
+        {
+            Equipment equipment = info.Get();
 
             if (equipment is null)
             {
@@ -263,7 +328,8 @@ namespace BF2D.Game
             }
 
             EquipModifierUpdate(equipment);
-            EquipByType(equipment.Type, id);
+            info.Decrement(this);
+            EquipByType(equipment.Type, info.ID);
         }
 
         public void Unequip(EquipmentType equipmentType)
@@ -271,45 +337,7 @@ namespace BF2D.Game
             string id = GetEquipped(equipmentType);
             UnequipModifierUpdate(GameInfo.Instance.GetEquipment(id));
             EquipByType(equipmentType, null);
-        }
-
-        public void ApplyStatusEffect(string id)
-        {
-            StatusEffectInfo info = AddStatusEffect(id);
-
-            if (info is null)
-            {
-                Debug.LogWarning($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
-                return;
-            }
-
-            info.Increment();
-            ApplyStatusEffectModifierUpdate(info.Get());
-        }
-
-        public void RemoveStatusEffect(StatusEffectInfo info)
-        {
-            if (info is null)
-            {
-                Debug.LogWarning($"[CharacterStats:RemoveStatusEffect] Tried to apply a status effect to {this.name} but the status effect given was null");
-                return;
-            }
-
-            RemoveStatusEffectModifierUpdate(info.Get());
-            this.statusEffects.Remove(info);
-        }
-
-        public uint GetStatsProperty(CharacterStatsProperty property)
-        {
-            return property switch
-            {
-                CharacterStatsProperty.Speed => this.Speed,
-                CharacterStatsProperty.Attack => this.Attack,
-                CharacterStatsProperty.Defense => this.Defense,
-                CharacterStatsProperty.Focus => this.Focus,
-                CharacterStatsProperty.Luck => this.Luck,
-                _ => 0
-            };
+            AcquireEquipment(id);
         }
 
         public bool IsEquipped(EquipmentType equipmentType)
@@ -331,9 +359,45 @@ namespace BF2D.Game
             };
         }
 
-        public void SetName(string newName)
+        public void AcquireEquipment(string id)
         {
-            this.name = newName;
+            EquipmentInfo info = AddEquipment(id);
+            
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
+                return;
+            }
+
+            info.Increment();
+        }
+
+        public void RemoveEquipment(EquipmentInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
+                return;
+            }
+
+            UnequipModifierUpdate(info.Get());
+            this.equipments.Remove(info);
+        }
+
+        private EquipmentInfo AddEquipment(string id)
+        {
+            if (id == string.Empty)
+                return null;
+
+            foreach (EquipmentInfo info in this.equipments)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            EquipmentInfo newInfo = new(id);
+            this.equipments.Add(newInfo);
+            return newInfo;
         }
 
         private void EquipByType(EquipmentType equipmentType, string equipmentID)
@@ -372,6 +436,34 @@ namespace BF2D.Game
             this.defenseModifier.Unequip(equipment);
             this.focusModifier.Unequip(equipment);
             this.luckModifier.Unequip(equipment);
+        }
+        #endregion
+
+        #region Status Effects
+        public void ApplyStatusEffect(string id)
+        {
+            StatusEffectInfo info = AddStatusEffect(id);
+
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
+                return;
+            }
+
+            info.Increment();
+            ApplyStatusEffectModifierUpdate(info.Get());
+        }
+
+        public void RemoveStatusEffect(StatusEffectInfo info)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.name} but the status effect info given was null");
+                return;
+            }
+
+            RemoveStatusEffectModifierUpdate(info.Get());
+            this.statusEffects.Remove(info);
         }
 
         private void ApplyStatusEffectModifierUpdate(StatusEffect statusEffect)
@@ -413,6 +505,7 @@ namespace BF2D.Game
             this.statusEffects.Add(newInfo);
             return newInfo;
         }
+        #endregion
 
         private int CritMultiplier()
         {
