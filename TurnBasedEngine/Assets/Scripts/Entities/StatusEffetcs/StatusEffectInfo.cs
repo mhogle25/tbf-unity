@@ -8,8 +8,6 @@ namespace BF2D.Game
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] protected string id = string.Empty;
-        [JsonIgnore] public int Count { get { return this.count; } }
-        [JsonProperty] protected int count = 0;
         [JsonIgnore] public int RemainingDuration { get { return this.remainingDuration; } }
         [JsonProperty] private int remainingDuration = -1;
 
@@ -24,11 +22,6 @@ namespace BF2D.Game
             return GameInfo.Instance.GetStatusEffect(this.ID);
         }
 
-        public void Increment()
-        {
-            this.count++;
-        }
-
         public void Use(CharacterStats owner)
         {
             if (this.remainingDuration < 0)
@@ -38,13 +31,8 @@ namespace BF2D.Game
 
             if (this.remainingDuration == 0)
             {
-                if (this.count == 1)
-                {
-                    owner.RemoveStatusEffect(this);
-                    return;
-                }
-
-                this.count--;
+                owner.RemoveStatusEffect(this);
+                return;
             }
         }
     }

@@ -450,7 +450,6 @@ namespace BF2D.Game
                 return;
             }
 
-            info.Increment();
             ApplyStatusEffectModifierUpdate(info.Get());
         }
 
@@ -494,12 +493,6 @@ namespace BF2D.Game
         {
             if (id == string.Empty)
                 return null;
-
-            foreach (StatusEffectInfo info in this.statusEffects)
-            {
-                if (info.ID == id)
-                    return info;
-            }
 
             StatusEffectInfo newInfo = new(id);
             this.statusEffects.Add(newInfo);
