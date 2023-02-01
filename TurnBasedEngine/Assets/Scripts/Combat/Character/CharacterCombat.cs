@@ -79,6 +79,7 @@ namespace BF2D.Combat
         {
             this.eventStack.Push(() =>
             {
+                Debug.Log("Event Trigger");
                 if (this.Stats.Dead)
                 {
                     DeathEvent();

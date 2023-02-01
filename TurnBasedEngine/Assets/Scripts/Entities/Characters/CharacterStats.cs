@@ -172,7 +172,7 @@ namespace BF2D.Game
         {
             int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
             this.health -= value;
-            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -180,7 +180,7 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage : 1;
             this.health -= value;
-            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -188,7 +188,7 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage * CritMultiplier() : 1;
             this.health -= value;
-            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -196,7 +196,7 @@ namespace BF2D.Game
         {
             int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
             this.health -= value;
-            Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -210,7 +210,7 @@ namespace BF2D.Game
             }
 
             this.health += value;
-            Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
             return value;
         }
 
@@ -224,7 +224,7 @@ namespace BF2D.Game
             }
 
             this.stamina += value;
-            Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
+            //Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -232,7 +232,7 @@ namespace BF2D.Game
         {
             int value = exertion > 0 ? exertion : 1;
             this.stamina -= value;
-            Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
+            //Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -240,7 +240,7 @@ namespace BF2D.Game
         {
             int healthBefore = this.Health;
             this.health = this.MaxHealth;
-            Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            //Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
             return this.Health - healthBefore;
         }
 
@@ -248,7 +248,7 @@ namespace BF2D.Game
         {
             int staminaBefore = this.Stamina;
             this.stamina = this.MaxStamina;
-            Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            //Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
 
