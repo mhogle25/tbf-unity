@@ -7,11 +7,11 @@ namespace BF2D
 {
     public class AudioClipCollection : MonoBehaviour
     {
-        [SerializeField] private List<AudioClip> audioClips = new List<AudioClip>();
+        [SerializeField] private List<AudioClip> audioClips = new();
 
-        private readonly Dictionary<string, AudioClip> audioClipsDict = new Dictionary<string, AudioClip>();
+        private readonly Dictionary<string, AudioClip> audioClipsDict = new();
 
-        public AudioClip this[string key] { get { return Get(key); } }
+        public AudioClip this[string id] { get { return Get(id); } }
 
         private void Awake()
         {
@@ -31,19 +31,19 @@ namespace BF2D
             this.audioClipsDict.Clear();
         }
 
-        public AudioClip Get(string key)
+        public AudioClip Get(string id)
         {
-            if (!this.audioClipsDict.ContainsKey(key))
+            if (!this.audioClipsDict.ContainsKey(id))
             {
-                throw new ArgumentException($"[SpriteCollection] The sprite collection did not contain a sprite for key {key}");
+                throw new ArgumentException($"[SpriteCollection] The audio collection did not contain a sound for id {id}");
             }
 
-            return this.audioClipsDict[key];
+            return this.audioClipsDict[id];
         }
 
-        public bool Contains(string key)
+        public bool Contains(string id)
         {
-            return this.audioClipsDict.ContainsKey(key);
+            return this.audioClipsDict.ContainsKey(id);
         }
 
     }

@@ -7,19 +7,19 @@ namespace BF2D
 {
     public class SpriteCollection : MonoBehaviour
     {
-        [SerializeField] private List<Sprite> sprites = new List<Sprite>();
+        [SerializeField] private List<Sprite> sprites = new();
 
-        private readonly Dictionary<string, Sprite> spritesDict = new Dictionary<string, Sprite>();
+        private readonly Dictionary<string, Sprite> spritesDict = new();
 
-        public Sprite this[string key] { 
+        public Sprite this[string id] { 
             get 
             { 
-                return Get(key); 
+                return Get(id); 
             }
 
             set
             {
-                this.spritesDict[key] = value;
+                this.spritesDict[id] = value;
             }
         }
 
@@ -41,19 +41,19 @@ namespace BF2D
             this.spritesDict.Clear();
         }
 
-        public Sprite Get(string key)
+        public Sprite Get(string id)
         {
-            if (!this.spritesDict.ContainsKey(key))
+            if (!this.spritesDict.ContainsKey(id))
             {
-                throw new ArgumentException($"[SpriteCollection] The sprite collection did not contain a sprite for key {key}");
+                throw new ArgumentException($"[SpriteCollection:Get] The sprite collection did not contain a sprite for id {id}");
             }
 
-            return this.spritesDict[key];
+            return this.spritesDict[id];
         }
 
-        public bool Contains(string key)
+        public bool Contains(string id)
         {
-            return this.spritesDict.ContainsKey(key);
+            return this.spritesDict.ContainsKey(id);
         }
     }
 }

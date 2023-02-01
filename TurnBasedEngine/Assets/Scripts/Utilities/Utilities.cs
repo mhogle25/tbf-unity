@@ -71,9 +71,8 @@ namespace BF2D.Utilities
             }
             catch (Exception x)
             {
-                Debug.LogWarning($"[BF2D.Utilities.TextFile] The files specified by path '{path}' do not exist");
-                Debug.LogError(x.ToString());
-                return null;
+                Debug.LogError($"[Utilities:TextFile:LoadFile] The files specified by path '{path}' do not exist");
+                throw x;
             }
             return content;
         }
@@ -88,7 +87,7 @@ namespace BF2D.Utilities
             catch (Exception x)
             {
                 Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
-                return default;
+                throw x;
             }
             return t;
         }
