@@ -21,8 +21,7 @@
     [
         {
             "id":"se_burning_01",
-            "remainingDuration":3,
-            "count":1
+            "remainingDuration":3
         }
     ],
     "gridPosition":0,
