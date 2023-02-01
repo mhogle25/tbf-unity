@@ -10,10 +10,5 @@ namespace BF2D.Game
     {
         [JsonIgnore] public int Duration { get { return this.duration; } }
         [JsonProperty] private int duration = -1;
-
-        public void Use()
-        {
-            this.duration--;
-        }
     }
 }

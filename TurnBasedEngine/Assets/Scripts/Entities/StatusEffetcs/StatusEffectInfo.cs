@@ -34,11 +34,17 @@ namespace BF2D.Game
             if (this.remainingDuration < 0)
                 return;
 
-            this.count--;
+            this.remainingDuration--;
 
             if (this.remainingDuration == 0)
             {
-                owner.RemoveStatusEffect(this);
+                if (this.count == 1)
+                {
+                    owner.RemoveStatusEffect(this);
+                    return;
+                }
+
+                this.count--;
             }
         }
     }
