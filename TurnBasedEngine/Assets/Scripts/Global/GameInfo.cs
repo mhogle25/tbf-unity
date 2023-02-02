@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-using Newtonsoft.Json;
 using System.IO;
-using System;
 using BF2D.Combat;
 using BF2D.Game.Actions;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -31,10 +29,16 @@ namespace BF2D.Game
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
 
-        private readonly JsonStringCache<Item> items = new();
-        private readonly JsonObjectCache<Equipment> equipments = new();
-        private readonly JsonObjectCache<StatusEffect> statusEffects = new();
-        private readonly JsonObjectCache<CharacterStatsAction> characterStatsActions = new();
+        //String Caches (instantiate on get, modifiable discardable data classes)
+        private readonly JsonStringCache<CharacterStats> players = new(5);
+        private readonly JsonStringCache<CharacterStats> enemies = new(5);
+        private readonly JsonStringCache<Item> items = new(20);
+
+        //Object caches (no instantiation on get, single instance data classes)
+        private readonly JsonObjectCache<Equipment> equipments = new(10);
+        private readonly JsonObjectCache<StatusEffect> statusEffects = new(10);
+        private readonly JsonObjectCache<CharacterStatsAction> characterStatsActions = new(10);
+
         private readonly List<ICache> externalCaches = new();
 
         //AssetCollections
@@ -93,6 +97,8 @@ namespace BF2D.Game
                 cache.Clear();
             }
 
+            this.players.Clear();
+            this.enemies.Clear();
             this.items.Clear();
             this.statusEffects.Clear();
             this.equipments.Clear();
@@ -137,8 +143,7 @@ namespace BF2D.Game
                 return null;
             }
             this.items.Datapath = Path.Combine(Application.streamingAssetsPath, this.itemsPath);
-            Item item = this.items.Get(id);
-            return item;
+            return this.items.Get(id);
         }
 
         public Equipment GetEquipment(string id)
@@ -149,8 +154,7 @@ namespace BF2D.Game
                 return null;
             }
             this.equipments.Datapath = Path.Combine(Application.streamingAssetsPath, this.equipmentsPath);
-            Equipment equipment = this.equipments.Get(id);
-            return equipment;
+            return this.equipments.Get(id);
         }
 
         public StatusEffect GetStatusEffect(string id)
@@ -162,8 +166,7 @@ namespace BF2D.Game
             }
 
             this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
-            StatusEffect statusEffect = this.statusEffects.Get(id);
-            return statusEffect;
+            return this.statusEffects.Get(id);
         }
 
         public CharacterStatsAction GetCharacterStatsAction(string id)
@@ -175,8 +178,7 @@ namespace BF2D.Game
             }
 
             this.characterStatsActions.Datapath = Path.Combine(Application.streamingAssetsPath, this.characterStatsActionsPath);
-            CharacterStatsAction characterStatsAction = this.characterStatsActions.Get(id);
-            return characterStatsAction;
+            return this.characterStatsActions.Get(id);
         }
 
         public CharacterStats InstantiateEnemy(string id)
@@ -187,11 +189,8 @@ namespace BF2D.Game
                 return null;
             }
 
-            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, id + ".json"));
-            if (content == string.Empty)
-                return null;
-
-            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
+            this.enemies.Datapath = Path.Combine(Application.streamingAssetsPath, this.enemiesPath);
+            return this.enemies.Get(id);
         }
 
         public void NewPlayer(string playerID, string newName)
@@ -214,11 +213,8 @@ namespace BF2D.Game
                 return null;
             }
 
-            string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, id + ".json"));
-            if (content == string.Empty)
-                return null;
-
-            return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
+            this.players.Datapath = Path.Combine(Application.streamingAssetsPath, this.playersPath);
+            return this.players.Get(id);
         }
 
         private SaveData LoadSaveData(string saveID)
@@ -236,9 +232,7 @@ namespace BF2D.Game
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
 
             foreach (CharacterStats character in saveData.Players)
-            {
                 character.Setup();
-            }
 
             return saveData;
         }

@@ -6,34 +6,49 @@ using Newtonsoft.Json;
 
 namespace BF2D
 {
-    public class JsonStringCache<T> : ICache
+    public class JsonStringCache<T> : ICache where T : class
     {
+        public JsonStringCache()
+        {
 
-        private readonly Dictionary<string, string> objects = new();
+        }
+
+        public JsonStringCache(int limit)
+        {
+            this.cacheLimit = limit;
+        }
+
+        private readonly Dictionary<string, string> jsons = new();
 
         public string Datapath { get { return this.datapath; } set { this.datapath = value; } }
         private string datapath = string.Empty;
 
+        public int CacheLimit { get { return this.cacheLimit; } set { this.cacheLimit = value; } }
+        private int cacheLimit = 10;
+
         public T Get(string key)
         {
-            if (this.objects.ContainsKey(key))
-                return BF2D.Utilities.TextFile.DeserializeString<T>(this.objects[key]);
+            if (this.jsons.ContainsKey(key))
+                return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[key]);
 
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"{key}.json"));
             if (content == string.Empty)
-                return default;
+                return null;
 
-            this.objects[key] = content;
+            if (this.jsons.Count > this.cacheLimit)
+                Clear();
 
-            if (this.objects.ContainsKey(key))
-                return BF2D.Utilities.TextFile.DeserializeString<T>(this.objects[key]);
+            this.jsons[key] = content;
 
-            return default;
+            if (this.jsons.ContainsKey(key))
+                return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[key]);
+
+            return null;
         }
 
         public void Clear()
         {
-            this.objects.Clear();
+            this.jsons.Clear();
         }
     }
 }
