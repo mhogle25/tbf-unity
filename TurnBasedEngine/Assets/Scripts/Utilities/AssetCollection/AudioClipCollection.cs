@@ -35,7 +35,8 @@ namespace BF2D
         {
             if (!this.audioClipsDict.ContainsKey(id))
             {
-                throw new ArgumentException($"[SpriteCollection] The audio collection did not contain a sound for id {id}");
+                Debug.LogError($"[SpriteCollection] The audio collection did not contain a sound for id {id}");
+                return null;
             }
 
             return this.audioClipsDict[id];

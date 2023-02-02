@@ -69,10 +69,10 @@ namespace BF2D.Utilities
             {
                 content = File.ReadAllText(path);
             }
-            catch (Exception x)
+            catch
             {
                 Debug.LogError($"[Utilities:TextFile:LoadFile] The files specified by path '{path}' do not exist");
-                throw x;
+                return string.Empty;
             }
             return content;
         }
@@ -84,10 +84,10 @@ namespace BF2D.Utilities
             {
                 t = JsonConvert.DeserializeObject<T>(content, new Newtonsoft.Json.Converters.StringEnumConverter());
             }
-            catch (Exception x)
+            catch
             {
                 Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
-                throw x;
+                return default;
             }
             return t;
         }
@@ -99,9 +99,10 @@ namespace BF2D.Utilities
             {
                 paths = Directory.GetFiles(path);
             }
-            catch (Exception x)
+            catch
             {
-                throw x;
+                Debug.LogError($"[Utilities:TextFile:LoadTextFiles] The specified path '{path}' was invalid");
+                return -1;
             }
 
             foreach (string p in paths)
@@ -120,9 +121,9 @@ namespace BF2D.Utilities
                 string content = File.ReadAllText(path);
                 collection[filename] = content;
             } 
-            catch (Exception x)
+            catch
             {
-                throw x;
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
             }
         }
 
@@ -133,9 +134,10 @@ namespace BF2D.Utilities
             {
                 paths = Directory.GetFiles(path);
             }
-            catch (Exception x)
+            catch
             {
-                throw x;
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' does not exist");
+                return -1;
             }
 
             foreach (string p in paths)
@@ -151,9 +153,9 @@ namespace BF2D.Utilities
             try
             {
                 string filename = Path.GetFileNameWithoutExtension(path);
-                List<string> dialog = new List<string>();
+                List<string> dialog = new();
 
-                using (StreamReader stream = new StreamReader(path))
+                using (StreamReader stream = new(path))
                 {
                     string line;
                     while ((line = stream.ReadLine()) != null)
@@ -164,9 +166,9 @@ namespace BF2D.Utilities
 
                 collection[filename] = dialog;
             }
-            catch (Exception x)
+            catch
             {
-                throw x;
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
             }
         }
     }

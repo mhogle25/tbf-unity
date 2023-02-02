@@ -186,7 +186,11 @@ namespace BF2D.Game
                 Debug.LogWarning("[GameInfo:InstantiateEnemy] String was empty");
                 return null;
             }
+
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.enemiesPath, id + ".json"));
+            if (content == string.Empty)
+                return null;
+
             return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
@@ -209,7 +213,11 @@ namespace BF2D.Game
                 Debug.LogWarning("[GameInfo:InstantiatePlayer] String was empty");
                 return null;
             }
+
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.streamingAssetsPath, this.playersPath, id + ".json"));
+            if (content == string.Empty)
+                return null;
+
             return BF2D.Utilities.TextFile.DeserializeString<CharacterStats>(content).Setup();
         }
 
@@ -220,7 +228,11 @@ namespace BF2D.Game
                 Debug.LogWarning("[GameInfo:InstantiateEnemy] String was empty");
                 return null;
             }
+
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(Application.persistentDataPath, this.savesPath, saveID + ".json"));
+            if (content == string.Empty)
+                return null;
+
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
 
             foreach (CharacterStats character in saveData.Players)

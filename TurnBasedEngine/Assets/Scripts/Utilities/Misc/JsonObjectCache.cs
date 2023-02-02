@@ -20,6 +20,9 @@ namespace BF2D
                 return this.objects[key];
 
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"{key}.json"));
+            if (content == string.Empty)
+                return default;
+
             this.objects[key] = BF2D.Utilities.TextFile.DeserializeString<T>(content);
 
             if (this.objects.ContainsKey(key))

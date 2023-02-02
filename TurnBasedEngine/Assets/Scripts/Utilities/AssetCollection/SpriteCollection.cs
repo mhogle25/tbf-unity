@@ -45,7 +45,8 @@ namespace BF2D
         {
             if (!this.spritesDict.ContainsKey(id))
             {
-                throw new ArgumentException($"[SpriteCollection:Get] The sprite collection did not contain a sprite for id {id}");
+                Debug.LogError($"[SpriteCollection:Get] The sprite collection did not contain a sprite for id {id}");
+                return null;
             }
 
             return this.spritesDict[id];
