@@ -25,6 +25,9 @@ namespace BF2D.Combat
 
             foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
             {
+                if (itemInfo.Get() is null)
+                    return;
+
                 this.items.Add(itemInfo.Get());
 
                 this.controlledOptionsGrid.Add(new UIOption.Data

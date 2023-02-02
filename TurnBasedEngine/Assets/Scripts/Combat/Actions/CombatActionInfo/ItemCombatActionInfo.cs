@@ -11,7 +11,7 @@ namespace BF2D.Combat.Actions
 
         public List<string> GetOpeningMessage()
         {
-            return this.info.Get().OnUse.Message;
+            return this.info.Get()?.OnUse.Message;
         }
     }
 }

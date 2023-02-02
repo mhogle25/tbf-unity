@@ -33,6 +33,10 @@ namespace BF2D.Game
         public Item Use(CharacterStats owner)
         {
             Get();
+
+            if (this.staged is null)
+                return null;
+
             if (this.staged.Consumeable)
             {
                 this.count--;

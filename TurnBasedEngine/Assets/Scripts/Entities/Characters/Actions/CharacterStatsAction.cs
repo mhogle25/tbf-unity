@@ -64,6 +64,8 @@ namespace BF2D.Game.Actions
             if (this.statusEffect is not null)
             {
                 StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect);
+                if (statusEffect is null)
+                    return actionMessage;
                 actionMessage += source == target ? 
                     $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.1]" : 
                     $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.1]";
