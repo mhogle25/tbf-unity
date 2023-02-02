@@ -123,7 +123,7 @@ namespace BF2D.Utilities
             } 
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' was invalid or nonexistent");
             }
         }
 
