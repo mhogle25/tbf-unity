@@ -9,17 +9,11 @@
         [
             "[I:0] launched a firework.[E]"
         ],
-        "statsActions": 
+        "targetedGems": 
         [
             {
                 "target":"Any",
-                "properties":
-                {
-                    "damage": 
-                    {
-                        "value":3
-                    }
-                }
+                "gemID":"gm_damage_01"
             }
         ]
     }

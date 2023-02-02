@@ -146,24 +146,24 @@ namespace BF2D.Combat.Actions
             }
         }
 
-        public IEnumerable<CharacterStatsAction> GetTargetedStatsActions()
+        public IEnumerable<TargetedCharacterStatsAction> GetTargetedStatsActions()
         {
             switch (this.combatActionType)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.itemCombatAction.Info.Get().OnUse.StatsActions;
+                case CombatActionType.Item: return this.itemCombatAction.Info.Get().OnUse.TargetedGems;
                 default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }
 
         
 
-        public IEnumerable<CharacterStatsAction> UseTargetedStatsActions()
+        public IEnumerable<TargetedCharacterStatsAction> UseTargetedStatsActions()
         {
             switch (this.combatActionType)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.itemCombatAction.Info.Use(CombatManager.Instance.CurrentCharacter.Stats).OnUse.StatsActions;
+                case CombatActionType.Item: return this.itemCombatAction.Info.Use(CombatManager.Instance.CurrentCharacter.Stats).OnUse.TargetedGems;
                 default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }

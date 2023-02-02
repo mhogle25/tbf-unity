@@ -20,12 +20,12 @@ namespace BF2D.Combat
         [Header("Misc")]
         [SerializeField] private DialogTextbox textbox = null;
 
-        private readonly Queue<CharacterStatsAction> stagedStatsActions = new();
-        private CharacterStatsAction stagedStatsAction = null;
+        private readonly Queue<TargetedCharacterStatsAction> stagedStatsActions = new();
+        private TargetedCharacterStatsAction stagedStatsAction = null;
 
         public override void ControlInitialize()
         {
-            foreach (CharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedStatsActions())
+            foreach (TargetedCharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedStatsActions())
             {
                 this.stagedStatsActions.Enqueue(statsAction);
             }

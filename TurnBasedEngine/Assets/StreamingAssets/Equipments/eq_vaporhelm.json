@@ -9,14 +9,9 @@
         [
             "The Vapor Helm shimmers magically on [I:0]'s head.[E]"
         ],
-        "statsActionProperties":
+        "gemIds":
         [
-            {
-                "heal":
-                {
-                    "value":1
-                }
-            }
+            "gm_basicheal_01"
         ]
     }
 }

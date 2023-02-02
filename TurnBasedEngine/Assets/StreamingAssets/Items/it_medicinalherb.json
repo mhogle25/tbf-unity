@@ -9,22 +9,12 @@
         [
             "[I:0] used the medicinal herb's healing properties.[E]"
         ],
-        "statsActions": 
+        "targetedGems": 
         [
             {
                 "target":"Any",
                 "description":"heal",
-                "properties":
-                {
-                    "heal": 
-                    {
-                        "value":10,
-                        "modifiers":
-                        [
-                            "Focus"
-                        ]
-                    }
-                }
+                "gemID":"gm_heal_01_f"
             }
         ]
     }

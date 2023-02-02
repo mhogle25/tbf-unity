@@ -79,7 +79,7 @@ namespace BF2D.Combat
         {
             this.eventStack.Push(() =>
             {
-                Debug.Log("Event Trigger");
+                //Debug.Log("Event Trigger");
                 if (this.Stats.Dead)
                 {
                     DeathEvent();
@@ -209,7 +209,7 @@ namespace BF2D.Combat
         {
             PlayDialog(gameAction.Message, () =>
             {
-                RunUntargetedStatsActions(gameAction.StatsActionProperties);
+                RunUntargetedStatsActions(gameAction.Gems);
             });
         }
         #endregion
@@ -234,9 +234,9 @@ namespace BF2D.Combat
         }
         #endregion
 
-        private void RunUntargetedStatsActions(IEnumerable<CharacterStatsActionProperties> actions)
+        private void RunUntargetedStatsActions(IEnumerable<CharacterStatsAction> actions)
         {
-            foreach (CharacterStatsActionProperties action in actions)
+            foreach (CharacterStatsAction action in actions)
             {
                 StageUntargetedStatsAction(action);
             }
@@ -244,7 +244,7 @@ namespace BF2D.Combat
             Continue();
         }
 
-        private void StageUntargetedStatsAction(CharacterStatsActionProperties action)
+        private void StageUntargetedStatsAction(CharacterStatsAction action)
         {
             PushEvent(() =>
             {
@@ -255,9 +255,9 @@ namespace BF2D.Combat
             });
         }
 
-        private void RunTargetedStatsActions(IEnumerable<CharacterStatsAction> actions)
+        private void RunTargetedStatsActions(IEnumerable<TargetedCharacterStatsAction> actions)
         {
-            foreach (CharacterStatsAction action in actions)
+            foreach (TargetedCharacterStatsAction action in actions)
             {
                 StageTargetedStatsAction(action);
             }
@@ -265,7 +265,7 @@ namespace BF2D.Combat
             Continue();
         }
 
-        private void StageTargetedStatsAction(CharacterStatsAction action)
+        private void StageTargetedStatsAction(TargetedCharacterStatsAction action)
         {
             PushEvent(() =>
             {
@@ -279,11 +279,11 @@ namespace BF2D.Combat
                         if (target.Stats.Dead)
                             continue;
 
-                        target.PlayAnimation(action.Properties.GetAnimationKey());
+                        target.PlayAnimation(action.Gem.GetAnimationKey());
 
                         if (message == DEFAULT_MESSAGE)
                             message = string.Empty;
-                        message += action.Properties.Run(this.stats, target.Stats);
+                        message += action.Gem.Run(this.stats, target.Stats);
                     }
                     return message;
                 });

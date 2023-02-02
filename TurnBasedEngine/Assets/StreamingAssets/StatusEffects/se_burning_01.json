@@ -9,20 +9,10 @@
         [
             "The flames continue to sear [I:0]'s flesh.[E]"
         ],
-        "statsActionProperties":
+        "gemIDs":
         [
-            {
-                "directDamage":
-                {
-                    "value":1
-                }
-            },
-            {
-                "directDamage":
-                {
-                    "value":1
-                }
-            }
+            "gm_basicdamage_01",
+            "gm_basicdamage_01"
         ]
     }
 }

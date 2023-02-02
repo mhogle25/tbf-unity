@@ -25,7 +25,7 @@ namespace BF2D.Combat
 
             foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
             {
-                this.items.Add(GameInfo.Instance.InstantiateItem(itemInfo.ID));
+                this.items.Add(itemInfo.Get());
 
                 this.controlledOptionsGrid.Add(new UIOption.Data
                 {
@@ -58,7 +58,7 @@ namespace BF2D.Combat
             Item item = this.items[index];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
-            foreach(CharacterStatsAction statsAction in item.OnUse.StatsActions)
+            foreach(TargetedCharacterStatsAction statsAction in item.OnUse.TargetedGems)
             {
                 this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
             }

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System;
 using BF2D.Combat;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
@@ -25,6 +26,7 @@ namespace BF2D.Game
         [SerializeField] private string itemsPath = "Items";
         [SerializeField] private string equipmentsPath = "Equipments";
         [SerializeField] private string statusEffectsPath = "StatusEffects";
+        [SerializeField] private string characterStatsActionsPath = "Gems";
          
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
@@ -32,6 +34,8 @@ namespace BF2D.Game
         private readonly JsonStringCache<Item> items = new();
         private readonly JsonObjectCache<Equipment> equipments = new();
         private readonly JsonObjectCache<StatusEffect> statusEffects = new();
+        private readonly JsonObjectCache<CharacterStatsAction> characterStatsActions = new();
+        private readonly List<ICache> externalCaches = new();
 
         //AssetCollections
         [Header("Asset Collections")]
@@ -82,6 +86,29 @@ namespace BF2D.Game
             });
         }
 
+        public void ClearCaches()
+        {
+            foreach (ICache cache in this.externalCaches)
+            {
+                cache.Clear();
+            }
+
+            this.items.Clear();
+            this.statusEffects.Clear();
+            this.equipments.Clear();
+            this.characterStatsActions.Clear();
+        }
+
+        public void RegisterCache(ICache cache)
+        {
+            this.externalCaches.Add(cache);
+        }
+
+        public void RemoveExternalCache(ICache cache)
+        {
+            this.externalCaches.Remove(cache);
+        }
+
         public Sprite GetIcon(string id)
         {
             if (id == string.Empty)
@@ -130,13 +157,26 @@ namespace BF2D.Game
         {
             if (id == string.Empty)
             {
-                Debug.LogWarning("[GameInfo:GetEquipment] String was empty");
+                Debug.LogWarning("[GameInfo:GetStatusEffect] String was empty");
                 return null;
             }
 
             this.statusEffects.Datapath = Path.Combine(Application.streamingAssetsPath, this.statusEffectsPath);
             StatusEffect statusEffect = this.statusEffects.Get(id);
             return statusEffect;
+        }
+
+        public CharacterStatsAction GetCharacterStatsAction(string id)
+        {
+            if (id == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetCharacterStatsAction] String was empty");
+                return null;
+            }
+
+            this.characterStatsActions.Datapath = Path.Combine(Application.streamingAssetsPath, this.characterStatsActionsPath);
+            CharacterStatsAction characterStatsAction = this.characterStatsActions.Get(id);
+            return characterStatsAction;
         }
 
         public CharacterStats InstantiateEnemy(string id)

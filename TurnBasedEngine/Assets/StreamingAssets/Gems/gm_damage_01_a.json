@@ -1,0 +1,10 @@
+{
+    "damage":
+    {
+        "value":3,
+        "modifiers":
+        [
+            "Attack"
+        ]
+    }
+}

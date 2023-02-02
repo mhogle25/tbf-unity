@@ -9,15 +9,12 @@
         [
             "[I:0] used the panacea's healing properties.[E]"
         ],
-        "statsActions": 
+        "targetedGems": 
         [
             {
                 "target":"Any",
                 "description":"heal",
-                "properties":
-                {
-                    "resetHealth":true
-                }
+                "gemID":"gm_healthreset"
             }
         ]
     }

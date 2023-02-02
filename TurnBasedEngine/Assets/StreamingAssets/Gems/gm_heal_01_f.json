@@ -1,0 +1,10 @@
+{
+    "heal": 
+    {
+        "value":10,
+        "modifiers":
+        [
+            "Focus"
+        ]
+    }
+}

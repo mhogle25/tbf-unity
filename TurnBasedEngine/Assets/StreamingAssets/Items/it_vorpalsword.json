@@ -9,22 +9,12 @@
         [
             "[I:0] performed a calculated strike.[E]"
         ],
-        "statsActions": 
+        "targetedGems": 
         [
             {
                 "target":"Enemy",
                 "description":"attack",
-                "properties":
-                {
-                    "damage":
-                    {
-                        "value":3,
-                        "modifiers":
-                        [
-                            "Attack"
-                        ]
-                    }
-                }
+                "gemID":"gm_damage_01_a"
             }
         ]
     }

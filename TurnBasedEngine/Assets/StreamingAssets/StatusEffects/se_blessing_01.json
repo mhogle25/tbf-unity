@@ -9,15 +9,9 @@
         [
             "The light of the gods shines upon [I:0].[E]"
         ],
-        "statsActionProperties":
+        "gemIDs":
         [
-            {
-                "heal":
-                {
-                    "value":2
-                },
-                "resetStamina":true
-            }
+            "gm_basicheal_02"
         ]
     }
 }
