@@ -170,14 +170,14 @@ namespace BF2D.Combat
                 string equipmentID = this.Stats.GetEquipped(equipmentType);
 
                 if (equipmentID == string.Empty || equipmentID is null)
-                    this.eventStack.Continue();
+                    continue;
 
                 Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
 
                 if (equipment is null)
                 {
                     Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
-                    this.eventStack.Continue();
+                    continue;
                 }
 
                 stagingAction(equipment, null);
@@ -282,7 +282,7 @@ namespace BF2D.Combat
                     foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
                     {
                         if (target.Stats.Dead)
-                            this.eventStack.Continue();
+                            continue;
 
                         target.PlayAnimation(action.Gem.GetAnimationKey());
 
