@@ -3,7 +3,7 @@
     "description":"hexed",
     "effect":"Fire",
     "duration":3,
-    "onUpkeep": 
+    "onEOT": 
     {
         "message":
         [

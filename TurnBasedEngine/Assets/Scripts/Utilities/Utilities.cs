@@ -92,6 +92,21 @@ namespace BF2D.Utilities
             return t;
         }
 
+        public static string SerializeObject<T>(T obj)
+        {
+            string t;
+            try
+            {
+                t = JsonConvert.SerializeObject(obj, new Newtonsoft.Json.Converters.StringEnumConverter());
+            }
+            catch
+            {
+                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
+                return default;
+            }
+            return t;
+        }
+
         public static int LoadTextFiles(Dictionary<string, string> collection, string path)
         {
             string[] paths;

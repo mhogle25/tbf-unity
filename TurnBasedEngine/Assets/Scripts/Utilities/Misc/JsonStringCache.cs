@@ -8,15 +8,9 @@ namespace BF2D
 {
     public class JsonStringCache<T> : ICache where T : class
     {
-        public JsonStringCache()
-        {
+        public JsonStringCache() { }
 
-        }
-
-        public JsonStringCache(int limit)
-        {
-            this.cacheLimit = limit;
-        }
+        public JsonStringCache(int limit) => this.CacheLimit = limit;
 
         private readonly Dictionary<string, string> jsons = new();
 
@@ -28,15 +22,15 @@ namespace BF2D
 
         public T Get(string key)
         {
+            if (this.jsons.Count > this.cacheLimit)
+                Clear();
+
             if (this.jsons.ContainsKey(key))
                 return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[key]);
 
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"{key}.json"));
             if (content == string.Empty)
                 return null;
-
-            if (this.jsons.Count > this.cacheLimit)
-                Clear();
 
             this.jsons[key] = content;
 

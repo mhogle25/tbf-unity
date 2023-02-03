@@ -10,7 +10,7 @@ namespace BF2D.Combat
     {
         [SerializeField] private SpriteRenderer cursor = null;
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
-        [SerializeField] private CharacterCombat assignedCharacter;
+        [SerializeField] private CharacterCombat assignedCharacter = null;
 
         public override bool Interactable
         {

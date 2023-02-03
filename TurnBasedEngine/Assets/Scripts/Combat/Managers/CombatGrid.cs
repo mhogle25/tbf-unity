@@ -20,6 +20,7 @@ namespace BF2D.Combat
         private readonly Dictionary<string, CharacterCombat> enemyCombatPrefabsDict = new();
 
         private readonly List<CharacterCombat> characterQueue = new();
+        private readonly List<CharacterStats> defeatedEnemies = new();
 
         private int playersCount = 0;
         private int enemiesCount = 0;
@@ -70,17 +71,6 @@ namespace BF2D.Combat
         #endregion
 
         #region Public Utilities
-        public void DestroyCharacter(CharacterCombat character)
-        {
-            this.characterQueue.Remove(character);
-            character.Destroy();
-        }
-
-        public void EndTurn()
-        {
-            this.currentCharacterIndex++;
-        }
-
         public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
         {
             if (!DictsLoaded())
@@ -93,7 +83,7 @@ namespace BF2D.Combat
             {
                 if (IsEnemyGridFull())
                 {
-                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate an EnemyCombat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
                     return;
                 }
                 CharacterCombat playerCombat = InstantiatePlayerCombat(playerStats);
@@ -106,7 +96,7 @@ namespace BF2D.Combat
             {
                 if (IsPlayerGridFull())
                 {
-                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate a PlayerCombat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
                     return;
                 }
                 CharacterCombat enemyCombat = InstantiateEnemyCombat(enemyStats);
@@ -115,11 +105,63 @@ namespace BF2D.Combat
                 this.enemiesCount++;
             }
 
-            this.characterQueue.Sort((x, y) => x.Stats.Speed.CompareTo(y.Stats.Speed));
+            SpeedSort();
+
+        }
+
+        public void PassTurn()
+        {
+            List<CharacterCombat> toBeDestroyed = new();
+
+            this.characterQueue.RemoveAll((character) =>
+            {
+                if (character.Stats.Dead)
+                {
+                    if (CharacterIsEnemy(character))
+                    {
+                        this.defeatedEnemies.Add(character.Stats);
+                        this.enemiesCount--;
+                    }
+
+                    if (CharacterIsPlayer(character))
+                    {
+                        this.playersCount--;
+                    }
+                    toBeDestroyed.Add(character);
+                }
+
+                return character.Stats.Dead;
+            });
+
+            foreach (CharacterCombat character in toBeDestroyed)
+                character.Destroy();
+
+            this.currentCharacterIndex++;
+
+            if (this.currentCharacterIndex >= this.characterQueue.Count)
+            {
+                SpeedSort();
+                this.currentCharacterIndex = 0;
+            }
+        }
+
+        public bool CharacterIsPlayer(CharacterCombat character)
+        {
+            return this.Players.Contains(character);
+        }
+
+        public bool CharacterIsEnemy(CharacterCombat character)
+        {
+            return this.Enemies.Contains(character);
         }
         #endregion
 
         #region Private Methods
+        private void SpeedSort()
+        {
+            this.characterQueue.Sort((x, y) => x.Stats.Speed.CompareTo(y.Stats.Speed));
+        }
+
         private void LoadCharacterPrefabs()
         {
             foreach (CharacterCombat combatPrefab in this.playerCombatPrefabs)

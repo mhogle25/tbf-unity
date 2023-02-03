@@ -22,18 +22,12 @@ namespace BF2D.Game
             return GameInfo.Instance.GetStatusEffect(this.ID);
         }
 
-        public void Use(CharacterStats owner)
+        public void Use()
         {
             if (this.remainingDuration < 0)
                 return;
 
             this.remainingDuration--;
-
-            if (this.remainingDuration == 0)
-            {
-                owner.RemoveStatusEffect(this);
-                return;
-            }
         }
     }
 }

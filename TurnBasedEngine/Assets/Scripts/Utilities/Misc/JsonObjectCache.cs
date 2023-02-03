@@ -8,16 +8,9 @@ namespace BF2D
 {
     public class JsonObjectCache<T> : ICache where T : class
     {
+        public JsonObjectCache() { }
 
-        public JsonObjectCache()
-        {
-
-        }
-
-        public JsonObjectCache(int limit)
-        {
-            this.cacheLimit = limit;
-        }
+        public JsonObjectCache(int limit) => this.CacheLimit = limit;
 
         private readonly Dictionary<string, T> objects = new();
 
@@ -29,15 +22,15 @@ namespace BF2D
 
         public T Get(string key)
         {
+            if (this.objects.Count > this.cacheLimit)
+                Clear();
+
             if (this.objects.ContainsKey(key))
                 return this.objects[key];
 
             string content = BF2D.Utilities.TextFile.LoadFile(Path.Combine(this.datapath, $"{key}.json"));
             if (content == string.Empty)
                 return null;
-
-            if (this.objects.Count > this.cacheLimit)
-                Clear();
 
             this.objects[key] = BF2D.Utilities.TextFile.DeserializeString<T>(content);
 

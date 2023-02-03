@@ -134,7 +134,7 @@ namespace BF2D.Combat
                     this.textbox.UtilityFinalize();
                     this.textbox.View.gameObject.SetActive(false);
                 }
-                CombatManager.Instance.RunCombat();
+                CombatManager.Instance.RunCombatEvents();
                 return;
             }
             this.stagedStatsAction = this.stagedStatsActions.Dequeue();

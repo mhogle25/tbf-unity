@@ -21,14 +21,14 @@
     [
         {
             "id":"se_burning_01",
-            "remainingDuration":3
+            "remainingDuration":2
         }
     ],
     "gridPosition":0,
     "items":
     [
         {
-            "id": "it_firecracker",
+            "id": "it_medicinalherb",
             "count":10
         }
     ],

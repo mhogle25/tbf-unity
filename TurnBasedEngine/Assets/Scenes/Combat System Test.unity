@@ -12432,11 +12432,11 @@ MonoBehaviour:
   nametag: {fileID: 5812303955566375564}
   nametagTextField: {fileID: 5812303956541767229}
   continueIcon: {fileID: 699852719}
-  dialogFilesPath: Dialog/Dialogs
+  dialogFilesPath: Dialog/Dialogs/Combat/System
   DefaultMessageSpeed: 0.05
   MessageInterrupt: 1
   AutoPass: 0
-  onEndOfStackedDialogs:
+  onEndOfQueuedDialogs:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1073090695}
@@ -12836,7 +12836,7 @@ MonoBehaviour:
   DefaultMessageSpeed: 0.05
   MessageInterrupt: 1
   AutoPass: 1
-  onEndOfStackedDialogs:
+  onEndOfQueuedDialogs:
     m_PersistentCalls:
       m_Calls: []
   ResponseOptionsEnabled: 1

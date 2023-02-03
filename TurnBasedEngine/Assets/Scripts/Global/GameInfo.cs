@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using BF2D.Combat;
 using BF2D.Game.Actions;
 using UnityEngine;
@@ -88,6 +89,14 @@ namespace BF2D.Game
                 players = this.Players,
                 enemies = enemies
             });
+        }
+
+        public void SaveGame()
+        {
+            string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
+            StreamWriter writer = new StreamWriter(Path.Combine(Application.persistentDataPath, this.savesPath, this.currentSave.ID + ".json"), false);
+            writer.WriteLine(newJSON);
+            writer.Close();
         }
 
         public void ClearCaches()

@@ -5,6 +5,8 @@ using System;
 using BF2D.UI;
 using BF2D.Combat.Actions;
 using BF2D.Game.Actions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace BF2D.Combat
 {
@@ -14,7 +16,7 @@ namespace BF2D.Combat
         {
             public List<CharacterStats> players = new();
             public List<CharacterStats> enemies = new();
-            public string openingMessage = "Enemies approach.";
+            public string openingDialogKey = "di_opening_default";
         }
 
         [SerializeField] private OptionsGridControlInit mainMenu = null;
@@ -61,10 +63,61 @@ namespace BF2D.Combat
             });
         }
 
-        public void RunCombat()
+        public void RunCombatEvents()
         {
             UIControlsManager.Instance.ResetControlChain(false);
-            this.CurrentCharacter.RunCombat();
+            this.CurrentCharacter.RunCombatEvents();
+        }
+
+        public void PassTurn()
+        {
+            ResetOrphanedTextbox();
+
+            this.combatGrid.PassTurn();
+            BeginTurn();
+        }
+
+        public void EndCombat()
+        {
+            ResetOrphanedTextbox();
+
+            this.standaloneTextboxControl.Textbox.Dialog("di_eoc", 0, () =>
+            {
+                Debug.Log("Final Trigger");
+            });
+
+            UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+        }
+
+        public void ResetOrphanedTextbox()
+        {
+            this.OrphanedTextbox.UtilityFinalize();
+            this.OrphanedTextbox.View.gameObject.SetActive(false);
+        }
+
+        public bool CombatIsOver()
+        {
+            return EnemiesAreDefeated() || PlayersAreDefeated();
+        }
+
+        public bool EnemiesAreDefeated()
+        {
+            bool enemiesDefeated = true;
+            foreach (CharacterCombat enemy in this.Enemies)
+            {
+                enemiesDefeated = enemiesDefeated && enemy.Stats.Dead;
+            }
+            return enemiesDefeated;
+        }
+
+        public bool PlayersAreDefeated()
+        {
+            bool playersDefeated = true;
+            foreach (CharacterCombat player in this.Players)
+            {
+                playersDefeated = playersDefeated && player.Stats.Dead;
+            }
+            return playersDefeated;
         }
         #endregion
 
@@ -85,8 +138,34 @@ namespace BF2D.Combat
         {
             this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
-            this.standaloneTextboxControl.Textbox.Message(initInfo.openingMessage, () => UIControlsManager.Instance.TakeControl(this.mainMenu));
+            this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+        }
+
+        private void BeginTurn()
+        {
+            if (this.combatGrid.CharacterIsPlayer(this.CurrentCharacter))
+            {
+                UIControlsManager.Instance.TakeControl(this.mainMenu);
+                return;
+            }
+
+            //Begin Enemy AI
+            //
+            //
+            //
+            //
+            //
+            //
+            //GameInfo.Instance.SaveGame();
+            UIControlsManager.Instance.TakeControl(this.mainMenu);
+            //
+            //
+            //
+            //
+            //
+            //
+            //
         }
 
         private void SingletonSetup()

@@ -7,6 +7,7 @@ using BF2D.Game.Actions;
 using System;
 using BF2D.Game.Enums;
 using System.Runtime.CompilerServices;
+using System.Numerics;
 
 namespace BF2D.Combat
 {
@@ -18,7 +19,7 @@ namespace BF2D.Combat
             public bool HasEvent { get { return this.animEvent is not null; } }
 
             private string animState = Strings.Animation.Idle;
-            public delegate string RunEvent();
+            public delegate List<string> RunEvent();
             private RunEvent animEvent = null;
 
             private readonly Animator animator = null;
@@ -41,12 +42,12 @@ namespace BF2D.Combat
                 this.animEvent = callback;
             }
 
-            public string InvokeAnimEvent()
+            public List<string> InvokeAnimEvent()
             {
-                string message = string.Empty;
-                message = this.animEvent?.Invoke();
+                List<string> dialog = null;
+                dialog = this.animEvent?.Invoke();
                 this.animEvent = null;
-                return message;
+                return dialog;
             }
         }
 
@@ -61,7 +62,7 @@ namespace BF2D.Combat
         private CombatGridTile assignedTile = null;
 
         public CharacterStats Stats { get { return this.stats; } set { this.stats = value; } }
-        private CharacterStats stats;
+        private CharacterStats stats = null;
 
         private void Awake()
         {
@@ -77,17 +78,7 @@ namespace BF2D.Combat
 
         private void PushEvent(Action action)
         {
-            this.eventStack.Push(() =>
-            {
-                //Debug.Log("Event Trigger");
-                if (this.Stats.Dead)
-                {
-                    DeathEvent();
-                    return;
-                }
-
-                action?.Invoke();
-            });
+            this.eventStack.Push(action);
         }
 
         private void FlushEvents()
@@ -103,21 +94,15 @@ namespace BF2D.Combat
             this.currentCombatAction.Setup();
         }
 
-        public void RunCombat()
+        public void RunCombatEvents()
         {
-            PushEvent(() =>
-            {
-                PlayMessage("This is when the final event of this character's turn should be triggered", () =>
-                {
-                    Debug.Log("Trigger");
-                });
-            });
+            PushEvent(EOTEvent);
 
-            StagePersistentEffectEvents(StagePersistentEffectEOTEvent);     //Stage EOT events
+            StagePersistentEffectEvents(StagePersistentEffectEOTEvent);     //Stage EOT persistent effect events
 
             StageCombatEvents();
 
-            StagePersistentEffectEvents(StagePersistentEffectUpkeepEvent);  //Stage Upkeep Events
+            StagePersistentEffectEvents(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
 
             //Run Combat
             Continue();
@@ -143,8 +128,8 @@ namespace BF2D.Combat
             if (!this.animatorController.HasEvent)
                 return;
 
-            string message = this.animatorController.InvokeAnimEvent();
-            PlayMessage(message, Continue);
+            List<string> message = this.animatorController.InvokeAnimEvent();
+            PlayDialog(message, Continue);
         }
 
         public void AnimSwitchIdle()
@@ -153,7 +138,9 @@ namespace BF2D.Combat
         }
         #endregion
 
-        #region Stage Persistent Effect Events
+        //Private Methods
+
+        #region Stage and Run Persistent Effect Events
         private void StagePersistentEffectEvents(Action<PersistentEffect, Action> stagingAction)
         {
             //Status Effect Event
@@ -161,7 +148,16 @@ namespace BF2D.Combat
             {
                 stagingAction(info.Get(), () => 
                 {
-                    info.Use(this.Stats);
+                    info.Use();
+                    if (info.RemainingDuration == 0)
+                    {
+                        PushEvent(() =>
+                        {
+                            this.Stats.RemoveStatusEffect(info);
+                            PlayMessage($"The {info.Get().Name} on {this.Stats.Name} wore off. [P:0.1]", Continue);
+                        });
+
+                    }
                 });
             }
 
@@ -209,12 +205,12 @@ namespace BF2D.Combat
         {
             PlayDialog(gameAction.Message, () =>
             {
-                RunUntargetedStatsActions(gameAction.Gems);
+                RunUntargetedGems(gameAction.Gems);
             });
         }
         #endregion
 
-        #region Stage Combat Events
+        #region Stage General Combat Events
         private void StageCombatEvents()
         {
             PushEvent(() =>
@@ -224,7 +220,7 @@ namespace BF2D.Combat
                     switch (this.CurrentCombatAction.CombatActionType)
                     {
                         case Enums.CombatActionType.Item:
-                            RunTargetedStatsActions(this.CurrentCombatAction.UseTargetedStatsActions());
+                            RunTargetedGems(this.CurrentCombatAction.UseTargetedStatsActions());
                             break;
                         default:
                             throw new NotImplementedException();
@@ -234,38 +230,42 @@ namespace BF2D.Combat
         }
         #endregion
 
-        private void RunUntargetedStatsActions(IEnumerable<CharacterStatsAction> actions)
+        #region Stage and Run Gems
+        private void RunUntargetedGems(IEnumerable<CharacterStatsAction> actions)
         {
             foreach (CharacterStatsAction action in actions)
             {
-                StageUntargetedStatsAction(action);
+                StageUntargetedGems(action);
             }
 
             Continue();
         }
 
-        private void StageUntargetedStatsAction(CharacterStatsAction action)
+        private void StageUntargetedGems(CharacterStatsAction action)
         {
             PushEvent(() =>
             {
                 this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
                 {
-                    return action.Run(this.Stats, this.Stats);
+                    CharacterStatsAction.Info info = action.Run(this.Stats, this.Stats);
+                    List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
+                    dialog.Insert(0, info.message);
+                    return dialog;
                 });
             });
         }
 
-        private void RunTargetedStatsActions(IEnumerable<TargetedCharacterStatsAction> actions)
+        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsAction> actions)
         {
             foreach (TargetedCharacterStatsAction action in actions)
             {
-                StageTargetedStatsAction(action);
+                StageTargetedGems(action);
             }
 
             Continue();
         }
 
-        private void StageTargetedStatsAction(TargetedCharacterStatsAction action)
+        private void StageTargetedGems(TargetedCharacterStatsAction action)
         {
             PushEvent(() =>
             {
@@ -273,7 +273,9 @@ namespace BF2D.Combat
 
                 this.animatorController.ChangeAnimState(Strings.Animation.Attack, () =>
                 {
+                    List<CharacterStatsAction.Info> infos = new();
                     string message = DEFAULT_MESSAGE;
+
                     foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
                     {
                         if (target.Stats.Dead)
@@ -283,23 +285,69 @@ namespace BF2D.Combat
 
                         if (message == DEFAULT_MESSAGE)
                             message = string.Empty;
-                        message += action.Gem.Run(this.stats, target.Stats);
+                        CharacterStatsAction.Info info = action.Gem.Run(this.stats, target.Stats);
+                        message += info.message;
+                        infos.Add(info);
                     }
-                    return message;
+
+                    List<string> dialog = GemStatusCheck(infos);
+                    dialog.Insert(0, message);
+                    return dialog;
                 });
             });
         }
 
-        private void DeathEvent()
+        private List<string> GemStatusCheck(IEnumerable<CharacterStatsAction.Info> infos)
         {
-            PlayDeathMessage();
-            FlushEvents();
-            //End the turn and pass it to the next target
+            bool iDied = false;
+            List<string> dialog = new();
+            foreach (CharacterStatsAction.Info info in infos)
+            {
+                if (info.targetWasKilled)
+                {
+                    if (info.target == this.Stats)
+                        iDied = true;
+
+                    dialog.Add($"{info.target.Name} died. [P:0.1]");
+                }
+            }
+
+            //No one died
+            if (dialog.Count < 1)
+                return new List<string>();
+
+            if (CombatManager.Instance.CombatIsOver() || iDied)
+                FinalizeTurn();
+
+            if (CombatManager.Instance.CombatIsOver())
+                PushEvent(EOCEvent);
+
+            if (iDied && !CombatManager.Instance.CombatIsOver())
+                PushEvent(EOTEvent);
+
+            return dialog;
+        }
+        #endregion
+
+        #region EOC and EOT
+        private void EOTEvent()
+        {
+            Debug.Log("End of Turn");
+            CombatManager.Instance.PassTurn();
         }
 
-        private void PlayDeathMessage()
+        private void EOCEvent()
         {
-            PlayMessage($"{this.Stats.Name} died.");
+            Debug.Log("End of Combat");
+            CombatManager.Instance.EndCombat();
+        }
+        #endregion
+
+        #region Private Utilities
+        private void FinalizeTurn()
+        {
+            FlushEvents();
+            this.currentCombatAction = null;
         }
 
         private void PlayDialog(List<string> dialog)
@@ -309,11 +357,13 @@ namespace BF2D.Combat
 
         private void PlayDialog(List<string> dialog, Action callback)
         {
+            dialog[dialog.Count - 1] += "[E]";
             CombatManager.Instance.OrphanedTextbox.Dialog(dialog, 0, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
                 callback?.Invoke();
-            }, new List<string>
+            },
+            new List<string>
             {
                 this.Stats.Name
             });
@@ -332,12 +382,14 @@ namespace BF2D.Combat
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
                 callback?.Invoke();
-            }, new List<string>
+            },
+            new List<string>
             {
                 this.Stats.Name
             });
             CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
             CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
         }
+        #endregion
     }
 }
