@@ -28,8 +28,12 @@
     "items":
     [
         {
-            "id": "it_medicinalherb",
+            "id":"it_medicinalherb",
             "count":10
+        },
+        {
+            "id":"it_firecracker",
+            "count":40
         }
     ],
     "equipments": 

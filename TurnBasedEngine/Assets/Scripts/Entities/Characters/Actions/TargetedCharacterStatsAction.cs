@@ -76,10 +76,10 @@ namespace BF2D.Game.Actions
 
         private string TextBreakdownHelper(CharacterStats character, CharacterStatsActionProperty actionProperty, string statsActionName, Color32 color)
         {
-            string text = $"{statsActionName} ";
+            string text = $"{statsActionName} {actionProperty.Value}";
             foreach (CharacterStatsProperty modifier in actionProperty.Modifiers)
             {
-                text += $"{actionProperty.Value}<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}</color>";
+                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}</color>";
             }
             text += "\n";
             return text;

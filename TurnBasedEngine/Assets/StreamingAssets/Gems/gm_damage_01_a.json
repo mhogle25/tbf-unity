@@ -1,7 +1,7 @@
 {
     "damage":
     {
-        "value":5,
+        "value":3,
         "modifiers":
         [
             "Attack"

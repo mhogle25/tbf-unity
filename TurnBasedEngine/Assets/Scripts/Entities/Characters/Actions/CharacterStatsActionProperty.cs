@@ -9,7 +9,7 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly int value = 0;
 
         [JsonIgnore] public CharacterStatsProperty[] Modifiers { get { return this.modifiers; } }
-        [JsonProperty] private readonly CharacterStatsProperty[] modifiers = null;
+        [JsonProperty] private readonly CharacterStatsProperty[] modifiers = { };
 
         public int Calculate(CharacterStats character)
         {

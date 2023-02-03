@@ -12567,12 +12567,16 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1731117492, guid: 887cbe10ac07df1408ee4df848707460, type: 3}
       propertyPath: sprites.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1731117492, guid: 887cbe10ac07df1408ee4df848707460, type: 3}
       propertyPath: sprites.Array.data[2]
       value: 
       objectReference: {fileID: 21300000, guid: 69872507412995c4d806b342c3789660, type: 3}
+    - target: {fileID: 1731117492, guid: 887cbe10ac07df1408ee4df848707460, type: 3}
+      propertyPath: sprites.Array.data[3]
+      value: 
+      objectReference: {fileID: 21300000, guid: e1eb60130c203454189be6bc858cbc6c, type: 3}
     - target: {fileID: 1510383438815836917, guid: 887cbe10ac07df1408ee4df848707460, type: 3}
       propertyPath: m_Name
       value: Player Animator Controller Collection
