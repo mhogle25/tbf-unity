@@ -80,7 +80,7 @@ namespace BF2D.Combat
         public void EndCombat()
         {
             ResetOrphanedTextbox();
-
+            this.combatGrid.PassTurn();
             this.standaloneTextboxControl.Textbox.Dialog("di_eoc", 0, () =>
             {
                 Debug.Log("Final Trigger");
