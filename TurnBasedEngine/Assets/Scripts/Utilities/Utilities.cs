@@ -128,7 +128,7 @@ namespace BF2D.Utilities
             return paths.Length;
         }
 
-        public static void LoadTextFile(Dictionary<string, string> collection, string path)
+        private static void LoadTextFile(Dictionary<string, string> collection, string path)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace BF2D.Utilities
             return paths.Length;
         }
 
-        public static void LoadTextFile(Dictionary<string, List<string>> collection, string path)
+        private static void LoadTextFile(Dictionary<string, List<string>> collection, string path)
         {
             try
             {

@@ -34,8 +34,8 @@ namespace BF2D.UI {
         [SerializeField] private Image continueIcon = null;
 
         [Header("Dialog")]
+        [SerializeField] private Utilities.FileManager dialogFileManager = null;
         //Public variables
-        [SerializeField] private string dialogFilesPath = string.Empty;
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
         public bool AutoPass = false;
@@ -43,8 +43,8 @@ namespace BF2D.UI {
         [SerializeField] private UnityEvent onEndOfQueuedDialogs = new();
 
         [Header("Dialog Responses")]
+        [SerializeField] private Utilities.FileManager responsesFileManager = null;
         public bool ResponseOptionsEnabled = true;
-        [SerializeField] private string responseOptionsFilesPath = string.Empty;
         [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
@@ -56,11 +56,12 @@ namespace BF2D.UI {
         [SerializeField] private AudioSource confirmAudioSource = null;
         [SerializeField] private AudioSource voiceAudioSource = null;
         [SerializeField] private AudioClip defaultVoice = null;
-
+        [Header("Assets")]
+        //File Manager
         //Loaded dialogs
-        private readonly Dictionary<string, List<string>> dialogs = new();
+        private Dictionary<string, List<string>> dialogs = new();
         //Loaded dialog options
-        private readonly Dictionary<string, string> dialogResponses = new();
+        private Dictionary<string, string> dialogResponses = new();
 
         //The state delegate
         private Action state = null;
@@ -94,8 +95,8 @@ namespace BF2D.UI {
 
         private void Awake() 
         {
-            LoadDialogFiles();
-            LoadDialogResponseFiles();
+            this.dialogs = this.dialogFileManager.LoadFilesLined();
+            this.dialogResponses = this.responsesFileManager.LoadFiles();
         }
 
         private void Update()
@@ -268,18 +269,6 @@ namespace BF2D.UI {
             {
                 this.continueFlag = true;
             }
-        }
-
-        public void LoadDialogFiles()
-        {
-            this.dialogs.Clear();
-            BF2D.Utilities.TextFile.LoadTextFiles(this.dialogs, Path.Combine(Application.streamingAssetsPath, this.dialogFilesPath));
-        }
-
-        public void LoadDialogResponseFiles()
-        {
-            this.dialogResponses.Clear();
-            BF2D.Utilities.TextFile.LoadTextFiles(this.dialogResponses, Path.Combine(Application.streamingAssetsPath, this.responseOptionsFilesPath));
         }
         #endregion
 
