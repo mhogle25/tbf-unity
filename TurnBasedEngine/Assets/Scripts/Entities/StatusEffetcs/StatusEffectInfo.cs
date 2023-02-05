@@ -7,7 +7,7 @@ namespace BF2D.Game
     public class StatusEffectInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
-        [JsonProperty] protected string id = string.Empty;
+        [JsonProperty] private readonly string id = string.Empty;
         [JsonIgnore] public int RemainingDuration { get { return this.remainingDuration; } }
         [JsonProperty] private int remainingDuration = -1;
 

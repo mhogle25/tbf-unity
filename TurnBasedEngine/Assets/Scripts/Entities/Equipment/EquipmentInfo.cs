@@ -7,7 +7,7 @@ namespace BF2D.Game
     public class EquipmentInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
-        [JsonProperty] protected string id = string.Empty;
+        [JsonProperty] private readonly string id = string.Empty;
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] protected int count = 0;
 

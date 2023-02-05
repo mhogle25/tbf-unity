@@ -250,6 +250,8 @@ namespace BF2D.Combat
             {
                 this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
                 {
+                    PlayAnimation(action.GetAnimationKey());
+
                     CharacterStatsAction.Info info = action.Run(this.Stats, this.Stats);
                     List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
                     dialog.Insert(0, info.message);

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class CharacterStatsAction
+    public class CharacterStatsAction : Entity
     {
         public class Info
         {
@@ -38,7 +38,15 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetStamina = false;
         [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
         [JsonProperty] private readonly string statusEffect = null;
-         
+
+        public string GetAnimationKey()
+        {
+            if (this.criticalDamage is not null || this.psychicDamage is not null || this.directDamage is not null || this.damage is not null)
+                return Strings.Animation.Damaged;
+
+            return Strings.Animation.Flashing;
+        }
+        
         public Info Run(CharacterStats source, CharacterStats target)
         {
             Info info = new();
@@ -94,14 +102,6 @@ namespace BF2D.Game.Actions
             int result = targetAction(value);
 
             return result;
-        }
-
-        public string GetAnimationKey()
-        {
-            if (this.criticalDamage is not null || this.psychicDamage is not null || this.directDamage is not null || this.damage is not null)
-                return Strings.Animation.Damaged;
-
-            return Strings.Animation.Flashing;
         }
     }
 }

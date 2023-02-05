@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BF2D.Game
+namespace BF2D
 {
     public class Entity
     {

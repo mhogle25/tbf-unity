@@ -19,7 +19,11 @@ namespace BF2D.Enums
         [EnumMember]
         Focus,
         [EnumMember]
-        Luck
+        Luck,
+        [EnumMember]
+        MaxHealth,
+        [EnumMember]
+        MaxStamina
     }
 
     public class CharacterStatsPropertyCollection<T>

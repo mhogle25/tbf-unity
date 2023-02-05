@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace BF2D.Utilities
 {
-    public class JsonStringCache<T> : ICache where T : class
+    public class JsonStringCache<T> : ICache where T : Entity
     {
         public JsonStringCache() { }
 

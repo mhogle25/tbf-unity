@@ -27,6 +27,7 @@ namespace BF2D.Game
         [SerializeField] private FileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
         [SerializeField] private FileManager characterStatsActionsFileManager = null;
+        [SerializeField] private FileManager jobFileManager = null;
 
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
@@ -37,9 +38,10 @@ namespace BF2D.Game
         private readonly JsonStringCache<Item> items = new(20);
 
         //Object caches (no instantiation on get, single instance data classes)
-        private readonly JsonObjectCache<Equipment> equipments = new(10);
-        private readonly JsonObjectCache<StatusEffect> statusEffects = new(10);
-        private readonly JsonObjectCache<CharacterStatsAction> characterStatsActions = new(10);
+        private readonly JsonEntityCache<Equipment> equipments = new(10);
+        private readonly JsonEntityCache<StatusEffect> statusEffects = new(10);
+        private readonly JsonEntityCache<CharacterStatsAction> characterStatsActions = new(10);
+        private readonly JsonEntityCache<Job> jobs = new(10);
 
         private readonly List<ICache> externalCaches = new();
 
@@ -181,6 +183,15 @@ namespace BF2D.Game
                 return null;
             }
             return this.characterStatsActions.Get(id, this.characterStatsActionsFileManager);
+        }
+
+        public Job GetJob(string id)
+        {
+            if (id == string.Empty)
+            {
+                Debug.LogWarning("[GameInfo:GetJob] String was empty");
+            }
+            return this.jobs.Get(id, this.jobFileManager);
         }
 
         public CharacterStats InstantiateEnemy(string id)

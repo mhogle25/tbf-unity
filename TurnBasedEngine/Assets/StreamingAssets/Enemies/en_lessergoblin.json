@@ -1,11 +1,11 @@
 {                                                                                                                                                                                                                                                                
     "name":"Lesser Goblin",
-    "prefabID":"goblin",
     "description":"A fiend of the dark with a desire for blood.",
-    "experience":0,
-    "level":1,
+    "prefabID":"goblin",
     "health":5,
     "stamina":1,
+    "constitution":5,
+    "endurance":1,
     "swiftness":1,
     "strength":2,
     "toughness":1,
@@ -17,6 +17,7 @@
     "hands":"",
     "feet":"",
     "accessory":"",
+    "gridPosition":0,
     "statusEffects":
     [
         {
@@ -24,7 +25,6 @@
             "remainingDuration":2
         }
     ],
-    "gridPosition":0,
     "items":
     [
         {

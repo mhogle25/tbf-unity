@@ -6,11 +6,11 @@ using Newtonsoft.Json;
 
 namespace BF2D.Utilities
 {
-    public class JsonObjectCache<T> : ICache where T : class
+    public class JsonEntityCache<T> : ICache where T : Entity
     {
-        public JsonObjectCache() { }
+        public JsonEntityCache() { }
 
-        public JsonObjectCache(int limit) => this.CacheLimit = limit;
+        public JsonEntityCache(int limit) => this.CacheLimit = limit;
 
         private readonly Dictionary<string, T> objects = new();
 

@@ -18,6 +18,10 @@ namespace BF2D.Game
         [JsonProperty] private readonly int focusModifier = 0;
         [JsonIgnore] public int LuckModifier { get { return this.luckModifier; } }
         [JsonProperty] private readonly int luckModifier = 0;
+        [JsonIgnore] public int MaxHealthModifier { get { return this.maxHealthModifier; } }
+        [JsonProperty] private readonly int maxHealthModifier = 0;
+        [JsonIgnore] public int MaxStaminaModifier { get { return this.maxStaminaModifier; } }
+        [JsonProperty] private readonly int maxStaminaModifier = 0;
         [JsonIgnore] public UntargetedGameAction OnUpkeep { get { return this.onUpkeep; } }
         [JsonProperty] private readonly UntargetedGameAction onUpkeep = null;
         [JsonIgnore] public UntargetedGameAction OnEOT { get { return this.onEOT; } }
@@ -41,6 +45,8 @@ namespace BF2D.Game
                 CharacterStatsProperty.Defense => this.defenseModifier,
                 CharacterStatsProperty.Focus => this.focusModifier,
                 CharacterStatsProperty.Luck => this.luckModifier,
+                CharacterStatsProperty.MaxHealth => this.maxHealthModifier,
+                CharacterStatsProperty.MaxStamina => this.maxStaminaModifier,
                 _ => 0
             };
         }
