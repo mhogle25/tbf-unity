@@ -159,7 +159,6 @@ namespace BF2D.UI
         /// 
         public GridOption Add(GridOption.Data optionData)
         {
-
             //Base case
             if (!this.optionPrefab)
             {

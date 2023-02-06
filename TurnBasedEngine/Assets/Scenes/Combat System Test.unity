@@ -617,8 +617,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Dialogs/Combat/System
-  fileExtension: 
+  path: Dialog/Dialogs/Combat
+  fileExtension: txt
   directory: 1
 --- !u!1 &177414667
 GameObject:
@@ -2810,8 +2810,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Responses
-  fileExtension: txt
+  path: Dialog/Responses/Combat
+  fileExtension: json
   directory: 1
 --- !u!1 &685925505
 GameObject:
@@ -2990,6 +2990,7 @@ MonoBehaviour:
   controlledOptionsGrid: {fileID: 0}
   delay: 0.5
   speed: 0.1
+  orphanedTextbox: {fileID: 3762075292545349522}
   playerPlatforms: {fileID: 1316870473}
   initPlayerOptions:
   - {fileID: 1121190681}
@@ -3012,7 +3013,6 @@ MonoBehaviour:
   - {fileID: 2143075866}
   - {fileID: 1613403330}
   - {fileID: 1151682090}
-  textbox: {fileID: 3762075292545349522}
 --- !u!1 &726882009
 GameObject:
   m_ObjectHideFlags: 0
@@ -3842,7 +3842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Dialogs/Combat/System
+  path: Dialog/Dialogs/Combat
   fileExtension: txt
   directory: 1
 --- !u!1001 &839711158
@@ -8161,8 +8161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Responses
-  fileExtension: 
+  path: Dialog/Responses/Combat
+  fileExtension: json
   directory: 1
 --- !u!1 &1736500715
 GameObject:
@@ -13285,6 +13285,7 @@ MonoBehaviour:
   ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 123}
   prereqConditionChecker: {fileID: 0}
+  ResponseBackEventEnabled: 0
   responseOptionEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -13653,6 +13654,7 @@ MonoBehaviour:
   ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 2158157276703626550}
   prereqConditionChecker: {fileID: 0}
+  ResponseBackEventEnabled: 0
   responseOptionEvent:
     m_PersistentCalls:
       m_Calls: []

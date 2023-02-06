@@ -18,12 +18,12 @@ namespace BF2D.UI {
         };
 
         [Serializable]
-        private struct ResponseData
+        private class ResponseData
         {
-            public string text;
-            public int dialogIndex;
-            public object action;
-            public object prereq;
+            public string text = string.Empty;
+            public int dialogIndex = 0;
+            public object action = null;
+            public object prereq = null;
         };
 
         [Header("Private References")]
@@ -47,8 +47,10 @@ namespace BF2D.UI {
         public bool ResponseOptionsEnabled = true;
         [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
+        public bool ResponseBackEventEnabled = false;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
+        public ResponseOptionEvent ResponseEvent { get { return this.responseOptionEvent; } }
         [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
 
         [Header("Audio")]
@@ -108,6 +110,7 @@ namespace BF2D.UI {
         #region Public Overrides
         public override void UtilityInitialize()
         {
+            Debug.Log("Initialize");
             base.UtilityInitialize();
             this.state = DialogQueueHandler;
         }
@@ -485,7 +488,9 @@ namespace BF2D.UI {
                                 SetupResponses(options);
 
                             this.messageIndex = newMessageIndex + 1;
-                        } else
+                            //this.state = null;
+                        }
+                        else
                         {
                             Debug.LogError("[DialogTextbox] The value for the response data cannot be null");
                         }
@@ -610,6 +615,13 @@ namespace BF2D.UI {
                             {
                                 this.responseOptionEvent?.Invoke(option.action.ToString());
                                 FinalizeResponse(option.dialogIndex);
+                            },
+                            [InputButton.Back] = () =>
+                            {
+                                if (this.ResponseBackEventEnabled)
+                                {
+                                    UIControlsManager.Instance.PassControlBack();
+                                }
                             }
                         }
                     }); 
@@ -620,7 +632,7 @@ namespace BF2D.UI {
                 }
             }
 
-            UIControlsManager.Instance.TakeControl(this.responseOptionsControl);
+            UIControlsManager.Instance.StartPhantomControl(this.responseOptionsControl);
             this.responseOptionsControl.ControlledOptionsGrid.SetCursorToFirst();
         }
 
@@ -633,7 +645,8 @@ namespace BF2D.UI {
             this.responseOptionsControl.gameObject.SetActive(false);
             this.pass = true;
             this.state = MessageParseAndDisplayClocked;
-            UIControlsManager.Instance.PassControlBack();
+
+            UIControlsManager.Instance.EndPhantomControl();
         }
         #endregion
 

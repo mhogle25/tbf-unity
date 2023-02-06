@@ -28,6 +28,7 @@ namespace BF2D.UI
 
         private readonly Stack<UIControl> controlChainHistory = new Stack<UIControl>();
         private UIControl currentControl = null;
+        private UIControl phantomControl = null;
         private readonly Mutex historyMutex = new();
 
         public void PassControlBack()
@@ -120,15 +121,45 @@ namespace BF2D.UI
             this.historyMutex.ReleaseMutex();
         }
 
+        public void StartPhantomControl(UIControl uiControl)
+        {
+            Debug.Log("Start Phantom");
+            if (this.phantomControl)
+                EndControlGeneric(this.phantomControl);
+            this.phantomControl = uiControl;
+            StartControlGeneric(this.phantomControl);
+            if (this.currentControl)
+                this.currentControl.enabled = false;
+        }
+
+        public void EndPhantomControl()
+        {
+            Debug.Log("End Phantom");
+            EndControlGeneric(this.phantomControl);
+            this.phantomControl = null;
+            if (this.currentControl)
+                this.currentControl.enabled = true;
+        }
+
         private void StartControl(UIControl uiControl)
+        {
+            StartControlGeneric(uiControl);
+            this.currentControl = uiControl;
+        }
+
+        private void EndControl(UIControl uiControl)
+        {
+            EndControlGeneric(uiControl);
+        }
+
+        private void StartControlGeneric(UIControl uiControl)
         {
             uiControl.gameObject.SetActive(true);
             uiControl.enabled = true;
-            this.currentControl = uiControl;
             uiControl.ControlInitialize();
         }
 
-        private static void EndControl(UIControl uiControl)
+        private static void EndControlGeneric(UIControl uiControl)
         {
             uiControl.enabled = false;
             uiControl.ControlFinalize();

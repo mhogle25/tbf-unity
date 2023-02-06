@@ -10,21 +10,30 @@ namespace BF2D.Combat
 {
     public class CharacterTargeterControl : OptionsGridControl
     {
+        public struct AlignmentFlag
+        {
+            public bool players;
+        }
+
+        [Header("Dialog Textbox")]
+        [SerializeField] private DialogTextbox orphanedTextbox = null;
         [Header("Character Targeter")]
         [SerializeField] private OptionsGrid playerPlatforms = null;
         [SerializeField] private List<CombatGridTile> initPlayerOptions = new();
+        [Space(10)]
         [SerializeField] private OptionsGrid enemyPlatforms = null;
         [SerializeField] private List<CombatGridTile> initEnemyOptions = new();
+        [Space(10)]
         [SerializeField] private OptionsGrid anyPlatforms = null;
         [SerializeField] private List<CombatGridTile> initAnyOptions = new();
-        [Header("Misc")]
-        [SerializeField] private DialogTextbox textbox = null;
 
         private readonly Queue<TargetedCharacterStatsAction> stagedStatsActions = new();
         private TargetedCharacterStatsAction stagedStatsAction = null;
 
         public override void ControlInitialize()
         {
+            this.stagedStatsActions.Clear();
+            this.stagedStatsAction = null;
             foreach (TargetedCharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedStatsActions())
             {
                 this.stagedStatsActions.Enqueue(statsAction);
@@ -34,9 +43,12 @@ namespace BF2D.Combat
 
         public override void ControlFinalize() 
         {
-            this.textbox.View.gameObject.SetActive(false);
-            this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
-            this.controlledOptionsGrid.UtilityFinalize();
+            this.orphanedTextbox.View.gameObject.SetActive(false);
+            if (this.controlledOptionsGrid)
+            {
+                this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
+                this.controlledOptionsGrid.UtilityFinalize();
+            }
         }
 
         protected override void Awake()
@@ -53,7 +65,7 @@ namespace BF2D.Combat
 
             if (InputManager.ConfirmPress)
             {
-                this.textbox.Continue();
+                this.orphanedTextbox.Continue();
             }
         }
 
@@ -108,7 +120,19 @@ namespace BF2D.Combat
                     SetupDialog(this.anyPlatforms);
                     return;
                 case CharacterTarget.AllOfAny:
-                    //TODO
+                    this.orphanedTextbox.AutoPass = false;
+                    this.orphanedTextbox.ResponseEvent.AddListener((json) =>
+                    {
+                        AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
+                        this.stagedStatsAction.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
+                    });
+                    this.orphanedTextbox.Dialog("di_targeter_allofany", 0, () =>
+                    {
+                        this.orphanedTextbox.ResponseEvent.RemoveAllListeners();
+                        this.orphanedTextbox.AutoPass = true;
+                        Continue();
+                    });
+                    this.orphanedTextbox.UtilityInitialize();
                     return;
                 case CharacterTarget.All:
                     this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
@@ -129,11 +153,10 @@ namespace BF2D.Combat
                     this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
                     this.controlledOptionsGrid.UtilityFinalize();
                 }
-                if (this.textbox)
-                {
-                    this.textbox.UtilityFinalize();
-                    this.textbox.View.gameObject.SetActive(false);
-                }
+
+                this.orphanedTextbox.UtilityFinalize();
+                this.orphanedTextbox.View.gameObject.SetActive(false);
+
                 CombatManager.Instance.RunCombatEvents();
                 return;
             }
@@ -143,9 +166,9 @@ namespace BF2D.Combat
 
         private void SetupDialog(OptionsGrid followUp)
         {
-            this.textbox.Message($"Who would you like to {this.stagedStatsAction.Description}?", () =>
+            this.orphanedTextbox.Message($"Who would you like to {this.stagedStatsAction.Description}?", () =>
             {
-                this.textbox.UtilityFinalize();
+                this.orphanedTextbox.UtilityFinalize();
                 if (this.controlledOptionsGrid && this.controlledOptionsGrid.Interactable)
                 {
                     this.controlledOptionsGrid.UtilityFinalize();
@@ -154,7 +177,7 @@ namespace BF2D.Combat
                 this.controlledOptionsGrid.UtilityInitialize();
                 this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
             });
-            this.textbox.UtilityInitialize();
+            this.orphanedTextbox.UtilityInitialize();
         }
     }
 }
