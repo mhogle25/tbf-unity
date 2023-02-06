@@ -97,7 +97,7 @@ namespace BF2D.Utilities
             string t;
             try
             {
-                t = JsonConvert.SerializeObject(obj, new Newtonsoft.Json.Converters.StringEnumConverter());
+                t = JsonConvert.SerializeObject(obj, Formatting.Indented, new Newtonsoft.Json.Converters.StringEnumConverter());
             }
             catch
             {

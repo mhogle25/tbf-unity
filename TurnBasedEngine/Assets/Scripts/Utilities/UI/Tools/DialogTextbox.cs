@@ -110,7 +110,6 @@ namespace BF2D.UI {
         #region Public Overrides
         public override void UtilityInitialize()
         {
-            Debug.Log("Initialize");
             base.UtilityInitialize();
             this.state = DialogQueueHandler;
         }

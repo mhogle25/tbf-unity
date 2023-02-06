@@ -157,7 +157,7 @@ namespace BF2D.Combat
             //
             //
             //
-            GameInfo.Instance.SaveGame();
+            //GameInfo.Instance.SaveGame();
             UIControlsManager.Instance.TakeControl(this.mainMenu);
             //
             //

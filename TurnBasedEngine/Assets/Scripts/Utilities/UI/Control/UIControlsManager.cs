@@ -35,6 +35,12 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
+            if (this.phantomControl)
+            {
+                Debug.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                return;
+            }
+
             if (this.currentControl)
                 EndControl(this.currentControl);
 
@@ -54,6 +60,12 @@ namespace BF2D.UI
         public void PassControlBackToFirst(bool setActive)
         {
             this.historyMutex.WaitOne();
+
+            if (this.phantomControl)
+            {
+                Debug.LogWarning("[UIControlsManager:PassControlBackToFirst] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                return;
+            }
 
             this.controlChainHistory.Push(this.currentControl);
             this.currentControl = null;
@@ -79,6 +91,12 @@ namespace BF2D.UI
         public void ResetControlChain(bool setActive)
         {
             this.historyMutex.WaitOne();
+
+            if (this.phantomControl)
+            {
+                Debug.LogWarning("[UIControlsManager:ResetControlChain] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                return;
+            }
 
             this.controlChainHistory.Push(this.currentControl);
             this.currentControl = null;
@@ -106,6 +124,12 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
+            if (this.phantomControl)
+            {
+                Debug.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                return;
+            }
+
             //Dont give control to the component that is already in control
             if (Object.ReferenceEquals(this.currentControl, uiControl))
                 return;
@@ -123,9 +147,9 @@ namespace BF2D.UI
 
         public void StartPhantomControl(UIControl uiControl)
         {
-            Debug.Log("Start Phantom");
             if (this.phantomControl)
                 EndControlGeneric(this.phantomControl);
+
             this.phantomControl = uiControl;
             StartControlGeneric(this.phantomControl);
             if (this.currentControl)
@@ -134,7 +158,12 @@ namespace BF2D.UI
 
         public void EndPhantomControl()
         {
-            Debug.Log("End Phantom");
+            if (!this.phantomControl)
+            {
+                Debug.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
+                return;
+            }
+
             EndControlGeneric(this.phantomControl);
             this.phantomControl = null;
             if (this.currentControl)

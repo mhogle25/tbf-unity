@@ -141,10 +141,7 @@ namespace BF2D.Combat.Actions
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
                     if (this.Item.Info.Get().OnUse.TargetedGems.Count > 0)
-                    {
                         UIControlsManager.Instance.TakeControl(CombatManager.Instance.CharacterTargeter);
-                        break;
-                    }
                     //TODO
                     break;
                 case CombatActionType.Roster: break;
