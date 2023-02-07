@@ -223,10 +223,13 @@ namespace BF2D
             }
         }
 
+        [SerializeField] private Utilities.ExternalFileManager inputConfigsFileManager = null;
+
         [SerializeReference] private static ControlsConfigKeyboard defaultKeyboardConfig;
         [SerializeReference] private static ControlsConfigGamepad defaultGamepadConfig;
         [SerializeReference] private static ControlsConfigKeyboard keyboardConfig;
         [SerializeReference] private static ControlsConfigGamepad gamepadConfig;
+
         private static ControlsConfig currentConfig;
         private static KeyCode lastHitKey;
 
@@ -366,8 +369,8 @@ namespace BF2D
         {
             return controllerType switch
             {
-                InputController.Keyboard => JsonConvert.SerializeObject(InputManager.keyboardConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
-                InputController.Gamepad => JsonConvert.SerializeObject(InputManager.gamepadConfig, new Newtonsoft.Json.Converters.StringEnumConverter()),
+                InputController.Keyboard => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigKeyboard>(InputManager.keyboardConfig),
+                InputController.Gamepad => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigGamepad>(InputManager.gamepadConfig),
                 _ => throw new ArgumentException("[InputManager] InputController was null or invalid"),
             };
         }
@@ -377,10 +380,10 @@ namespace BF2D
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    InputManager.keyboardConfig = JsonConvert.DeserializeObject<ControlsConfigKeyboard>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
+                    InputManager.keyboardConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigKeyboard>(json);
                     break;
                 case InputController.Gamepad:
-                    InputManager.gamepadConfig = JsonConvert.DeserializeObject<ControlsConfigGamepad>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
+                    InputManager.gamepadConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigGamepad>(json);
                     break;
                 default:
                     throw new ArgumentException("[InputManager] InputController was null or invalid");

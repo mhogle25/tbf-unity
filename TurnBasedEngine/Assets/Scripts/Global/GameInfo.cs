@@ -21,14 +21,14 @@ namespace BF2D.Game
         [SerializeField] private float clockSpeed = 0.03125f;
 
         [Header("Data File Managers")]
-        [SerializeField] private ExternalFileManager savesFileManager = null;
+        [SerializeField] private ExternalFileManager saveFilesManager = null;
         [SerializeField] private FileManager playersFileManager = null;
         [SerializeField] private FileManager enemiesFileManager = null;
         [SerializeField] private FileManager itemsFileManager = null;
         [SerializeField] private FileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
         [SerializeField] private FileManager characterStatsActionsFileManager = null;
-        [SerializeField] private FileManager jobFileManager = null;
+        [SerializeField] private FileManager jobsFileManager = null;
 
         public List<CharacterStats> Players { get { return this.currentSave.Players; } }
         private SaveData currentSave = null;
@@ -54,14 +54,6 @@ namespace BF2D.Game
         [Header("Fonts")]
         [SerializeField] private TMP_FontAsset mainFont;
 
-        public CombatManager.InitializeInfo UnstageCombatInfo()
-        { 
-            if (this.queuedCombats.Count < 1)
-            {
-                return null;
-            }
-            return this.queuedCombats.Dequeue(); 
-        }
         private readonly Queue<CombatManager.InitializeInfo> queuedCombats = new();
 
         private void Awake()
@@ -98,10 +90,11 @@ namespace BF2D.Game
             });
         }
 
+        #region Public Methods
         public void SaveGame()
         {
             string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
-            this.savesFileManager.WriteToFile(newJSON, this.currentSave.ID);
+            this.saveFilesManager.WriteToFile(newJSON, this.currentSave.ID);
         }
 
         public void ClearCaches()
@@ -195,7 +188,7 @@ namespace BF2D.Game
             {
                 Debug.LogWarning("[GameInfo:GetJob] String was empty");
             }
-            return this.jobs.Get(id, this.jobFileManager);
+            return this.jobs.Get(id, this.jobsFileManager);
         }
 
         public CharacterStats InstantiateEnemy(string id)
@@ -220,11 +213,22 @@ namespace BF2D.Game
             this.currentSave.AddPlayer(newPlayer);
         }
 
+        public CombatManager.InitializeInfo UnstageCombatInfo()
+        {
+            if (this.queuedCombats.Count < 1)
+            {
+                return null;
+            }
+            return this.queuedCombats.Dequeue();
+        }
+
         public bool ValidText(string text, out List<char> invalidCharacters)
         {
             return this.mainFont.HasCharacters(text, out invalidCharacters);
         }
+        #endregion
 
+        #region Private Utilities
         private CharacterStats InstantiatePlayer(string id)
         {
             if (id == string.Empty)
@@ -243,7 +247,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            string content = this.savesFileManager.LoadFile(saveID);
+            string content = this.saveFilesManager.LoadFile(saveID);
             if (content == string.Empty)
                 return null;
 
@@ -254,7 +258,7 @@ namespace BF2D.Game
 
             return saveData;
         }
-
+        #endregion
     }
 
 }

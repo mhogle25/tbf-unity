@@ -155,7 +155,7 @@ namespace BF2D.Combat
 
         private void SetupDialog(OptionsGrid followUp)
         {
-            this.orphanedTextbox.Message($"Who would you like to {this.stagedStatsAction.Description}?", () =>
+            this.orphanedTextbox.Dialog("di_targeter", 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
                 if (this.controlledOptionsGrid && this.controlledOptionsGrid.Interactable)
@@ -165,6 +165,9 @@ namespace BF2D.Combat
                 this.controlledOptionsGrid = followUp;
                 this.controlledOptionsGrid.UtilityInitialize();
                 this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
+            }, new List<string>
+            {
+                stagedStatsAction.Description
             });
             this.orphanedTextbox.UtilityInitialize();
         }
@@ -184,7 +187,7 @@ namespace BF2D.Combat
                 UIControlsManager.Instance.PassControlBack();
                 this.orphanedTextbox.Cancel();
             });
-            this.orphanedTextbox.Dialog("di_targeter_allofany", 0, () =>
+            this.orphanedTextbox.Dialog("di_targeter", 1, () =>
             {
                 EndAllOfAnyEvent();
                 Continue();
