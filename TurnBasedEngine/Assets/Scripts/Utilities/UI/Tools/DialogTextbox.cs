@@ -28,9 +28,9 @@ namespace BF2D.UI {
 
         [Header("Private References")]
         //Serialized private variables
-        [SerializeField] private TextMeshProUGUI textField = null;
+        [SerializeField] private Utilities.TextField textField = null;
         [SerializeField] private RectTransform nametag = null;
-        [SerializeField] private TextMeshProUGUI nametagTextField = null;
+        [SerializeField] private Utilities.TextField nametagTextField = null;
         [SerializeField] private Image continueIcon = null;
 
         [Header("Dialog")]
@@ -47,11 +47,13 @@ namespace BF2D.UI {
         public bool ResponseOptionsEnabled = true;
         [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
-        public bool ResponseBackEventEnabled = false;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
         public ResponseOptionEvent ResponseEvent { get { return this.responseOptionEvent; } }
         [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
+
+        public UnityEvent ResponseBackEvent { get { return this.responseOptionBackEvent; } }
+        [SerializeField] private UnityEvent responseOptionBackEvent = new();
 
         [Header("Audio")]
         [SerializeField] private AudioClipCollection voiceCollection = null;
@@ -272,6 +274,12 @@ namespace BF2D.UI {
                 this.continueFlag = true;
             }
         }
+
+        public void Cancel()
+        {
+            this.dialogQueue.Clear();
+            this.state = DialogQueueHandler;
+        }
         #endregion
 
         #region Public Static Utilities
@@ -373,7 +381,9 @@ namespace BF2D.UI {
         #endregion
 
         #region Private Methods
-        private void ResetControlVariables(int dialogIndex) {
+        private void ResetControlVariables(int dialogIndex)
+        {
+            this.continueIcon.enabled = false;
             this.dialogIndex = dialogIndex;
             this.messageIndex = 0;
             this.timeAccumulator = 0f;
@@ -613,14 +623,12 @@ namespace BF2D.UI {
                             [InputButton.Confirm] = () =>
                             {
                                 this.responseOptionEvent?.Invoke(option.action.ToString());
-                                FinalizeResponse(option.dialogIndex);
+                                ResponseConfirm(option.dialogIndex);
                             },
                             [InputButton.Back] = () =>
                             {
-                                if (this.ResponseBackEventEnabled)
-                                {
-                                    UIControlsManager.Instance.PassControlBack();
-                                }
+                                FinalizeResponse();
+                                this.responseOptionBackEvent?.Invoke();
                             }
                         }
                     }); 
@@ -635,17 +643,21 @@ namespace BF2D.UI {
             this.responseOptionsControl.ControlledOptionsGrid.SetCursorToFirst();
         }
 
-        private void FinalizeResponse(int dialogIndex)
+        private void ResponseConfirm(int dialogIndex)
         {
             if (dialogIndex != DialogTextbox.defaultValue)
             {
                 this.nextDialogIndex = dialogIndex;
             }
-            this.responseOptionsControl.gameObject.SetActive(false);
+            FinalizeResponse();
             this.pass = true;
             this.state = MessageParseAndDisplayClocked;
+        }
 
+        private void FinalizeResponse()
+        {
             UIControlsManager.Instance.EndPhantomControl();
+            this.responseOptionsControl.gameObject.SetActive(false);
         }
         #endregion
 

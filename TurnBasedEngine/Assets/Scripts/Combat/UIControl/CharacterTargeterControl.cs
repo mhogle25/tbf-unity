@@ -90,6 +90,7 @@ namespace BF2D.Combat
         {
             this.stagedStatsAction.TargetInfo.CombatTargets = targets;
 
+            this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
             this.controlledOptionsGrid.UtilityFinalize();
             Continue();
         }
@@ -120,19 +121,7 @@ namespace BF2D.Combat
                     SetupDialog(this.anyPlatforms);
                     return;
                 case CharacterTarget.AllOfAny:
-                    this.orphanedTextbox.AutoPass = false;
-                    this.orphanedTextbox.ResponseEvent.AddListener((json) =>
-                    {
-                        AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
-                        this.stagedStatsAction.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
-                    });
-                    this.orphanedTextbox.Dialog("di_targeter_allofany", 0, () =>
-                    {
-                        this.orphanedTextbox.ResponseEvent.RemoveAllListeners();
-                        this.orphanedTextbox.AutoPass = true;
-                        Continue();
-                    });
-                    this.orphanedTextbox.UtilityInitialize();
+                    AllOfAnyEvent();
                     return;
                 case CharacterTarget.All:
                     this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
@@ -178,6 +167,36 @@ namespace BF2D.Combat
                 this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
             });
             this.orphanedTextbox.UtilityInitialize();
+        }
+
+        private void AllOfAnyEvent()
+        {
+            this.orphanedTextbox.AutoPass = false;
+            this.orphanedTextbox.ResponseEvent.AddListener((json) =>
+            {
+                AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
+                this.stagedStatsAction.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
+            });
+            this.orphanedTextbox.ResponseBackEvent.AddListener(() =>
+            {
+                EndAllOfAnyEvent();
+                this.orphanedTextbox.View.gameObject.SetActive(false);
+                UIControlsManager.Instance.PassControlBack();
+                this.orphanedTextbox.Cancel();
+            });
+            this.orphanedTextbox.Dialog("di_targeter_allofany", 0, () =>
+            {
+                EndAllOfAnyEvent();
+                Continue();
+            });
+            this.orphanedTextbox.UtilityInitialize();
+        }
+
+        private void EndAllOfAnyEvent()
+        {
+            this.orphanedTextbox.ResponseEvent.RemoveAllListeners();
+            this.orphanedTextbox.ResponseBackEvent.RemoveAllListeners();
+            this.orphanedTextbox.AutoPass = true;
         }
     }
 }

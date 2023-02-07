@@ -5,6 +5,7 @@ using BF2D.Combat;
 using BF2D.Game.Actions;
 using UnityEngine;
 using BF2D.Utilities;
+using TMPro;
 
 namespace BF2D.Game
 {
@@ -49,6 +50,9 @@ namespace BF2D.Game
         [Header("Asset Collections")]
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
+
+        [Header("Fonts")]
+        [SerializeField] private TMP_FontAsset mainFont;
 
         public CombatManager.InitializeInfo UnstageCombatInfo()
         { 
@@ -216,6 +220,11 @@ namespace BF2D.Game
             this.currentSave.AddPlayer(newPlayer);
         }
 
+        public bool ValidText(string text, out List<char> invalidCharacters)
+        {
+            return this.mainFont.HasCharacters(text, out invalidCharacters);
+        }
+
         private CharacterStats InstantiatePlayer(string id)
         {
             if (id == string.Empty)
@@ -245,6 +254,7 @@ namespace BF2D.Game
 
             return saveData;
         }
+
     }
 
 }

@@ -13,8 +13,8 @@ namespace BF2D.Combat
     public class BagMenuControl : OptionsGridControl
     {
         [Header("Information")]
-        [SerializeField] private TextMeshProUGUI nameText = null;
-        [SerializeField] private TextMeshProUGUI descriptionText = null;
+        [SerializeField] private Utilities.TextField nameText = null;
+        [SerializeField] private Utilities.TextField descriptionText = null;
 
         private readonly List<Item> items = new();
 

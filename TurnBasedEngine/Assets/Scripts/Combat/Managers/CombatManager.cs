@@ -81,7 +81,8 @@ namespace BF2D.Combat
         {
             ResetOrphanedTextbox();
             this.combatGrid.PassTurn();
-            this.standaloneTextboxControl.Textbox.Dialog("di_eoc", 0, () =>
+            string dialogKey = EnemiesAreDefeated() ? "di_victory" : PlayersAreDefeated() ? "di_defeat" : "di_draw";
+            this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, () =>
             {
                 Debug.Log("Final Trigger");
             });

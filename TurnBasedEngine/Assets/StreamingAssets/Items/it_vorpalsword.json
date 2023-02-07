@@ -12,6 +12,11 @@
         "targetedGems": 
         [
             {
+                "target":"Player",
+                "description":"heal",
+                "gemID":"gm_basicheal_02"
+            },
+            {
                 "target":"AllOfAny",
                 "description":"attack",
                 "gemID":"gm_damage_01_a"
