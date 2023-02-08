@@ -53,6 +53,17 @@ namespace BF2D.UI {
         [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
 
         public UnityEvent ResponseBackEvent { get { return this.responseOptionBackEvent; } }
+        public bool ResponseBackEventEnabled
+        {
+            get
+            {
+                return this.responseOptionsControl.ControlledOptionsGrid.BackEnabled;
+            }
+            set
+            {
+                this.responseOptionsControl.ControlledOptionsGrid.BackEnabled = value;
+            }
+        }
         [SerializeField] private UnityEvent responseOptionBackEvent = new();
 
         [Header("Audio")]

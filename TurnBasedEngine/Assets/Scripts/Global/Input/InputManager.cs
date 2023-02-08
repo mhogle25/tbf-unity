@@ -7,9 +7,12 @@ namespace BF2D
 {
     public class InputManager : MonoBehaviour
     {
+
         [Serializable]
         public abstract class ControlsConfig
         {
+            [JsonIgnore] public abstract string ID { get; set; }
+
             [JsonIgnore] public abstract InputController ControlType { get; }
             [JsonIgnore] public KeyCode Confirm { get { return this.confirm; } set { this.confirm = value; } }
             [JsonProperty] private protected KeyCode confirm = KeyCode.P;
@@ -34,7 +37,7 @@ namespace BF2D
                     InputButton.Attack => this.attack,
                     InputButton.Pause => this.pause,
                     InputButton.Select => this.select,
-                    _ => throw new ArgumentException("[InputManager] InputButton was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfig:GetButtonKeyCode] InputButton was null or invalid"),
                 };
             }
 
@@ -60,6 +63,9 @@ namespace BF2D
         [Serializable]
         public class ControlsConfigKeyboard : ControlsConfig
         {
+            [JsonIgnore] public override string ID { get { return this.id; } set { this.id = value; } }
+            [JsonProperty] private string id = "keyboard_default";
+
             [JsonIgnore] public override InputController ControlType { get { return ControlsConfigKeyboard.controlType; } }
             private const InputController controlType = InputController.Keyboard;
             [JsonIgnore] public KeyCode Up { get { return this.up; } set { this.up = value; } }
@@ -79,7 +85,7 @@ namespace BF2D
                     InputDirection.Left => this.left,
                     InputDirection.Down => this.down,
                     InputDirection.Right => this.right,
-                    _ => throw new ArgumentException("[InputManager] InputButton was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfigKeyboard:GetDirectionKeyCode] InputButton was null or invalid"),
                 };
             }
 
@@ -138,7 +144,7 @@ namespace BF2D
                 {
                     Axis.Horizontal => tempHor,
                     Axis.Vertical => tempVer,
-                    _ => throw new ArgumentException("[InputManager] Axis was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfigKeyboard:GetAxis] Axis was null or invalid"),
                 };
             }
         }
@@ -152,6 +158,9 @@ namespace BF2D
             private const string D_HORIZONTAL_AXIS = "D Horizontal";
             private const string D_VERTICAL_AXIS = "D Vertical";
             #endregion
+
+            [JsonIgnore] public override string ID { get { return this.id; } set { this.id = value; } }
+            [JsonProperty] private string id = "gamepad_default";
 
             [JsonIgnore] public override InputController ControlType { get { return ControlsConfigGamepad.controlType; } }
             private const InputController controlType = InputController.Gamepad;
@@ -175,7 +184,7 @@ namespace BF2D
                 {
                     Axis.Horizontal => HORIZONTAL_AXIS,
                     Axis.Vertical => VERTICAL_AXIS,
-                    _ => throw new ArgumentException("[InputManager] Axis was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfigGamepad:GetAxisKey] Axis was null or invalid"),
                 };
             }
 
@@ -185,7 +194,7 @@ namespace BF2D
                 {
                     Axis.Horizontal => D_HORIZONTAL_AXIS,
                     Axis.Vertical => D_VERTICAL_AXIS,
-                    _ => throw new ArgumentException("[InputManager] Axis was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfigGamepad:GetAxisKey] Axis was null or invalid"),
                 };
             }
 
@@ -213,7 +222,7 @@ namespace BF2D
                     InputDirection.Left => MaxAxis(Input.GetAxis(GetAxisKey(Axis.Horizontal)), Input.GetAxis(GetDAxisKey(Axis.Horizontal))) < -this.joystickThreshold,
                     InputDirection.Down => MaxAxis(Input.GetAxis(GetAxisKey(Axis.Vertical)), Input.GetAxis(GetDAxisKey(Axis.Vertical))) < -this.joystickThreshold,
                     InputDirection.Right => MaxAxis(Input.GetAxis(GetAxisKey(Axis.Horizontal)), Input.GetAxis(GetDAxisKey(Axis.Horizontal))) > this.joystickThreshold,
-                    _ => throw new ArgumentException("[InputManager] InputDirection was null or invalid"),
+                    _ => throw new ArgumentException("[InputManager:ControlsConfigGamepad:GetDirection] InputDirection was null or invalid"),
                 };
             }
 
@@ -222,8 +231,6 @@ namespace BF2D
                 return MaxAxis(Input.GetAxis(GetAxisKey(axis)), Input.GetAxis(GetDAxisKey(axis)));
             }
         }
-
-        [SerializeField] private Utilities.ExternalFileManager inputConfigsFileManager = null;
 
         [SerializeReference] private static ControlsConfigKeyboard defaultKeyboardConfig;
         [SerializeReference] private static ControlsConfigGamepad defaultGamepadConfig;
@@ -261,6 +268,9 @@ namespace BF2D
         public static bool SelectRelease { get { return GetButtonRelease(InputButton.Select); } }
         public static float HorizontalAxis { get { return GetAxis(Axis.Horizontal); } }
         public static float VerticalAxis { get { return GetAxis(Axis.Vertical); } }
+
+        public static string KeyboardID { get { return InputManager.keyboardConfig.ID; } set { InputManager.keyboardConfig.ID = value; } }
+        public static string GamepadID { get { return InputManager.gamepadConfig.ID; } set { InputManager.gamepadConfig.ID = value; } }
 
         public InputManager()
         {
@@ -344,16 +354,9 @@ namespace BF2D
                     InputManager.gamepadConfig = CloneGamepadConfig(InputManager.defaultGamepadConfig);
                     break;
                 default:
-                    throw new ArgumentException("[InputManager] InputController was null or invalid");
+                    Debug.LogError("[InputManager:ResetConfig] InputController was null or invalid");
+                    return;
             }
-        }
-
-        /// <summary>
-        /// Returns the config of the gamepad to its default values
-        /// </summary>
-        public static void ResetConfig()
-        {
-            InputManager.gamepadConfig = CloneGamepadConfig(InputManager.defaultGamepadConfig);
         }
 
         /// <summary>
@@ -371,11 +374,11 @@ namespace BF2D
             {
                 InputController.Keyboard => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigKeyboard>(InputManager.keyboardConfig),
                 InputController.Gamepad => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigGamepad>(InputManager.gamepadConfig),
-                _ => throw new ArgumentException("[InputManager] InputController was null or invalid"),
+                _ => string.Empty,
             };
         }
 
-        public void DeserializeConfig(InputController controllerType, string json)
+        public static void DeserializeConfig(InputController controllerType, string json)
         {
             switch (controllerType)
             {
@@ -386,7 +389,8 @@ namespace BF2D
                     InputManager.gamepadConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigGamepad>(json);
                     break;
                 default:
-                    throw new ArgumentException("[InputManager] InputController was null or invalid");
+                    Debug.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");
+                    break;
             }
 
             ReloadCurrentConfig();
@@ -451,14 +455,17 @@ namespace BF2D
             };
         }
 
-        private void ReloadCurrentConfig()
+        private static void ReloadCurrentConfig()
         {
-            currentConfig = currentConfig.ControlType switch
+            InputManager.currentConfig = InputManager.currentConfig.ControlType switch
             {
-                InputController.Keyboard => keyboardConfig,
-                InputController.Gamepad => gamepadConfig,
-                _ => throw new ArgumentException("[InputManager] InputController was null or invalid"),
+                InputController.Keyboard => InputManager.keyboardConfig,
+                InputController.Gamepad => InputManager.gamepadConfig,
+                _ => null,
             };
+
+            if (InputManager.currentConfig is null)
+                Debug.LogError("[InputManager:ReloadCurrentConfig] InputController was null or invalid");
         }
 
         private void StateGamepadConnected()
@@ -523,7 +530,8 @@ namespace BF2D
                     InputManager.currentConfig.Select = InputManager.lastHitKey;
                     break;
                 default:
-                    throw new ArgumentException("[InputManager] InputButton was null or invalid");
+                    Debug.LogError("[InputManager:StateSetCurrentConfigButton] InputButton was null or invalid");
+                    break;
             }
 
             states -= buttonLambda;
@@ -551,7 +559,8 @@ namespace BF2D
                     InputManager.keyboardConfig.Right = InputManager.lastHitKey;
                     break;
                 default:
-                    throw new ArgumentException("[InputManager] InputDirection was null or invalid");
+                    Debug.LogError("[InputManager:StateSetKeyboardDirection] InputDirection was null or invalid");
+                    break;
 
             }
 

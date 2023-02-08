@@ -1168,7 +1168,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &279476918
 MonoBehaviour:
@@ -1376,6 +1376,7 @@ Transform:
   m_Children:
   - {fileID: 1145024692}
   - {fileID: 1726763346}
+  - {fileID: 1631695783}
   - {fileID: 1103501670}
   - {fileID: 418440188}
   - {fileID: 279476917}
@@ -1564,7 +1565,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &418440189
 MonoBehaviour:
@@ -1744,7 +1745,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &504665460
 GameObject:
@@ -2133,7 +2134,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &618640904
 MonoBehaviour:
@@ -2497,7 +2498,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &735434021
 MonoBehaviour:
@@ -4023,7 +4024,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1103501671
 MonoBehaviour:
@@ -7677,6 +7678,53 @@ MonoBehaviour:
       m_Calls: []
   cursor: {fileID: 255178420}
   assignedCharacter: {fileID: 0}
+--- !u!1 &1631695782
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1631695783}
+  - component: {fileID: 1631695784}
+  m_Layer: 0
+  m_Name: Gamepad Controls Configs
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1631695783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631695782}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 395386715}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1631695784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631695782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: ControlsConfigs/Gamepad
+  fileExtension: json
+  directory: 0
 --- !u!1 &1726763345
 GameObject:
   m_ObjectHideFlags: 0
@@ -7688,7 +7736,7 @@ GameObject:
   - component: {fileID: 1726763346}
   - component: {fileID: 1726763347}
   m_Layer: 0
-  m_Name: Input Config
+  m_Name: ' Keyboard Controls Configs'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7721,7 +7769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: InputConfigs
+  path: ControlsConfigs/Keyboard
   fileExtension: json
   directory: 0
 --- !u!1 &1736500715
@@ -8442,7 +8490,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clockSpeed: 0.03125
   saveFilesManager: {fileID: 1145024693}
-  inputConfigsFileManager: {fileID: 1726763347}
+  keyboardControlsConfigFilesManager: {fileID: 1726763347}
+  gamepadControlsConfigFilesManager: {fileID: 1631695784}
   playersFileManager: {fileID: 1103501671}
   enemiesFileManager: {fileID: 418440189}
   itemsFileManager: {fileID: 279476918}
@@ -8452,7 +8501,6 @@ MonoBehaviour:
   jobsFileManager: {fileID: 476307232}
   iconCollection: {fileID: 3178956709704653840}
   soundEffectCollection: {fileID: 7786038003881255837}
-  mainFont: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
 --- !u!1 &1858917249
 GameObject:
   m_ObjectHideFlags: 0
@@ -8483,7 +8531,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 395386715}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1858917251
 MonoBehaviour:

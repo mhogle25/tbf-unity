@@ -6,6 +6,8 @@ using BF2D.Game.Actions;
 using UnityEngine;
 using BF2D.Utilities;
 using TMPro;
+using BF2D.Enums;
+using System;
 
 namespace BF2D.Game
 {
@@ -22,6 +24,8 @@ namespace BF2D.Game
 
         [Header("Data File Managers")]
         [SerializeField] private ExternalFileManager saveFilesManager = null;
+        [SerializeField] private ExternalFileManager keyboardControlsConfigFilesManager = null;
+        [SerializeField] private ExternalFileManager gamepadControlsConfigFilesManager = null;
         [SerializeField] private FileManager playersFileManager = null;
         [SerializeField] private FileManager enemiesFileManager = null;
         [SerializeField] private FileManager itemsFileManager = null;
@@ -51,9 +55,6 @@ namespace BF2D.Game
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
 
-        [Header("Fonts")]
-        [SerializeField] private TMP_FontAsset mainFont;
-
         private readonly Queue<CombatManager.InitializeInfo> queuedCombats = new();
 
         private void Awake()
@@ -74,6 +75,9 @@ namespace BF2D.Game
 
         private void TEST_INITIALIZE()
         {
+            LoadControlsConfig(InputController.Keyboard, "keyboard_default");
+            LoadControlsConfig(InputController.Gamepad, "gamepad_default");
+
             Debug.Log($"Streaming Assets Path: {Application.streamingAssetsPath}");
             Debug.Log($"Persistent Data Path: {Application.persistentDataPath}");
 
@@ -91,12 +95,6 @@ namespace BF2D.Game
         }
 
         #region Public Methods
-        public void SaveGame()
-        {
-            string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
-            this.saveFilesManager.WriteToFile(newJSON, this.currentSave.ID);
-        }
-
         public void ClearCaches()
         {
             foreach (ICache cache in this.externalCaches)
@@ -122,11 +120,92 @@ namespace BF2D.Game
             this.externalCaches.Remove(cache);
         }
 
+        public void NewGame(string saveID, string playerPrefabID, string playerName)
+        {
+            SaveData newGame = new SaveData
+            {
+                ID = saveID
+            };
+            this.currentSave = newGame;
+            NewPlayer(playerPrefabID, playerName);
+        }
+
+        public void SaveGame()
+        {
+            SaveGameAs(this.currentSave.ID);
+        }
+
+        public void SaveGameAs(string id)
+        {
+            this.currentSave.ID = id;
+            string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
+            this.saveFilesManager.WriteToFile(newJSON, id);
+        }
+
+        public void LoadGame(string id)
+        {
+            this.currentSave = LoadSaveData(id);
+        }
+
+        public void NewControlsConfig(InputController controllerType)
+        {
+            InputManager.ResetConfig(controllerType);
+        }
+
+        public void SaveControlsConfig(InputController controllerType)
+        {
+            string id = controllerType switch
+            {
+                InputController.Keyboard => InputManager.KeyboardID,
+                InputController.Gamepad => InputManager.GamepadID,
+                _ => throw new ArgumentException("[GameInfo:SaveControlsConfig] InputController enum value was invalid")
+            };
+            SaveControlsConfigAs(controllerType, id);
+        }
+
+        public void SaveControlsConfigAs(InputController controllerType, string id)
+        {
+            string newJSON = InputManager.SerializeConfig(controllerType);
+
+            switch (controllerType)
+            {
+                case InputController.Keyboard:
+                    InputManager.KeyboardID = id;
+                    this.keyboardControlsConfigFilesManager.WriteToFile(newJSON, id);
+                    break;
+                case InputController.Gamepad:
+                    InputManager.GamepadID = id;
+                    this.gamepadControlsConfigFilesManager.WriteToFile(newJSON, id);
+                    break;
+                default:
+                    Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
+                    break;
+            }
+        }
+
+        public void LoadControlsConfig(InputController controllerType, string id)
+        {
+            string newJSON = controllerType switch
+            {
+                InputController.Keyboard => this.keyboardControlsConfigFilesManager.LoadFile(id),
+                InputController.Gamepad => this.gamepadControlsConfigFilesManager.LoadFile(id),
+                _ => string.Empty
+            };
+
+            if (string.IsNullOrEmpty(newJSON))
+            {
+                Debug.LogError("[GameInfo:LoadControlsConfig] Fetch failed");
+                return;
+            }
+
+            InputManager.DeserializeConfig(controllerType, newJSON);
+        }
+
         public Sprite GetIcon(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetIcon] String was empty");
+                Debug.LogWarning("[GameInfo:GetIcon] ID was invalid.");
                 return null;
             }
             return this.iconCollection[id];
@@ -134,9 +213,9 @@ namespace BF2D.Game
 
         public AudioClip GetSoundEffect(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetSoundEffect] String was empty");
+                Debug.LogWarning("[GameInfo:GetSoundEffect] ID was invalid.");
                 return null;
             }
             return this.soundEffectCollection[id];
@@ -144,9 +223,9 @@ namespace BF2D.Game
 
         public Item InstantiateItem(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateItem] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiateItem] ID was invalid.");
                 return null;
             }
             return this.items.Get(id, this.itemsFileManager);
@@ -154,9 +233,9 @@ namespace BF2D.Game
 
         public Equipment GetEquipment(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetEquipment] String was empty");
+                Debug.LogWarning("[GameInfo:GetEquipment] ID was invalid.");
                 return null;
             }
             return this.equipments.Get(id, this.equipmentsFileManager);
@@ -164,9 +243,9 @@ namespace BF2D.Game
 
         public StatusEffect GetStatusEffect(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetStatusEffect] String was empty");
+                Debug.LogWarning("[GameInfo:GetStatusEffect] ID was invalid.");
                 return null;
             }
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
@@ -174,9 +253,9 @@ namespace BF2D.Game
 
         public CharacterStatsAction GetCharacterStatsAction(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetCharacterStatsAction] String was empty");
+                Debug.LogWarning("[GameInfo:GetCharacterStatsAction] ID was invalid.");
                 return null;
             }
             return this.characterStatsActions.Get(id, this.characterStatsActionsFileManager);
@@ -184,18 +263,18 @@ namespace BF2D.Game
 
         public Job GetJob(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetJob] String was empty");
+                Debug.LogWarning("[GameInfo:GetJob] ID was invalid.");
             }
             return this.jobs.Get(id, this.jobsFileManager);
         }
 
         public CharacterStats InstantiateEnemy(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateEnemy] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
                 return null;
             }
             return this.enemies.Get(id, this.enemiesFileManager);
@@ -204,7 +283,7 @@ namespace BF2D.Game
         public void NewPlayer(string playerID, string newName)
         {
             CharacterStats newPlayer = InstantiatePlayer(playerID);
-            if (newPlayer == null)
+            if (newPlayer is null)
             {
                 Debug.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");
                 return;
@@ -221,34 +300,29 @@ namespace BF2D.Game
             }
             return this.queuedCombats.Dequeue();
         }
-
-        public bool ValidText(string text, out List<char> invalidCharacters)
-        {
-            return this.mainFont.HasCharacters(text, out invalidCharacters);
-        }
         #endregion
 
         #region Private Utilities
         private CharacterStats InstantiatePlayer(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiatePlayer] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiatePlayer] ID was invalid.");
                 return null;
             }
             return this.players.Get(id, this.playersFileManager);
         }
 
-        private SaveData LoadSaveData(string saveID)
+        private SaveData LoadSaveData(string id)
         {
-            if (saveID == string.Empty)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateEnemy] String was empty");
+                Debug.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
                 return null;
             }
 
-            string content = this.saveFilesManager.LoadFile(saveID);
-            if (content == string.Empty)
+            string content = this.saveFilesManager.LoadFile(id);
+            if (string.IsNullOrEmpty(content))
                 return null;
 
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);

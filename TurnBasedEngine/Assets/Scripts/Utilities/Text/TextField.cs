@@ -18,7 +18,7 @@ namespace BF2D.Utilities
             set
             {
                 List<char> invalidCharacters;
-                if (GameInfo.Instance.ValidText(value, out invalidCharacters))
+                if (ValidText(value, out invalidCharacters))
                 {
                     base.text = value;
                     return;
@@ -28,6 +28,11 @@ namespace BF2D.Utilities
                 newText = newText.Trim(invalidCharacters.ToArray());
                 base.text = newText;
             }
+        }
+
+        private bool ValidText(string text, out List<char> invalidCharacters)
+        {
+            return this.font.HasCharacters(text, out invalidCharacters);
         }
     }
 }

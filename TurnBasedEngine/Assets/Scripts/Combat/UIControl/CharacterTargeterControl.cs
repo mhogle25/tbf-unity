@@ -175,6 +175,7 @@ namespace BF2D.Combat
         private void AllOfAnyEvent()
         {
             this.orphanedTextbox.AutoPass = false;
+            this.orphanedTextbox.ResponseBackEventEnabled = true; 
             this.orphanedTextbox.ResponseEvent.AddListener((json) =>
             {
                 AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
@@ -200,6 +201,7 @@ namespace BF2D.Combat
             this.orphanedTextbox.ResponseEvent.RemoveAllListeners();
             this.orphanedTextbox.ResponseBackEvent.RemoveAllListeners();
             this.orphanedTextbox.AutoPass = true;
+            this.orphanedTextbox.ResponseBackEventEnabled = false;
         }
     }
 }
