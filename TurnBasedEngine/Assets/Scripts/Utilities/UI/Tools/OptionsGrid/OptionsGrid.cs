@@ -162,13 +162,13 @@ namespace BF2D.UI
             //Base case
             if (!this.optionPrefab)
             {
-                Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
+                Terminal.IO.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
                 return null;
             }
 
             if (this.count + 1 > Size)
             {
-                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
+                Terminal.IO.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return null;
             }
 
@@ -193,7 +193,7 @@ namespace BF2D.UI
             //Base case
             if (this.count + 1 > Size)
             {
-                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
+                Terminal.IO.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return false;
             }
 
@@ -218,7 +218,7 @@ namespace BF2D.UI
             //Base Case
             if (this.count < 1)
             {
-                Debug.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");
+                Terminal.IO.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");
                 return;
             }
 
@@ -318,7 +318,7 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Debug.LogError("[OptionsGrid:SetCursorAtHead] Tried to set the cursor at head but the grid was null");
+                Terminal.IO.LogError("[OptionsGrid:SetCursorAtHead] Tried to set the cursor at head but the grid was null");
                 return;
             }
 
@@ -341,7 +341,7 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Debug.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
+                Terminal.IO.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
                 return;
             }
 
@@ -352,7 +352,7 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Debug.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
+                Terminal.IO.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
                 return;
             }
 
@@ -395,7 +395,7 @@ namespace BF2D.UI
                             option = this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y];
                         break;
                     default:
-                        Debug.LogError("[OptionsGrid:Navigate] Invalid direction");
+                        Terminal.IO.LogError("[OptionsGrid:Navigate] Invalid direction");
                         break;
                 }
 

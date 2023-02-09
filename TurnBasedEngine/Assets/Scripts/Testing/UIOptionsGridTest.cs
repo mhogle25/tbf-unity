@@ -30,6 +30,6 @@ public class UIOptionsGridTest : MonoBehaviour
 
     public void HellYeah()
     {
-        Debug.Log("hell fuckin yeah bruther");
+        Terminal.IO.Log("hell fuckin yeah bruther");
     }
 }

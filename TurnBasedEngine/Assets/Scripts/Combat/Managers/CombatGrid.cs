@@ -83,7 +83,7 @@ namespace BF2D.Combat
             {
                 if (IsEnemyGridFull())
                 {
-                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
+                    Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
                     return;
                 }
                 CharacterCombat playerCombat = InstantiatePlayerCombat(playerStats);
@@ -96,7 +96,7 @@ namespace BF2D.Combat
             {
                 if (IsPlayerGridFull())
                 {
-                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
+                    Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
                     return;
                 }
                 CharacterCombat enemyCombat = InstantiateEnemyCombat(enemyStats);

@@ -34,32 +34,32 @@ namespace BF2D.UI
 
             this.state?.Invoke();
 
-            if (InputManager.ConfirmPress)
+            if (InputManager.Instance.ConfirmPress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Confirm);
             }
 
-            if (InputManager.MenuPress)
+            if (InputManager.Instance.MenuPress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Menu);
             }
 
-            if (InputManager.AttackPress)
+            if (InputManager.Instance.AttackPress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Attack);
             }
 
-            if (InputManager.BackPress)
+            if (InputManager.Instance.BackPress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Back);
             }
 
-            if (InputManager.PausePress)
+            if (InputManager.Instance.PausePress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Pause);
             }
 
-            if (InputManager.SelectPress)
+            if (InputManager.Instance.SelectPress)
             {
                 this.controlledOptionsGrid.InvokeEvent(InputButton.Select);
             }
@@ -94,22 +94,22 @@ namespace BF2D.UI
 
         private void StateDirectionInputListener()
         {
-            if (InputManager.Left)
+            if (InputManager.Instance.Left)
             {
                 DirectionalCall(InputDirection.Left);
             }
 
-            if (InputManager.Up)
+            if (InputManager.Instance.Up)
             {
                 DirectionalCall(InputDirection.Up);
             }
 
-            if (InputManager.Right)
+            if (InputManager.Instance.Right)
             {
                 DirectionalCall(InputDirection.Right);
             }
 
-            if (InputManager.Down)
+            if (InputManager.Instance.Down)
             {
                 DirectionalCall(InputDirection.Down);
             }
@@ -158,15 +158,15 @@ namespace BF2D.UI
             switch (InputDirection)
             {
                 case InputDirection.Left:
-                    return !InputManager.Left;
+                    return !InputManager.Instance.Left;
                 case InputDirection.Up:
-                    return !InputManager.Up;
+                    return !InputManager.Instance.Up;
                 case InputDirection.Right:
-                    return !InputManager.Right;
+                    return !InputManager.Instance.Right;
                 case InputDirection.Down:
-                    return !InputManager.Down;
+                    return !InputManager.Instance.Down;
                 default:
-                    Debug.LogError("[UIOptionsGridController] Invalid move direction");
+                    Terminal.IO.LogError("[UIOptionsGridController] Invalid move direction");
                     return false;
             }
         }

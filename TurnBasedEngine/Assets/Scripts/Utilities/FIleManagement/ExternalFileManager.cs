@@ -29,13 +29,13 @@ namespace BF2D.Utilities
         public override string LoadFile(string id)
         {
             return BF2D.Utilities.TextFile.LoadFile(Path.Combine(GetPathPrefix(), this.path, $"{id}.{this.fileExtension}"));
-        }
+        }   
 
         public void WriteToFile(string content, string id)
         {
             if (this.directory == GameDirectory.Streaming)
             {
-                Debug.LogWarning("[ExternalFileManager:WriteToFile] Cannot write to a streaming assets file, they are readonly.");
+                Terminal.IO.LogWarning("[ExternalFileManager:WriteToFile] Cannot write to a streaming assets file, they are readonly.");
                 return;
             }
 

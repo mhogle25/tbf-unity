@@ -16,6 +16,7 @@ namespace BF2D.Game
             return GameInfo.Instance.GetJob(this.id);
         }
 
+        [JsonIgnore]
         public int Level
         {
             get
@@ -24,6 +25,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int MaxHealthModifier
         {
             get
@@ -32,6 +34,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int MaxStaminaModifier
         {
             get
@@ -40,6 +43,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int SpeedModifier
         {
             get
@@ -48,6 +52,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int AttackModifier
         {
             get
@@ -56,6 +61,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int DefenseModifier
         {
             get
@@ -64,6 +70,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int FocusModifier
         {
             get
@@ -72,6 +79,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore]
         public int LuckModifier
         {
             get

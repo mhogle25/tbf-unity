@@ -43,7 +43,7 @@ namespace BF2D.Utilities
 
             if (!this.cachedData.ContainsKey(id))
             {
-                Debug.LogError($"[InternalFileManager: LoadFile] The text asset {id} didnt exist.");
+                Terminal.IO.LogError($"[InternalFileManager: LoadFile] The text asset {id} didnt exist.");
                 return string.Empty;
             }
 

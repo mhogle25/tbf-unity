@@ -34,7 +34,7 @@ namespace BF2D.Utilities
                 {
                     while (!uwr.isDone) await Task.Delay(5);
 
-                    if (uwr.result == UnityWebRequest.Result.ConnectionError) Debug.Log($"{uwr.error}");
+                    if (uwr.result == UnityWebRequest.Result.ConnectionError) Terminal.IO.Log($"{uwr.error}");
                     else
                     {
                         clip = DownloadHandlerAudioClip.GetContent(uwr);
@@ -42,7 +42,7 @@ namespace BF2D.Utilities
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"{e.Message}, {e.StackTrace}");
+                    Terminal.IO.LogError($"{e.Message}, {e.StackTrace}");
                 }
             }
 
@@ -71,7 +71,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadFile] The files specified by path '{path}' do not exist");
+                Terminal.IO.LogError($"[Utilities:TextFile:LoadFile] The files specified by path '{path}' do not exist");
                 return string.Empty;
             }
             return content;
@@ -86,7 +86,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
+                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
                 return default;
             }
             return t;
@@ -101,7 +101,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
+                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
                 return default;
             }
             return t;
@@ -116,7 +116,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFiles] The specified path '{path}' was invalid");
+                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFiles] The specified path '{path}' was invalid");
                 return -1;
             }
 
@@ -138,7 +138,7 @@ namespace BF2D.Utilities
             } 
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' was invalid or nonexistent");
+                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' was invalid or nonexistent");
             }
         }
 
@@ -151,7 +151,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' does not exist");
+                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' does not exist");
                 return -1;
             }
 
@@ -183,7 +183,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
             }
         }
     }

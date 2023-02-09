@@ -63,7 +63,7 @@ namespace BF2D.Combat
         {
             base.Update();
 
-            if (InputManager.ConfirmPress)
+            if (InputManager.Instance.ConfirmPress)
             {
                 this.orphanedTextbox.Continue();
             }
@@ -128,7 +128,7 @@ namespace BF2D.Combat
                     Continue();
                     return;
                 default:
-                    Debug.LogError("[CharacterTargeterControl:TargeterSetup] The provided value for a character target was invalid");
+                    Terminal.IO.LogError("[CharacterTargeterControl:TargeterSetup] The provided value for a character target was invalid");
                     return;
             }
         }

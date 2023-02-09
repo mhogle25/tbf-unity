@@ -84,7 +84,7 @@ namespace BF2D.Combat
             string dialogKey = EnemiesAreDefeated() ? "di_victory" : PlayersAreDefeated() ? "di_defeat" : "di_draw";
             this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, () =>
             {
-                Debug.Log("Final Trigger");
+                Terminal.IO.Log("Final Trigger");
             });
 
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);

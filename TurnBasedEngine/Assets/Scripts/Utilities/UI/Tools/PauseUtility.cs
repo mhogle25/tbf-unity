@@ -14,7 +14,7 @@ namespace BF2D.UI
 
         private void Update()
         {
-            if (InputManager.PausePress)
+            if (InputManager.Instance.PausePress)
             {
                 this.onPause.Invoke();
             }

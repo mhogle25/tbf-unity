@@ -37,7 +37,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Debug.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Terminal.IO.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Debug.LogWarning("[UIControlsManager:PassControlBackToFirst] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Terminal.IO.LogWarning("[UIControlsManager:PassControlBackToFirst] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -94,7 +94,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Debug.LogWarning("[UIControlsManager:ResetControlChain] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Terminal.IO.LogWarning("[UIControlsManager:ResetControlChain] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Debug.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Terminal.IO.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -160,7 +160,7 @@ namespace BF2D.UI
         {
             if (!this.phantomControl)
             {
-                Debug.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
+                Terminal.IO.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
                 return;
             }
 

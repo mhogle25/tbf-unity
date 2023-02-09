@@ -2,6 +2,7 @@ using BF2D.Enums;
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace BF2D
 {
@@ -64,7 +65,7 @@ namespace BF2D
         public class ControlsConfigKeyboard : ControlsConfig
         {
             [JsonIgnore] public override string ID { get { return this.id; } set { this.id = value; } }
-            [JsonProperty] private string id = "keyboard_default";
+            [JsonProperty] private string id = "default";
 
             [JsonIgnore] public override InputController ControlType { get { return ControlsConfigKeyboard.controlType; } }
             private const InputController controlType = InputController.Keyboard;
@@ -160,7 +161,7 @@ namespace BF2D
             #endregion
 
             [JsonIgnore] public override string ID { get { return this.id; } set { this.id = value; } }
-            [JsonProperty] private string id = "gamepad_default";
+            [JsonProperty] private string id = "default";
 
             [JsonIgnore] public override InputController ControlType { get { return ControlsConfigGamepad.controlType; } }
             private const InputController controlType = InputController.Gamepad;
@@ -232,63 +233,80 @@ namespace BF2D
             }
         }
 
-        [SerializeReference] private static ControlsConfigKeyboard defaultKeyboardConfig;
-        [SerializeReference] private static ControlsConfigGamepad defaultGamepadConfig;
-        [SerializeReference] private static ControlsConfigKeyboard keyboardConfig;
-        [SerializeReference] private static ControlsConfigGamepad gamepadConfig;
+        [SerializeField] private List<KeyCode> blacklistedCharacters = new();
 
-        private static ControlsConfig currentConfig;
-        private static KeyCode lastHitKey;
+        public bool InputEnabled { get { return this.inputEnabled; } set { this.inputEnabled = value; } }
+        private bool inputEnabled = true;
+
+        private ControlsConfigKeyboard defaultKeyboardConfig;
+        private ControlsConfigGamepad defaultGamepadConfig;
+        private ControlsConfigKeyboard keyboardConfig;
+        private ControlsConfigGamepad gamepadConfig;
+
+        private ControlsConfig currentConfig;
+        private KeyCode lastHitKey;
 
         private Action states;
         private Action buttonLambda;
         private Action directionLambda;
 
-        public static bool Up { get { return GetDirection(InputDirection.Up); } }
-        public static bool Left { get { return GetDirection(InputDirection.Left); } }
-        public static bool Down { get { return GetDirection(InputDirection.Down); } }
-        public static bool Right { get { return GetDirection(InputDirection.Right); } }
-        public static bool Confirm { get { return GetButton(InputButton.Confirm); } }
-        public static bool Back { get { return GetButton(InputButton.Back); } }
-        public static bool Menu { get { return GetButton(InputButton.Menu); } }
-        public static bool Attack { get { return GetButton(InputButton.Attack); } }
-        public static bool Pause { get { return GetButton(InputButton.Pause); } }
-        public static bool Select { get { return GetButton(InputButton.Select); } }
-        public static bool ConfirmPress { get { return GetButtonPress(InputButton.Confirm); } }
-        public static bool BackPress { get { return GetButtonPress(InputButton.Back); } }
-        public static bool MenuPress { get { return GetButtonPress(InputButton.Menu); } }
-        public static bool AttackPress { get { return GetButtonPress(InputButton.Attack); } }
-        public static bool PausePress { get { return GetButtonPress(InputButton.Pause); } }
-        public static bool SelectPress { get { return GetButtonPress(InputButton.Select); } }
-        public static bool ConfirmRelease { get { return GetButtonRelease(InputButton.Confirm); } }
-        public static bool BackRelease { get { return GetButtonRelease(InputButton.Back); } }
-        public static bool MenuRelease { get { return GetButtonRelease(InputButton.Menu); } }
-        public static bool AttackRelease { get { return GetButtonRelease(InputButton.Attack); } }
-        public static bool PauseRelease { get { return GetButtonRelease(InputButton.Pause); } }
-        public static bool SelectRelease { get { return GetButtonRelease(InputButton.Select); } }
-        public static float HorizontalAxis { get { return GetAxis(Axis.Horizontal); } }
-        public static float VerticalAxis { get { return GetAxis(Axis.Vertical); } }
+        public bool Up { get { return GetDirection(InputDirection.Up); } }
+        public bool Left { get { return GetDirection(InputDirection.Left); } }
+        public bool Down { get { return GetDirection(InputDirection.Down); } }
+        public bool Right { get { return GetDirection(InputDirection.Right); } }
+        public bool Confirm { get { return GetButton(InputButton.Confirm); } }
+        public bool Back { get { return GetButton(InputButton.Back); } }
+        public bool Menu { get { return GetButton(InputButton.Menu); } }
+        public bool Attack { get { return GetButton(InputButton.Attack); } }
+        public bool Pause { get { return GetButton(InputButton.Pause); } }
+        public bool Select { get { return GetButton(InputButton.Select); } }
+        public bool ConfirmPress { get { return GetButtonPress(InputButton.Confirm); } }
+        public bool BackPress { get { return GetButtonPress(InputButton.Back); } }
+        public bool MenuPress { get { return GetButtonPress(InputButton.Menu); } }
+        public bool AttackPress { get { return GetButtonPress(InputButton.Attack); } }
+        public bool PausePress { get { return GetButtonPress(InputButton.Pause); } }
+        public bool SelectPress { get { return GetButtonPress(InputButton.Select); } }
+        public bool ConfirmRelease { get { return GetButtonRelease(InputButton.Confirm); } }
+        public bool BackRelease { get { return GetButtonRelease(InputButton.Back); } }
+        public bool MenuRelease { get { return GetButtonRelease(InputButton.Menu); } }
+        public bool AttackRelease { get { return GetButtonRelease(InputButton.Attack); } }
+        public bool PauseRelease { get { return GetButtonRelease(InputButton.Pause); } }
+        public bool SelectRelease { get { return GetButtonRelease(InputButton.Select); } }
+        public float HorizontalAxis { get { return GetAxis(Axis.Horizontal); } }
+        public float VerticalAxis { get { return GetAxis(Axis.Vertical); } }
 
-        public static string KeyboardID { get { return InputManager.keyboardConfig.ID; } set { InputManager.keyboardConfig.ID = value; } }
-        public static string GamepadID { get { return InputManager.gamepadConfig.ID; } set { InputManager.gamepadConfig.ID = value; } }
+        public string KeyboardID { get { return this.keyboardConfig.ID; } set { this.keyboardConfig.ID = value; } }
+        public string GamepadID { get { return this.gamepadConfig.ID; } set { this.gamepadConfig.ID = value; } }
+
+        public static InputManager Instance { get { return InputManager.instance; } }
+        private static InputManager instance = null;
 
         public InputManager()
         {
             //Set up the default configs 
-            InputManager.defaultKeyboardConfig = new ControlsConfigKeyboard();
-            InputManager.defaultGamepadConfig = new ControlsConfigGamepad();
+            this.defaultKeyboardConfig = new ControlsConfigKeyboard();
+            this.defaultGamepadConfig = new ControlsConfigGamepad();
 
             //Set up the keyboard and gamepad configs
-            InputManager.keyboardConfig = CloneKeyboardConfig(InputManager.defaultKeyboardConfig);
-            InputManager.gamepadConfig = CloneGamepadConfig(InputManager.defaultGamepadConfig);
+            this.keyboardConfig = CloneKeyboardConfig(this.defaultKeyboardConfig);
+            this.gamepadConfig = CloneGamepadConfig(this.defaultGamepadConfig);
 
             //Initialize the current config
-            InputManager.currentConfig = InputManager.keyboardConfig;
+            this.currentConfig = this.keyboardConfig;
         }
 
         private void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
+
+            //Setup of Monobehaviour Singleton
+            if (InputManager.instance != this && InputManager.instance != null)
+            {
+                Destroy(InputManager.instance.gameObject);
+            }
+
+            InputManager.instance = this;
+
             states += StateGamepadConnected;
         }
 
@@ -301,60 +319,74 @@ namespace BF2D
         {
             if (Input.anyKeyDown)
             {
-                InputManager.lastHitKey = Event.current.keyCode;
+                this.lastHitKey = Event.current.keyCode;
             }
         }
 
-        public static bool GetDirection(InputDirection inputDirection)
+        public bool GetDirection(InputDirection inputDirection)
         {
-            return InputManager.currentConfig.GetDirection(inputDirection);
+            if (!this.inputEnabled)
+                return false;
+            return this.currentConfig.GetDirection(inputDirection);
         }
 
-        public static bool GetButton(InputButton inputButton)
+        public bool GetButton(InputButton inputButton)
         {
-            return InputManager.currentConfig.GetButton(inputButton);
+            if (!this.inputEnabled)
+                return false;
+            return this.currentConfig.GetButton(inputButton);
         }
 
-        public static bool GetButtonPress(InputButton inputButton)
+        public bool GetButtonPress(InputButton inputButton)
         {
-            return InputManager.currentConfig.GetButtonPress(inputButton);
+            if (!this.inputEnabled)
+                return false;
+            return this.currentConfig.GetButtonPress(inputButton);
         }
 
-        public static bool GetButtonPress()
+        public bool GetButtonPress()
         {
-            return InputManager.ConfirmPress || InputManager.BackPress || InputManager.MenuPress || InputManager.AttackPress || InputManager.PausePress || InputManager.SelectPress;
+            if (!this.inputEnabled)
+                return false;
+            return this.ConfirmPress || this.BackPress || this.MenuPress || this.AttackPress || this.PausePress || this.SelectPress;
         }
 
-        public static bool GetButtonRelease(InputButton inputButton)
+        public bool GetButtonRelease(InputButton inputButton)
         {
-            return InputManager.currentConfig.GetButtonPress(inputButton);
+            if (!this.inputEnabled)
+                return false;
+            return this.currentConfig.GetButtonPress(inputButton);
         }
 
-        public static bool GetButtonRelease()
+        public bool GetButtonRelease()
         {
-            return InputManager.ConfirmRelease || InputManager.BackRelease || InputManager.MenuRelease || InputManager.AttackRelease || InputManager.PauseRelease || InputManager.SelectRelease;
+            if (!this.inputEnabled)
+                return false;
+            return this.ConfirmRelease || this.BackRelease || this.MenuRelease || this.AttackRelease || this.PauseRelease || this.SelectRelease;
         }
 
-        public static float GetAxis(Axis axis)
+        public float GetAxis(Axis axis)
         {
-            return InputManager.currentConfig.GetAxis(axis);
+            if (!this.inputEnabled)
+                return 0f;
+            return this.currentConfig.GetAxis(axis);
         }
 
         /// <summary>
         /// Returns the config of the keyboard to its default values
         /// </summary>
-        public static void ResetConfig(InputController inputController)
+        public void ResetConfig(InputController inputController)
         {
             switch (inputController)
             {
                 case InputController.Keyboard:
-                    InputManager.keyboardConfig = CloneKeyboardConfig(InputManager.defaultKeyboardConfig);
+                    this.keyboardConfig = CloneKeyboardConfig(this.defaultKeyboardConfig);
                     break;
                 case InputController.Gamepad:
-                    InputManager.gamepadConfig = CloneGamepadConfig(InputManager.defaultGamepadConfig);
+                    this.gamepadConfig = CloneGamepadConfig(this.defaultGamepadConfig);
                     break;
                 default:
-                    Debug.LogError("[InputManager:ResetConfig] InputController was null or invalid");
+                    Terminal.IO.LogError("[InputManager:ResetConfig] InputController was null or invalid");
                     return;
             }
         }
@@ -363,33 +395,33 @@ namespace BF2D
         /// Gets the type of the active Input Controller
         /// </summary>
         /// <returns>The type of the active Input Controller</returns>
-        public static InputController GetCurrentControlType()
+        public InputController GetCurrentControlType()
         {
-            return InputManager.currentConfig.ControlType;
+            return this.currentConfig.ControlType;
         }
 
-        public static string SerializeConfig(InputController controllerType)
+        public string SerializeConfig(InputController controllerType)
         {
             return controllerType switch
             {
-                InputController.Keyboard => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigKeyboard>(InputManager.keyboardConfig),
-                InputController.Gamepad => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigGamepad>(InputManager.gamepadConfig),
+                InputController.Keyboard => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigKeyboard>(this.keyboardConfig),
+                InputController.Gamepad => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigGamepad>(this.gamepadConfig),
                 _ => string.Empty,
             };
         }
 
-        public static void DeserializeConfig(InputController controllerType, string json)
+        public void DeserializeConfig(InputController controllerType, string json)
         {
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    InputManager.keyboardConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigKeyboard>(json);
+                    this.keyboardConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigKeyboard>(json);
                     break;
                 case InputController.Gamepad:
-                    InputManager.gamepadConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigGamepad>(json);
+                    this.gamepadConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigGamepad>(json);
                     break;
                 default:
-                    Debug.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");
+                    Terminal.IO.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");
                     break;
             }
 
@@ -419,7 +451,7 @@ namespace BF2D
         /// </summary>
         /// <param iconID="config">The Keyboard Config to be copied</param>
         /// <returns>The copy of the Keyboard Config</returns>
-        private static ControlsConfigKeyboard CloneKeyboardConfig(ControlsConfigKeyboard config)
+        private ControlsConfigKeyboard CloneKeyboardConfig(ControlsConfigKeyboard config)
         {
             return new ControlsConfigKeyboard
             {
@@ -441,7 +473,7 @@ namespace BF2D
         /// </summary>
         /// <param iconID="config">The Gamepad Config to be copied</param>
         /// <returns>The copy of the Gamepad Config</returns>
-        private static ControlsConfigGamepad CloneGamepadConfig(ControlsConfigGamepad config)
+        private ControlsConfigGamepad CloneGamepadConfig(ControlsConfigGamepad config)
         {
             return new ControlsConfigGamepad
             {
@@ -455,17 +487,17 @@ namespace BF2D
             };
         }
 
-        private static void ReloadCurrentConfig()
+        private void ReloadCurrentConfig()
         {
-            InputManager.currentConfig = InputManager.currentConfig.ControlType switch
+            this.currentConfig = this.currentConfig.ControlType switch
             {
-                InputController.Keyboard => InputManager.keyboardConfig,
-                InputController.Gamepad => InputManager.gamepadConfig,
+                InputController.Keyboard => this.keyboardConfig,
+                InputController.Gamepad => this.gamepadConfig,
                 _ => null,
             };
 
-            if (InputManager.currentConfig is null)
-                Debug.LogError("[InputManager:ReloadCurrentConfig] InputController was null or invalid");
+            if (this.currentConfig is null)
+                Terminal.IO.LogError("[InputManager:ReloadCurrentConfig] InputController was null or invalid");
         }
 
         private void StateGamepadConnected()
@@ -490,14 +522,14 @@ namespace BF2D
             {
                 if (GetCurrentControlType() != InputController.Gamepad)
                 {
-                    InputManager.currentConfig = InputManager.gamepadConfig;
+                    this.currentConfig = this.gamepadConfig;
                 }
             }
             else
             {
                 if (GetCurrentControlType() == InputController.Gamepad)
                 {
-                    InputManager.currentConfig = InputManager.keyboardConfig;
+                    this.currentConfig = this.keyboardConfig;
                 }
             }
         }
@@ -509,28 +541,34 @@ namespace BF2D
                 return;
             }
 
+            if (IsKeyCodeBlacklisted(this.lastHitKey))
+            {
+                Terminal.IO.LogWarning($"[InputManager:StateSetCurrentConfigButton] Tried to bind key '{this.lastHitKey}' to '{inputButton}' but the key was blacklisted.");
+                return;
+            }
+
             switch (inputButton)
             {
                 case InputButton.Confirm:
-                    InputManager.currentConfig.Confirm = InputManager.lastHitKey;
+                    this.currentConfig.Confirm = this.lastHitKey;
                     break;
                 case InputButton.Back:
-                    InputManager.currentConfig.Back = InputManager.lastHitKey;
+                    this.currentConfig.Back = this.lastHitKey;
                     break;
                 case InputButton.Menu:
-                    InputManager.currentConfig.Menu = InputManager.lastHitKey;
+                    this.currentConfig.Menu = this.lastHitKey;
                     break;
                 case InputButton.Attack:
-                    InputManager.currentConfig.Attack = InputManager.lastHitKey;
+                    this.currentConfig.Attack = this.lastHitKey;
                     break;
                 case InputButton.Pause:
-                    InputManager.currentConfig.Pause = InputManager.lastHitKey;
+                    this.currentConfig.Pause = this.lastHitKey;
                     break;
                 case InputButton.Select:
-                    InputManager.currentConfig.Select = InputManager.lastHitKey;
+                    this.currentConfig.Select = this.lastHitKey;
                     break;
                 default:
-                    Debug.LogError("[InputManager:StateSetCurrentConfigButton] InputButton was null or invalid");
+                    Terminal.IO.LogError("[InputManager:StateSetCurrentConfigButton] InputButton was null or invalid");
                     break;
             }
 
@@ -544,27 +582,37 @@ namespace BF2D
                 return;
             }
 
+            if (IsKeyCodeBlacklisted(this.lastHitKey))
+            {
+                Terminal.IO.LogWarning($"[InputManager:StateSetCurrentKeyboardDirection] Tried to bind key '{this.lastHitKey}' to '{inputDirection}' but the key was blacklisted.");
+                return;
+            }
+
             switch (inputDirection)
             {
                 case InputDirection.Up:
-                    InputManager.keyboardConfig.Up = InputManager.lastHitKey;
+                    this.keyboardConfig.Up = this.lastHitKey;
                     break;
                 case InputDirection.Left:
-                    InputManager.keyboardConfig.Left = InputManager.lastHitKey;
+                    this.keyboardConfig.Left = this.lastHitKey;
                     break;
                 case InputDirection.Down:
-                    InputManager.keyboardConfig.Down = InputManager.lastHitKey;
+                    this.keyboardConfig.Down = this.lastHitKey;
                     break;
                 case InputDirection.Right:
-                    InputManager.keyboardConfig.Right = InputManager.lastHitKey;
+                    this.keyboardConfig.Right = this.lastHitKey;
                     break;
                 default:
-                    Debug.LogError("[InputManager:StateSetKeyboardDirection] InputDirection was null or invalid");
+                    Terminal.IO.LogError("[InputManager:StateSetKeyboardDirection] InputDirection was null or invalid");
                     break;
-
             }
 
             states -= directionLambda;
+        }
+
+        private bool IsKeyCodeBlacklisted(KeyCode code)
+        {
+            return this.blacklistedCharacters.Contains(code);
         }
     }
 }

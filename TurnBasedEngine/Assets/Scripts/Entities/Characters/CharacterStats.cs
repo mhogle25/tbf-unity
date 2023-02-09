@@ -202,7 +202,7 @@ namespace BF2D.Game
         {
             int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
             this.health -= value;
-            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -210,7 +210,7 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage : 1;
             this.health -= value;
-            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -218,7 +218,7 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage * CritMultiplier() : 1;
             this.health -= value;
-            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -226,7 +226,7 @@ namespace BF2D.Game
         {
             int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
             this.health -= value;
-            //Debug.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
+            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -240,7 +240,7 @@ namespace BF2D.Game
             }
 
             this.health += value;
-            //Debug.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
+            //Console.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
             return value;
         }
 
@@ -254,7 +254,7 @@ namespace BF2D.Game
             }
 
             this.stamina += value;
-            //Debug.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
+            //Console.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -262,7 +262,7 @@ namespace BF2D.Game
         {
             int value = exertion > 0 ? exertion : 1;
             this.stamina -= value;
-            //Debug.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
+            //Console.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -270,7 +270,7 @@ namespace BF2D.Game
         {
             int healthBefore = this.Health;
             this.health = (int)this.MaxHealth;
-            //Debug.Log($"Health Before: {healthBefore} Health After: {this.Health}");
+            //Console.Log($"Health Before: {healthBefore} Health After: {this.Health}");
             return this.Health - healthBefore;
         }
 
@@ -278,7 +278,7 @@ namespace BF2D.Game
         {
             int staminaBefore = this.Stamina;
             this.stamina = (int)this.MaxStamina;
-            //Debug.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
+            //Console.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
         #endregion
@@ -313,7 +313,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s items bag but the item id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s items bag but the item id given was invalid");
                 return;
             }
 
@@ -324,7 +324,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an item from {this.name}'s item bag but the item info given was null");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to remove an item from {this.name}'s item bag but the item info given was null");
                 return;
             }
 
@@ -355,7 +355,7 @@ namespace BF2D.Game
 
             if (equipment is null)
             {
-                Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                Terminal.IO.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
                 return;
             }
 
@@ -397,7 +397,7 @@ namespace BF2D.Game
             
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:AddEffect] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
                 return;
             }
 
@@ -408,7 +408,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:AddEffect] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
                 return;
             }
 
@@ -442,7 +442,7 @@ namespace BF2D.Game
                 case EquipmentType.Hands: this.hands = equipmentID; break;
                 case EquipmentType.Legs: this.legs = equipmentID; break;
                 case EquipmentType.Feet: this.feet = equipmentID; break;
-                default: Debug.LogError($"[CharacterStats:SetEquipmentByType] Tried to equip an equipment that didn't have a type to {this.name}"); return;
+                default: Terminal.IO.LogError($"[CharacterStats:SetEquipmentByType] Tried to equip an equipment that didn't have a type to {this.name}"); return;
             }
         }
 
@@ -478,7 +478,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
                 return;
             }
 
@@ -489,7 +489,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Debug.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.name} but the status effect info given was null");
+                Terminal.IO.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.name} but the status effect info given was null");
                 return;
             }
 

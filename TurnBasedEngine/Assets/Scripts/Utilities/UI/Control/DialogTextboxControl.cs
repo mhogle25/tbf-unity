@@ -22,7 +22,7 @@ namespace BF2D.UI
 
         private void Listen()
         {
-            if (InputManager.ConfirmPress)
+            if (InputManager.Instance.ConfirmPress)
             {
                 this.dialogTextbox.Continue();
             }

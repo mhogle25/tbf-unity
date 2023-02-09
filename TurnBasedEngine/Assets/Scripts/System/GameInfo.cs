@@ -69,29 +69,6 @@ namespace BF2D.Game
             }
 
             GameInfo.instance = this;
-
-            TEST_INITIALIZE();
-        }
-
-        private void TEST_INITIALIZE()
-        {
-            LoadControlsConfig(InputController.Keyboard, "keyboard_default");
-            LoadControlsConfig(InputController.Gamepad, "gamepad_default");
-
-            Debug.Log($"Streaming Assets Path: {Application.streamingAssetsPath}");
-            Debug.Log($"Persistent Data Path: {Application.persistentDataPath}");
-
-            this.currentSave = LoadSaveData("save1");
-            List<CharacterStats> enemies = new()
-            {
-                InstantiateEnemy("en_lessergoblin")
-            };
-
-            this.queuedCombats.Enqueue(new CombatManager.InitializeInfo
-            {
-                players = this.Players,
-                enemies = enemies
-            });
         }
 
         #region Public Methods
@@ -149,15 +126,15 @@ namespace BF2D.Game
 
         public void NewControlsConfig(InputController controllerType)
         {
-            InputManager.ResetConfig(controllerType);
+            InputManager.Instance.ResetConfig(controllerType);
         }
 
         public void SaveControlsConfig(InputController controllerType)
         {
             string id = controllerType switch
             {
-                InputController.Keyboard => InputManager.KeyboardID,
-                InputController.Gamepad => InputManager.GamepadID,
+                InputController.Keyboard => InputManager.Instance.KeyboardID,
+                InputController.Gamepad => InputManager.Instance.GamepadID,
                 _ => throw new ArgumentException("[GameInfo:SaveControlsConfig] InputController enum value was invalid")
             };
             SaveControlsConfigAs(controllerType, id);
@@ -165,20 +142,20 @@ namespace BF2D.Game
 
         public void SaveControlsConfigAs(InputController controllerType, string id)
         {
-            string newJSON = InputManager.SerializeConfig(controllerType);
+            string newJSON = InputManager.Instance.SerializeConfig(controllerType);
 
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    InputManager.KeyboardID = id;
+                    InputManager.Instance.KeyboardID = id;
                     this.keyboardControlsConfigFilesManager.WriteToFile(newJSON, id);
                     break;
                 case InputController.Gamepad:
-                    InputManager.GamepadID = id;
+                    InputManager.Instance.GamepadID = id;
                     this.gamepadControlsConfigFilesManager.WriteToFile(newJSON, id);
                     break;
                 default:
-                    Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
+                    Terminal.IO.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
                     break;
             }
         }
@@ -194,18 +171,18 @@ namespace BF2D.Game
 
             if (string.IsNullOrEmpty(newJSON))
             {
-                Debug.LogError("[GameInfo:LoadControlsConfig] Fetch failed");
+                Terminal.IO.LogError("[GameInfo:LoadControlsConfig] Fetch failed");
                 return;
             }
 
-            InputManager.DeserializeConfig(controllerType, newJSON);
+            InputManager.Instance.DeserializeConfig(controllerType, newJSON);
         }
 
         public Sprite GetIcon(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetIcon] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetIcon] ID was invalid.");
                 return null;
             }
             return this.iconCollection[id];
@@ -215,7 +192,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetSoundEffect] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetSoundEffect] ID was invalid.");
                 return null;
             }
             return this.soundEffectCollection[id];
@@ -225,7 +202,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateItem] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:InstantiateItem] ID was invalid.");
                 return null;
             }
             return this.items.Get(id, this.itemsFileManager);
@@ -235,7 +212,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetEquipment] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetEquipment] ID was invalid.");
                 return null;
             }
             return this.equipments.Get(id, this.equipmentsFileManager);
@@ -245,7 +222,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetStatusEffect] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetStatusEffect] ID was invalid.");
                 return null;
             }
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
@@ -255,7 +232,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetCharacterStatsAction] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetCharacterStatsAction] ID was invalid.");
                 return null;
             }
             return this.characterStatsActions.Get(id, this.characterStatsActionsFileManager);
@@ -265,7 +242,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:GetJob] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:GetJob] ID was invalid.");
             }
             return this.jobs.Get(id, this.jobsFileManager);
         }
@@ -274,7 +251,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
                 return null;
             }
             return this.enemies.Get(id, this.enemiesFileManager);
@@ -285,11 +262,16 @@ namespace BF2D.Game
             CharacterStats newPlayer = InstantiatePlayer(playerID);
             if (newPlayer is null)
             {
-                Debug.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");
+                Terminal.IO.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");
                 return;
             }
             newPlayer.SetName(newName);
             this.currentSave.AddPlayer(newPlayer);
+        }
+
+        public void StageCombatInfo(CombatManager.InitializeInfo info)
+        {
+            this.queuedCombats.Enqueue(info);
         }
 
         public CombatManager.InitializeInfo UnstageCombatInfo()
@@ -307,7 +289,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiatePlayer] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:InstantiatePlayer] ID was invalid.");
                 return null;
             }
             return this.players.Get(id, this.playersFileManager);
@@ -317,7 +299,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
+                Terminal.IO.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
                 return null;
             }
 

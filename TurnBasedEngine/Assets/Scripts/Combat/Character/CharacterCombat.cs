@@ -176,7 +176,7 @@ namespace BF2D.Combat
 
                 if (equipment is null)
                 {
-                    Debug.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
+                    Terminal.IO.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
                     continue;
                 }
 
@@ -337,13 +337,13 @@ namespace BF2D.Combat
         #region EOC and EOT
         private void EOTEvent()
         {
-            Debug.Log("End of Turn");
+            Terminal.IO.Log("End of Turn");
             CombatManager.Instance.PassTurn();
         }
 
         private void EOCEvent()
         {
-            Debug.Log("End of Combat");
+            Terminal.IO.Log("End of Combat");
             CombatManager.Instance.EndCombat();
         }
         #endregion

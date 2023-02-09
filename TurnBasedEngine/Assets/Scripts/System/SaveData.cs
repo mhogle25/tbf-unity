@@ -18,7 +18,7 @@ namespace BF2D.Game
         {
             if (newPlayer is null)
             {
-                Debug.LogWarning("[SaveData] Tried to add a player but the player was null");
+                Terminal.IO.LogWarning("[SaveData] Tried to add a player but the player was null");
                 return;
             }
             this.players.Add(newPlayer);
