@@ -8,6 +8,7 @@ using BF2D.Utilities;
 using TMPro;
 using BF2D.Enums;
 using System;
+using BF2D.UI;
 
 namespace BF2D.Game
 {
@@ -18,6 +19,7 @@ namespace BF2D.Game
         private static GameInfo instance;
 
         public float ClockSpeed { get { return this.clockSpeed; } }
+        public DialogTextboxControl SystemTextbox { get { return this.systemTextbox; } }
 
         [Header("Global Game Settings")]
         [SerializeField] private float clockSpeed = 0.03125f;
@@ -54,6 +56,9 @@ namespace BF2D.Game
         [Header("Asset Collections")]
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
+
+        [Header("Miscellaneous")]
+        [SerializeField] private DialogTextboxControl systemTextbox = null;
 
         private readonly Queue<CombatManager.InitializeInfo> queuedCombats = new();
 

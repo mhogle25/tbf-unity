@@ -8,13 +8,21 @@ using BF2D.Combat;
 using BF2D.Enums;
 using System.Text.RegularExpressions;
 using System.Linq;
+using BF2D.UI;
 
 namespace BF2D
 {
+    [RequireComponent(typeof(TMP_InputField))]
     public class TerminalInput : MonoBehaviour
     {
+        private TMP_InputField inputField;
+
         private delegate void Command(string[] arguments);
         private readonly Dictionary<string, Command> commands;
+
+        private readonly Stack<string> historyBackward = new();
+        private readonly Stack<string> historyForward = new();
+        private bool inHistory = false;
 
         public TerminalInput()
         {
@@ -23,8 +31,23 @@ namespace BF2D
                 { "echo", CommandEcho },
                 { "clear", CommandClear },
                 { "paths", CommandPaths },
-                { "combatdemo", CommandCombatDemo }
+                { "combatdemo", CommandCombatDemo },
+                { "message", CommandMessage },
             };
+        }
+
+        private void Awake()
+        {
+            this.inputField = GetComponent<TMP_InputField>();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+                UpKeyEvent();
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+                DownKeyEvent();
         }
 
         public void Commit(string command)
@@ -32,6 +55,8 @@ namespace BF2D
             if (string.IsNullOrEmpty(command))
                 return;
 
+            ResetHistoryCursor();
+            this.historyBackward.Push(command);
             string[] args = ParseCommand(command);
 
             if (args is null)
@@ -66,6 +91,54 @@ namespace BF2D
             }
 
             return args.ToArray();
+        }
+
+        private void UpKeyEvent()
+        {
+            if (this.historyBackward.Count > 0)
+            {
+                string command = this.historyBackward.Pop();
+
+                if (this.inHistory)
+                    this.historyForward.Push(this.inputField.text);
+
+                this.inHistory = true;
+
+                this.inputField.text = command;
+            }
+        }
+
+        private void DownKeyEvent()
+        {
+            if (this.historyForward.Count > 0)
+            {
+                string command = this.historyForward.Pop();
+                this.historyBackward.Push(this.inputField.text);
+                this.inputField.text = command;
+            } 
+            else
+            {
+                if (this.inHistory)
+                {
+                    this.historyBackward.Push(this.inputField.text);
+                    this.inputField.text = string.Empty;
+                }
+
+                this.inHistory = false;
+            }
+        }
+
+        private void ResetHistoryCursor()
+        {
+            if (this.inHistory)
+            {
+                this.inHistory = false;
+                this.historyBackward.Push(this.inputField.text);
+                while (this.historyForward.Count > 0)
+                {
+                    this.historyBackward.Push(this.historyForward.Pop());
+                }
+            }
         }
 
         #region Commands
@@ -107,6 +180,22 @@ namespace BF2D
                 players = GameInfo.Instance.Players,
                 enemies = enemies
             });
+        }
+
+        private void CommandMessage(string[] arguments)
+        {
+            if (arguments.Length < 2)
+            {
+                Terminal.IO.LogWarning("Useage: message [text] (optional ->) [insert1] [insert2]...");
+            }
+
+            List<string> inserts = new();
+            for (int i = 2; i < arguments.Length; i++)
+            {
+                inserts.Add(arguments[i]);
+            }
+            GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], null, inserts);
+            UIControlsManager.Instance.TakeControl(GameInfo.Instance.SystemTextbox);
         }
         #endregion
     }

@@ -8,12 +8,13 @@ namespace BF2D
         public static Terminal IO { get { return Terminal.instance; } }
         private static Terminal instance = null;
 
+        [SerializeField] private KeyCode enableKey = KeyCode.BackQuote;
         [SerializeField] private RectTransform view = null;
         [SerializeField] private TerminalOutput terminalOut = null;
         [SerializeField] private TerminalInput terminalIn = null;
 
         [SerializeField] private UnityEvent onEnable = new();
-        [SerializeField] private KeyCode enableKey = KeyCode.BackQuote;
+        [SerializeField] private UnityEvent onDisable = new();
 
         private void Awake()
         {
@@ -30,7 +31,10 @@ namespace BF2D
             {
                 InputManager.Instance.InputEnabled = !InputManager.Instance.InputEnabled;
                 this.view.gameObject.SetActive(!this.view.gameObject.activeSelf);
-                this.onEnable?.Invoke();
+                if (this.view.gameObject.activeSelf)
+                    this.onEnable?.Invoke();
+                else
+                    this.onDisable?.Invoke();
             }
         }
 

@@ -162,7 +162,7 @@ namespace BF2D.UI {
 
             lines = ReplaceInsertTags(lines, inserts);
 
-            DialogData dialogData = new DialogData
+            DialogData dialogData = new()
             {
                 dialog = lines,
                 index = 0,
@@ -474,7 +474,7 @@ namespace BF2D.UI {
                         } 
                         else
                         {
-                            Terminal.IO.LogError($"[DialogTextbox] Voice key '{key}' was not found in the voices dictionary");
+                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Voice key '{key}' was not found in the voices dictionary");
                         }
                         this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
@@ -500,7 +500,7 @@ namespace BF2D.UI {
                                 } 
                                 else
                                 {
-                                    Terminal.IO.LogError($"[Dialog Textbox] The dialog response file for the specified key '{data}' was not found");
+                                    Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
                                 }
                             }
 
@@ -512,7 +512,7 @@ namespace BF2D.UI {
                         }
                         else
                         {
-                            Terminal.IO.LogError("[DialogTextbox] The value for the response data cannot be null");
+                            Terminal.IO.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
                         }
                         this.messageIndex = newMessageIndex + 1;
                         return false;
@@ -520,8 +520,12 @@ namespace BF2D.UI {
                         this.state = EndOfDialog;
                         return false;
                     default:
-                        Terminal.IO.LogError($"[DialogTextbox] Tag '{tag}' was not a valid character");
-                        break;
+                        if (tag == DialogTextbox.insertTag)
+                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
+                        else
+                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not a valid character");
+                        Cancel();
+                        return true;
                 }
             } else { //Basic character
                 if (message[this.messageIndex] != ' ')
@@ -545,7 +549,7 @@ namespace BF2D.UI {
             //Move to colon, check if colon exists, move on
             index++;
             if (message[index] != ':') {
-                Terminal.IO.LogError("[DialogTextbox] Incorrect Syntax, add ':' after tag");
+                Terminal.IO.LogError("[DialogTextbox:ParseTag] Incorrect Syntax, add ':' after tag");
             }
             index++;
 
