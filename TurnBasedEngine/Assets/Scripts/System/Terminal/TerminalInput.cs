@@ -34,7 +34,10 @@ namespace BF2D
                 { "combatdemo", CommandCombatDemo },
                 { "message", CommandMessage },
                 { "dialog", CommandDialog },
+                { "dialogkey", CommandDialogKey },
                 { "runtextbox", CommandRunTextbox },
+                { "clearcaches", CommandClearCaches },
+                { "save", CommandSaveGame },
             };
         }
 
@@ -68,7 +71,7 @@ namespace BF2D
 
             if (!this.commands.ContainsKey(op))
             {
-                Terminal.IO.LogWarning($"The command '{op}' does not exist");
+                Terminal.IO.LogWarningQuiet($"The command '{op}' does not exist.");
                 return;
             }
 
@@ -153,7 +156,7 @@ namespace BF2D
 
             for (int i = 1; i < arguments.Length; i++)
             {
-                Terminal.IO.Log(arguments[i]);
+                Terminal.IO.LogQuiet(arguments[i]);
             }
         }
 
@@ -164,8 +167,8 @@ namespace BF2D
 
         private void CommandPaths(string[] arguments)
         {
-            Terminal.IO.Log($"Streaming Assets Path: {Application.streamingAssetsPath}");
-            Terminal.IO.Log($"Persistent Data Path: {Application.persistentDataPath}");
+            Terminal.IO.LogQuiet($"Streaming Assets Path: {Application.streamingAssetsPath}");
+            Terminal.IO.LogQuiet($"Persistent Data Path: {Application.persistentDataPath}");
         }
 
         private void CommandCombatDemo(string[] arguments)
@@ -190,7 +193,7 @@ namespace BF2D
         {
             if (arguments.Length < 2)
             {
-                Terminal.IO.LogWarning("Useage: message [text] (optional ->) [insert1] [insert2]...");
+                Terminal.IO.LogWarningQuiet("Useage: message [text] (optional ->) [insert1] [insert2]...");
                 return;
             }
 
@@ -201,43 +204,44 @@ namespace BF2D
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], null, inserts);
+            Terminal.IO.LogQuiet("Pushed a message to the system textbox's queue. Run with 'runtextbox'.");
         }
 
         private void CommandDialog(string[] arguments)
         {
-            const string warningMessage = "Useage: dialog [length] [startingIndex] [line1] [line2]... (optional ->) [insert1] [insert2]...";
+            const string warningMessage = "Useage: dialog [startingIndex] [length] [line1] [line2]... (optional ->) [insert1] [insert2]...";
 
             if (arguments.Length < 4)
             {
-                Terminal.IO.LogWarning(warningMessage);
-                return;
-            }
-
-            int length;
-            try
-            {
-                length = int.Parse(arguments[1]);
-            }
-            catch
-            {
-                Terminal.IO.LogWarning(warningMessage);
+                Terminal.IO.LogWarningQuiet(warningMessage);
                 return;
             }
 
             int startingIndex;
             try
             {
-                startingIndex = int.Parse(arguments[2]);
+                startingIndex = int.Parse(arguments[1]);
             }
             catch
             {
-                Terminal.IO.LogWarning(warningMessage);
+                Terminal.IO.LogWarningQuiet(warningMessage);
+                return;
+            }
+
+            int length;
+            try
+            {
+                length = int.Parse(arguments[2]);
+            }
+            catch
+            {
+                Terminal.IO.LogWarningQuiet(warningMessage);
                 return;
             }
 
             if (length > arguments.Length - 3)
             {
-                Terminal.IO.LogWarning(warningMessage);
+                Terminal.IO.LogWarningQuiet(warningMessage);
                 return;
             }
 
@@ -254,11 +258,58 @@ namespace BF2D
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, startingIndex, null, inserts);
+            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'runtextbox'.");
+        }
+
+        private void CommandDialogKey(string[] arguments)
+        {
+            const string warningMessage = "Useage: dialogkey [startingIndex] [key] (optional ->) [insert1] [insert2]...";
+
+            if (arguments.Length < 3)
+            {
+                Terminal.IO.LogWarningQuiet(warningMessage);
+                return;
+            }
+
+            int startingIndex;
+            try
+            {
+                startingIndex = int.Parse(arguments[1]);
+            }
+            catch
+            {
+                Terminal.IO.LogWarningQuiet(warningMessage);
+                return;
+            }
+
+            List<string> inserts = new();
+            for (int i = 3; i < arguments.Length; i++)
+            {
+                inserts.Add(arguments[i]);
+            }
+
+            GameInfo.Instance.SystemTextbox.Textbox.Dialog(arguments[2], startingIndex, null, inserts);
+            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'runtextbox'.");
         }
 
         private void CommandRunTextbox(string[] arguments)
         {
+            if (!GameInfo.Instance.SystemTextbox.Textbox.Armed)
+            {
+                Terminal.IO.LogWarningQuiet("The system textbox wasn't armed.");
+                return;
+            }
             UIControlsManager.Instance.TakeControl(GameInfo.Instance.SystemTextbox);
+        }
+
+        private void CommandClearCaches(string[] arguments)
+        {
+            GameInfo.Instance.ClearCaches();
+        }
+
+        private void CommandSaveGame(string[] arguments)
+        {
+            GameInfo.Instance.SaveGame();
         }
         #endregion
     }

@@ -87,6 +87,8 @@ namespace BF2D.Game
             this.statusEffects.Clear();
             this.equipments.Clear();
             this.characterStatsActions.Clear();
+
+            Terminal.IO.Log("Caches cleared.");
         }
 
         public void RegisterCache(ICache cache)
@@ -101,7 +103,7 @@ namespace BF2D.Game
 
         public void NewGame(string saveID, string playerPrefabID, string playerName)
         {
-            SaveData newGame = new SaveData
+            SaveData newGame = new()
             {
                 ID = saveID
             };
@@ -111,14 +113,27 @@ namespace BF2D.Game
 
         public void SaveGame()
         {
+            if (this.currentSave is null)
+            {
+                Terminal.IO.LogWarning("[GameInfo:SaveGame] Save failed, there was no game loaded");
+                return;
+            }
+
             SaveGameAs(this.currentSave.ID);
         }
 
         public void SaveGameAs(string id)
         {
+            if (this.currentSave is null)
+            {
+                Terminal.IO.LogWarning("[GameInfo:SaveGameAs] Save failed, there was no game loaded");
+                return;
+            }
+
             this.currentSave.ID = id;
             string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
             this.saveFilesManager.WriteToFile(newJSON, id);
+            Terminal.IO.Log("Game was saved.");
         }
 
         public void LoadGame(string id)

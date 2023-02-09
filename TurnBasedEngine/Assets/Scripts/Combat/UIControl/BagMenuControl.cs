@@ -63,8 +63,9 @@ namespace BF2D.Combat
             this.descriptionText.text = $"{item.Description}\n";
             foreach(TargetedCharacterStatsAction statsAction in item.OnUse.TargetedGems)
             {
-                this.descriptionText.text += statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
+                this.descriptionText.text += "-\n" + statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
             }
+            this.descriptionText.text += "-\n";
         }
     }
 }

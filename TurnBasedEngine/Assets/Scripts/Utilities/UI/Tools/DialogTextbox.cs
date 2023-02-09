@@ -73,14 +73,15 @@ namespace BF2D.UI {
         [SerializeField] private AudioClip defaultVoice = null;
         [Header("Assets")]
         //File Manager
-        //Loaded dialogs
+        //Armed dialogs
         private Dictionary<string, List<string>> dialogs = new();
-        //Loaded dialog options
+        //Armed dialog options
         private Dictionary<string, string> dialogResponses = new();
 
         //The state delegate
         private Action state = null;
 
+        public bool Armed { get => this.dialogQueue.Count > 0; }
         //The dialog queue
         private readonly Queue<DialogData> dialogQueue = new();
 
@@ -329,7 +330,7 @@ namespace BF2D.UI {
             this.callback = dialogData.callback;
             this.textField.text = "";
 
-            //Terminal.IO.Log("[DialogTextbox] Dialog Loaded\n" + this.activeLines.Count + " lines");
+            //Terminal.IO.Log("[DialogTextbox] Dialog Armed\n" + this.activeLines.Count + " lines");
 
             this.state = MessageParseAndDisplayClocked;
         }

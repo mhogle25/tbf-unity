@@ -22,7 +22,7 @@ namespace BF2D.Game.Actions
 
         public string TextBreakdown(CharacterStats character)
         {
-            string text = "-\n";
+            string text = string.Empty;
 
             if (this.Gem.Damage != null)
             {
@@ -61,15 +61,13 @@ namespace BF2D.Game.Actions
 
             if (this.Gem.ResetHealth)
             {
-                text += $"Fully restore {Strings.CharacterStats.Health} ({character.MaxHealth})\n";
+                text += $"Fill {Strings.CharacterStats.Health} ({character.MaxHealth})\n";
             }
 
             if (this.Gem.ResetStamina)
             {
-                text += $"Fully restore {Strings.CharacterStats.Stamina} ({character.MaxStamina})\n";
+                text += $"Fill {Strings.CharacterStats.Stamina} ({character.MaxStamina})\n";
             }
-
-            text += "-";
 
             return text;
         }

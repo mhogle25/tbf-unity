@@ -85,6 +85,7 @@ namespace BF2D.Combat
             this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, () =>
             {
                 Terminal.IO.Log("Final Trigger");
+                UIControlsManager.Instance.PassControlBack();
             });
 
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);

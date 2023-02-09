@@ -43,22 +43,37 @@ namespace BF2D
             this.terminalIn.Commit(command);
         }
 
+        public void LogQuiet(string message)
+        {
+            this.terminalOut.Log(message);
+        }
+
         public void Log(string message)
         {
             Debug.Log(message);
-            this.terminalOut.Log(message);
+            LogQuiet(message);
+        }
+
+        public void LogWarningQuiet(string warning)
+        {
+            this.terminalOut.LogWarning(warning);
         }
 
         public void LogWarning(string warning)
         {
             Debug.LogWarning(warning);
-            this.terminalOut.LogWarning(warning);
+            LogWarningQuiet(warning);
+        }
+
+        public void LogErrorQuiet(string error)
+        {
+            this.terminalOut.LogError(error);
         }
 
         public void LogError(string error)
         {
             Debug.LogError(error);
-            this.terminalOut.LogError(error);
+            LogErrorQuiet(error);
         }
 
         public void Clear()
