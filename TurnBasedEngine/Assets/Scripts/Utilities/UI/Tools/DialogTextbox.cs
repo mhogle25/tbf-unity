@@ -155,6 +155,12 @@ namespace BF2D.UI {
         /// <param name="callbackFunction">Called at the end of dialog</param>
         public void Message(string message, Action callbackFunction, List<string> inserts)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                Terminal.IO.LogError("[DialogTextbox] Tried to queue a message but the message was null or empty");
+                return;
+            }
+
             List<string> lines = new()
             {
                 $"{message}[{DialogTextbox.endTag}]'"
@@ -201,8 +207,6 @@ namespace BF2D.UI {
         /// <param name="callbackFunction">Called at the end of dialog</param>
         public void Dialog(string key, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
-            //Terminal.IO.Log("[DialogTextbox] Loading Dialog\nkey: " + key + ", index: " + dialogIndex);
-
             if (!this.dialogs.ContainsKey(key))
             {
                 Terminal.IO.LogError($"[DialogTextbox] The key '{key}' was not found in the dialogs dictionary");
@@ -252,9 +256,10 @@ namespace BF2D.UI {
         /// <param name="callbackFunction">Called at the end of dialog</param>
         public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction, List<string> inserts)
         {
-            if (lines is null)
+            if (lines is null || lines.Count < 1)
             {
-                Terminal.IO.LogError("[DialogTextbox] Tried to queue a dialog but the dialog was null");
+                Terminal.IO.LogError("[DialogTextbox] Tried to queue a dialog but the dialog was null or empty");
+                return;
             }
 
             List<string> newLines = ReplaceInsertTags(lines, inserts);
@@ -687,18 +692,18 @@ namespace BF2D.UI {
             string newMessage = message;
             for (int i = 0; i < inserts.Count; i++)
             {
-                newMessage = ReplaceInsertTags(message, inserts[i], i);
+                newMessage = ReplaceInsertTags(newMessage, inserts[i], i);
             }
             return newMessage;
         }
 
         private static string ReplaceInsertTags(string message, string insert, int index)
         {
-            if (insert is null)
+            if (insert is null || !message.Contains($"[{DialogTextbox.insertTag}:{index}]"))
                 return message;
 
-            return message.Replace($"[{DialogTextbox.insertTag}:{index}]", insert);
-            
+            string newMessage = message.Replace($"[{DialogTextbox.insertTag}:{index}]", insert);
+            return newMessage;
         }
         #endregion
     }

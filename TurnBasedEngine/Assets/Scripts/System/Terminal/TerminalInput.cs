@@ -33,6 +33,8 @@ namespace BF2D
                 { "paths", CommandPaths },
                 { "combatdemo", CommandCombatDemo },
                 { "message", CommandMessage },
+                { "dialog", CommandDialog },
+                { "runtextbox", CommandRunTextbox },
             };
         }
 
@@ -73,6 +75,7 @@ namespace BF2D
             this.commands[op].Invoke(args);
         }
 
+        #region Private Methods
         private string[] ParseCommand(string command)
         {
             string processed = command.Trim();
@@ -140,6 +143,7 @@ namespace BF2D
                 }
             }
         }
+        #endregion
 
         #region Commands
         private void CommandEcho(string[] arguments)
@@ -187,6 +191,7 @@ namespace BF2D
             if (arguments.Length < 2)
             {
                 Terminal.IO.LogWarning("Useage: message [text] (optional ->) [insert1] [insert2]...");
+                return;
             }
 
             List<string> inserts = new();
@@ -194,7 +199,65 @@ namespace BF2D
             {
                 inserts.Add(arguments[i]);
             }
+
             GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], null, inserts);
+        }
+
+        private void CommandDialog(string[] arguments)
+        {
+            const string warningMessage = "Useage: dialog [length] [startingIndex] [line1] [line2]... (optional ->) [insert1] [insert2]...";
+
+            if (arguments.Length < 4)
+            {
+                Terminal.IO.LogWarning(warningMessage);
+                return;
+            }
+
+            int length;
+            try
+            {
+                length = int.Parse(arguments[1]);
+            }
+            catch
+            {
+                Terminal.IO.LogWarning(warningMessage);
+                return;
+            }
+
+            int startingIndex;
+            try
+            {
+                startingIndex = int.Parse(arguments[2]);
+            }
+            catch
+            {
+                Terminal.IO.LogWarning(warningMessage);
+                return;
+            }
+
+            if (length > arguments.Length - 3)
+            {
+                Terminal.IO.LogWarning(warningMessage);
+                return;
+            }
+
+            List<string> dialog = new();
+            for (int i = 3; i < length + 3; i++)
+            {
+                dialog.Add(arguments[i]);
+            }
+
+            List<string> inserts = new();
+            for (int i = length + 3; i < arguments.Length; i++)
+            {
+                inserts.Add(arguments[i]);
+            }
+
+            GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, startingIndex, null, inserts);
+        }
+
+        private void CommandRunTextbox(string[] arguments)
+        {
             UIControlsManager.Instance.TakeControl(GameInfo.Instance.SystemTextbox);
         }
         #endregion

@@ -938,6 +938,64 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!1 &160691921
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 160691922}
+  - component: {fileID: 160691923}
+  m_Layer: 0
+  m_Name: Game Info
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &160691922
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160691921}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1825664405}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &160691923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 160691921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dacb4c5bb37b64f449eb8f0caae69152, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clockSpeed: 0.03125
+  saveFilesManager: {fileID: 1145024693}
+  keyboardControlsConfigFilesManager: {fileID: 1726763347}
+  gamepadControlsConfigFilesManager: {fileID: 1631695784}
+  playersFileManager: {fileID: 1103501671}
+  enemiesFileManager: {fileID: 418440189}
+  itemsFileManager: {fileID: 279476918}
+  equipmentsFileManager: {fileID: 735434021}
+  statusEffectsFileManager: {fileID: 618640904}
+  characterStatsActionsFileManager: {fileID: 1858917251}
+  jobsFileManager: {fileID: 476307232}
+  iconCollection: {fileID: 3178956709704653840}
+  soundEffectCollection: {fileID: 7786038003881255837}
+  systemTextbox: {fileID: 1040462395}
 --- !u!1 &177414667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1386,7 +1444,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 5
   m_TargetDisplay: 0
 --- !u!114 &231096363
 MonoBehaviour:
@@ -4166,7 +4224,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &778349872
 PrefabInstance:
@@ -5643,6 +5701,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1825664406}
+        m_TargetAssemblyTypeName: BF2D.Game.GameManager, Assembly-CSharp
+        m_MethodName: PassControlBack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   responsesFileManager: {fileID: 387108273}
   ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 370945186}
@@ -5729,7 +5799,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!224 &1040462399
 RectTransform:
@@ -8396,7 +8466,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1325600370
 GameObject:
@@ -11477,9 +11547,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1825664405}
-  - component: {fileID: 1825664407}
+  - component: {fileID: 1825664406}
   m_Layer: 0
-  m_Name: Game Info
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11501,10 +11571,11 @@ Transform:
   - {fileID: 395386715}
   - {fileID: 685925506}
   - {fileID: 231096359}
+  - {fileID: 160691922}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1825664407
+--- !u!114 &1825664406
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11513,23 +11584,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1825664404}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dacb4c5bb37b64f449eb8f0caae69152, type: 3}
+  m_Script: {fileID: 11500000, guid: 782e29afe0ded594e94c02caad8c6efe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clockSpeed: 0.03125
-  saveFilesManager: {fileID: 1145024693}
-  keyboardControlsConfigFilesManager: {fileID: 1726763347}
-  gamepadControlsConfigFilesManager: {fileID: 1631695784}
-  playersFileManager: {fileID: 1103501671}
-  enemiesFileManager: {fileID: 418440189}
-  itemsFileManager: {fileID: 279476918}
-  equipmentsFileManager: {fileID: 735434021}
-  statusEffectsFileManager: {fileID: 618640904}
-  characterStatsActionsFileManager: {fileID: 1858917251}
-  jobsFileManager: {fileID: 476307232}
-  iconCollection: {fileID: 3178956709704653840}
-  soundEffectCollection: {fileID: 7786038003881255837}
-  systemTextbox: {fileID: 1040462395}
 --- !u!1 &1844211289
 GameObject:
   m_ObjectHideFlags: 0
@@ -14831,7 +14888,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5143353800899463934, guid: 1b1ae34120e95b340af27e954a987ebc, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5143353800899463934, guid: 1b1ae34120e95b340af27e954a987ebc, type: 3}
       propertyPath: m_LocalPosition.x

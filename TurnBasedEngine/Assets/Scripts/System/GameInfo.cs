@@ -64,9 +64,6 @@ namespace BF2D.Game
 
         private void Awake()
         {
-            //Set this object not to destroy on loading new scenes
-            DontDestroyOnLoad(this.gameObject);
-
             //Setup of Monobehaviour Singleton
             if (GameInfo.instance != this && GameInfo.instance != null)
             {

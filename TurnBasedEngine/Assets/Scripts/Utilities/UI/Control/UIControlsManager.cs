@@ -14,6 +14,8 @@ namespace BF2D.UI
 
         private void Awake()
         {
+            DontDestroyOnLoad(this.gameObject);
+
             //Setup of Monobehaviour Singleton
             if (UIControlsManager.instance)
             {
