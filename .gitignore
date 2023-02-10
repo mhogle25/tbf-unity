@@ -3,6 +3,9 @@
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
 .DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
 
 [Ll]ibrary/
 [Tt]emp/
