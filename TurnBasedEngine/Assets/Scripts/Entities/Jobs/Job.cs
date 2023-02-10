@@ -4,6 +4,8 @@ namespace BF2D.Game
 {
     public class Job : Entity
     {
+
+
         public int GetLevel(int experience)
         {
             return 0;

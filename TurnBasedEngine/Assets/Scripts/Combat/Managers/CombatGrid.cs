@@ -159,7 +159,7 @@ namespace BF2D.Combat
         #region Private Methods
         private void SpeedSort()
         {
-            this.characterQueue.Sort((x, y) => x.Stats.Speed.CompareTo(y.Stats.Speed));
+            this.characterQueue.Sort((x, y) => y.Stats.Speed.CompareTo(x.Stats.Speed));
         }
 
         private void LoadCharacterPrefabs()

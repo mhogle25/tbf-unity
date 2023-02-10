@@ -1,3 +1,6 @@
+using BF2D.Enums;
+using UnityEngine.Animations;
+
 namespace BF2D.Game
 {
     public static class Strings
@@ -22,6 +25,30 @@ namespace BF2D.Game
             public const string Defense = "Defense";
             public const string Focus = "Focus";
             public const string Luck = "Luck";
+
+            public const char SpeedSymbol = 'ª';
+            public const char AttackSymbol = '¨';
+            public const char DefenseSymbol = '©';
+            public const char FocusSymbol = '«';
+            public const char LuckSymbol = '¬';
+            public const char MaxHealthSymbol = '§';
+            public const char MaxStaminaSymbol = '®';
+
+            public static char GetStatsPropertySymbol(CharacterStatsProperty property) 
+            {
+                return property switch
+                {
+                    CharacterStatsProperty.Speed => SpeedSymbol,
+                    CharacterStatsProperty.Attack => AttackSymbol,
+                    CharacterStatsProperty.Defense => DefenseSymbol,
+                    CharacterStatsProperty.Focus => FocusSymbol,
+                    CharacterStatsProperty.Luck => LuckSymbol,
+                    CharacterStatsProperty.MaxHealth => MaxHealthSymbol,
+                    CharacterStatsProperty.MaxStamina => MaxStaminaSymbol,
+                    _ => ' '
+                };
+            }
+
         }
         #endregion
 

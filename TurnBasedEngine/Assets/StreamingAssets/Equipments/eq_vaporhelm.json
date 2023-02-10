@@ -3,6 +3,13 @@
     "description":"The helm of Vapor Knight.",
     "spriteID":"helm_01",
     "type":"Head",
+    "speedModifier":0,
+    "attackModifier":0,
+    "defenseModifier":1,
+    "focusModifier":0,
+    "luckModifier":0,
+    "maxHealthModifier":1,
+    "maxStaminaModifier":0,
     "onUpkeep":
     {
         "message":

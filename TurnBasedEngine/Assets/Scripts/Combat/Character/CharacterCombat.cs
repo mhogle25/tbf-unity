@@ -123,6 +123,11 @@ namespace BF2D.Combat
         {
             this.animatorController.ChangeAnimState(key);
         }
+        private void RefreshStatsDisplay()
+        {
+            this.assignedTile.SetHealthBar();
+            this.assignedTile.SetStaminaBar();
+        }
         #endregion
 
         #region Animation Events
@@ -255,6 +260,7 @@ namespace BF2D.Combat
                     CharacterStatsAction.Info info = action.Run(this.Stats, this.Stats);
                     List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
                     dialog.Insert(0, info.message);
+                    RefreshStatsDisplay();
                     return dialog;
                 });
             });
@@ -293,6 +299,7 @@ namespace BF2D.Combat
                         CharacterStatsAction.Info info = action.Gem.Run(this.stats, target.Stats);
                         message += info.message;
                         infos.Add(info);
+                        target.RefreshStatsDisplay();
                     }
 
                     List<string> dialog = GemStatusCheck(infos);

@@ -40,9 +40,9 @@ namespace BF2D.Game
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)
-        private readonly JsonStringCache<CharacterStats> players = new(5);
-        private readonly JsonStringCache<CharacterStats> enemies = new(5);
-        private readonly JsonStringCache<Item> items = new(20);
+        private readonly JsonStringCache<CharacterStats> playerTemplates = new(5);
+        private readonly JsonStringCache<CharacterStats> enemyTemplates = new(5);
+        private readonly JsonStringCache<Item> itemTemplates = new(20);
 
         //Object caches (no instantiation on get, single instance data classes)
         private readonly JsonEntityCache<Equipment> equipments = new(10);
@@ -81,14 +81,14 @@ namespace BF2D.Game
                 cache.Clear();
             }
 
-            this.players.Clear();
-            this.enemies.Clear();
-            this.items.Clear();
+            this.playerTemplates.Clear();
+            this.enemyTemplates.Clear();
+            this.itemTemplates.Clear();
             this.statusEffects.Clear();
             this.equipments.Clear();
             this.characterStatsActions.Clear();
 
-            Terminal.IO.Log("Caches cleared.");
+            Terminal.IO.LogQuiet("Caches cleared.");
         }
 
         public void RegisterCache(ICache cache)
@@ -175,6 +175,8 @@ namespace BF2D.Game
                     Terminal.IO.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
                     break;
             }
+
+            Terminal.IO.LogQuiet($"{controllerType} config saved to file with ID '{id}'");
         }
 
         public void LoadControlsConfig(InputController controllerType, string id)
@@ -193,6 +195,8 @@ namespace BF2D.Game
             }
 
             InputManager.Instance.DeserializeConfig(controllerType, newJSON);
+
+            Terminal.IO.LogQuiet($"{controllerType} config with id '{id}' was loaded");
         }
 
         public Sprite GetIcon(string id)
@@ -222,7 +226,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning("[GameInfo:InstantiateItem] ID was invalid.");
                 return null;
             }
-            return this.items.Get(id, this.itemsFileManager);
+            return this.itemTemplates.Get(id, this.itemsFileManager);
         }
 
         public Equipment GetEquipment(string id)
@@ -271,7 +275,8 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
                 return null;
             }
-            return this.enemies.Get(id, this.enemiesFileManager);
+            CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
+            return enemy.Setup();
         }
 
         public void NewPlayer(string playerID, string newName)
@@ -309,7 +314,8 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning("[GameInfo:InstantiatePlayer] ID was invalid.");
                 return null;
             }
-            return this.players.Get(id, this.playersFileManager);
+            CharacterStats player = this.playerTemplates.Get(id, this.playersFileManager);
+            return player.Setup();
         }
 
         private SaveData LoadSaveData(string id)

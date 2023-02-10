@@ -3,6 +3,13 @@
     "description":"blessed",
     "effect":"Healing",
     "duration":5,
+    "speedModifier":0,
+    "attackModifier":0,
+    "defenseModifier":0,
+    "focusModifier":0,
+    "luckModifier":5,
+    "maxHealthModifier":0,
+    "maxStaminaModifier":0,
     "onUpkeep": 
     {
         "message":

@@ -59,7 +59,7 @@ namespace BF2D.Game
         {
             get
             {
-                int value = this.Constitution + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxHealthModifier);
+                int value = this.Constitution + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxHealthModifier) + this.MaxHealthModifier.Total;
                 if (value < 0) value = 0;
                 return (uint)value;
             }
@@ -73,7 +73,7 @@ namespace BF2D.Game
         {
             get
             {
-                int value = this.Endurance + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxStaminaModifier);
+                int value = this.Endurance + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxStaminaModifier) + this.MaxStaminaModifier.Total;
                 if (value < 0) value = 0;
                 return (uint)value;
             }
@@ -287,10 +287,8 @@ namespace BF2D.Game
         public CharacterStats Setup()
         {
             foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
-            {
                 if (IsEquipped(equipmentType))
                     EquipModifierUpdate(GameInfo.Instance.GetEquipment(GetEquipped(equipmentType)));
-            }
 
             foreach (StatusEffectInfo info in this.statusEffects)
             {
@@ -313,7 +311,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s items bag but the item id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s itemTemplates bag but the item id given was invalid");
                 return;
             }
 
@@ -456,6 +454,10 @@ namespace BF2D.Game
             this.defenseModifier.Equip(equipment);
             this.focusModifier.Equip(equipment);
             this.luckModifier.Equip(equipment);
+            this.maxHealthModifier.Equip(equipment);
+            this.maxStaminaModifier.Equip(equipment);
+
+            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private void UnequipModifierUpdate(Equipment equipment)
@@ -468,6 +470,10 @@ namespace BF2D.Game
             this.defenseModifier.Unequip(equipment);
             this.focusModifier.Unequip(equipment);
             this.luckModifier.Unequip(equipment);
+            this.maxHealthModifier.Unequip(equipment);
+            this.maxStaminaModifier.Unequip(equipment);
+
+            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
         #endregion
 
@@ -507,6 +513,10 @@ namespace BF2D.Game
             this.defenseModifier.ApplyStatusEffect(statusEffect);
             this.focusModifier.ApplyStatusEffect(statusEffect);
             this.luckModifier.ApplyStatusEffect(statusEffect);
+            this.maxHealthModifier.ApplyStatusEffect(statusEffect);
+            this.maxStaminaModifier.ApplyStatusEffect(statusEffect);
+
+            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private void RemoveStatusEffectModifierUpdate(StatusEffect statusEffect)
@@ -519,6 +529,10 @@ namespace BF2D.Game
             this.defenseModifier.RemoveStatusEffect(statusEffect);
             this.focusModifier.RemoveStatusEffect(statusEffect);
             this.luckModifier.RemoveStatusEffect(statusEffect);
+            this.maxHealthModifier.RemoveStatusEffect(statusEffect);
+            this.maxStaminaModifier.RemoveStatusEffect(statusEffect);
+
+            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private StatusEffectInfo AddStatusEffect(string id)

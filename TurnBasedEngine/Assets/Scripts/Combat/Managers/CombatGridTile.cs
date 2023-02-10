@@ -1,15 +1,19 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
-using BF2D.Enums;
+using UnityEngine.UI;
 
 namespace BF2D.Combat
 {
     public class CombatGridTile : GridOption
     {
+        [Header("UI/Grid Elements")]
         [SerializeField] private SpriteRenderer cursor = null;
+        [SerializeField] private Canvas displayCanvas = null;
+        [SerializeField] private Slider healthBar = null;
+        [SerializeField] private Slider staminaBar = null;
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
+        [Header("Display")]
         [SerializeField] private CharacterCombat assignedCharacter = null;
 
         public override bool Interactable
@@ -31,6 +35,20 @@ namespace BF2D.Combat
             this.cursor.enabled = status;
         }
 
+        public void SetHealthBar()
+        {
+            if (this.assignedCharacter == null)
+                return;
+            this.healthBar.value = ((float)this.assignedCharacter.Stats.Health) / this.assignedCharacter.Stats.MaxHealth;
+        }
+
+        public void SetStaminaBar()
+        {
+            if (this.assignedCharacter == null)
+                return;
+            this.staminaBar.value = ((float)this.assignedCharacter.Stats.Stamina) / this.assignedCharacter.Stats.MaxStamina;
+        }
+
         public void AssignCharacter(CharacterCombat characterCombat)
         {
             this.assignedCharacter = characterCombat;
@@ -39,11 +57,16 @@ namespace BF2D.Combat
             characterCombat.transform.localPosition = Vector3.zero;
             characterCombat.transform.localScale = Vector3.one;
 
+            this.displayCanvas.enabled = true;
+            SetHealthBar();
+            SetStaminaBar();
+
             characterCombat.Tile = this;
         }
 
         public void ResetTile()
         {
+            this.displayCanvas.enabled = false;
             this.assignedCharacter = null;
         }
 

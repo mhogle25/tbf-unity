@@ -77,7 +77,7 @@ namespace BF2D.Game.Actions
             string text = $"{statsActionName} {actionProperty.Value}";
             foreach (CharacterStatsProperty modifier in actionProperty.Modifiers)
             {
-                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}</color>";
+                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}{BF2D.Game.Strings.CharacterStats.GetStatsPropertySymbol(modifier)}</color>";
             }
             text += "\n";
             return text;

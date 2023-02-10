@@ -3,6 +3,13 @@
     "description":"hexed",
     "effect":"Fire",
     "duration":3,
+    "speedModifier":0,
+    "attackModifier":-1,
+    "defenseModifier":0,
+    "focusModifier":0,
+    "luckModifier":0,
+    "maxHealthModifier":0,
+    "maxStaminaModifier":0,
     "onEOT": 
     {
         "message":
