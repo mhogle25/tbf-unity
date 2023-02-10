@@ -26,13 +26,13 @@ namespace BF2D.Game
             public const string Focus = "Focus";
             public const string Luck = "Luck";
 
-            public const char SpeedSymbol = 'ª';
-            public const char AttackSymbol = '¨';
-            public const char DefenseSymbol = '©';
-            public const char FocusSymbol = '«';
-            public const char LuckSymbol = '¬';
-            public const char MaxHealthSymbol = '§';
-            public const char MaxStaminaSymbol = '®';
+            public const char SpeedSymbol = 'Âª';
+            public const char AttackSymbol = 'Â¨';
+            public const char DefenseSymbol = 'Â©';
+            public const char FocusSymbol = 'Â«';
+            public const char LuckSymbol = 'Â¬';
+            public const char MaxHealthSymbol = 'Â§';
+            public const char MaxStaminaSymbol = 'Â®';
 
             public static char GetStatsPropertySymbol(CharacterStatsProperty property) 
             {
