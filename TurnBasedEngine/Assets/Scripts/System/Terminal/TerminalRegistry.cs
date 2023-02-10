@@ -35,6 +35,7 @@ namespace BF2D
         {
             this.commands = new()
             {
+                { "help", CommandHelp },
                 { "echo", CommandEcho },
                 { "clear", CommandClear },
                 { "paths", CommandPaths },
@@ -51,6 +52,12 @@ namespace BF2D
         }
 
         #region Commands
+        private void CommandHelp(string[] arguments)
+        {
+            GameInfo.Instance.SystemTextbox.Textbox.Dialog("help_combat", 0, null);
+            CommandRunTextbox(null);
+        }
+
         private void CommandEcho(string[] arguments)
         {
             if (arguments.Length < 2)

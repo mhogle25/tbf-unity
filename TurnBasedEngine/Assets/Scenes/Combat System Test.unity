@@ -3885,7 +3885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Responses/Combat
+  path: Dialog/Responses/System
   fileExtension: json
   directory: 1
 --- !u!224 &387108274
@@ -19244,7 +19244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  path: Dialog/Dialogs/Combat
+  path: Dialog/Dialogs/System
   fileExtension: txt
   directory: 1
 --- !u!224 &1976019434
