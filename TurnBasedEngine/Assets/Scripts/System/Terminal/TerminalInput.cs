@@ -35,7 +35,7 @@ namespace BF2D
                 { "message", CommandMessage },
                 { "dialog", CommandDialog },
                 { "dialogkey", CommandDialogKey },
-                { "runtextbox", CommandRunTextbox },
+                { "textbox", CommandRunTextbox },
                 { "clearcaches", CommandClearCaches },
                 { "save", CommandSaveGame },
             };
@@ -204,7 +204,7 @@ namespace BF2D
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], null, inserts);
-            Terminal.IO.LogQuiet("Pushed a message to the system textbox's queue. Run with 'runtextbox'.");
+            Terminal.IO.LogQuiet("Pushed a message to the system textbox's queue. Run with 'textbox'.");
         }
 
         private void CommandDialog(string[] arguments)
@@ -241,7 +241,13 @@ namespace BF2D
 
             if (length > arguments.Length - 3)
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarningQuiet("Length was greater than the number of lines. " + warningMessage);
+                return;
+            }
+
+            if (startingIndex >= length)
+            {
+                Terminal.IO.LogWarningQuiet("Starting index was outside the range of the dialog. " + warningMessage);
                 return;
             }
 
@@ -258,7 +264,7 @@ namespace BF2D
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, startingIndex, null, inserts);
-            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'runtextbox'.");
+            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
         }
 
         private void CommandDialogKey(string[] arguments)
@@ -289,7 +295,7 @@ namespace BF2D
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Dialog(arguments[2], startingIndex, null, inserts);
-            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'runtextbox'.");
+            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
         }
 
         private void CommandRunTextbox(string[] arguments)
@@ -299,7 +305,14 @@ namespace BF2D
                 Terminal.IO.LogWarningQuiet("The system textbox wasn't armed.");
                 return;
             }
-            UIControlsManager.Instance.TakeControl(GameInfo.Instance.SystemTextbox);
+
+            if (UIControlsManager.Instance.PhantomControlEnabled)
+            {
+                Terminal.IO.LogWarningQuiet("Can't run system textbox while another phantom UI control is active.");
+                return;
+            }
+
+            UIControlsManager.Instance.StartPhantomControl(GameInfo.Instance.SystemTextbox);
         }
 
         private void CommandClearCaches(string[] arguments)
@@ -309,7 +322,17 @@ namespace BF2D
 
         private void CommandSaveGame(string[] arguments)
         {
-            GameInfo.Instance.SaveGame();
+            if (arguments.Length == 1)
+            {
+                GameInfo.Instance.SaveGame();
+                return;
+            }
+
+            for (int i = 1; i < arguments.Length; i++)
+            {
+                string newSaveFileID = arguments[i];
+                GameInfo.Instance.SaveGameAs(newSaveFileID);
+            }
         }
         #endregion
     }

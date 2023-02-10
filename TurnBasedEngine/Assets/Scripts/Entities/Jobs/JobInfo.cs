@@ -4,7 +4,7 @@ using System;
 
 namespace BF2D.Game
 {
-    public class JobInfo
+    public class JobInfo : IEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private readonly string id = string.Empty;

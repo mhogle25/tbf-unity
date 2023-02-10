@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace BF2D.Game
 {
     [Serializable]
-    public class EquipmentInfo
+    public class EquipmentInfo : IEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private readonly string id = string.Empty;

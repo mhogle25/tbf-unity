@@ -12,6 +12,8 @@ namespace BF2D.UI
         public static UIControlsManager Instance { get { return UIControlsManager.instance; } }
         private static UIControlsManager instance = null;
 
+        public bool PhantomControlEnabled { get { return this.phantomControl != null; } }
+
         private void Awake()
         {
             DontDestroyOnLoad(this.gameObject);

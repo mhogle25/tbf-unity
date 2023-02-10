@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BF2D.Game
 {
     [Serializable]
-    public class ItemInfo
+    public class ItemInfo : IEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private string id = string.Empty;

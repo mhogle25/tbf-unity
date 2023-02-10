@@ -10,9 +10,9 @@ namespace BF2D.Game
             DontDestroyOnLoad(this.gameObject);
         }
 
-        public void PassControlBack()
+        public void EndPhantomControl()
         {
-            UIControlsManager.Instance.PassControlBack();
+            UIControlsManager.Instance.EndPhantomControl();
         }
     }
 }

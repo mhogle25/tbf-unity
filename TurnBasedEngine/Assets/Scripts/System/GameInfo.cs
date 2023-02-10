@@ -133,7 +133,7 @@ namespace BF2D.Game
             this.currentSave.ID = id;
             string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
             this.saveFilesManager.WriteToFile(newJSON, id);
-            Terminal.IO.Log("Game was saved.");
+            Terminal.IO.LogQuiet($"Saved to file with ID '{id}'");
         }
 
         public void LoadGame(string id)

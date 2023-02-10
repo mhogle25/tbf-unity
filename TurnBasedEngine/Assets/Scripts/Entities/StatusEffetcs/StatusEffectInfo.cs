@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BF2D.Game
 {
-    public class StatusEffectInfo
+    public class StatusEffectInfo : IEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private readonly string id = string.Empty;

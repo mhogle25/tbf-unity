@@ -23,9 +23,7 @@ namespace BF2D.UI
         private void Listen()
         {
             if (InputManager.Instance.ConfirmPress)
-            {
                 this.dialogTextbox.Continue();
-            }
         }
 
         public override void ControlInitialize()

@@ -216,6 +216,12 @@ namespace BF2D.UI {
 
             List<string> lines = this.dialogs[key];
 
+            if (startingLineIndex < 0 || startingLineIndex >= lines.Count)
+            {
+                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
+                return;
+            }
+
             lines = ReplaceInsertTags(lines, inserts);
 
             DialogData dialogData = new()
@@ -259,7 +265,13 @@ namespace BF2D.UI {
         {
             if (lines is null || lines.Count < 1)
             {
-                Terminal.IO.LogError("[DialogTextbox] Tried to queue a dialog but the dialog was null or empty");
+                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the dialog was null or empty");
+                return;
+            }
+
+            if (startingLineIndex < 0 || startingLineIndex >= lines.Count)
+            {
+                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
                 return;
             }
 
