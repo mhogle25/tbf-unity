@@ -65,12 +65,6 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            if (this.phantomControl)
-            {
-                Terminal.IO.LogWarning("[UIControlsManager:PassControlBackToFirst] Cannot perform UIControl History operations while a phantom UIControl is active.");
-                return;
-            }
-
             this.controlChainHistory.Push(this.currentControl);
             this.currentControl = null;
 
@@ -96,11 +90,8 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            if (this.phantomControl)
-            {
-                Terminal.IO.LogWarning("[UIControlsManager:ResetControlChain] Cannot perform UIControl History operations while a phantom UIControl is active.");
+            if (this.controlChainHistory.Count < 1 && this.currentControl == null)
                 return;
-            }
 
             this.controlChainHistory.Push(this.currentControl);
             this.currentControl = null;

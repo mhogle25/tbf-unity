@@ -127,6 +127,15 @@ namespace BF2D.UI {
             base.UtilityInitialize();
             this.state = DialogQueueHandler;
         }
+
+        public override void UtilityFinalize()
+        {
+            base.UtilityFinalize();
+            NametagDisable();
+            if (UIControlsManager.Instance.PhantomControlEnabled)
+                UIControlsManager.Instance.EndPhantomControl();
+            Cancel();
+        }
         #endregion
 
         #region Public Methods

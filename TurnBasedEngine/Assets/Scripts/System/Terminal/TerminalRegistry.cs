@@ -39,6 +39,7 @@ namespace BF2D
                 { "echo", CommandEcho },
                 { "clear", CommandClear },
                 { "paths", CommandPaths },
+                { "combat", CommandCombat },
                 { "combatdemo", CommandCombatDemo },
                 { "message", CommandMessage },
                 { "dialog", CommandDialog },
@@ -80,22 +81,58 @@ namespace BF2D
             Terminal.IO.LogQuiet($"Persistent Data Path: {Application.persistentDataPath}");
         }
 
-        private void CommandCombatDemo(string[] arguments)
+        private void CommandCombat(string[] arguments)
         {
-            GameInfo.Instance.LoadControlsConfig(InputController.Keyboard, "default");
-            GameInfo.Instance.LoadControlsConfig(InputController.Gamepad, "default");
+            //
+            // Delete this
+            //
+            GameInfo.Instance.LoadControlsConfig(InputController.Keyboard, BF2D.Game.Strings.System.Default);
+            GameInfo.Instance.LoadControlsConfig(InputController.Gamepad, BF2D.Game.Strings.System.Default);
+            //
+            //
+            //
 
-            GameInfo.Instance.LoadGame("save1");
-            List<CharacterStats> enemies = new()
+            const string warning = "Useage: combat [saveFileID] [enemyID1] (optional ->) [enemyID2]...";
+
+            if (arguments.Length < 3)
             {
-                GameInfo.Instance.InstantiateEnemy("en_lessergoblin")
-            };
+                Terminal.IO.LogWarningQuiet(warning);
+                return;
+            }
+
+            string saveFileID = arguments[1];
+
+            GameInfo.Instance.LoadGame(saveFileID);
+            if (!GameInfo.Instance.SaveActive)
+            {
+                Terminal.IO.LogErrorQuiet("Save file load failed.");
+                return;
+            }
+
+            List<CharacterStats> enemies = new();
+            for (int i = 2; i < arguments.Length; i++)
+            {
+                CharacterStats enemy = GameInfo.Instance.InstantiateEnemy(arguments[i]);
+                if (enemy is null)
+                {
+                    Terminal.IO.LogErrorQuiet($"Enemy with ID {arguments[i]} does not exist.");
+                    return;
+                }
+                enemies.Add(enemy);
+            }
+
+            CombatManager.Instance.CancelCombat();
 
             GameInfo.Instance.StageCombatInfo(new CombatManager.InitializeInfo
             {
                 players = GameInfo.Instance.Players,
                 enemies = enemies
             });
+        }
+
+        private void CommandCombatDemo(string[] arguments)
+        {
+            CommandCombat(new string[] { "combat", "save1", "en_lessergoblin" });
         }
 
         private void CommandMessage(string[] arguments)

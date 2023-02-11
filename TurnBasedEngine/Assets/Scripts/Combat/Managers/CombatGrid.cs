@@ -22,7 +22,9 @@ namespace BF2D.Combat
         private readonly List<CharacterCombat> characterQueue = new();
         private readonly List<CharacterStats> defeatedEnemies = new();
 
+        public int PlayerCount { get { return this.playersCount; } }
         private int playersCount = 0;
+        public int EnemyCount { get { return this.enemiesCount; } }
         private int enemiesCount = 0;
 
         private int currentCharacterIndex = 0;
@@ -81,10 +83,10 @@ namespace BF2D.Combat
 
             foreach (CharacterStats playerStats in players)
             {
-                if (IsEnemyGridFull())
+                if (IsPlayerGridFull())
                 {
                     Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
-                    return;
+                    continue;
                 }
                 CharacterCombat playerCombat = InstantiatePlayerCombat(playerStats);
                 this.playerPlatforms[this.playersCount].AssignCharacter(playerCombat);
@@ -94,10 +96,10 @@ namespace BF2D.Combat
 
             foreach (CharacterStats enemyStats in enemies)
             {
-                if (IsPlayerGridFull())
+                if (IsEnemyGridFull())
                 {
                     Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
-                    return;
+                    continue;
                 }
                 CharacterCombat enemyCombat = InstantiateEnemyCombat(enemyStats);
                 this.enemyPlatforms[this.enemiesCount].AssignCharacter(enemyCombat);
@@ -153,6 +155,27 @@ namespace BF2D.Combat
         public bool CharacterIsEnemy(CharacterCombat character)
         {
             return this.Enemies.Contains(character);
+        }
+
+        public void GridReset()
+        {
+            foreach (CombatGridTile tile in this.playerPlatforms)
+            {
+                if (tile.AssignedCharacter != null)
+                    tile.AssignedCharacter.Destroy();
+            }
+
+            foreach (CombatGridTile tile in this.enemyPlatforms)
+            {
+                if (tile.AssignedCharacter != null)
+                    tile.AssignedCharacter.Destroy();
+            }
+
+            this.characterQueue.Clear();
+            this.defeatedEnemies.Clear();
+            this.currentCharacterIndex = 0;
+            this.playersCount = 0;
+            this.enemiesCount = 0;
         }
         #endregion
 

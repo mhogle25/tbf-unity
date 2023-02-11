@@ -172,7 +172,7 @@ namespace BF2D.Game
         [JsonIgnore] public JobInfo CurrentJob { get { return this.job; } }
         [JsonProperty] private JobInfo job = null;
         [JsonIgnore] public IEnumerable<JobInfo> InactiveJobs { get { return this.inactiveJobs; } }
-        [JsonProperty] private List<JobInfo> inactiveJobs = new();
+        [JsonProperty] private readonly List<JobInfo> inactiveJobs = new();
 
         [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get { return this.statusEffects; } }
         [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();

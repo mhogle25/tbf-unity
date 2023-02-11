@@ -36,7 +36,8 @@ namespace BF2D.Game
         [SerializeField] private FileManager characterStatsActionsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public List<CharacterStats> Players { get { return this.currentSave.Players; } }
+        public List<CharacterStats> Players { get { return this.currentSave is null ? null : this.currentSave.Players; } }
+        public bool SaveActive { get { return this.currentSave is not null; } }
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)
@@ -276,6 +277,8 @@ namespace BF2D.Game
                 return null;
             }
             CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
+            if (enemy is null)
+                return null;
             return enemy.Setup();
         }
 

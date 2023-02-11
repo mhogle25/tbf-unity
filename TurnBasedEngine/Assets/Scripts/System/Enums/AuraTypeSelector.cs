@@ -8,26 +8,36 @@ namespace BF2D.Enums
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum CharacterType
+    public enum AuraType
     {
         [EnumMember]
-        Player,
+        Generic,
         [EnumMember]
-        Enemy
+        Fire,
+        [EnumMember]
+        Ice,
+        [EnumMember]
+        Poison,
+        [EnumMember]
+        Psychic,
+        [EnumMember]
+        Restoration,
+        [EnumMember]
+        Evil
     }
 
-    public class CharacterTypeCollection<T>
+    public class AuraTypeCollection<T>
     {
-        private readonly T[] collection;
+        private T[] collection;
         private readonly int enumSize = 0;
 
-        public CharacterTypeCollection()
+        public AuraTypeCollection()
         {
-            enumSize = Enum.GetValues(typeof(CharacterType)).Length;
+            enumSize = Enum.GetValues(typeof(AuraType)).Length;
             collection = new T[enumSize];
         }
 
-        public T this[CharacterType index]
+        public T this[AuraType index]
         {
             get
             {
@@ -41,8 +51,8 @@ namespace BF2D.Enums
         }
     }
 
-    public class CharacterTypeSelector : MonoBehaviour
+    public class AuraTypeSelector : MonoBehaviour
     {
-        public CharacterType characterType;
+        public AuraType auraType;
     }
 }

@@ -26,7 +26,7 @@ namespace BF2D.Utilities
                 return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[id]);
 
             string content = fileManager.LoadFile(id);
-            if (content == string.Empty)
+            if (string.IsNullOrEmpty(content))
                 return null;
 
             this.jsons[id] = content;

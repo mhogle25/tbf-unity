@@ -5,6 +5,11 @@ namespace BF2D.Game
 {
     public static class Strings
     {
+        public static class System
+        {
+            public const string Default = "default";
+        }
+
         #region CharacterStatsProperties
         public static class CharacterStats
         {

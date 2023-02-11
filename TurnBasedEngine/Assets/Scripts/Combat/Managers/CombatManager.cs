@@ -34,7 +34,9 @@ namespace BF2D.Combat
 
         public CharacterCombat CurrentCharacter { get { return this.combatGrid.CurrentCharacter; } }
         public IEnumerable<CharacterCombat> Players { get { return this.combatGrid.Players; } }
+        public int PlayerCount { get { return this.combatGrid.PlayerCount; } }
         public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.Enemies; } }
+        public int EnemyCount { get { return this.combatGrid.EnemyCount; } }
         public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.Characters; } }
         public CharacterTargeterControl CharacterTargeter { get { return this.characterTargeter; } }
         public DialogTextbox OrphanedTextbox { get { return this.orphanedTextbox; } }
@@ -91,6 +93,14 @@ namespace BF2D.Combat
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
         }
 
+        public void CancelCombat()
+        {
+            this.combatGrid.GridReset();
+            UIControlsManager.Instance.ResetControlChain(false);
+            ResetOrphanedTextbox();
+            this.listener = CombatInfoListen;
+        }
+
         public void ResetOrphanedTextbox()
         {
             this.OrphanedTextbox.UtilityFinalize();
@@ -142,6 +152,8 @@ namespace BF2D.Combat
 
             this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+
+            Terminal.IO.LogQuiet($"Combat intialized with {CombatManager.Instance.PlayerCount} players and {CombatManager.Instance.EnemyCount} enemies.");
         }
 
         private void BeginTurn()

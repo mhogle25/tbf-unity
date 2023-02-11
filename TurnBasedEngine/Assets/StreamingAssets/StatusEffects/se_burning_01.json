@@ -1,7 +1,9 @@
 {
     "name":"Burning",
     "description":"hexed",
-    "effect":"Fire",
+    "auras": [
+        "Fire"
+    ],
     "duration":3,
     "speedModifier":0,
     "attackModifier":-1,

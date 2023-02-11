@@ -1,7 +1,9 @@
 {
     "name":"Holy Blessing",
     "description":"blessed",
-    "effect":"Healing",
+    "auras": [
+        "Restoration"
+    ],
     "duration":5,
     "speedModifier":0,
     "attackModifier":0,

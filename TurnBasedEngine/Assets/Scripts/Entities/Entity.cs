@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using BF2D.Enums;
 
 namespace BF2D
 {
@@ -8,5 +10,7 @@ namespace BF2D
         [JsonProperty] protected string name = string.Empty;
         [JsonIgnore] public string Description { get { return this.description; } }
         [JsonProperty] protected readonly string description = string.Empty;
+        [JsonIgnore] public IEnumerable<AuraType> Auras { get { return this.auras; } }
+        [JsonProperty] protected readonly List<AuraType> auras = new() { AuraType.Generic };
     }
 }

@@ -1,13 +1,12 @@
 using Newtonsoft.Json;
 using BF2D.Enums;
 using BF2D.Game.Actions;
+using System.Collections.Generic;
 
 namespace BF2D.Game
 {
     public class PersistentEffect : Entity
     {
-        [JsonIgnore] public EffectType Effect { get { return this.effect; } }
-        [JsonProperty] private readonly EffectType effect = EffectType.Generic;
         [JsonIgnore] public int SpeedModifier { get { return this.speedModifier; } }
         [JsonProperty] private readonly int speedModifier = 0;
         [JsonIgnore] public int AttackModifier { get { return this.attackModifier; } }

@@ -113,6 +113,8 @@ namespace BF2D.Combat
 
         public void Destroy()
         {
+            FinalizeTurn();
+
             if (this.assignedTile)
                 this.assignedTile.ResetTile();
 
@@ -123,6 +125,7 @@ namespace BF2D.Combat
         {
             this.animatorController.ChangeAnimState(key);
         }
+
         private void RefreshStatsDisplay()
         {
             this.assignedTile.SetHealthBar();
