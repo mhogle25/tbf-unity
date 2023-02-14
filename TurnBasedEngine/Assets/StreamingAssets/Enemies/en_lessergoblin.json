@@ -20,26 +20,21 @@
     "gridPosition":0,
     "statusEffects":
     [
-        {
-            "id":"se_burning_01",
-            "remainingDuration":2
-        }
+
     ],
     "items":
     [
         {
             "id":"it_medicinalherb",
-            "count":10
+            "count":1
         },
         {
             "id":"it_firecracker",
-            "count":40
+            "count":3
         }
     ],
     "equipments": 
     [
-        {
 
-        }
     ]
 }

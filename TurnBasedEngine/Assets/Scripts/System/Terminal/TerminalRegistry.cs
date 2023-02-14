@@ -125,7 +125,7 @@ namespace BF2D
 
             GameInfo.Instance.StageCombatInfo(new CombatManager.InitializeInfo
             {
-                players = GameInfo.Instance.Players,
+                players = GameInfo.Instance.ActivePlayers,
                 enemies = enemies
             });
         }

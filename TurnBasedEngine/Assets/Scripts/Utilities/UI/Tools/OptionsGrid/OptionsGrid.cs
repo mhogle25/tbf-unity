@@ -375,24 +375,41 @@ namespace BF2D.UI
                     SetCursorAtPosition(this.cursorPosition, false);
 
 
-                GridOption option = null;
+                GridOption originalOption = this.CurrentOption;
+                Vector2Int bfsStartingPosition = this.cursorPosition;
                 switch (direction)
                 {
                     case InputDirection.Up:
-                        while (option == null || !option.Interactable)
-                            option = this.grid[this.cursorPosition.x, this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight)];
+                        do this.cursorPosition.y = Decrement(this.cursorPosition.y, this.gridHeight);
+                        while (this.CurrentOption == null || !this.CurrentOption.Interactable);
+
+                        bfsStartingPosition.y = Decrement(this.cursorPosition.y, this.gridHeight);
+                        if (this.CurrentOption == originalOption)
+                            this.cursorPosition = DirectionalBFS(bfsStartingPosition, direction);
                         break;
                     case InputDirection.Left:
-                        while (option == null || !option.Interactable)
-                            option = this.grid[this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y];
+                        do this.cursorPosition.x = Decrement(this.cursorPosition.x, this.gridWidth);
+                        while (this.CurrentOption == null || !this.CurrentOption.Interactable);
+
+                        bfsStartingPosition.x = Decrement(this.cursorPosition.x, this.gridWidth);
+                        if (this.CurrentOption == originalOption)
+                            this.cursorPosition = DirectionalBFS(bfsStartingPosition, direction);
                         break;
                     case InputDirection.Down:
-                        while (option == null || !option.Interactable)
-                            option = this.grid[this.cursorPosition.x, this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight)];
+                        do this.cursorPosition.y = Increment(this.cursorPosition.y, this.gridHeight);
+                        while (this.CurrentOption == null || !this.CurrentOption.Interactable);
+
+                        bfsStartingPosition.y = Increment(this.cursorPosition.y, this.gridHeight);
+                        if (this.CurrentOption == originalOption)
+                            this.cursorPosition = DirectionalBFS(bfsStartingPosition, direction);
                         break;
                     case InputDirection.Right:
-                        while (option == null || !option.Interactable)
-                            option = this.grid[this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth), this.cursorPosition.y];
+                        do this.cursorPosition.x = Increment(this.cursorPosition.x, this.gridWidth);
+                        while (this.CurrentOption == null || !this.CurrentOption.Interactable);
+
+                        bfsStartingPosition.x = Increment(this.cursorPosition.x, this.gridWidth);
+                        if (this.CurrentOption == originalOption)
+                            this.cursorPosition = DirectionalBFS(bfsStartingPosition, direction);
                         break;
                     default:
                         Terminal.IO.LogError("[OptionsGrid:Navigate] Invalid direction");
@@ -417,6 +434,7 @@ namespace BF2D.UI
         #endregion
 
         #region Private Methods
+
         private int Increment(int value, int size)
         {
             int field = value;
@@ -554,6 +572,82 @@ namespace BF2D.UI
                 InputButton.Select => this.selectEnabled,
                 _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputButton was null or invalid")
             };
+        }
+
+        private InputDirection InvertDirection(InputDirection direction)
+        {
+            return direction switch
+            {
+                InputDirection.Up => InputDirection.Down,
+                InputDirection.Left => InputDirection.Right,
+                InputDirection.Down => InputDirection.Up,
+                InputDirection.Right => InputDirection.Left,
+                _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputDirection was null or invalid")
+            };
+        }
+
+        private Vector2Int DirectionalBFS(Vector2Int startingPosition, InputDirection direction)
+        {
+            bool[,] visited = new bool[this.gridWidth, this.gridHeight];
+
+            if (direction == InputDirection.Up || direction == InputDirection.Down)
+            {
+                for (int i = 0; i < this.gridWidth; i++)
+                    visited[i, this.cursorPosition.y] = true;
+            }
+
+            if (direction == InputDirection.Left || direction == InputDirection.Right)
+            {
+                for (int i = 0; i < this.gridHeight; i++)
+                    visited[this.cursorPosition.x, i] = true;
+            }
+
+            visited[startingPosition.x, startingPosition.y] = true;
+
+            Queue<Vector2Int> bfsq = new();
+            bfsq.Enqueue(startingPosition);
+
+            Vector2Int current = startingPosition;
+            while (bfsq.Count > 0)
+            {
+                current = bfsq.Dequeue();
+                visited[current.x, current.y] = true;
+                if (this.grid[current.x, current.y] != null && this.grid[current.x, current.y].Interactable)
+                    break;
+
+                foreach (InputDirection branchDirection in Enum.GetValues(typeof(InputDirection)))
+                {
+                    if (branchDirection == InvertDirection(direction))
+                        continue;
+
+                    Vector2Int toQueue = current;
+                    switch (branchDirection)
+                    {
+                        case InputDirection.Up:
+                            toQueue.y = Decrement(toQueue.y, this.gridHeight);
+                            break;
+                        case InputDirection.Left:
+                            toQueue.x = Decrement(toQueue.x, this.gridWidth);
+                            break;
+                        case InputDirection.Down:
+                            toQueue.y = Increment(toQueue.y, this.gridHeight);
+                            break;
+                        case InputDirection.Right:
+                            toQueue.x = Increment(toQueue.x, this.gridWidth);
+                            break;
+                    }
+
+                    if (visited[toQueue.x, toQueue.y])
+                        continue;
+
+                    bfsq.Enqueue(toQueue);
+                }
+            }
+
+            if (this.grid[current.x, current.y] == null || !this.grid[current.x, current.y].Interactable)
+                current = this.cursorPosition;
+
+            return current;
         }
         #endregion
     }

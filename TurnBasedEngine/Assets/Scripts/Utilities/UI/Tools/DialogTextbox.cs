@@ -132,7 +132,7 @@ namespace BF2D.UI {
         {
             base.UtilityFinalize();
             NametagDisable();
-            if (UIControlsManager.Instance.PhantomControlEnabled)
+            if (this.responseOptionsControl.ControlledOptionsGrid.View.gameObject.activeSelf)
                 UIControlsManager.Instance.EndPhantomControl();
             Cancel();
         }

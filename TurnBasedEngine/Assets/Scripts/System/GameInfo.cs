@@ -18,11 +18,7 @@ namespace BF2D.Game
         public static GameInfo Instance { get { return GameInfo.instance; } }
         private static GameInfo instance;
 
-        public float ClockSpeed { get { return this.clockSpeed; } }
         public DialogTextboxControl SystemTextbox { get { return this.systemTextbox; } }
-
-        [Header("Global Game Settings")]
-        [SerializeField] private float clockSpeed = 0.03125f;
 
         [Header("Data File Managers")]
         [SerializeField] private ExternalFileManager saveFilesManager = null;
@@ -36,7 +32,8 @@ namespace BF2D.Game
         [SerializeField] private FileManager characterStatsActionsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public List<CharacterStats> Players { get { return this.currentSave is null ? null : this.currentSave.Players; } }
+        public List<CharacterStats> ActivePlayers { get { return this.currentSave is null ? null : this.currentSave.ActivePlayers; } }
+        public List<CharacterStats> InactivePlayers { get { return this.currentSave is null ? null : this.currentSave.InactivePlayers; } }
         public bool SaveActive { get { return this.currentSave is not null; } }
         private SaveData currentSave = null;
 
@@ -335,7 +332,7 @@ namespace BF2D.Game
 
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
 
-            foreach (CharacterStats character in saveData.Players)
+            foreach (CharacterStats character in saveData.ActivePlayers)
                 character.Setup();
 
             return saveData;

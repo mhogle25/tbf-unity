@@ -10,8 +10,8 @@ namespace BF2D.Combat
     public class CombatGrid : MonoBehaviour
     {
         [Header("Platforms")]
-        [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[4];
-        [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[4];
+        [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[Macros.MaxPartySize];
+        [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[Macros.MaxPartySize];
         [Header("Prefabs")]
         [SerializeField] private List<CharacterCombat> playerCombatPrefabs = new();
         [SerializeField] private List<CharacterCombat> enemyCombatPrefabs = new();
