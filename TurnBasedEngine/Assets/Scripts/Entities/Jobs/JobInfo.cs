@@ -87,5 +87,32 @@ namespace BF2D.Game
                 return Get().GetLuckModifier(this.experience);
             }
         }
+
+        [JsonIgnore]
+        public int CritMultiplier
+        {
+            get
+            {
+                return Get().GetCritMultiplier(this.experience);
+            }
+        }
+
+        [JsonIgnore]
+        public int CritChance
+        {
+            get
+            {
+                return Get().GetCritChance(this.experience);
+            }
+        }
+
+        [JsonIgnore]
+        public int ExperienceAward
+        {
+            get
+            {
+                return Get().GetExperienceAward(this.experience);
+            }
+        }
     }
 }

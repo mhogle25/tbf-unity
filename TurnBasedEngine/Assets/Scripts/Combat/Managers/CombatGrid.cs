@@ -73,6 +73,20 @@ namespace BF2D.Combat
         #endregion
 
         #region Public Utilities
+        public int GetTotalExperience()
+        {
+            if (CombatManager.Instance.CombatIsOver())
+            {
+                Terminal.IO.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
+                return 0;
+            }
+
+            int value = 0;
+            foreach (CharacterStats character in this.defeatedEnemies)
+                value += character.CurrentJob.ExperienceAward;
+            return value;
+        }
+
         public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
         {
             if (!DictsLoaded())

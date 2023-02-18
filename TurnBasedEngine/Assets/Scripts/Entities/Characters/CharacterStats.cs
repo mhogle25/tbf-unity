@@ -182,6 +182,14 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
+        [JsonProperty] BF2D.Utilities.NumRand randtest = null;
+
+        public void CalculateRandTest()
+        {
+            Terminal.IO.Log($"Final Value: {this.randtest.Calculate()}");
+        }
+
+
         #region Stats Properties
         public uint GetStatsProperty(CharacterStatsProperty property)
         {
@@ -216,7 +224,7 @@ namespace BF2D.Game
 
         public int CriticalDamage(int damage)
         {
-            int value = damage > 0 ? damage * CritMultiplier() : 1;
+            int value = damage > 0 ? damage * this.CurrentJob.CritMultiplier : 1;
             this.health -= value;
             //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
@@ -545,10 +553,5 @@ namespace BF2D.Game
             return newInfo;
         }
         #endregion
-
-        private int CritMultiplier()
-        {
-            return 2;   //
-        }
     }
 }

@@ -48,7 +48,8 @@ namespace BF2D
                 { "clearcaches", CommandClearCaches },
                 { "savegame", CommandSaveGame },
                 { "saveconfig", CommandSaveControlsConfig },
-                { "loadconfig", CommandLoadControlsConfig }
+                { "loadconfig", CommandLoadControlsConfig },
+                { "randtest", CommandRandTest },
             };
         }
 
@@ -82,16 +83,7 @@ namespace BF2D
         }
 
         private void CommandCombat(string[] arguments)
-        {
-            //
-            // Delete this
-            //
-            GameInfo.Instance.LoadControlsConfig(InputController.Keyboard, BF2D.Game.Strings.System.Default);
-            GameInfo.Instance.LoadControlsConfig(InputController.Gamepad, BF2D.Game.Strings.System.Default);
-            //
-            //
-            //
-
+        { 
             const string warning = "Useage: combat [saveFileID] [enemyID1] (optional ->) [enemyID2]...";
 
             if (arguments.Length < 3)
@@ -322,6 +314,13 @@ namespace BF2D
         {
             const string warningMessage = "Useage: loadconfig [keyboard OR gamepad] [fileID]";
 
+            if (arguments.Length == 1)
+            {
+                GameInfo.Instance.LoadControlsConfig(InputController.Keyboard, BF2D.Game.Strings.System.Default);
+                GameInfo.Instance.LoadControlsConfig(InputController.Gamepad, BF2D.Game.Strings.System.Default);
+                return;
+            }
+
             if (arguments.Length < 3 || arguments.Length > 3)
             {
                 Terminal.IO.LogWarning(warningMessage);
@@ -341,6 +340,14 @@ namespace BF2D
             }
 
             GameInfo.Instance.LoadControlsConfig(controllerType, arguments[2]);
+        }
+
+        private void CommandRandTest(string[] arguments)
+        {
+            foreach(CharacterStats character in GameInfo.Instance.ActivePlayers)
+            {
+                character.CalculateRandTest();
+            }
         }
         #endregion
     }

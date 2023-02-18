@@ -1,5 +1,5 @@
 Welcome to the BF2D Engine.[P:0.5] Here are some tips for using the combat system.
-To load a controls config,[P:0.25] run the 'loadconfig' command.[P:0.5] This command must be followed up by either 'keyboard' or 'gamepad and the ID of the config to load.
+To load a controls config,[P:0.25] run the 'loadconfig' command.[P:0.5] This command is followed up by either 'keyboard' or 'gamepad and the ID of the config to load.[P:0.5] If no arguments are given, the default configs for both controllers are loaded.
 To save your controls config,[P:0.25] run the 'saveconfig' command.[P:0.5] This command must be followed up by either 'keyboard' or 'gamepad',[P:0.25] then it may followed by any number of IDs.[P:0.5] If it is,[P:0.25] the currently active config will be saved to a file at each ID, and the currently active config ID will be set to the last ID.
 Saves and configs are found in the persistent data path.[P:0.5] List system data paths using the 'paths' command.
 To save your game,[P:0.25] run the 'savegame' command.[P:0.5] This command can be followed up by any number of IDs.[P:0.5] If it is,[P:0.25] the currently active save data will be saved to a file at each ID,[P:0.25] and the currently active save ID will be set to the last ID.

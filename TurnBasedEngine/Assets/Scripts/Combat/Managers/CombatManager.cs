@@ -14,8 +14,8 @@ namespace BF2D.Combat
     {
         public class InitializeInfo
         {
-            public List<CharacterStats> players = new();
-            public List<CharacterStats> enemies = new();
+            public IEnumerable<CharacterStats> players = null;
+            public IEnumerable<CharacterStats> enemies = null;
             public string openingDialogKey = "di_opening_default";
         }
 
@@ -83,12 +83,37 @@ namespace BF2D.Combat
         {
             ResetOrphanedTextbox();
             this.combatGrid.PassTurn();
-            string dialogKey = EnemiesAreDefeated() ? "di_victory" : PlayersAreDefeated() ? "di_defeat" : "di_draw";
-            this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, () =>
+
+            string dialogKey = string.Empty;
+            Action callback = null;
+            if (EnemiesAreDefeated())
             {
-                Terminal.IO.Log("Final Trigger");
-                CancelCombat();
-            });
+                dialogKey = "di_victory";
+                callback = () =>
+                {
+                    AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
+                    GameInfo.Instance.SaveGame();
+                    CancelCombat();
+                };
+            }
+            else if (PlayersAreDefeated())
+            {
+                dialogKey = "di_defeat";
+                callback = () =>
+                {
+                    CancelCombat();
+                };
+            }
+            else
+            {
+                dialogKey = "di_draw";
+                callback = () =>
+                {
+                    CancelCombat();
+                };
+            }
+
+            this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, callback);
 
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
         }
@@ -148,7 +173,19 @@ namespace BF2D.Combat
         #region Private Methods
         private void Initialize(InitializeInfo initInfo)
         {
-            this.combatGrid.Setup(initInfo.players, initInfo.enemies);
+            List<CharacterStats> players = new();
+            foreach (CharacterStats character in initInfo.players)
+            {
+                players.Add(character);
+            }
+
+            List<CharacterStats> enemies = new();
+            foreach(CharacterStats character in initInfo.enemies)
+            {
+                enemies.Add(character);
+            }
+
+            this.combatGrid.Setup(players, enemies);
 
             this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
@@ -194,6 +231,12 @@ namespace BF2D.Combat
             }
 
             CombatManager.instance = this;
+        }
+
+        private void AllocateExperience(IEnumerable<CharacterCombat> characters, int totalExperience)
+        {
+            foreach (CharacterCombat character in characters)
+                character.Stats.CurrentJob.Experience = totalExperience;
         }
         #endregion
     }
