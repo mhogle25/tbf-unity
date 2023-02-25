@@ -38,6 +38,7 @@ namespace BF2D.Combat
         public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.Enemies; } }
         public int EnemyCount { get { return this.combatGrid.EnemyCount; } }
         public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.Characters; } }
+
         public CharacterTargeterControl CharacterTargeter { get { return this.characterTargeter; } }
         public DialogTextbox OrphanedTextbox { get { return this.orphanedTextbox; } }
 

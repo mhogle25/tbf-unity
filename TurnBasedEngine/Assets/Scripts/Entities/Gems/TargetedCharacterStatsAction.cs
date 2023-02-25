@@ -26,37 +26,37 @@ namespace BF2D.Game.Actions
 
             if (this.Gem.Damage != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.Damage, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.Red);
+                text += TextBreakdownHelper(character, this.Gem.Damage, Strings.CharacterStats.Damage, Colors.Red);
             }
 
             if (this.Gem.DirectDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.DirectDamage, BF2D.Game.Strings.CharacterStats.Damage, BF2D.Game.Colors.Red);
+                text += TextBreakdownHelper(character, this.Gem.DirectDamage, Strings.CharacterStats.Damage, Colors.Red);
             }
 
             if (this.Gem.CriticalDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.CriticalDamage, BF2D.Game.Strings.CharacterStats.CriticalDamage, BF2D.Game.Colors.Yellow);
+                text += TextBreakdownHelper(character, this.Gem.CriticalDamage, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
             }
 
             if (this.Gem.PsychicDamage != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.PsychicDamage, BF2D.Game.Strings.CharacterStats.PsychicDamage, BF2D.Game.Colors.Magenta);
+                text += TextBreakdownHelper(character, this.Gem.PsychicDamage, Strings.CharacterStats.PsychicDamage, Colors.Magenta);
             }
 
             if (this.Gem.Heal != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.Heal, BF2D.Game.Strings.CharacterStats.Heal, BF2D.Game.Colors.Green);
+                text += TextBreakdownHelper(character, this.Gem.Heal, Strings.CharacterStats.Heal, Colors.Green);
             }
 
             if (this.Gem.Recover != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.Recover, BF2D.Game.Strings.CharacterStats.Recover, BF2D.Game.Colors.Cyan);
+                text += TextBreakdownHelper(character, this.Gem.Recover, Strings.CharacterStats.Recover, Colors.Cyan);
             }
 
             if (this.Gem.Exert != null)
             {
-                text += TextBreakdownHelper(character, this.Gem.Exert, BF2D.Game.Strings.CharacterStats.Exert, BF2D.Game.Colors.Blue);
+                text += TextBreakdownHelper(character, this.Gem.Exert, Strings.CharacterStats.Exert, Colors.Blue);
             }
 
             if (this.Gem.ResetHealth)
@@ -74,10 +74,10 @@ namespace BF2D.Game.Actions
 
         private string TextBreakdownHelper(CharacterStats character, CharacterStatsActionProperty actionProperty, string statsActionName, Color32 color)
         {
-            string text = $"{statsActionName} {actionProperty.Value}";
+            string text = $"{statsActionName} {actionProperty.Number.TextBreakdown(character)}";
             foreach (CharacterStatsProperty modifier in actionProperty.Modifiers)
             {
-                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}{BF2D.Game.Strings.CharacterStats.GetStatsPropertySymbol(modifier)}</color>";
+                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{character.GetStatsProperty(modifier)}{Strings.CharacterStats.GetStatsPropertySymbol(modifier)}</color>";
             }
             text += "\n";
             return text;

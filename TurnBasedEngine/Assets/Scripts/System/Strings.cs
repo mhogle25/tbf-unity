@@ -1,5 +1,6 @@
 using BF2D.Enums;
 using UnityEngine.Animations;
+using System;
 
 namespace BF2D.Game
 {
@@ -66,5 +67,17 @@ namespace BF2D.Game
             public const string Damaged = "damaged";
         }
         #endregion
+
+        public static string IntToStringSigned(int value)
+        {
+            if (value > 0)
+                return $"+{value}";
+
+
+            if (value < 0)
+                return $"-{Math.Abs(value)}";
+
+            return null;
+        }
     }
 }

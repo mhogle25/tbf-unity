@@ -7,7 +7,7 @@ namespace BF2D.Game
     public class Job : Entity
     {
         [Serializable]
-        private struct Modifier
+        private struct Rate
         {
             [JsonProperty] public int skip;
             [JsonProperty] public int amount;
@@ -15,7 +15,7 @@ namespace BF2D.Game
 
         [JsonProperty] private readonly float initLevelUpAmount = 10f;
         [JsonProperty] private readonly float levelUpRate = 1.5f;
-        [JsonProperty] private readonly Modifier healthModifier = new Modifier
+        [JsonProperty] private readonly Rate healthModifier = new Rate
         {
             skip = 0,
             amount = 1,

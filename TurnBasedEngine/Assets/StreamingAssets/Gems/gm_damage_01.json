@@ -1,6 +1,9 @@
 {
     "damage": 
     {
-        "value":3
+        "number":
+        {
+            "value":3
+        }
     }
 }

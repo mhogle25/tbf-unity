@@ -49,7 +49,6 @@ namespace BF2D
                 { "savegame", CommandSaveGame },
                 { "saveconfig", CommandSaveControlsConfig },
                 { "loadconfig", CommandLoadControlsConfig },
-                { "randtest", CommandRandTest },
             };
         }
 
@@ -340,14 +339,6 @@ namespace BF2D
             }
 
             GameInfo.Instance.LoadControlsConfig(controllerType, arguments[2]);
-        }
-
-        private void CommandRandTest(string[] arguments)
-        {
-            foreach(CharacterStats character in GameInfo.Instance.ActivePlayers)
-            {
-                character.CalculateRandTest();
-            }
         }
         #endregion
     }

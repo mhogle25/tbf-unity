@@ -1,7 +1,10 @@
 {
     "heal":
     {
-        "value":2
+        "number":
+        {
+            "value":2
+        }
     },
     "resetStamina":true
 }

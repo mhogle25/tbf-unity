@@ -43,6 +43,36 @@ namespace BF2D
             this.terminalIn.Commit(command);
         }
 
+        public void LogQuiet(int value)
+        {
+            LogQuiet($"{value}");
+        }
+
+        public void Log(int value)
+        {
+            Log($"{value}");
+        }
+
+        public void LogWarningQuiet(int value)
+        {
+            LogWarningQuiet($"{value}");
+        }
+
+        public void LogWarning(int value)
+        {
+            LogWarning($"{value}");
+        }
+
+        public void LogErrorQuiet(int value)
+        {
+            LogErrorQuiet($"{value}");
+        }
+
+        public void LogError(int value)
+        {
+            LogError($"{value}");
+        }
+
         public void LogQuiet(string message)
         {
             this.terminalOut.Log(message);

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BF2D.Enums;
 using UnityEngine;
 using BF2D.Game.Enums;
+using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game
 {
@@ -55,13 +56,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Stamina { get { return this.stamina; } }
         [JsonProperty] private int stamina = 0;
 
-        [JsonIgnore] public uint MaxHealth
+        [JsonIgnore] public int MaxHealth
         {
             get
             {
                 int value = this.Constitution + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxHealthModifier) + this.MaxHealthModifier.Total;
                 if (value < 0) value = 0;
-                return (uint)value;
+                return value;
             }
         }
         [JsonIgnore] public StatModifier MaxHealthModifier { get { return this.maxHealthModifier; } }
@@ -69,13 +70,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Constitution { get { return this.constitution; } }
         [JsonProperty] private int constitution = 0;
 
-        [JsonIgnore] public uint MaxStamina
+        [JsonIgnore] public int MaxStamina
         {
             get
             {
                 int value = this.Endurance + (this.CurrentJob is null ? 0 : this.CurrentJob.MaxStaminaModifier) + this.MaxStaminaModifier.Total;
                 if (value < 0) value = 0;
-                return (uint)value;
+                return value;
             }
         }
         [JsonIgnore] public StatModifier MaxStaminaModifier { get { return this.maxStaminaModifier; } }
@@ -83,13 +84,13 @@ namespace BF2D.Game
         [JsonIgnore] private int Endurance { get { return this.endurance; } }
         [JsonProperty] private int endurance = 0;
 
-        [JsonIgnore] public uint Speed 
+        [JsonIgnore] public int Speed 
         { 
             get 
             {
                 int value = this.speedModifier.Total + (this.CurrentJob is null ? 0 : this.CurrentJob.SpeedModifier) + this.swiftness;
                 if (value < 0) value = 0;
-                return (uint)value; 
+                return value; 
             } 
         }
         [JsonIgnore] public StatModifier SpeedModifier { get { return this.speedModifier; }}
@@ -97,13 +98,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Swiftness { get { return this.swiftness; } }
         [JsonProperty] private int swiftness = 0;
 
-        [JsonIgnore] public uint Attack 
+        [JsonIgnore] public int Attack 
         { 
             get 
             {
                 int value = this.attackModifier.Total + (this.CurrentJob is null ? 0 : this.CurrentJob.AttackModifier) + this.strength;
                 if (value < 0) value = 0;
-                return (uint)value; 
+                return value; 
             } 
         }
         [JsonIgnore] public StatModifier AttackModifier { get { return this.attackModifier; } }
@@ -111,13 +112,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Strength { get { return this.strength; } }
         [JsonProperty] private int strength = 0;
 
-        [JsonIgnore] public uint Defense 
+        [JsonIgnore] public int Defense 
         { 
             get 
             {
                 int value = this.defenseModifier.Total + (this.CurrentJob is null ? 0 : this.CurrentJob.DefenseModifier) + this.toughness;
                 if (value < 0) value = 0;
-                return (uint)value;
+                return value;
             } 
         }
         [JsonIgnore] public StatModifier DefenseModifier { get { return this.defenseModifier; }}
@@ -125,13 +126,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Toughness { get { return this.toughness; } }
         [JsonProperty] private int toughness = 0;
 
-        [JsonIgnore] public uint Focus 
+        [JsonIgnore] public int Focus 
         { 
             get 
             {
                 int value = this.focusModifier.Total + (this.CurrentJob is null ? 0 : this.CurrentJob.FocusModifier) + this.will;
                 if (value < 0) value = 0;
-                return (uint)value;
+                return value;
             } 
         }
         [JsonIgnore] public StatModifier FocusModifier { get { return this.focusModifier; } }
@@ -139,13 +140,13 @@ namespace BF2D.Game
         [JsonIgnore] public int Will { get { return this.will; } }
         [JsonProperty] private int will = 0;
 
-        [JsonIgnore] public uint Luck 
+        [JsonIgnore] public int Luck 
         { 
             get 
             { 
                 int value = this.luckModifier.Total + (this.CurrentJob is null ? 0 : this.CurrentJob.LuckModifier) + this.fortune;
                 if (value < 0) value = 0;
-                return (uint)value;
+                return value;
             } 
         }
         [JsonIgnore] public StatModifier LuckModifier { get { return this.luckModifier; } }
@@ -182,16 +183,8 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
-        [JsonProperty] BF2D.Utilities.NumRand randtest = null;
-
-        public void CalculateRandTest()
-        {
-            Terminal.IO.Log($"Final Value: {this.randtest.Calculate()}");
-        }
-
-
         #region Stats Properties
-        public uint GetStatsProperty(CharacterStatsProperty property)
+        public int GetStatsProperty(CharacterStatsProperty property)
         {
             return property switch
             {
@@ -208,7 +201,7 @@ namespace BF2D.Game
 
         public int Damage(int damage)
         {
-            int value = (damage - (int)Defense) > 0 ? (damage - (int)Defense) : 1;
+            int value = (damage - this.Defense) > 0 ? (damage - this.Defense) : 1;
             this.health -= value;
             //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
@@ -232,7 +225,7 @@ namespace BF2D.Game
 
         public int PsychicDamage(int damage)
         {
-            int value = (damage - (int)Focus) > 0 ? (damage - (int)Focus) : 1;
+            int value = (damage - this.Focus) > 0 ? (damage - this.Focus) : 1;
             this.health -= value;
             //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
@@ -277,7 +270,7 @@ namespace BF2D.Game
         public int ResetHealth()
         {
             int healthBefore = this.Health;
-            this.health = (int)this.MaxHealth;
+            this.health = this.MaxHealth;
             //Console.Log($"Health Before: {healthBefore} Health After: {this.Health}");
             return this.Health - healthBefore;
         }
@@ -285,7 +278,7 @@ namespace BF2D.Game
         public int ResetStamina()
         {
             int staminaBefore = this.Stamina;
-            this.stamina = (int)this.MaxStamina;
+            this.stamina = this.MaxStamina;
             //Console.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
@@ -309,6 +302,11 @@ namespace BF2D.Game
         public void SetName(string newName)
         {
             this.name = newName;
+        }
+
+        public string GetStatsPropertyText(CharacterStatsProperty property)
+        {
+            return $"{GetStatsProperty(property)}{Strings.CharacterStats.GetStatsPropertySymbol(property)}";
         }
         #endregion
 

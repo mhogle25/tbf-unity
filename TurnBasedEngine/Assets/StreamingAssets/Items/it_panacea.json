@@ -1,7 +1,7 @@
 {
     "name":"Panacea",
     "spriteID":"herb_02",
-    "description":"A mixture of herbs that restores a character to full health.",
+    "description":"A mixture of herbs that restores a target to full health.",
     "consumeable":true,
     "onUse":
     {

@@ -1,6 +1,9 @@
 {
     "heal":
-    {
-        "value":1
+    {        
+        "number":
+        {
+            "value":1
+        }
     }
 }
