@@ -1,54 +1,44 @@
 {
     "maxHealthRate": 
     {
-        "skip":1,
-        "amount":3
+        "skip":0,
+        "amount":1
     },
     "maxStaminaRate": 
     {
-        "skip":2,
-        "amount":4
+        "skip":3,
+        "amount":1
     },
     "speedRate": 
     {
         "skip":1,
-        "amount":2
+        "amount":1
     },
     "attackRate": 
     {
         "skip":0,
-        "amount":2
+        "amount":1
     },
     "defenseRate": 
     {
-        "skip":0,
-        "amount":2
+        "skip":1,
+        "amount":1
     },
     "focusRate": 
     {
         "skip":2,
-        "amount":2
+        "amount":1
     },
     "luckRate": 
     {
-        "skip":5,
-        "amount":1
-    },
-    "critMultiplierRate":
-    {
-        "skip":50,
-        "amount":1
-    },
-    "critChanceRate":
-    {
         "skip":10,
-        "amount":10
+        "amount":1
     },
     "levelUpEvents":
     [
         {
             "level":5,
-            "maxHealth":3
+            "attack":3
         }
     ]
 }

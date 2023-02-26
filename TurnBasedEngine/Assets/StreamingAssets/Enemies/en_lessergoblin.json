@@ -2,7 +2,7 @@
     "name":"Lesser Goblin",
     "description":"A fiend of the dark with a desire for blood.",
     "prefabID":"goblin",
-    "health":5,
+    "health":6,
     "stamina":1,
     "constitution":5,
     "endurance":1,
@@ -18,6 +18,10 @@
     "feet":"",
     "accessory":"",
     "gridPosition":0,
+    "job": {
+        "id": "jb_fiend",
+        "experience": 15
+    },
     "statusEffects":
     [
 
@@ -30,11 +34,17 @@
         },
         {
             "id":"it_firecracker",
-            "count":3
+            "count":50
         }
     ],
     "equipments": 
     [
 
-    ]
+    ],
+    "itemsLoot": 
+    [
+        "it_firecracker",
+        "it_firecracker"
+    ],
+    "currencyLoot":5
 }

@@ -25,50 +25,34 @@ namespace BF2D.Game.Actions
             string text = string.Empty;
 
             if (this.Gem.Damage != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.Damage, Strings.CharacterStats.Damage, Colors.Red);
-            }
 
             if (this.Gem.DirectDamage != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.DirectDamage, Strings.CharacterStats.Damage, Colors.Red);
-            }
 
             if (this.Gem.CriticalDamage != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.CriticalDamage, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
-            }
 
             if (this.Gem.PsychicDamage != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.PsychicDamage, Strings.CharacterStats.PsychicDamage, Colors.Magenta);
-            }
 
             if (this.Gem.Heal != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.Heal, Strings.CharacterStats.Heal, Colors.Green);
-            }
 
             if (this.Gem.Recover != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.Recover, Strings.CharacterStats.Recover, Colors.Cyan);
-            }
 
             if (this.Gem.Exert != null)
-            {
                 text += TextBreakdownHelper(character, this.Gem.Exert, Strings.CharacterStats.Exert, Colors.Blue);
-            }
 
             if (this.Gem.ResetHealth)
-            {
                 text += $"Fill {Strings.CharacterStats.Health} ({character.MaxHealth})\n";
-            }
 
             if (this.Gem.ResetStamina)
-            {
                 text += $"Fill {Strings.CharacterStats.Stamina} ({character.MaxStamina})\n";
-            }
 
+            if (this.Gem.SuccessRate < 100)
+                text += SuccessRateHelper();
             return text;
         }
 
@@ -81,6 +65,14 @@ namespace BF2D.Game.Actions
             }
             text += "\n";
             return text;
+        }
+
+        private string SuccessRateHelper()
+        {
+            if (this.Gem.SuccessRate < 0)
+                return $"Always Fails";
+
+            return $"Success Rate {this.Gem.SuccessRate}\n";
         }
     }
 }

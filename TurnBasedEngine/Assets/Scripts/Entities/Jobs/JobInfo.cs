@@ -1,15 +1,51 @@
 using Newtonsoft.Json;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
+using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game
 {
     public class JobInfo : IEntityInfo
     {
+        public class LevelUpInfo
+        {
+            public CharacterStats parent = null;
+            public bool leveledUp = false;
+            public List<string> levelUpDialog = null;
+        }
+
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Experience { get { return this.experience; } set { this.experience = value; } }
+        [JsonIgnore] public int Experience
+        {
+            get
+            {
+                return this.experience;
+            }
+        }
         [JsonProperty] private int experience = 0;
+
+        public LevelUpInfo GrantExperience(CharacterStats parent, int experience)
+        {
+            LevelUpInfo info = new();
+            int previousExperience = this.Experience;
+            this.experience += experience;
+            if (Get().GetLevel(previousExperience) < this.Level)
+            {
+                info.leveledUp = true;
+                List<string> levelUpDialog = new();
+                levelUpDialog.Add($"{parent.Name} went from level {Get().GetLevel(previousExperience)} to level {Get().GetLevel(this.experience)}. [P:0.2]");
+                string levelUpMessage = Get().GetLevelUpMessage(previousExperience, this.experience);
+                if (!string.IsNullOrEmpty(levelUpMessage))
+                    levelUpDialog.Add(levelUpMessage + "[E]");
+                else
+                    levelUpDialog[0] += "[E]";
+                info.levelUpDialog = levelUpDialog;
+                info.parent = parent;
+            }
+            return info;
+        }
 
         public Job Get()
         {

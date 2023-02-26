@@ -183,6 +183,11 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
+        [JsonProperty] private readonly List<string> itemsLoot = new();
+        [JsonProperty] private readonly List<string> equipmentsLoot = new();
+        [JsonIgnore] public int CurrencyLoot { get { return this.currencyLoot; } }
+        [JsonProperty] private readonly int currencyLoot = 1;
+
         #region Stats Properties
         public int GetStatsProperty(CharacterStatsProperty property)
         {
@@ -307,6 +312,16 @@ namespace BF2D.Game
         public string GetStatsPropertyText(CharacterStatsProperty property)
         {
             return $"{GetStatsProperty(property)}{Strings.CharacterStats.GetStatsPropertySymbol(property)}";
+        }
+
+        public int GetLevel(int experience)
+        {
+            return this.CurrentJob.Get().GetLevel(experience);
+        }
+
+        public JobInfo.LevelUpInfo GrantExperience(int experience)
+        {
+            return this.CurrentJob.GrantExperience(this, experience);
         }
         #endregion
 

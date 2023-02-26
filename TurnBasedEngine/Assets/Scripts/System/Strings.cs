@@ -6,6 +6,8 @@ namespace BF2D.Game
 {
     public static class Strings
     {
+        public const string Currency = "USD";
+
         public static class System
         {
             public const string Default = "default";

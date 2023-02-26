@@ -85,36 +85,36 @@ namespace BF2D.Combat
             ResetOrphanedTextbox();
             this.combatGrid.PassTurn();
 
-            string dialogKey = string.Empty;
-            Action callback = null;
             if (EnemiesAreDefeated())
             {
-                dialogKey = "di_victory";
-                callback = () =>
+                this.standaloneTextboxControl.Textbox.Dialog("di_victory", 0);
+                List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience() / this.PlayerCount);
+                foreach (JobInfo.LevelUpInfo info in infos)
                 {
-                    AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
+                    this.standaloneTextboxControl.Textbox.Dialog(info.levelUpDialog, 0, null, new List<string>
+                    {
+                        info.parent.Name
+                    });
+                }
+
+                GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
+
+                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Currency}", () =>
+                {
                     GameInfo.Instance.SaveGame();
                     CancelCombat();
-                };
+                });
+
             }
             else if (PlayersAreDefeated())
             {
-                dialogKey = "di_defeat";
-                callback = () =>
-                {
-                    CancelCombat();
-                };
+                this.standaloneTextboxControl.Textbox.Dialog("di_defeat", 0, CancelCombat);
             }
             else
             {
-                dialogKey = "di_draw";
-                callback = () =>
-                {
-                    CancelCombat();
-                };
+                this.standaloneTextboxControl.Textbox.Dialog("di_draw", 0, CancelCombat);
             }
 
-            this.standaloneTextboxControl.Textbox.Dialog(dialogKey, 0, callback);
 
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
         }
@@ -234,10 +234,18 @@ namespace BF2D.Combat
             CombatManager.instance = this;
         }
 
-        private void AllocateExperience(IEnumerable<CharacterCombat> characters, int totalExperience)
+        private List<JobInfo.LevelUpInfo> AllocateExperience(IEnumerable<CharacterCombat> characters, int experience)
         {
+            List<JobInfo.LevelUpInfo> infos = new();
+
             foreach (CharacterCombat character in characters)
-                character.Stats.CurrentJob.Experience = totalExperience;
+            {
+                JobInfo.LevelUpInfo info = character.Stats.GrantExperience(experience);
+                if (info.leveledUp)
+                    infos.Add(info);
+            }
+
+            return infos;
         }
         #endregion
     }

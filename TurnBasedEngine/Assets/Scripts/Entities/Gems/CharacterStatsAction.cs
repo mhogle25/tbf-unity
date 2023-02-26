@@ -5,6 +5,9 @@ using Newtonsoft.Json;
 
 namespace BF2D.Game.Actions
 {
+    /// <summary>
+    /// Gem
+    /// </summary>
     [Serializable]
     public class CharacterStatsAction : Entity
     {
@@ -14,6 +17,14 @@ namespace BF2D.Game.Actions
             public bool targetWasKilled = false;
             public bool targetWasRevived = false;
             public CharacterStats target = null;
+            public bool failed = false;
+
+            public string GetMessage()
+            {
+                if (this.failed)
+                    return $"But {this.target.Name} was not affected. [P:0.2]";
+                return message;
+            }
         }
 
         private delegate int CalculatedAction(int value);
@@ -38,6 +49,8 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetStamina = false;
         [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
         [JsonProperty] private readonly string statusEffect = null;
+        [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
+        [JsonProperty] private readonly int successRate = 100;
 
         public string GetAnimationKey()
         {
@@ -46,51 +59,76 @@ namespace BF2D.Game.Actions
 
             return Strings.Animation.Flashing;
         }
-        
+
         public Info Run(CharacterStats source, CharacterStats target)
         {
             Info info = new();
+            info.target = target;
+
+            int randomValue = UnityEngine.Random.Range(0, 100);
+            if (randomValue > this.successRate)
+            {
+                info.failed = true;
+                return info;
+            }
+
             bool targetDeadPrevious = target.Dead;
 
             if (this.resetHealth)
             {
-                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} went up to full. [P:0.1]";
+                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} went up to full. [P:0.2]";
                 target.ResetHealth();
             }
             if (this.resetStamina)
             {
-                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} went up to full. [P:0.1]";
+                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} went up to full. [P:0.2]";
                 target.ResetStamina();
             }
 
             if (this.damage is not null)
-                info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.1]";
+            {
+                Terminal.IO.Log(source.CurrentJob.CritChance);
+                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance)
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                else
+                    info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+            }
             if (this.directDamage is not null)
-                info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.1]";
+            {
+                Terminal.IO.Log(source.CurrentJob.CritChance);
+                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance)
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                else
+                    info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+            }
             if (this.criticalDamage is not null)
-                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.1]";
+                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             if (this.psychicDamage is not null)
-                info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.1]";
+                info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             if (this.heal is not null)
-                info.message += $"{target.Name} gained {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. [P:0.1]";
+                info.message += $"{target.Name} gained {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. [P:0.2]";
             if (this.recover is not null)
-                info.message += $"{target.Name} recovered {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.1]";
+                info.message += $"{target.Name} recovered {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.exert is not null)
-                info.message += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.1]";
+                info.message += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.statusEffect is not null)
             {
                 StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect);
                 if (statusEffect is null)
-                    return info;
-                info.message += source == target ? 
-                    $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.1]" : 
-                    $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.1]";
-                target.ApplyStatusEffect(this.statusEffect);
+                {
+                    Terminal.IO.LogError($"[CharacterStatsAction:Run] A status effect with id '{this.statusEffect}' does not exist");
+                }
+                else
+                {
+                    info.message += source == target ?
+                        $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
+                        $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
+                    target.ApplyStatusEffect(this.statusEffect);
+                }
             }
 
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
             info.targetWasRevived = targetDeadPrevious && !target.Dead;
-            info.target = target;
 
             return info;
         }

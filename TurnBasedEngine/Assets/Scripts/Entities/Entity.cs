@@ -11,6 +11,6 @@ namespace BF2D
         [JsonIgnore] public string Description { get { return this.description; } }
         [JsonProperty] protected readonly string description = string.Empty;
         [JsonIgnore] public IEnumerable<AuraType> Auras { get { return this.auras; } }
-        [JsonProperty] protected readonly List<AuraType> auras = new() { AuraType.Generic };
+        [JsonProperty] protected readonly List<AuraType> auras = new();
     }
 }

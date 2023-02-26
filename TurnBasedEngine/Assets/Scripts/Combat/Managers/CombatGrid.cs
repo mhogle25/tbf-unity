@@ -75,7 +75,7 @@ namespace BF2D.Combat
         #region Public Utilities
         public int GetTotalExperience()
         {
-            if (CombatManager.Instance.CombatIsOver())
+            if (!CombatManager.Instance.CombatIsOver())
             {
                 Terminal.IO.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
                 return 0;
@@ -87,8 +87,24 @@ namespace BF2D.Combat
             return value;
         }
 
+        public int GetTotalCurrencyLoot()
+        {
+            if (!CombatManager.Instance.CombatIsOver())
+            {
+                Terminal.IO.LogWarning($"[CombatGrid:GetTotalExperience] Tried to get the total {Strings.Currency} loot from the fight but combat wasn't over.");
+                return 0;
+            }
+
+            int value = 0;
+            foreach (CharacterStats character in this.defeatedEnemies)
+                value += character.CurrencyLoot;
+            return value;
+        }
+
         public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
         {
+            this.defeatedEnemies.Clear();
+
             if (!DictsLoaded())
                 LoadCharacterPrefabs();
 

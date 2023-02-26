@@ -1,0 +1,10 @@
+{
+    "damage": 
+    {
+        "number":
+        {
+            "expression":"| 2 5"
+        }
+    },
+    "successRate":60
+}

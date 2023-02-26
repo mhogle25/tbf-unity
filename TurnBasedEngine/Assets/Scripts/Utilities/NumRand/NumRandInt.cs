@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using BF2D.Utilities;
 using BF2D.Enums;
+using System.Text.RegularExpressions;
 
 namespace BF2D.Game
 {
@@ -12,6 +13,7 @@ namespace BF2D.Game
         [JsonProperty] private readonly int value = 0;
 
         [JsonIgnore] private readonly NumRand calculator = new();
+        [JsonIgnore] private Regex regex = new(@"\s+");
 
         public NumRandInt(int value)
         {
@@ -64,8 +66,8 @@ namespace BF2D.Game
                         { Strings.CharacterStats.Defense, source.GetStatsPropertyText(CharacterStatsProperty.Defense) },
                         { Strings.CharacterStats.Focus, source.GetStatsPropertyText(CharacterStatsProperty.Focus) },
                         { Strings.CharacterStats.Luck, source.GetStatsPropertyText(CharacterStatsProperty.Luck) },
-                        { Strings.CharacterStats.MaxHealth, source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
-                        { Strings.CharacterStats.MaxStamina, source.GetStatsPropertyText(CharacterStatsProperty.MaxStamina) }
+                        { this.regex.Replace(Strings.CharacterStats.MaxHealth, ""), source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
+                        { this.regex.Replace(Strings.CharacterStats.MaxStamina, ""), source.GetStatsPropertyText(CharacterStatsProperty.MaxStamina) }
                     }
                 });
             }

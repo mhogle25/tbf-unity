@@ -12,7 +12,7 @@
         "targetedGems": 
         [
             {
-                "target":"Any",
+                "target":"Enemy",
                 "description":"attack",
                 "gemID":"gm_damage_01_sadflhz"
             }

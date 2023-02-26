@@ -17,6 +17,9 @@ namespace BF2D.Game
         [JsonIgnore] public List<CharacterStats> InactivePlayers { get { return this.inactivePlayers; } }
         [JsonProperty] private readonly List<CharacterStats> inactivePlayers = new();
 
+        [JsonIgnore] public int Currency { get { return this.currency; } set { this.currency = value; } }
+        [JsonProperty] private int currency = 0;
+
         public void AddPlayer(CharacterStats newPlayer)
         {
             if (newPlayer is null)

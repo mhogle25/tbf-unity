@@ -35,6 +35,7 @@ namespace BF2D.Game
         public IEnumerable<CharacterStats> ActivePlayers { get { return this.currentSave is null ? null : this.currentSave.ActivePlayers; } }
         public IEnumerable<CharacterStats> InactivePlayers { get { return this.currentSave is null ? null : this.currentSave.InactivePlayers; } }
         public bool SaveActive { get { return this.currentSave is not null; } }
+        public int Currency { get { return this.currentSave.Currency; } set { this.currentSave.Currency = value; } }
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)

@@ -252,17 +252,17 @@ namespace BF2D.Combat
             this.eventStack.Continue();
         }
 
-        private void StageUntargetedGems(CharacterStatsAction action)
+        private void StageUntargetedGems(CharacterStatsAction gem)
         {
             this.eventStack.PushEvent(() =>
             {
                 this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
                 {
-                    PlayAnimation(action.GetAnimationKey());
+                    PlayAnimation(gem.GetAnimationKey());
 
-                    CharacterStatsAction.Info info = action.Run(this.Stats, this.Stats);
+                    CharacterStatsAction.Info info = gem.Run(this.Stats, this.Stats);
                     List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
-                    dialog.Insert(0, info.message);
+                    dialog.Insert(0, info.GetMessage());
                     RefreshStatsDisplay();
                     return dialog;
                 });
@@ -283,12 +283,10 @@ namespace BF2D.Combat
         {
             this.eventStack.PushEvent(() =>
             {
-                const string DEFAULT_MESSAGE = "But no one was affected.";
-
                 this.animatorController.ChangeAnimState(Strings.Animation.Attack, () =>
                 {
                     List<CharacterStatsAction.Info> infos = new();
-                    string message = DEFAULT_MESSAGE;
+                    string message = string.Empty;
 
                     foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
                     {
@@ -297,10 +295,8 @@ namespace BF2D.Combat
 
                         target.PlayAnimation(action.Gem.GetAnimationKey());
 
-                        if (message == DEFAULT_MESSAGE)
-                            message = string.Empty;
                         CharacterStatsAction.Info info = action.Gem.Run(this.stats, target.Stats);
-                        message += info.message;
+                        message += info.GetMessage();
                         infos.Add(info);
                         target.RefreshStatsDisplay();
                     }
