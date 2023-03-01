@@ -4,6 +4,7 @@
     "description":"An herb with restorative properties. Heal base 1-10 Health to a single target.",
     "auras": 
     [
+        "Restoration"
     ],
     "consumeable":true,
     "alignment":"Defense",

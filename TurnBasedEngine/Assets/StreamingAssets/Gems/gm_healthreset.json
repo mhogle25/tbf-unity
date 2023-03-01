@@ -1,6 +1,7 @@
 {
     "auras": 
     [
+        "Restoration"
     ],
     "alignment":"Defense",
     "resetHealth":true

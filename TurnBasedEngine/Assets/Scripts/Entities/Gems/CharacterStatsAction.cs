@@ -10,7 +10,7 @@ namespace BF2D.Game.Actions
     /// Gem
     /// </summary>
     [Serializable]
-    public class CharacterStatsAction : Entity
+    public class CharacterStatsAction : Entity, IUtilityEntity
     {
         public class Info
         {
@@ -54,16 +54,6 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly int successRate = 100;
         [JsonIgnore] public CombatAlignment Alignment { get { return this.alignment; } }
         [JsonProperty] public CombatAlignment alignment = CombatAlignment.Neutral;
-
-        public bool IsHealthRestore
-        {
-            get
-            {
-                if (this.heal is not null || this.resetHealth)
-                    return true;
-                return false;
-            }
-        }
 
         public string GetAnimationKey()
         {

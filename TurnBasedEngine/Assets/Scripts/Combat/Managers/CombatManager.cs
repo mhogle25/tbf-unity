@@ -168,6 +168,22 @@ namespace BF2D.Combat
             }
             return playersDefeated;
         }
+
+        public bool PlayersAreAtFullHealth
+        {
+            get
+            {
+                return CharactersAreAtFullHealth(this.Players);
+            }
+        }
+
+        public bool EnemiesAreAtFullHealth
+        {
+            get
+            {
+                return CharactersAreAtFullHealth(this.Enemies);
+            }
+        }
         #endregion
 
         #region Listeners
@@ -183,6 +199,14 @@ namespace BF2D.Combat
         #endregion
 
         #region Private Methods
+        private bool CharactersAreAtFullHealth(IEnumerable<CharacterCombat> characters)
+        {
+            foreach (CharacterCombat character in characters)
+                if (character.Stats.Health != character.Stats.MaxHealth && !character.Stats.Dead)
+                    return false;
+            return true;
+        }
+
         private void Initialize(InitializeInfo initInfo)
         {
             List<CharacterStats> players = new();

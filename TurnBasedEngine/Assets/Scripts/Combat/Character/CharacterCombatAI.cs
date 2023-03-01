@@ -144,9 +144,14 @@ namespace BF2D.Combat
 
             List<IEntityInfo> list = new();
 
+            bool allRestoration = true;
             foreach (IUtilityEntityInfo entity in entities)
+            {
+                if (!entity.GetEntity.ContainsAura(AuraType.Restoration))
+                    allRestoration = false;
                 if (entity.GetUtility.Alignment == alignment)
                     list.Add(entity);
+            }
 
             foreach(IEntityInfo entity in entities)
                 if (entity.GetEntity.ContainsAura(aura))
@@ -162,9 +167,21 @@ namespace BF2D.Combat
                     if (entity.GetEntity.ContainsAura(this.auraRanking.Max))
                         list.Add(entity);
 
-            if (list.Count < 1)
-                foreach (IEntityInfo entity in entities)
-                    list.Add(entity);
+            if (CombatManager.Instance.EnemiesAreAtFullHealth && !allRestoration)
+            {
+                list.RemoveAll((entity) => entity.GetEntity.ContainsAura(AuraType.Restoration));
+
+                if (list.Count < 1)
+                    foreach (IEntityInfo entity in entities)
+                        if (!entity.GetEntity.ContainsAura(AuraType.Restoration))
+                            list.Add(entity);
+            }
+            else
+            {
+                if (list.Count < 1)
+                    foreach (IEntityInfo entity in entities)
+                        list.Add(entity);
+            }
 
             int random = UnityEngine.Random.Range(0, list.Count);
             return list[random];
@@ -176,7 +193,7 @@ namespace BF2D.Combat
             foreach (CharacterCombat enemy in CombatManager.Instance.Enemies)
                 enemies.Add(enemy);
 
-            if (gem.IsHealthRestore && !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos))
+            if (HealLogicCheck(gem))
             {
                 enemies.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
                 return PickACharacter(enemies);
@@ -200,7 +217,7 @@ namespace BF2D.Combat
             foreach (CharacterCombat character in CombatManager.Instance.Enemies)
                 characters.Add(character);
 
-            if (gem.IsHealthRestore && !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos))
+            if (HealLogicCheck(gem))
             {
                 characters.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
                 return PickACharacter(characters);
@@ -231,6 +248,13 @@ namespace BF2D.Combat
                 }
             }
             return chosen;
+        }
+
+        private bool HealLogicCheck(CharacterStatsAction gem)
+        {
+            return gem.ContainsAura(AuraType.Restoration) &&
+                (gem.Alignment == CombatAlignment.Defense || gem.Alignment == CombatAlignment.Neutral) &&
+                !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos);
         }
     }
 }

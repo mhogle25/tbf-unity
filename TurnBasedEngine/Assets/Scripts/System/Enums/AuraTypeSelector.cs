@@ -24,6 +24,8 @@ namespace BF2D.Enums
         Evil,
         [EnumMember]
         Chaos,
+        [EnumMember]
+        Restoration
     }
 
     public class AuraTypeCollection<T>
