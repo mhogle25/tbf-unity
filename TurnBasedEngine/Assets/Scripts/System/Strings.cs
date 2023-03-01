@@ -7,6 +7,7 @@ namespace BF2D.Game
     public static class Strings
     {
         public const string Currency = "USD";
+        public const string Bag = "Bag";
 
         public static class System
         {

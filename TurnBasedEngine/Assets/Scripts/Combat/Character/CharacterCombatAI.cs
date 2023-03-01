@@ -12,7 +12,7 @@ namespace BF2D.Combat
     public class CharacterCombatAI
     {
         [JsonIgnore] public bool Enabled { get { return this.enabled; } }
-        [JsonIgnore] public bool enabled = false;
+        [JsonIgnore] private bool enabled = false;
 
         [Serializable]
         private class Ranking<T> where T : Enum

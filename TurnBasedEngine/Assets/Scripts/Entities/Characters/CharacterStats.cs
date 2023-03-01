@@ -182,8 +182,10 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get { return this.statusEffects; } }
         [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
 
+        [JsonIgnore] public int ItemsCount { get { return this.items.Count; } }
         [JsonIgnore] public IEnumerable<ItemInfo> Items { get { return this.items; } }
         [JsonProperty] private readonly List<ItemInfo> items = new();
+        [JsonIgnore] public int EquipmentsCount { get { return this.equipments.Count; } }
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 

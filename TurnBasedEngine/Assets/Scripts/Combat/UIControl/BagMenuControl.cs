@@ -26,7 +26,7 @@ namespace BF2D.Combat
             foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
             {
                 if (itemInfo.Get() is null)
-                    return;
+                    continue;
 
                 this.items.Add(itemInfo.Get());
 
@@ -51,6 +51,23 @@ namespace BF2D.Combat
                 });
             }
 
+            if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
+            {
+                this.controlledOptionsGrid.Add(new UIOption.Data
+                {
+                    name = BF2D.Game.Strings.Bag,
+                    text = "NULL",
+                    actions = new InputButtonCollection<Action>
+                    {
+                        [InputButton.Back] = () =>
+                        {
+                            UIControlsManager.Instance.PassControlBack();
+                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                        }
+                    }
+                });
+            }
+
             this.controlledOptionsGrid.SetCursorToFirst();
             OnNavigate(this.controlledOptionsGrid.CursorPosition1D);
             base.ControlInitialize();
@@ -58,6 +75,13 @@ namespace BF2D.Combat
 
         public void OnNavigate(int index)
         {
+            if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
+            {
+                this.nameText.text = BF2D.Game.Strings.Bag;
+                this.descriptionText.text = $"The {BF2D.Game.Strings.Bag.ToLower()} is empty.";
+                return;
+            }
+
             Item item = this.items[index];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
