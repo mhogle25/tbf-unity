@@ -32,6 +32,7 @@ namespace BF2D.Game
         [SerializeField] private FileManager characterStatsActionsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
+        public CharacterStats Leader { get { return this.currentSave.Leader; } }
         public IEnumerable<CharacterStats> ActivePlayers { get { return this.currentSave is null ? null : this.currentSave.ActivePlayers; } }
         public IEnumerable<CharacterStats> InactivePlayers { get { return this.currentSave is null ? null : this.currentSave.InactivePlayers; } }
         public bool SaveActive { get { return this.currentSave is not null; } }

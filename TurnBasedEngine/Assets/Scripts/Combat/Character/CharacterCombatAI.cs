@@ -176,7 +176,7 @@ namespace BF2D.Combat
             foreach (CharacterCombat enemy in CombatManager.Instance.Enemies)
                 enemies.Add(enemy);
 
-            if (gem.IsHealthRestore)
+            if (gem.IsHealthRestore && !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos))
             {
                 enemies.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
                 return PickACharacter(enemies);

@@ -189,10 +189,18 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
+        public class EntityLoot
+        {
+            public string id = string.Empty;
+            public int probability = 100;
+            public int count = 1;
+        }
+
         [JsonIgnore] public CharacterCombatAI CombatAI { get { return this.combatAI; } }
         [JsonProperty] private readonly CharacterCombatAI combatAI = new();
-        [JsonProperty] private readonly List<string> itemsLoot = new();
-        [JsonProperty] private readonly List<string> equipmentsLoot = new();
+        [JsonIgnore] public List<EntityLoot> ItemsLoot { get { return this.itemsLoot; } }
+        [JsonProperty] private readonly List<EntityLoot> itemsLoot = new();
+        [JsonProperty] private readonly List<EntityLoot> equipmentsLoot = new();
         [JsonIgnore] public int CurrencyLoot { get { return this.currencyLoot; } }
         [JsonProperty] private readonly int currencyLoot = 1;
 
@@ -334,28 +342,30 @@ namespace BF2D.Game
         #endregion
 
         #region Items
-        public void AcquireItem(string id)
+        public ItemInfo AcquireItem(string id)
         {
             ItemInfo info = AddItem(id);
 
             if (info is null)
             {
                 Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s itemTemplates bag but the item id given was invalid");
-                return;
+                return null;
             }
 
             info.Increment();
+            return info;
         }
 
-        public void RemoveItem(ItemInfo info)
+        public ItemInfo RemoveItem(ItemInfo info)
         {
             if (info is null)
             {
                 Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to remove an item from {this.name}'s item bag but the item info given was null");
-                return;
+                return null;
             }
 
             this.items.Remove(info);
+            return info;
         }
 
         private ItemInfo AddItem(string id)
@@ -418,29 +428,31 @@ namespace BF2D.Game
             };
         }
 
-        public void AcquireEquipment(string id)
+        public EquipmentInfo AcquireEquipment(string id)
         {
             EquipmentInfo info = AddEquipment(id);
             
             if (info is null)
             {
                 Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
-                return;
+                return null;
             }
 
             info.Increment();
+            return info;
         }
 
-        public void RemoveEquipment(EquipmentInfo info)
+        public EquipmentInfo RemoveEquipment(EquipmentInfo info)
         {
             if (info is null)
             {
                 Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
-                return;
+                return null;
             }
 
             UnequipModifierUpdate(info.Get());
             this.equipments.Remove(info);
+            return info;
         }
 
         private EquipmentInfo AddEquipment(string id)

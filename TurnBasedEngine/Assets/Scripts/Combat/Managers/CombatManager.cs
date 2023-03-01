@@ -98,6 +98,17 @@ namespace BF2D.Combat
                     });
                 }
 
+                string message = string.Empty;
+                foreach (string id in this.combatGrid.GetTotalItemsLoot())
+                {
+                    ItemInfo itemInfo = GameInfo.Instance.Leader.AcquireItem(id);
+                    if (itemInfo is not null)
+                        message += $"{GameInfo.Instance.Leader.Name} acquired a {itemInfo.Get().Name}. [P:0.2]";
+                }
+
+                if (!string.IsNullOrEmpty(message))
+                    this.standaloneTextboxControl.Textbox.Message(message);
+
                 GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
 
                 this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Currency}", () =>
@@ -105,7 +116,6 @@ namespace BF2D.Combat
                     GameInfo.Instance.SaveGame();
                     CancelCombat();
                 });
-
             }
             else if (PlayersAreDefeated())
             {

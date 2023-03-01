@@ -11,6 +11,24 @@ namespace BF2D.Game
         [JsonIgnore] public string ID { get { return this.id; } set { this.id = value; } }
         [JsonProperty] private string id = string.Empty;
 
+        [JsonIgnore] public CharacterStats Leader
+        {
+            get
+            {
+                if (this.ActivePlayers.Count < 1)
+                    return null;
+
+                CharacterStats max = ActivePlayers[0];
+                foreach (CharacterStats character in this.ActivePlayers)
+                {
+                    if (character.GridPosition < max.GridPosition)
+                        max = character;
+                }
+
+                return max;
+            }
+        }
+
         [JsonIgnore] public List<CharacterStats> ActivePlayers { get { return this.activePlayers; } }
         [JsonProperty] private readonly List<CharacterStats> activePlayers = new();
 

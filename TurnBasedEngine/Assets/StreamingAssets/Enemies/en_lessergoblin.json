@@ -47,8 +47,11 @@
     ],
     "itemsLoot": 
     [
-        "it_firecracker",
-        "it_firecracker"
+        {
+            "id": "it_firecracker",
+            "probability": 50,
+            "count": 2
+        }
     ],
     "currencyLoot":5,
     "combatAI": 

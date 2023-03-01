@@ -101,6 +101,23 @@ namespace BF2D.Combat
             return value;
         }
 
+        public List<string> GetTotalItemsLoot()
+        {
+            if (!CombatManager.Instance.CombatIsOver())
+            {
+                Terminal.IO.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total items loot from the fight but combat wasn't over.");
+                return new();
+            }
+
+            List<string> totalLoot = new();
+            foreach (CharacterStats character in this.defeatedEnemies)
+                foreach (CharacterStats.EntityLoot loot in character.ItemsLoot)
+                    for(int i = 0; i < loot.count; i++)
+                        if (UnityEngine.Random.Range(0, 100) < loot.probability)
+                            totalLoot.Add(loot.id);
+            return totalLoot;
+        }
+
         public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
         {
             this.defeatedEnemies.Clear();
