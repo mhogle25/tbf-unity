@@ -124,6 +124,7 @@ namespace BF2D.Combat
             }
 
             CombatManager.Instance.RunCombatEvents();
+            this.enabled = false;
         }
 
         private void RollItemAction()
