@@ -34,6 +34,9 @@ namespace BF2D.Game
             public const string Focus = "Focus";
             public const string Luck = "Luck";
 
+            public const string CritMultiplier = "Critical Hit Multiplier";
+            public const string CritChance = "Critical Hit Chance";
+
             public const char SpeedSymbol = 'ª';
             public const char AttackSymbol = '¨';
             public const char DefenseSymbol = '©';

@@ -1,4 +1,8 @@
 {
+    "auras": 
+    [
+    ],
+    "alignment":"Defense",
     "heal":
     {        
         "number":

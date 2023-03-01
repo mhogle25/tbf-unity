@@ -1,4 +1,9 @@
 {
+    "auras": 
+    [
+        "Damage"
+    ],
+    "alignment":"Offense",
     "damage":
     {
         "number":

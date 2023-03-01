@@ -8,36 +8,28 @@ namespace BF2D.Enums
 {
     [Serializable]
     [JsonConverter(typeof(StringEnumConverter))]
-    public enum AuraType
+    public enum CombatAlignment
     {
         [EnumMember]
-        Generic,
+        Offense,
         [EnumMember]
-        Fire,
+        Defense,
         [EnumMember]
-        Ice,
-        [EnumMember]
-        Poison,
-        [EnumMember]
-        Psychic,
-        [EnumMember]
-        Evil,
-        [EnumMember]
-        Chaos,
+        Neutral
     }
 
-    public class AuraTypeCollection<T>
+    public class CombatAlignmentCollection<T>
     {
         private T[] collection;
         private readonly int enumSize = 0;
 
-        public AuraTypeCollection()
+        public CombatAlignmentCollection()
         {
-            enumSize = Enum.GetValues(typeof(AuraType)).Length;
+            enumSize = Enum.GetValues(typeof(CombatAlignment)).Length;
             collection = new T[enumSize];
         }
 
-        public T this[AuraType index]
+        public T this[CombatAlignment index]
         {
             get
             {
@@ -51,8 +43,8 @@ namespace BF2D.Enums
         }
     }
 
-    public class AuraTypeSelector : MonoBehaviour
+    public class CombatAlignmentSelector : MonoBehaviour
     {
-        public AuraType auraType;
+        public CombatAlignment combatAlignment;
     }
 }

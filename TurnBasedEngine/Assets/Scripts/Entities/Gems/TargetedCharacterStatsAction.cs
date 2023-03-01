@@ -72,7 +72,7 @@ namespace BF2D.Game.Actions
             if (this.Gem.SuccessRate < 0)
                 return $"Always Fails";
 
-            return $"Success Rate {this.Gem.SuccessRate}\n";
+            return $"Success Rate {this.Gem.SuccessRate}%\n";
         }
     }
 }

@@ -2,6 +2,10 @@
     "name":"Vorpal Sword",
     "spriteID":"sword_01",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
     "description":"An ancient sword of great power. Damages a single target.",
+    "auras": 
+    [
+    ],
+    "alignment":"Offense",
     "consumeable":false,
     "onUse":
     {
@@ -12,7 +16,7 @@
         "targetedGems": 
         [
             {
-                "target":"Enemy",
+                "target":"Opponent",
                 "description":"attack",
                 "gemID":"gm_damage_01_sadflhz"
             }

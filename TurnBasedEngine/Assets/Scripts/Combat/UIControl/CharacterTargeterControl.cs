@@ -34,7 +34,7 @@ namespace BF2D.Combat
         {
             this.stagedStatsActions.Clear();
             this.stagedStatsAction = null;
-            foreach (TargetedCharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedStatsActions())
+            foreach (TargetedCharacterStatsAction statsAction in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGems())
             {
                 this.stagedStatsActions.Enqueue(statsAction);
             }
@@ -103,17 +103,17 @@ namespace BF2D.Combat
                     this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
                     Continue();
                     return;
-                case CharacterTarget.Player:
+                case CharacterTarget.Ally:
                     SetupDialog(this.playerPlatforms);
                     return;
-                case CharacterTarget.AllPlayers:
+                case CharacterTarget.AllAllies:
                     this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Players;
                     Continue();
                     return;
-                case CharacterTarget.Enemy:
+                case CharacterTarget.Opponent:
                     SetupDialog(this.enemyPlatforms);
                     return;
-                case CharacterTarget.AllEnemies:
+                case CharacterTarget.AllOpponents:
                     this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
                     Continue();
                     return;

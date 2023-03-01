@@ -2,6 +2,10 @@
     "name":"Firecracker",
     "spriteID":"firecracker_01",
     "description":"A small firecracker that will explode when used.",
+    "auras": 
+    [
+    ],
+    "alignment":"Offense",
     "consumeable":true,
     "onUse":
     {

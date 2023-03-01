@@ -2,7 +2,11 @@
     "name":"Panacea",
     "spriteID":"herb_02",
     "description":"A mixture of herbs that restores a target to full health.",
+    "auras":
+    [
+    ],
     "consumeable":true,
+    "alignment":"Defense",
     "onUse":
     {
         "message":

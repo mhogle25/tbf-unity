@@ -1,8 +1,8 @@
 {
     "name":"Vapor Helm",
     "description":"The helm of Vapor Knight.",
-    "auras": [
-        "Restoration"
+    "auras": 
+    [
     ],
     "spriteID":"helm_01",
     "type":"Head",

@@ -1,11 +1,12 @@
 using System;
+using BF2D.Enums;
 using Newtonsoft.Json;
 using UnityEngine;
 
 namespace BF2D.Game
 {
     [Serializable]
-    public class ItemInfo : IEntityInfo
+    public class ItemInfo : IUtilityEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
         [JsonProperty] private string id = string.Empty;
@@ -13,6 +14,10 @@ namespace BF2D.Game
         [JsonProperty] private int count = 0;
 
         [JsonIgnore] private Item staged = null;
+
+        [JsonIgnore] public Entity GetEntity { get { return Get(); } }
+
+        [JsonIgnore] public IUtilityEntity GetUtility { get { return Get(); } }
 
         public ItemInfo(string id)
         {
@@ -43,6 +48,7 @@ namespace BF2D.Game
                 if (this.count < 1)
                     owner.RemoveItem(this);
             }
+
             return ResetStaged();
         }
 

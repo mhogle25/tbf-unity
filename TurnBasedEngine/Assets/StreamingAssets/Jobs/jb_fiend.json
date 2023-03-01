@@ -1,4 +1,9 @@
 {
+    "auras": 
+    [
+        "Evil",
+        "Fire"
+    ],
     "maxHealthRate": 
     {
         "skip":0,

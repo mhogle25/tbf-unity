@@ -86,7 +86,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. Content: {content}");
+                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. {content}");
                 return default;
             }
             return t;

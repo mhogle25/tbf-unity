@@ -7,6 +7,7 @@ using BF2D.Combat.Actions;
 using BF2D.Game.Actions;
 using System.Threading;
 using System.Threading.Tasks;
+using BF2D.Enums;
 
 namespace BF2D.Combat
 {
@@ -202,22 +203,7 @@ namespace BF2D.Combat
                 return;
             }
 
-            //Begin Enemy AI
-            //
-            //
-            //
-            //
-            //
-            //
-            //GameInfo.Instance.SaveGame();
-            UIControlsManager.Instance.TakeControl(this.mainMenu);
-            //
-            //
-            //
-            //
-            //
-            //
-            //
+            this.CurrentCharacter.Stats.CombatAI.Run();
         }
 
         private void SingletonSetup()

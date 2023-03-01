@@ -2,7 +2,11 @@
     "name":"Medicinal Herb",
     "spriteID":"herb_01",
     "description":"An herb with restorative properties. Heal base 1-10 Health to a single target.",
+    "auras": 
+    [
+    ],
     "consumeable":true,
+    "alignment":"Defense",
     "onUse":
     {
         "message":

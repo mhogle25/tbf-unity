@@ -52,6 +52,8 @@ namespace BF2D.Game
             return GameInfo.Instance.GetJob(this.id);
         }
 
+        [JsonIgnore] public Entity GetEntity { get { return Get(); } }
+
         [JsonIgnore]
         public int Level
         {

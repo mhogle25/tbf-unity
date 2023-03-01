@@ -7,6 +7,8 @@ namespace BF2D.Combat
 {
     public class CombatGridTile : GridOption
     {
+        [Header("Settings")]
+        [SerializeField] private Vector3 assignmentPosition = Vector3.zero;
         [Header("UI/Grid Elements")]
         [SerializeField] private SpriteRenderer cursor = null;
         [SerializeField] private Canvas displayCanvas = null;
@@ -54,7 +56,7 @@ namespace BF2D.Combat
             this.assignedCharacter = characterCombat;
 
             characterCombat.transform.SetParent(this.transform);
-            characterCombat.transform.localPosition = Vector3.zero;
+            characterCombat.transform.localPosition = this.assignmentPosition;
             characterCombat.transform.localScale = Vector3.one;
 
             this.displayCanvas.enabled = true;

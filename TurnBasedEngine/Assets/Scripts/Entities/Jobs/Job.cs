@@ -198,7 +198,7 @@ namespace BF2D.Game
 
         public int GetCritMultiplier(int experience)
         {
-            return 2 + Calculate(experience, this.critMultiplierRate, (level) =>
+            return Macros.BaseCritMultiplier + Calculate(experience, this.critMultiplierRate, (level) =>
             {
                 LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
                 if (levelUpEvent is null)
@@ -209,7 +209,7 @@ namespace BF2D.Game
 
         public int GetCritChance(int experience)
         {
-            return 10 + Calculate(experience, this.critChanceRate, (level) =>
+            return Macros.BaseCritChance + Calculate(experience, this.critChanceRate, (level) =>
             {
                 LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
                 if (levelUpEvent is null)
@@ -239,8 +239,8 @@ namespace BF2D.Game
             statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Defense + Strings.CharacterStats.DefenseSymbol, GetDefenseModifier(previousExperience), GetDefenseModifier(currentExperience));
             statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Focus + Strings.CharacterStats.FocusSymbol, GetFocusModifier(previousExperience), GetFocusModifier(currentExperience));
             statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Luck + Strings.CharacterStats.LuckSymbol, GetLuckModifier(previousExperience), GetLuckModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper("crit multiplier", GetCritMultiplier(previousExperience), GetCritMultiplier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper("crit chance", GetCritChance(previousExperience), GetCritChance(currentExperience));
+            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.CritMultiplier.ToLower(), GetCritMultiplier(previousExperience), GetCritMultiplier(currentExperience));
+            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.CritChance.ToLower(), GetCritChance(previousExperience), GetCritChance(currentExperience));
 
             return statsMessage;
         }

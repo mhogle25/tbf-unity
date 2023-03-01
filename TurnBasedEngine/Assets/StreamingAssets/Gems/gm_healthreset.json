@@ -1,3 +1,7 @@
 {
+    "auras": 
+    [
+    ],
+    "alignment":"Defense",
     "resetHealth":true
 }

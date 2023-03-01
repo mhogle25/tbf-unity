@@ -5,6 +5,7 @@ using BF2D.Enums;
 using UnityEngine;
 using BF2D.Game.Enums;
 using UnityEngine.TextCore.Text;
+using BF2D.Combat;
 
 namespace BF2D.Game
 {
@@ -154,6 +155,9 @@ namespace BF2D.Game
         [JsonIgnore] public int Fortune { get { return this.fortune; } }
         [JsonProperty] private int fortune = 0;
 
+        [JsonIgnore] public bool CritImmune { get { return this.critImmune; } }
+        [JsonProperty] private bool critImmune = false;
+
         [JsonIgnore] public string Head { get { return this.head; } }
         [JsonProperty] private string head = string.Empty;
         [JsonIgnore] public string Torso { get { return this.torso; } }
@@ -183,6 +187,8 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
+        [JsonIgnore] public CharacterCombatAI CombatAI { get { return this.combatAI; } }
+        [JsonProperty] private readonly CharacterCombatAI combatAI = new();
         [JsonProperty] private readonly List<string> itemsLoot = new();
         [JsonProperty] private readonly List<string> equipmentsLoot = new();
         [JsonIgnore] public int CurrencyLoot { get { return this.currencyLoot; } }

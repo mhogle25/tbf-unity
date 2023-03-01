@@ -11,6 +11,8 @@ namespace BF2D.Game
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] protected int count = 0;
 
+        [JsonIgnore] public Entity GetEntity { get { return Get(); } }
+
         public EquipmentInfo(string id)
         {
             this.id = id;

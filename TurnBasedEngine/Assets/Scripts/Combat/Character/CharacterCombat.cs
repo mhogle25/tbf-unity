@@ -76,7 +76,7 @@ namespace BF2D.Combat
 
         private readonly EventStack eventStack = new();
 
-        public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } }
+        public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } set { this.currentCombatAction = value; } }
         private CombatAction currentCombatAction = null;
 
         public CombatGridTile Tile { set { this.assignedTile = value; } }
@@ -94,7 +94,10 @@ namespace BF2D.Combat
         public void SetupCombatAction(CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
-            this.currentCombatAction.Setup();
+            if (this.Stats.CombatAI.Enabled)
+                this.currentCombatAction.SetupAI(this.stats.CombatAI);
+            else
+                this.currentCombatAction.SetupControlled();
         }
 
         public void RunCombatEvents()
@@ -231,7 +234,7 @@ namespace BF2D.Combat
                     switch (this.CurrentCombatAction.CombatActionType)
                     {
                         case Enums.CombatActionType.Item:
-                            RunTargetedGems(this.CurrentCombatAction.UseTargetedStatsActions());
+                            RunTargetedGems(this.CurrentCombatAction.UseTargetedGems());
                             break;
                         default:
                             throw new NotImplementedException();
@@ -343,13 +346,11 @@ namespace BF2D.Combat
         #region EOC and EOT
         private void EOTEvent()
         {
-            Terminal.IO.Log("End of Turn");
             CombatManager.Instance.PassTurn();
         }
 
         private void EOCEvent()
         {
-            Terminal.IO.Log("End of Combat");
             CombatManager.Instance.EndCombat();
         }
         #endregion

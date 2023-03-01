@@ -87,7 +87,7 @@ namespace BF2D.Game
             this.equipments.Clear();
             this.characterStatsActions.Clear();
 
-            Terminal.IO.LogQuiet("Caches cleared.");
+            Terminal.IO.LogQuiet("Caches cleared");
         }
 
         public void RegisterCache(ICache cache)
@@ -202,7 +202,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetIcon] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetIcon] ID '{id}' was invalid");
                 return null;
             }
             return this.iconCollection[id];
@@ -212,7 +212,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetSoundEffect] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetSoundEffect] ID '{id}' was invalid");
                 return null;
             }
             return this.soundEffectCollection[id];
@@ -222,7 +222,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:InstantiateItem] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
                 return null;
             }
             return this.itemTemplates.Get(id, this.itemsFileManager);
@@ -232,7 +232,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetEquipment] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetEquipment] ID '{id}' was invalid");
                 return null;
             }
             return this.equipments.Get(id, this.equipmentsFileManager);
@@ -242,7 +242,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetStatusEffect] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetStatusEffect] ID '{id}' was invalid");
                 return null;
             }
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
@@ -252,7 +252,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetCharacterStatsAction] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetCharacterStatsAction] ID '{id}' was invalid");
                 return null;
             }
             return this.characterStatsActions.Get(id, this.characterStatsActionsFileManager);
@@ -262,7 +262,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:GetJob] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:GetJob] ID '{id}' was invalid");
             }
             return this.jobs.Get(id, this.jobsFileManager);
         }
@@ -271,7 +271,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
             CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
@@ -312,7 +312,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:InstantiatePlayer] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:InstantiatePlayer] ID '{id}' was invalid");
                 return null;
             }
             CharacterStats player = this.playerTemplates.Get(id, this.playersFileManager);
@@ -323,15 +323,23 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Terminal.IO.LogWarning("[GameInfo:InstantiateEnemy] ID was invalid.");
+                Terminal.IO.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
 
             string content = this.saveFilesManager.LoadFile(id);
             if (string.IsNullOrEmpty(content))
+            {
+                Terminal.IO.LogWarning($"[GameInfo:LoadSaveData] The contents of the save file at id '{id}' were empty");
                 return null;
+            }
 
             SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
+            if (saveData is null)
+            {
+                Terminal.IO.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");
+                return null;
+            }
 
             foreach (CharacterStats character in saveData.ActivePlayers)
                 character.Setup();

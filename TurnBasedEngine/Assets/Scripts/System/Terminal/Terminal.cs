@@ -29,12 +29,7 @@ namespace BF2D
         {
             if (Input.GetKeyDown(this.enableKey))
             {
-                InputManager.Instance.InputEnabled = !InputManager.Instance.InputEnabled;
-                this.view.gameObject.SetActive(!this.view.gameObject.activeSelf);
-                if (this.view.gameObject.activeSelf)
-                    this.onEnable?.Invoke();
-                else
-                    this.onDisable?.Invoke();
+                SetViewActive(!this.view.gameObject.activeSelf);
             }
         }
 
@@ -50,6 +45,7 @@ namespace BF2D
 
         public void Log(int value)
         {
+            Debug.Log(value);
             Log($"{value}");
         }
 
@@ -60,16 +56,19 @@ namespace BF2D
 
         public void LogWarning(int value)
         {
+            Debug.LogWarning(value);
             LogWarning($"{value}");
         }
 
         public void LogErrorQuiet(int value)
         {
+            SetViewActive(true);
             LogErrorQuiet($"{value}");
         }
 
         public void LogError(int value)
         {
+            Debug.LogError(value);
             LogError($"{value}");
         }
 
@@ -97,6 +96,7 @@ namespace BF2D
 
         public void LogErrorQuiet(string error)
         {
+            SetViewActive(true);
             this.terminalOut.LogError(error);
         }
 
@@ -109,6 +109,16 @@ namespace BF2D
         public void Clear()
         {
             this.terminalOut.Clear();
+        }
+
+        private void SetViewActive(bool setActive)
+        {
+            InputManager.Instance.InputEnabled = !setActive;
+            this.view.gameObject.SetActive(setActive);
+            if (this.view.gameObject.activeSelf)
+                this.onEnable?.Invoke();
+            else
+                this.onDisable?.Invoke();
         }
     }
 }

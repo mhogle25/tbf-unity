@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using BF2D.Enums;
 
 namespace BF2D.Game.Actions
 {
@@ -51,6 +52,18 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly string statusEffect = null;
         [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
         [JsonProperty] private readonly int successRate = 100;
+        [JsonIgnore] public CombatAlignment Alignment { get { return this.alignment; } }
+        [JsonProperty] public CombatAlignment alignment = CombatAlignment.Neutral;
+
+        public bool IsHealthRestore
+        {
+            get
+            {
+                if (this.heal is not null || this.resetHealth)
+                    return true;
+                return false;
+            }
+        }
 
         public string GetAnimationKey()
         {
@@ -62,8 +75,10 @@ namespace BF2D.Game.Actions
 
         public Info Run(CharacterStats source, CharacterStats target)
         {
-            Info info = new();
-            info.target = target;
+            Info info = new()
+            {
+                target = target
+            };
 
             int randomValue = UnityEngine.Random.Range(0, 100);
             if (randomValue > this.successRate)
@@ -87,16 +102,14 @@ namespace BF2D.Game.Actions
 
             if (this.damage is not null)
             {
-                Terminal.IO.Log(source.CurrentJob.CritChance);
-                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance)
+                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance && !target.CritImmune)
                     info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
                     info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             }
             if (this.directDamage is not null)
             {
-                Terminal.IO.Log(source.CurrentJob.CritChance);
-                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance)
+                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance && !target.CritImmune)
                     info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
                     info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";

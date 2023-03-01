@@ -131,7 +131,7 @@ namespace BF2D.Combat.Actions
             }
         }
 
-        public void Setup()
+        public void SetupControlled()
         {
             switch (this.combatActionType)
             {
@@ -148,7 +148,24 @@ namespace BF2D.Combat.Actions
             }
         }
 
-        public IEnumerable<TargetedCharacterStatsAction> GetTargetedStatsActions()
+        public void SetupAI(CharacterCombatAI ai)
+        {
+            switch (this.combatActionType)
+            {
+                case CombatActionType.Act: break;   //TODO
+                case CombatActionType.Equip: break; //TODO
+                case CombatActionType.Event: break; //TODO
+                case CombatActionType.Flee: break;  //TODO
+                case CombatActionType.Item:
+                    if (this.Item.Info.Get().OnUse.TargetedGems.Count > 0)
+                        ai.SetupTargetedGems();
+                    //TODO
+                    break;
+                case CombatActionType.Roster: break;
+            }
+        }
+
+        public IEnumerable<TargetedCharacterStatsAction> GetTargetedGems()
         {
             switch (this.combatActionType)
             {
@@ -160,7 +177,7 @@ namespace BF2D.Combat.Actions
 
         
 
-        public IEnumerable<TargetedCharacterStatsAction> UseTargetedStatsActions()
+        public IEnumerable<TargetedCharacterStatsAction> UseTargetedGems()
         {
             switch (this.combatActionType)
             {

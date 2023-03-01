@@ -13,13 +13,13 @@ namespace BF2D.Enums
         [EnumMember]
         Self,
         [EnumMember]
-        Player,
+        Ally,
         [EnumMember]
-        AllPlayers,
+        AllAllies,
         [EnumMember]
-        Enemy,
+        Opponent,
         [EnumMember]
-        AllEnemies,
+        AllOpponents,
         [EnumMember]
         Any,
         [EnumMember]
