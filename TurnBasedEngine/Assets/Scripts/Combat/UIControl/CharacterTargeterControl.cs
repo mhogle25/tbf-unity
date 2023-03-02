@@ -127,6 +127,18 @@ namespace BF2D.Combat
                     this.stagedStatsAction.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
                     Continue();
                     return;
+                case CharacterTarget.Random:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomCharacter() };
+                    Continue();
+                    return;
+                case CharacterTarget.RandomAlly:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
+                    Continue();
+                    return;
+                case CharacterTarget.RandomOpponent:
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomEnemy() };
+                    Continue();
+                    return;
                 default:
                     Terminal.IO.LogError("[CharacterTargeterControl:TargeterSetup] The provided value for a character target was invalid");
                     return;

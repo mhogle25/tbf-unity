@@ -49,8 +49,7 @@
     [
         {
             "id": "it_firecracker",
-            "probability": 50,
-            "count": 1
+            "probability": 50
         }
     ],
     "currencyLoot":5,
@@ -117,6 +116,10 @@
                 {
                     "value": "Chaos",
                     "weight": 5
+                },
+                {
+                    "value": "Restoration",
+                    "weight": 1
                 }
             ]
         },
@@ -134,7 +137,7 @@
                 },
                 {
                     "value": "Defense",
-                    "weight": 2
+                    "weight": 1
                 }
             ]
         }

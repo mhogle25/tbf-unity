@@ -8,6 +8,7 @@ using System;
 using BF2D.Game.Enums;
 using System.Runtime.CompilerServices;
 using System.Numerics;
+using BF2D.Enums;
 
 namespace BF2D.Combat
 {
@@ -293,15 +294,44 @@ namespace BF2D.Combat
 
                     foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
                     {
+                        CharacterCombat verifiedTarget = target;
                         if (target.Stats.Dead)
-                            continue;
+                        {
+                            if (action.Target == CharacterTarget.Self)
+                            {
+                                Terminal.IO.LogError("[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed");
+                                continue;
+                            }
+                            else if (action.Target == CharacterTarget.Ally ||
+                            action.Target == CharacterTarget.RandomAlly)
+                            {
+                                verifiedTarget = RollAlly();
+                            }
+                            else if (action.Target == CharacterTarget.Opponent ||
+                            action.Target == CharacterTarget.RandomOpponent)
+                            {
+                                verifiedTarget = RollOpponent();
+                            }
+                            else if (action.Target == CharacterTarget.Any ||
+                            action.Target == CharacterTarget.Random)
+                            {
+                                verifiedTarget = RollCharacterAligned(action.Gem.Alignment);
+                            }
+                            else if (action.Target == CharacterTarget.All ||
+                            action.Target == CharacterTarget.AllOfAny ||
+                            action.Target == CharacterTarget.AllAllies ||
+                            action.Target == CharacterTarget.AllOpponents)
+                            {
+                                continue;
+                            }
+                        }
 
-                        target.PlayAnimation(action.Gem.GetAnimationKey());
+                        verifiedTarget.PlayAnimation(action.Gem.GetAnimationKey());
 
-                        CharacterStatsAction.Info info = action.Gem.Run(this.stats, target.Stats);
+                        CharacterStatsAction.Info info = action.Gem.Run(this.stats, verifiedTarget.Stats);
                         message += info.GetMessage();
                         infos.Add(info);
-                        target.RefreshStatsDisplay();
+                        verifiedTarget.RefreshStatsDisplay();
                     }
 
                     List<string> dialog = GemStatusCheck(infos);
@@ -309,6 +339,38 @@ namespace BF2D.Combat
                     return dialog;
                 });
             });
+        }
+
+        private CharacterCombat RollOpponent()
+        {
+            return CombatManager.Instance.CharacterIsEnemy(this) ?
+            CombatManager.Instance.RandomPlayer() :
+            CombatManager.Instance.RandomEnemy();
+        }
+
+        private CharacterCombat RollAlly()
+        {
+            return CombatManager.Instance.CharacterIsEnemy(this) ?
+            CombatManager.Instance.RandomEnemy() :
+            CombatManager.Instance.RandomPlayer();
+        }
+
+        private CharacterCombat RollCharacterAligned(CombatAlignment alignment)
+        {
+            if (CombatManager.Instance.CharacterIsEnemy(this))
+            {
+                return alignment == CombatAlignment.Offense ||
+                alignment == CombatAlignment.Neutral ?
+                CombatManager.Instance.RandomPlayer() :
+                CombatManager.Instance.RandomEnemy();
+            }
+            else
+            {
+                return alignment == CombatAlignment.Offense ||
+                alignment == CombatAlignment.Neutral ?
+                CombatManager.Instance.RandomEnemy() :
+                CombatManager.Instance.RandomPlayer();
+            }
         }
 
         private List<string> GemStatusCheck(IEnumerable<CharacterStatsAction.Info> infos)

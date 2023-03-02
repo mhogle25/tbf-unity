@@ -1,0 +1,23 @@
+{
+    "auras": 
+    [
+        "Fire"
+    ],
+    "alignment":"Offense",
+    "damage": 
+    {
+        "number": 
+        {
+            "expression":"| 2 5"
+        },
+        "modifiers":
+        [
+            "Focus"
+        ]
+    },
+    "statusEffect": 
+    {
+        "id":"se_burning_01",
+        "successRate":40
+    }
+}

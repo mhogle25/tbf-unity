@@ -28,6 +28,13 @@ namespace BF2D.Game.Actions
             }
         }
 
+        [Serializable]
+        public class StatusEffectProperty
+        {
+            [JsonProperty] public string id = string.Empty;
+            [JsonProperty] public int successRate = 100;
+        }
+
         private delegate int CalculatedAction(int value);
 
         [JsonIgnore] public CharacterStatsActionProperty Damage { get { return this.damage; } }
@@ -48,12 +55,27 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetHealth = false;
         [JsonIgnore] public bool ResetStamina { get { return this.resetStamina; } }
         [JsonProperty] private readonly bool resetStamina = false;
-        [JsonIgnore] public string StatusEffect { get { return this.statusEffect; } }
-        [JsonProperty] private readonly string statusEffect = null;
+        [JsonIgnore] public StatusEffectProperty StatusEffect { get { return this.statusEffect; } }
+        [JsonProperty] private readonly StatusEffectProperty statusEffect = null;
+        [JsonIgnore] public CharacterStatsActionProperty ConstitutionUp { get { return this.constitutionUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty constitutionUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty EnduranceUp { get { return this.enduranceUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty enduranceUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty SwiftnessUp { get { return this.swiftnessUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty swiftnessUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty StrengthUp { get { return this.strengthUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty strengthUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty ToughnessUp { get { return this.toughnessUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty toughnessUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty WillUp { get { return this.willUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty willUp = null;
+        [JsonIgnore] public CharacterStatsActionProperty FortuneUp { get { return this.fortuneUp; } }
+        [JsonProperty] private readonly CharacterStatsActionProperty fortuneUp = null;
+
         [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
         [JsonProperty] private readonly int successRate = 100;
         [JsonIgnore] public CombatAlignment Alignment { get { return this.alignment; } }
-        [JsonProperty] public CombatAlignment alignment = CombatAlignment.Neutral;
+        [JsonProperty] private CombatAlignment alignment = CombatAlignment.Neutral;
 
         public string GetAnimationKey()
         {
@@ -116,19 +138,41 @@ namespace BF2D.Game.Actions
                 info.message += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.statusEffect is not null)
             {
-                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect);
+                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect.id);
                 if (statusEffect is null)
                 {
                     Terminal.IO.LogError($"[CharacterStatsAction:Run] A status effect with id '{this.statusEffect}' does not exist");
                 }
                 else
                 {
-                    info.message += source == target ?
-                        $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
-                        $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
-                    target.ApplyStatusEffect(this.statusEffect);
+                    if (UnityEngine.Random.Range(0, 100) < this.statusEffect.successRate)
+                    {
+                        info.message += source == target ?
+                            $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
+                            $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
+                        target.ApplyStatusEffect(this.statusEffect.id);
+                    }
+                    else
+                    {
+                        info.message += $"{statusEffect.Name} failed. [P:0.2]";
+                    }
                 }
             }
+
+            if (this.constitutionUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {RunCharacterStatsActionProperty(this.constitutionUp, source, target.ConstitutionUp)}. [P:0.2]";
+            if (this.enduranceUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {RunCharacterStatsActionProperty(this.enduranceUp, source, target.EnduranceUp)}. [P:0.2]";
+            if (this.swiftnessUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {RunCharacterStatsActionProperty(this.swiftnessUp, source, target.SwiftnessUp)}. [P:0.2]";
+            if (this.strengthUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {RunCharacterStatsActionProperty(this.strengthUp, source, target.StrengthUp)}. [P:0.2]";
+            if (this.toughnessUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {RunCharacterStatsActionProperty(this.toughnessUp, source, target.ToughnessUp)}. [P:0.2]";
+            if (this.willUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {RunCharacterStatsActionProperty(this.willUp, source, target.WillUp)}. [P:0.2]";
+            if (this.fortuneUp is not null)
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {RunCharacterStatsActionProperty(this.fortuneUp, source, target.FortuneUp)}. [P:0.2]";
 
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
             info.targetWasRevived = targetDeadPrevious && !target.Dead;

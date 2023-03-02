@@ -25,7 +25,13 @@ namespace BF2D.Enums
         [EnumMember]
         AllOfAny,
         [EnumMember]
-        All
+        All,
+        [EnumMember]
+        RandomOpponent,
+        [EnumMember]
+        RandomAlly,
+        [EnumMember]
+        Random,
     }
 
     public class CharacterTargetCollection<T>

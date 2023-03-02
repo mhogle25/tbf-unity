@@ -189,13 +189,6 @@ namespace BF2D.Game
         [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
-        public class EntityLoot
-        {
-            public string id = string.Empty;
-            public int probability = 100;
-            public int count = 1;
-        }
-
         [JsonIgnore] public CharacterCombatAI CombatAI { get { return this.combatAI; } }
         [JsonProperty] private readonly CharacterCombatAI combatAI = new();
         [JsonIgnore] public List<EntityLoot> ItemsLoot { get { return this.itemsLoot; } }
@@ -303,6 +296,55 @@ namespace BF2D.Game
             //Console.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
+
+        public int ConstitutionUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.constitution += value;
+            return value;
+        }
+
+        public int EnduranceUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.endurance += value;
+            return value;
+        }
+
+        public int SwiftnessUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.constitution += value;
+            return value;
+        }
+
+        public int StrengthUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.strength += value;
+            return value;
+        }
+
+        public int ToughnessUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.toughness += value;
+            return value;
+        }
+
+        public int WillUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.will += value;
+            return value;
+        }
+
+        public int FortuneUp(int amount)
+        {
+            int value = amount > 0 ? amount : 1;
+            this.will += value;
+            return value;
+        }
         #endregion
 
         #region Generic Public Utilities
@@ -328,11 +370,6 @@ namespace BF2D.Game
         public string GetStatsPropertyText(CharacterStatsProperty property)
         {
             return $"{GetStatsProperty(property)}{Strings.CharacterStats.GetStatsPropertySymbol(property)}";
-        }
-
-        public int GetLevel(int experience)
-        {
-            return this.CurrentJob.Get().GetLevel(experience);
         }
 
         public JobInfo.LevelUpInfo GrantExperience(int experience)

@@ -1,7 +1,7 @@
 {
     "name":"Vorpal Sword",
     "spriteID":"sword_01",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-    "description":"An ancient sword of great power. Damages a single target.",
+    "description":"An ancient sword of great power. Damages a single opponent.",
     "auras": 
     [
     ],

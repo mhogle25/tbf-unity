@@ -21,16 +21,65 @@ namespace BF2D.Combat
 
         private readonly List<CharacterCombat> characterQueue = new();
         private readonly List<CharacterStats> defeatedEnemies = new();
+        private readonly List<CharacterStats> defeatedPlayers = new();
 
-        public int PlayerCount { get { return this.playersCount; } }
         private int playersCount = 0;
-        public int EnemyCount { get { return this.enemiesCount; } }
         private int enemiesCount = 0;
 
         private int currentCharacterIndex = 0;
 
         #region Getter Setters
-        public IEnumerable<CharacterCombat> Players
+        public List<CharacterCombat> ActivePlayers
+        {
+            get
+            {
+                List<CharacterCombat> list = new();
+                foreach (CombatGridTile tile in this.playerPlatforms)
+                {
+                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
+                        list.Add(tile.AssignedCharacter);
+                }
+                return list;
+            }
+        }
+
+        public List<CharacterCombat> ActiveEnemies
+        {
+            get
+            {
+                List<CharacterCombat> list = new();
+                foreach (CombatGridTile tile in this.enemyPlatforms)
+                {
+                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
+                        list.Add(tile.AssignedCharacter);
+                }
+                return list;
+            }
+        }
+
+        public List<CharacterCombat> ActiveCharacters
+        {
+            get
+            {
+                List<CharacterCombat> list = new();
+
+                foreach (CombatGridTile tile in this.playerPlatforms)
+                {
+                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
+                        list.Add(tile.AssignedCharacter);
+                }
+
+                foreach (CombatGridTile tile in this.enemyPlatforms)
+                {
+                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
+                        list.Add(tile.AssignedCharacter);
+                }
+
+                return list;
+            }
+        }
+
+        private List<CharacterCombat> AllPlayers
         {
             get
             {
@@ -43,7 +92,8 @@ namespace BF2D.Combat
                 return list;
             }
         }
-        public IEnumerable<CharacterCombat> Enemies
+
+        private List<CharacterCombat> AllEnemies
         {
             get
             {
@@ -56,13 +106,29 @@ namespace BF2D.Combat
                 return list;
             }
         }
-        public IEnumerable<CharacterCombat> Characters
+
+        private List<CharacterCombat> AllCharacters
         {
             get
             {
-                return this.characterQueue;
+                List<CharacterCombat> list = new();
+
+                foreach (CombatGridTile tile in this.playerPlatforms)
+                {
+                    if (tile.AssignedCharacter)
+                        list.Add(tile.AssignedCharacter);
+                }
+
+                foreach (CombatGridTile tile in this.enemyPlatforms)
+                {
+                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
+                        list.Add(tile.AssignedCharacter);
+                }
+
+                return list;
             }
         }
+
         public CharacterCombat CurrentCharacter
         {
             get
@@ -83,7 +149,10 @@ namespace BF2D.Combat
 
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
+            {
                 value += character.CurrentJob.ExperienceAward;
+            }
+            
             return value;
         }
 
@@ -111,10 +180,10 @@ namespace BF2D.Combat
 
             List<string> totalLoot = new();
             foreach (CharacterStats character in this.defeatedEnemies)
-                foreach (CharacterStats.EntityLoot loot in character.ItemsLoot)
-                    for(int i = 0; i < loot.count; i++)
-                        if (UnityEngine.Random.Range(0, 100) < loot.probability)
-                            totalLoot.Add(loot.id);
+                foreach (EntityLoot loot in character.ItemsLoot)
+                    for(int i = 0; i < loot.Count; i++)
+                        if (UnityEngine.Random.Range(0, 100) < loot.Probability)
+                            totalLoot.Add(loot.ID);
             return totalLoot;
         }
 
@@ -174,6 +243,7 @@ namespace BF2D.Combat
 
                     if (CharacterIsPlayer(character))
                     {
+                        this.defeatedPlayers.Add(character.Stats);
                         this.playersCount--;
                     }
                     toBeDestroyed.Add(character);
@@ -196,12 +266,12 @@ namespace BF2D.Combat
 
         public bool CharacterIsPlayer(CharacterCombat character)
         {
-            return this.Players.Contains(character);
+            return this.AllPlayers.Contains(character);
         }
 
         public bool CharacterIsEnemy(CharacterCombat character)
         {
-            return this.Enemies.Contains(character);
+            return this.AllEnemies.Contains(character);
         }
 
         public void GridReset()

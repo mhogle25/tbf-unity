@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using BF2D.Enums;
+using BF2D.Game.Enums;
 
 namespace BF2D
 {

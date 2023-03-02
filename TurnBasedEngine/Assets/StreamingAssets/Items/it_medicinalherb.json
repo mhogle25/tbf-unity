@@ -6,7 +6,6 @@
     [
         "Restoration"
     ],
-    "consumeable":true,
     "alignment":"Defense",
     "onUse":
     {

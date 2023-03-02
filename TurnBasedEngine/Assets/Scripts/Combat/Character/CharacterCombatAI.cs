@@ -1,10 +1,11 @@
 using System;
 using Newtonsoft.Json;
 using BF2D.Combat.Enums;
-using BF2D.Enums;
+using BF2D.Game.Enums;
 using BF2D.Game;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
+using BF2D.Enums;
 
 namespace BF2D.Combat
 {
@@ -112,10 +113,27 @@ namespace BF2D.Combat
                         targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(targetedGem.Gem) };
                         break;
                     case CharacterTarget.AllOfAny:
-                        //targetedGem.TargetInfo.CombatTargets = ;
+                        targetedGem.TargetInfo.CombatTargets = targetedGem.Gem.Alignment == CombatAlignment.Offense ||
+                        targetedGem.Gem.Alignment == CombatAlignment.Neutral ?
+                        CombatManager.Instance.Players :
+                        CombatManager.Instance.Enemies;
+
+                        if (CurrentCharacterIsChaotic())
+                            targetedGem.TargetInfo.CombatTargets = UnityEngine.Random.Range(0, 2) == 0 ?
+                            CombatManager.Instance.Players :
+                            CombatManager.Instance.Enemies;
                         break;
                     case CharacterTarget.All:
                         targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
+                        break;
+                    case CharacterTarget.Random:
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomCharacter() };
+                        break;
+                    case CharacterTarget.RandomAlly:
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomEnemy() };
+                        break;
+                    case CharacterTarget.RandomOpponent:
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
                         break;
                     default:
                         Terminal.IO.LogError("[CharacterCombatAI:SetupTargetedGems] The provided value for a character target was invalid");
@@ -227,10 +245,10 @@ namespace BF2D.Combat
             foreach (CharacterCombat character in CombatManager.Instance.Players)
                 characters.Add(character);
 
-            if (gem.Alignment == CombatAlignment.Defense && !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos))
+            if (gem.Alignment == CombatAlignment.Defense && !CurrentCharacterIsChaotic())
                 return PickAnEnemy(gem);
 
-            if (gem.Alignment == CombatAlignment.Offense && !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos))
+            if (gem.Alignment == CombatAlignment.Offense && !CurrentCharacterIsChaotic())
                 return PickAPlayer(gem);
 
             return characters[UnityEngine.Random.Range(0, characters.Count)];
@@ -255,7 +273,12 @@ namespace BF2D.Combat
         {
             return gem.ContainsAura(AuraType.Restoration) &&
                 (gem.Alignment == CombatAlignment.Defense || gem.Alignment == CombatAlignment.Neutral) &&
-                !CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos);
+                !CurrentCharacterIsChaotic();
+        }
+
+        private bool CurrentCharacterIsChaotic()
+        {
+            return CombatManager.Instance.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos);
         }
     }
 }

@@ -11,7 +11,13 @@
         },
         "modifiers":
         [
-            "Attack"
+            "Speed",
+            "Attack",
+            "Defense",
+            "Focus",
+            "Luck",
+            "MaxHealth",
+            "MaxStamina"
         ]
     }
 }

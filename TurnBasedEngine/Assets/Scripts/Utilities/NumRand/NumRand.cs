@@ -11,16 +11,12 @@ namespace BF2D.Utilities
         private const char OP_ADD = '+';
         private const char OP_SUB = '-';
         private const char OP_MULT = '*';
-        private const char OP_INCLUDE = '!';
-        private const char OP_EXCLUDE = '_';
 
         private readonly HashSet<char> operatorsSet = new() {
             NumRand.OP_RANGE,
             NumRand.OP_ADD,
             NumRand.OP_SUB,
-            NumRand.OP_MULT,
-            NumRand.OP_INCLUDE,
-            NumRand.OP_EXCLUDE
+            NumRand.OP_MULT
         };
 
         public class TextSpecs
@@ -82,15 +78,12 @@ namespace BF2D.Utilities
                 {
                     return (int) (x * y);
                 }
-                else if (RangeOperatorVerify(this.raw))
+                else if (this.raw[0] == NumRand.OP_RANGE)
                 {
                     float max = x > y ? x : y;
                     float min = x < y ? x : y;
 
                     int value = UnityEngine.Random.Range((int) min, (int) max);
-
-                    if (IsRangeInclusive(this.raw))
-                        value = (int) UnityEngine.Random.Range(min, max);
 
                     if (specs.showLogs)
                         Terminal.IO.Log($"Random Value: {value}");
@@ -112,37 +105,6 @@ namespace BF2D.Utilities
                 {
                     throw new Exception($"[NumRand:FloatOp:Calculate] Syntax Error: The operation '{this.raw}' was invalid");
                 }
-            }
-
-            private bool RangeOperatorVerify(string op)
-            {
-                for (int i = 0; i < op.Length; i++)
-                {
-                    if (op[i] != NumRand.OP_RANGE && op[i] != NumRand.OP_INCLUDE && op[i] != NumRand.OP_EXCLUDE)
-                        return false;
-                }
-                return true;
-            }
-
-            private bool IsRangeInclusive(string op)
-            {
-                string full = op;
-
-                if (full.Length > 2)
-                {
-                    throw new Exception($"[NumRand:FloatOp:IsRangeInclusive] Syntax Error: The operation '{full}' was invalid");
-                }
-
-                if (full.Length < 2)
-                {
-                    if (full[0] != NumRand.OP_RANGE)
-                    {
-                        throw new Exception($"[NumRand:FloatOp:IsRangeInclusive] Syntax Error: Range operator was incorrectly formatted -> full");
-                    }
-                    full += NumRand.OP_EXCLUDE;
-                }
-
-                return full[1] == NumRand.OP_INCLUDE;
             }
         }
 
@@ -189,7 +151,7 @@ namespace BF2D.Utilities
                 {
                     return $"{x}{NumRand.OP_MULT}{y}";
                 }
-                else if (RangeOperatorVerify(this.op))
+                else if (this.op == $"{NumRand.OP_RANGE}")
                 {
                     if (string.IsNullOrEmpty(specs.modifyEveryRandOp))
                         return $"<color=#{ColorUtility.ToHtmlStringRGBA(specs.randModifierColor)}>{x} to {y}</color>";
@@ -200,16 +162,6 @@ namespace BF2D.Utilities
                 {
                     throw new Exception($"[NumRand:StringOp:TextBreakdown] Syntax Error: The operation '{this.op}' was invalid");
                 }
-            }
-
-            private bool RangeOperatorVerify(string op)
-            {
-                for (int i = 0; i < op.Length; i++)
-                {
-                    if (op[i] != NumRand.OP_RANGE && op[i] != NumRand.OP_INCLUDE && op[i] != NumRand.OP_EXCLUDE)
-                        return false;
-                }
-                return true;
             }
         }
 

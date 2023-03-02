@@ -34,11 +34,12 @@ namespace BF2D.Combat
         public static CombatManager Instance { get { return CombatManager.instance; } }
 
         public CharacterCombat CurrentCharacter { get { return this.combatGrid.CurrentCharacter; } }
-        public IEnumerable<CharacterCombat> Players { get { return this.combatGrid.Players; } }
-        public int PlayerCount { get { return this.combatGrid.PlayerCount; } }
-        public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.Enemies; } }
-        public int EnemyCount { get { return this.combatGrid.EnemyCount; } }
-        public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.Characters; } }
+        public IEnumerable<CharacterCombat> Players { get { return this.combatGrid.ActivePlayers; } }
+        public int PlayerCount { get { return this.combatGrid.ActivePlayers.Count; } }
+        public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.ActiveEnemies; } }
+        public int EnemyCount { get { return this.combatGrid.ActiveEnemies.Count; } }
+        public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.ActiveCharacters; } }
+        public int CharacterCount { get { return this.combatGrid.ActivePlayers.Count + this.combatGrid.ActiveEnemies.Count; } }
 
         public CharacterTargeterControl CharacterTargeter { get { return this.characterTargeter; } }
         public DialogTextbox OrphanedTextbox { get { return this.orphanedTextbox; } }
@@ -183,6 +184,31 @@ namespace BF2D.Combat
             {
                 return CharactersAreAtFullHealth(this.Enemies);
             }
+        }
+
+        public CharacterCombat RandomCharacter()
+        {
+            return this.combatGrid.ActiveCharacters[UnityEngine.Random.Range(0, this.combatGrid.ActiveCharacters.Count)];
+        }
+
+        public CharacterCombat RandomEnemy()
+        {
+            return this.combatGrid.ActiveEnemies[UnityEngine.Random.Range(0, this.combatGrid.ActiveEnemies.Count)];
+        }
+
+        public CharacterCombat RandomPlayer()
+        {
+            return this.combatGrid.ActivePlayers[UnityEngine.Random.Range(0, this.combatGrid.ActivePlayers.Count)];
+        }
+
+        public bool CharacterIsPlayer(CharacterCombat character)
+        {
+            return this.combatGrid.CharacterIsPlayer(character);
+        }
+
+        public bool CharacterIsEnemy(CharacterCombat character)
+        {
+            return this.combatGrid.CharacterIsEnemy(character);
         }
         #endregion
 

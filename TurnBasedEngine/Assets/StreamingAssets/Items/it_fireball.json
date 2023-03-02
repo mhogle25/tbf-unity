@@ -1,0 +1,26 @@
+{
+    "name":"Fireball",
+    "spriteID":"fireball_01",
+    "description":"A small fireball that damages a single opponent and has a chance to set them on fire.",
+    "auras": 
+    [
+        "Fire",
+        "Psychic"
+    ],
+    "alignment":"Offense",
+    "consumeable":false,
+    "onUse":
+    {
+        "message":
+        [
+            "[I:0] casted Fireball.[E]"
+        ],
+        "targetedGems": 
+        [
+            {
+                "target":"Opponent",
+                "gemID":"gm_burning_01"
+            }
+        ]
+    }
+}

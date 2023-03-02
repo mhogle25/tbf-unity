@@ -6,7 +6,6 @@
     [
     ],
     "alignment":"Offense",
-    "consumeable":true,
     "onUse":
     {
         "message":

@@ -1,17 +1,18 @@
 {
     "auras": 
     [
+        "Psychic"
     ],
     "alignment":"Offense",
-    "damage":
+    "psychicDamage":
     {
         "number":
         {
-            "value":3
+            "expression":"| 1 Focus"
         },
         "modifiers":
         [
-            "Attack"
+            "Focus"
         ]
     }
 }

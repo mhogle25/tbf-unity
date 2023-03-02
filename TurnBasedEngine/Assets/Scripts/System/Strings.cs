@@ -8,6 +8,7 @@ namespace BF2D.Game
     {
         public const string Currency = "USD";
         public const string Bag = "Bag";
+        public const string StatusEffect = "Status Effect";
 
         public static class System
         {
@@ -34,6 +35,14 @@ namespace BF2D.Game
             public const string Defense = "Defense";
             public const string Focus = "Focus";
             public const string Luck = "Luck";
+
+            public const string Constitution = "Constitution";
+            public const string Endurance = "Endurance";
+            public const string Swiftness = "Swiftness";
+            public const string Strength = "Strength";
+            public const string Toughness = "Toughness";
+            public const string Will = "Will";
+            public const string Fortune = "Fortune";
 
             public const string CritMultiplier = "Critical Hit Multiplier";
             public const string CritChance = "Critical Hit Chance";

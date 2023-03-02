@@ -12,7 +12,7 @@ namespace BF2D.Game
         [JsonIgnore] public string SpriteID { get { return this.spriteID; } }
         [JsonProperty] protected readonly string spriteID = string.Empty;
         [JsonIgnore] public bool Consumeable { get { return this.consumeable; } }
-        [JsonProperty] protected readonly bool consumeable = false;
+        [JsonProperty] protected readonly bool consumeable = true;
         [JsonIgnore] public CombatAlignment Alignment { get { return this.alignment; } }
         [JsonProperty] private CombatAlignment alignment = CombatAlignment.Neutral;
         [JsonIgnore] public TargetedGameAction OnUse { get { return this.onUse; } }
