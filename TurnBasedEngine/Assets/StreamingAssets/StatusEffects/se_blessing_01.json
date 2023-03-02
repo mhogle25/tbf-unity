@@ -10,7 +10,7 @@
     "attackModifier":0,
     "defenseModifier":0,
     "focusModifier":0,
-    "luckModifier":5,
+    "luckModifier":0,
     "maxHealthModifier":0,
     "maxStaminaModifier":0,
     "onUpkeep": 

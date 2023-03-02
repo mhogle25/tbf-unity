@@ -7,7 +7,7 @@
     ],
     "duration":3,
     "speedModifier":0,
-    "attackModifier":-1,
+    "attackModifier":0,
     "defenseModifier":0,
     "focusModifier":0,
     "luckModifier":0,
@@ -21,7 +21,6 @@
         ],
         "gemIDs":
         [
-            "gm_basicdamage_01",
             "gm_basicdamage_01"
         ]
     }

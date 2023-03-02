@@ -39,6 +39,10 @@
         {
             "id":"it_firecracker",
             "count":50
+        },
+        {
+            "id":"it_fireball",
+            "count":1
         }
     ],
     "equipments": 

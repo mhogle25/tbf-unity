@@ -25,6 +25,7 @@ namespace BF2D
 
         private void Awake()
         {
+            this.historyBackward.Push("combat save1 en_lessergoblin en_lessergoblin en_lessergoblin en_lessergoblin");
             this.inputField = GetComponent<TMP_InputField>();
         }
 

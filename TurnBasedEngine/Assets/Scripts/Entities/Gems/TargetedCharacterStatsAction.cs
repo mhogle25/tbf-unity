@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.Combat;
+using System.Drawing;
 
 namespace BF2D.Game.Actions
 {
@@ -75,9 +76,9 @@ namespace BF2D.Game.Actions
             if (this.Gem.StatusEffect is not null)
             {
                 StatusEffect effect = GameInfo.Instance.GetStatusEffect(this.Gem.StatusEffect.id);
-                text += $"{Strings.StatusEffect} '{effect?.Name}'";
+                text += $"{effect?.Name}";
                 if (this.Gem.StatusEffect.successRate < 100)
-                    text += $", {this.Gem.StatusEffect.successRate}% chance\n";
+                    text += $", <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.Gem.StatusEffect.successRate}%+{character.Luck}{Strings.CharacterStats.LuckSymbol} chance</color>\n";
                 else text += '\n';
             }
 

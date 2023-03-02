@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
+using BF2D.Game;
 
 namespace BF2D.Utilities
 {
@@ -56,6 +57,15 @@ namespace BF2D.Utilities
 
             if (audioSource.clip != null)
                 audioSource.Play();
+        }
+    }
+
+    public static class Probability
+    {
+
+        public static bool Roll(CharacterStats parent, int percentage)
+        {
+            return UnityEngine.Random.Range(0 + parent.Luck, 100) < percentage;
         }
     }
 

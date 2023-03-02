@@ -181,8 +181,8 @@ namespace BF2D.Combat
             List<string> totalLoot = new();
             foreach (CharacterStats character in this.defeatedEnemies)
                 foreach (EntityLoot loot in character.ItemsLoot)
-                    for(int i = 0; i < loot.Count; i++)
-                        if (UnityEngine.Random.Range(0, 100) < loot.Probability)
+                    for (int i = 0; i < loot.Count; i++)
+                        if (Utilities.Probability.Roll(character, loot.Probability))
                             totalLoot.Add(loot.ID);
             return totalLoot;
         }

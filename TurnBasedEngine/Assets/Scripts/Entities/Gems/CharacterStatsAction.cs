@@ -92,8 +92,7 @@ namespace BF2D.Game.Actions
                 target = target
             };
 
-            int randomValue = UnityEngine.Random.Range(0, 100);
-            if (randomValue > this.successRate)
+            if (!Utilities.Probability.Roll(source, this.successRate))
             {
                 info.failed = true;
                 return info;
@@ -114,14 +113,14 @@ namespace BF2D.Game.Actions
 
             if (this.damage is not null)
             {
-                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance && !target.CritImmune)
+                if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
                     info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
                     info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             }
             if (this.directDamage is not null)
             {
-                if (UnityEngine.Random.Range(0, 100) < source.CurrentJob.CritChance && !target.CritImmune)
+                if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
                     info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
                     info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
@@ -145,7 +144,7 @@ namespace BF2D.Game.Actions
                 }
                 else
                 {
-                    if (UnityEngine.Random.Range(0, 100) < this.statusEffect.successRate)
+                    if (Utilities.Probability.Roll(source, this.statusEffect.successRate))
                     {
                         info.message += source == target ?
                             $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
