@@ -190,8 +190,10 @@ namespace BF2D.Game
 
         [JsonIgnore] public Combat.CharacterCombatAI CombatAI { get { return this.combatAI; } }
         [JsonProperty] private readonly Combat.CharacterCombatAI combatAI = new();
-        [JsonIgnore] public List<EntityLoot> ItemsLoot { get { return this.itemsLoot; } }
+
+        [JsonIgnore] public IEnumerable<EntityLoot> ItemsLoot { get { return this.itemsLoot; } }
         [JsonProperty] private readonly List<EntityLoot> itemsLoot = new();
+        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentsLoot { get { return this.equipmentsLoot; } }
         [JsonProperty] private readonly List<EntityLoot> equipmentsLoot = new();
         [JsonIgnore] public int CurrencyLoot { get { return this.currencyLoot; } }
         [JsonProperty] private readonly int currencyLoot = 1;

@@ -177,9 +177,10 @@ namespace BF2D.Game.Combat
                 this.controlledOptionsGrid = followUp;
                 this.controlledOptionsGrid.UtilityInitialize();
                 this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
-            }, new List<string>
+            },
+            new List<string>
             {
-                stagedStatsAction.Description
+                this.stagedStatsAction.Description
             });
             this.orphanedTextbox.UtilityInitialize();
         }
@@ -204,6 +205,10 @@ namespace BF2D.Game.Combat
             {
                 EndAllOfAnyEvent();
                 Continue();
+            },
+            new List<string>
+            {
+                this.stagedStatsAction.Description
             });
             this.orphanedTextbox.UtilityInitialize();
         }

@@ -17,7 +17,7 @@ namespace BF2D.Game.Combat
         {
             public IEnumerable<CharacterStats> players = null;
             public IEnumerable<CharacterStats> enemies = null;
-            public string openingDialogKey = "di_opening_default";
+            public string openingDialogKey = $"di_opening_{Strings.System.Default}";
         }
 
         [SerializeField] private OptionsGridControlInit mainMenu = null;

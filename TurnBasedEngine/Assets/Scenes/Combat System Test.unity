@@ -6182,7 +6182,7 @@ RectTransform:
   m_GameObject: {fileID: 653874490}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2158157277294129050}
@@ -7561,7 +7561,7 @@ RectTransform:
   m_GameObject: {fileID: 804794701}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2158157277294129050}
@@ -8830,7 +8830,7 @@ RectTransform:
   m_GameObject: {fileID: 1018325317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 831339456}
@@ -12373,7 +12373,7 @@ RectTransform:
   m_GameObject: {fileID: 1305017514}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2158157277294129050}
@@ -12948,7 +12948,7 @@ RectTransform:
   m_GameObject: {fileID: 1354700393}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 831339456}
@@ -16742,7 +16742,7 @@ RectTransform:
   m_GameObject: {fileID: 1748236650}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.0001067, y: 1.0001067, z: 1.0001067}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 831339456}
