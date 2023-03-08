@@ -16,13 +16,12 @@ namespace BF2D.Game.Actions
         {
             int total = this.Number.Calculate(character);
 
-            if (this.modifiers == null)
+            if (this.modifiers is null)
                 return total;
 
             foreach (CharacterStatsProperty property in this.modifiers)
-            {
-                total += (int)character.GetStatsProperty(property);
-            }
+                total += character.GetStatsProperty(property);
+
             return total;
         }
     }

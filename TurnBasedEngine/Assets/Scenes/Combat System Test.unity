@@ -1745,7 +1745,7 @@ MonoBehaviour:
   itemsFileManager: {fileID: 279476918}
   equipmentsFileManager: {fileID: 735434021}
   statusEffectsFileManager: {fileID: 618640904}
-  characterStatsActionsFileManager: {fileID: 1858917251}
+  gemsFileManager: {fileID: 1858917251}
   jobsFileManager: {fileID: 476307232}
   iconCollection: {fileID: 3178956709704653840}
   soundEffectCollection: {fileID: 7786038003881255837}

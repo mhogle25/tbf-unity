@@ -14,7 +14,7 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonIgnore] public string Description { get { return this.description; } }
         [JsonProperty] private readonly string description = "target";
-        [JsonIgnore] public CharacterStatsAction Gem { get { return GameInfo.Instance.GetCharacterStatsAction(this.gemID); } }
+        [JsonIgnore] public CharacterStatsAction Gem { get { return GameInfo.Instance.GetGem(this.gemID); } }
         [JsonProperty] private readonly string gemID = string.Empty;
 
         [JsonIgnore] public CharacterTargetInfo TargetInfo { get { return this.targetInfo; } }

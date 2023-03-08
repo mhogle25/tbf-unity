@@ -15,7 +15,7 @@ namespace BF2D.Game.Actions
 
                 foreach (string id in this.gemIDs)
                 {
-                    CharacterStatsAction gem = GameInfo.Instance.GetCharacterStatsAction(id);
+                    CharacterStatsAction gem = GameInfo.Instance.GetGem(id);
                     if (gem is not null)
                         this.cached.Add(gem);
                 }

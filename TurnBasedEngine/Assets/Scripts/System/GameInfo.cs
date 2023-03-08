@@ -28,7 +28,7 @@ namespace BF2D.Game
         [SerializeField] private FileManager itemsFileManager = null;
         [SerializeField] private FileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
-        [SerializeField] private FileManager characterStatsActionsFileManager = null;
+        [SerializeField] private FileManager gemsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
         public CharacterStats Leader { get { return this.currentSave.Leader; } }
@@ -46,7 +46,7 @@ namespace BF2D.Game
         //Object caches (no instantiation on get, single instance data classes)
         private readonly JsonEntityCache<Equipment> equipments = new(10);
         private readonly JsonEntityCache<StatusEffect> statusEffects = new(10);
-        private readonly JsonEntityCache<CharacterStatsAction> characterStatsActions = new(10);
+        private readonly JsonEntityCache<CharacterStatsAction> gems = new(10);
         private readonly JsonEntityCache<Job> jobs = new(10);
 
         private readonly List<ICache> externalCaches = new();
@@ -85,7 +85,7 @@ namespace BF2D.Game
             this.itemTemplates.Clear();
             this.statusEffects.Clear();
             this.equipments.Clear();
-            this.characterStatsActions.Clear();
+            this.gems.Clear();
 
             Terminal.IO.LogQuiet("Caches cleared");
         }
@@ -248,14 +248,14 @@ namespace BF2D.Game
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
         }
 
-        public CharacterStatsAction GetCharacterStatsAction(string id)
+        public CharacterStatsAction GetGem(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
                 Terminal.IO.LogWarning($"[GameInfo:GetCharacterStatsAction] ID '{id}' was invalid");
                 return null;
             }
-            return this.characterStatsActions.Get(id, this.characterStatsActionsFileManager);
+            return this.gems.Get(id, this.gemsFileManager);
         }
 
         public Job GetJob(string id)
@@ -280,9 +280,9 @@ namespace BF2D.Game
             return enemy.Setup();
         }
 
-        public void NewPlayer(string playerID, string newName)
+        public void NewPlayer(string id, string newName)
         {
-            CharacterStats newPlayer = InstantiatePlayer(playerID);
+            CharacterStats newPlayer = InstantiatePlayer(id);
             if (newPlayer is null)
             {
                 Terminal.IO.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");

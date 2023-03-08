@@ -108,30 +108,30 @@ namespace BF2D.Game.Actions
             if (this.damage is not null)
             {
                 if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
-                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
-                    info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{target.Name} took {RunNumericProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             }
             if (this.directDamage is not null)
             {
                 if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
-                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
                 else
-                    info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{target.Name} took {RunNumericProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             }
             if (this.criticalDamage is not null)
-                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunCharacterStatsActionProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             if (this.psychicDamage is not null)
-                info.message += $"{target.Name} took {RunCharacterStatsActionProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
             if (this.heal is not null)
-                info.message += $"{target.Name} gained {RunCharacterStatsActionProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} gained {RunNumericProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. [P:0.2]";
             if (this.recover is not null)
-                info.message += $"{target.Name} recovered {RunCharacterStatsActionProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} recovered {RunNumericProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.exert is not null)
-                info.message += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} exerted {RunNumericProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.statusEffect is not null)
             {
-                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect.ID);
+                StatusEffect statusEffect = this.statusEffect.Get();
                 if (statusEffect is null)
                 {
                     Terminal.IO.LogError($"[CharacterStatsAction:Run] A status effect with id '{this.statusEffect}' does not exist");
@@ -159,19 +159,19 @@ namespace BF2D.Game.Actions
             }
 
             if (this.constitutionUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {RunCharacterStatsActionProperty(this.constitutionUp, source, target.ConstitutionUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {RunNumericProperty(this.constitutionUp, source, target.ConstitutionUp)}. [P:0.2]";
             if (this.enduranceUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {RunCharacterStatsActionProperty(this.enduranceUp, source, target.EnduranceUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {RunNumericProperty(this.enduranceUp, source, target.EnduranceUp)}. [P:0.2]";
             if (this.swiftnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {RunCharacterStatsActionProperty(this.swiftnessUp, source, target.SwiftnessUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {RunNumericProperty(this.swiftnessUp, source, target.SwiftnessUp)}. [P:0.2]";
             if (this.strengthUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {RunCharacterStatsActionProperty(this.strengthUp, source, target.StrengthUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {RunNumericProperty(this.strengthUp, source, target.StrengthUp)}. [P:0.2]";
             if (this.toughnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {RunCharacterStatsActionProperty(this.toughnessUp, source, target.ToughnessUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {RunNumericProperty(this.toughnessUp, source, target.ToughnessUp)}. [P:0.2]";
             if (this.willUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {RunCharacterStatsActionProperty(this.willUp, source, target.WillUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {RunNumericProperty(this.willUp, source, target.WillUp)}. [P:0.2]";
             if (this.fortuneUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {RunCharacterStatsActionProperty(this.fortuneUp, source, target.FortuneUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {RunNumericProperty(this.fortuneUp, source, target.FortuneUp)}. [P:0.2]";
 
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
             info.targetWasRevived = targetDeadPrevious && !target.Dead;
@@ -250,9 +250,9 @@ namespace BF2D.Game.Actions
         #endregion
 
         #region Private Methods
-        private int RunCharacterStatsActionProperty(NumericProperty gemProperty, CharacterStats source, CalculatedAction targetAction)
+        private int RunNumericProperty(NumericProperty numericProperty, CharacterStats source, CalculatedAction targetAction)
         {
-            int value = gemProperty.Calculate(source);
+            int value = numericProperty.Calculate(source);
 
             int result = targetAction(value);
 
@@ -275,7 +275,7 @@ namespace BF2D.Game.Actions
             if (this.SuccessRate < 0)
                 return $"Always Fails";
 
-            return $"Success Rate  <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol}</color>\n";
+            return $"Success Rate <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol}</color>\n";
         }
         #endregion
     }

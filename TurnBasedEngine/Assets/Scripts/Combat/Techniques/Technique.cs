@@ -1,12 +1,17 @@
-﻿using System;
-public class Technique {
-    Action action;
-};
+﻿namespace BF2D.Game.Combat
+{
+    public class Technique
+    {
 
-public class Weapon : Technique {
+    };
 
-}
+    public class Weapon : Technique
+    {
 
-public class Art : Technique {
+    }
 
+    public class Art : Technique
+    {
+
+    }
 }
