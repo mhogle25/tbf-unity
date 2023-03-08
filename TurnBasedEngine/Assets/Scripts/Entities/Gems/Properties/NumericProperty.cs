@@ -4,7 +4,7 @@ using BF2D.Utilities;
 
 namespace BF2D.Game.Actions
 {
-    public class CharacterStatsActionProperty
+    public class NumericProperty
     {
         [JsonIgnore] public NumRandInt Number { get { return this.number; } }
         [JsonProperty] private readonly NumRandInt number = new(0);

@@ -28,49 +28,42 @@ namespace BF2D.Game.Actions
             }
         }
 
-        [Serializable]
-        public class StatusEffectProperty
-        {
-            [JsonProperty] public string id = string.Empty;
-            [JsonProperty] public int successRate = 100;
-        }
-
         private delegate int CalculatedAction(int value);
 
-        [JsonIgnore] public CharacterStatsActionProperty Damage { get { return this.damage; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty damage = null;
-        [JsonIgnore] public CharacterStatsActionProperty DirectDamage { get { return this.directDamage; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty directDamage = null;
-        [JsonIgnore] public CharacterStatsActionProperty CriticalDamage { get { return this.criticalDamage; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty criticalDamage = null;
-        [JsonIgnore] public CharacterStatsActionProperty PsychicDamage { get { return this.psychicDamage; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty psychicDamage = null;
-        [JsonIgnore] public CharacterStatsActionProperty Heal { get { return this.heal; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty heal = null;
-        [JsonIgnore] public CharacterStatsActionProperty Recover { get { return this.recover; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty recover = null;
-        [JsonIgnore] public CharacterStatsActionProperty Exert { get { return this.exert; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty exert = null;
+        [JsonIgnore] public NumericProperty Damage { get { return this.damage; } }
+        [JsonProperty] private readonly NumericProperty damage = null;
+        [JsonIgnore] public NumericProperty DirectDamage { get { return this.directDamage; } }
+        [JsonProperty] private readonly NumericProperty directDamage = null;
+        [JsonIgnore] public NumericProperty CriticalDamage { get { return this.criticalDamage; } }
+        [JsonProperty] private readonly NumericProperty criticalDamage = null;
+        [JsonIgnore] public NumericProperty PsychicDamage { get { return this.psychicDamage; } }
+        [JsonProperty] private readonly NumericProperty psychicDamage = null;
+        [JsonIgnore] public NumericProperty Heal { get { return this.heal; } }
+        [JsonProperty] private readonly NumericProperty heal = null;
+        [JsonIgnore] public NumericProperty Recover { get { return this.recover; } }
+        [JsonProperty] private readonly NumericProperty recover = null;
+        [JsonIgnore] public NumericProperty Exert { get { return this.exert; } }
+        [JsonProperty] private readonly NumericProperty exert = null;
         [JsonIgnore] public bool ResetHealth { get { return this.resetHealth; } }
         [JsonProperty] private readonly bool resetHealth = false;
         [JsonIgnore] public bool ResetStamina { get { return this.resetStamina; } }
         [JsonProperty] private readonly bool resetStamina = false;
         [JsonIgnore] public StatusEffectProperty StatusEffect { get { return this.statusEffect; } }
         [JsonProperty] private readonly StatusEffectProperty statusEffect = null;
-        [JsonIgnore] public CharacterStatsActionProperty ConstitutionUp { get { return this.constitutionUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty constitutionUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty EnduranceUp { get { return this.enduranceUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty enduranceUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty SwiftnessUp { get { return this.swiftnessUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty swiftnessUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty StrengthUp { get { return this.strengthUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty strengthUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty ToughnessUp { get { return this.toughnessUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty toughnessUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty WillUp { get { return this.willUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty willUp = null;
-        [JsonIgnore] public CharacterStatsActionProperty FortuneUp { get { return this.fortuneUp; } }
-        [JsonProperty] private readonly CharacterStatsActionProperty fortuneUp = null;
+        [JsonIgnore] public NumericProperty ConstitutionUp { get { return this.constitutionUp; } }
+        [JsonProperty] private readonly NumericProperty constitutionUp = null;
+        [JsonIgnore] public NumericProperty EnduranceUp { get { return this.enduranceUp; } }
+        [JsonProperty] private readonly NumericProperty enduranceUp = null;
+        [JsonIgnore] public NumericProperty SwiftnessUp { get { return this.swiftnessUp; } }
+        [JsonProperty] private readonly NumericProperty swiftnessUp = null;
+        [JsonIgnore] public NumericProperty StrengthUp { get { return this.strengthUp; } }
+        [JsonProperty] private readonly NumericProperty strengthUp = null;
+        [JsonIgnore] public NumericProperty ToughnessUp { get { return this.toughnessUp; } }
+        [JsonProperty] private readonly NumericProperty toughnessUp = null;
+        [JsonIgnore] public NumericProperty WillUp { get { return this.willUp; } }
+        [JsonProperty] private readonly NumericProperty willUp = null;
+        [JsonIgnore] public NumericProperty FortuneUp { get { return this.fortuneUp; } }
+        [JsonProperty] private readonly NumericProperty fortuneUp = null;
 
         [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
         [JsonProperty] private readonly int successRate = 100;
@@ -138,7 +131,7 @@ namespace BF2D.Game.Actions
                 info.message += $"{target.Name} exerted {RunCharacterStatsActionProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
             if (this.statusEffect is not null)
             {
-                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect.id);
+                StatusEffect statusEffect = GameInfo.Instance.GetStatusEffect(this.statusEffect.ID);
                 if (statusEffect is null)
                 {
                     Terminal.IO.LogError($"[CharacterStatsAction:Run] A status effect with id '{this.statusEffect}' does not exist");
@@ -147,7 +140,7 @@ namespace BF2D.Game.Actions
                 {
                     if (Utilities.Probability.Roll(source, this.statusEffect.successRate))
                     {
-                        if (target.ApplyStatusEffect(this.statusEffect.id))
+                        if (target.ApplyStatusEffect(this.statusEffect.ID))
                         {
                             info.message += source == target ?
                                 $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
@@ -240,11 +233,13 @@ namespace BF2D.Game.Actions
 
             if (this.StatusEffect is not null)
             {
-                StatusEffect effect = GameInfo.Instance.GetStatusEffect(this.StatusEffect.id);
+                StatusEffect effect = this.StatusEffect.Get();
                 text += $"{effect?.Name}";
                 if (this.StatusEffect.successRate < 100)
-                    text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.StatusEffect.successRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol} chance</color>\n";
-                else text += '\n';
+                    text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.StatusEffect.successRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol} chance</color>";
+                if (!effect.Singleton)
+                    text += ", stackable";
+                text += "\n";
             }
 
             if (this.SuccessRate < 100)
@@ -255,7 +250,7 @@ namespace BF2D.Game.Actions
         #endregion
 
         #region Private Methods
-        private int RunCharacterStatsActionProperty(CharacterStatsActionProperty gemProperty, CharacterStats source, CalculatedAction targetAction)
+        private int RunCharacterStatsActionProperty(NumericProperty gemProperty, CharacterStats source, CalculatedAction targetAction)
         {
             int value = gemProperty.Calculate(source);
 
@@ -264,7 +259,7 @@ namespace BF2D.Game.Actions
             return result;
         }
 
-        private string TextBreakdownHelper(CharacterStats source, CharacterStatsActionProperty actionProperty, string statsActionName, Color32 color)
+        private string TextBreakdownHelper(CharacterStats source, NumericProperty actionProperty, string statsActionName, Color32 color)
         {
             string text = $"{statsActionName} {actionProperty.Number.TextBreakdown(source)}";
             foreach (BF2D.Enums.CharacterStatsProperty modifier in actionProperty.Modifiers)
