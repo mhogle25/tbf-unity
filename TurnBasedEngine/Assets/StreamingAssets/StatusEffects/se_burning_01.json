@@ -6,6 +6,7 @@
         "Fire"
     ],
     "duration":3,
+    "singleton":true,
     "speedModifier":0,
     "attackModifier":0,
     "defenseModifier":0,

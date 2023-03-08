@@ -9,6 +9,8 @@ namespace BF2D.Game
     public class StatusEffect : PersistentEffect
     {
         [JsonIgnore] public int Duration { get { return this.duration; } }
-        [JsonProperty] private int duration = -1;
+        [JsonProperty] private readonly int duration = -1;
+        [JsonIgnore] public bool Singleton { get { return this.singleton; } }
+        [JsonProperty] private readonly bool singleton = false;
     }
 }

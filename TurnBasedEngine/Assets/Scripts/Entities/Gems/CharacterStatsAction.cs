@@ -147,10 +147,16 @@ namespace BF2D.Game.Actions
                 {
                     if (Utilities.Probability.Roll(source, this.statusEffect.successRate))
                     {
-                        info.message += source == target ?
-                            $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
-                            $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
-                        target.ApplyStatusEffect(this.statusEffect.id);
+                        if (target.ApplyStatusEffect(this.statusEffect.id))
+                        {
+                            info.message += source == target ?
+                                $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
+                                $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
+                        }
+                        else
+                        {
+                            info.message += $"{source.Name} already has {statusEffect.Name}. [P:0.2]";
+                        }
                     }
                     else
                     {

@@ -557,17 +557,15 @@ namespace BF2D.Game
         #endregion
 
         #region Status Effects
-        public void ApplyStatusEffect(string id)
+        public bool ApplyStatusEffect(string id)
         {
             StatusEffectInfo info = AddStatusEffect(id);
 
             if (info is null)
-            {
-                Terminal.IO.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
-                return;
-            }
+                return false;
 
             ApplyStatusEffectModifierUpdate(info.Get());
+            return true;
         }
 
         public void RemoveStatusEffect(StatusEffectInfo info)
@@ -617,9 +615,15 @@ namespace BF2D.Game
         private StatusEffectInfo AddStatusEffect(string id)
         {
             if (id == string.Empty)
+            {
+                Terminal.IO.LogError($"[CharacterStats:ApplyStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
                 return null;
+            }
 
             StatusEffectInfo newInfo = new(id);
+            if (newInfo.Get().Singleton && this.statusEffects.Exists(info => info.ID == id))
+                return null;
+
             this.statusEffects.Add(newInfo);
             return newInfo;
         }
