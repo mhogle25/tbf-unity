@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System;
 
-namespace BF2D.Combat.Actions
+namespace BF2D.Game.Combat.Actions
 {
     public class EventCombatActionInfo : ICombatActionInfo
     {

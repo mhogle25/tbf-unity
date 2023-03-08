@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using BF2D.Enums;
+using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game.Actions
 {
@@ -74,9 +74,10 @@ namespace BF2D.Game.Actions
 
         [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
         [JsonProperty] private readonly int successRate = 100;
-        [JsonIgnore] public CombatAlignment Alignment { get { return this.alignment; } }
-        [JsonProperty] private CombatAlignment alignment = CombatAlignment.Neutral;
+        [JsonIgnore] public Enums.CombatAlignment Alignment { get { return this.alignment; } }
+        [JsonProperty] private Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
 
+        #region Public Methods
         public string GetAnimationKey()
         {
             if (this.criticalDamage is not null || this.psychicDamage is not null || this.directDamage is not null || this.damage is not null)
@@ -179,13 +180,102 @@ namespace BF2D.Game.Actions
             return info;
         }
 
-        private int RunCharacterStatsActionProperty(CharacterStatsActionProperty statsActionProperty, CharacterStats source, CalculatedAction targetAction)
+        public string TextBreakdown(CharacterStats source)
         {
-            int value = statsActionProperty.Calculate(source);
+            string text = string.Empty;
+
+            if (this.Damage is not null)
+                text += TextBreakdownHelper(source, this.Damage, Strings.CharacterStats.Damage, Colors.Red);
+
+            if (this.DirectDamage is not null)
+                text += TextBreakdownHelper(source, this.DirectDamage, Strings.CharacterStats.Damage, Colors.Red);
+
+            if (this.CriticalDamage is not null)
+                text += TextBreakdownHelper(source, this.CriticalDamage, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
+
+            if (this.PsychicDamage is not null)
+                text += TextBreakdownHelper(source, this.PsychicDamage, Strings.CharacterStats.PsychicDamage + '\n', Colors.Magenta);
+
+            if (this.Heal is not null)
+                text += TextBreakdownHelper(source, this.Heal, Strings.CharacterStats.Heal, Colors.Green);
+
+            if (this.Recover is not null)
+                text += TextBreakdownHelper(source, this.Recover, Strings.CharacterStats.Recover, Colors.Cyan);
+
+            if (this.Exert is not null)
+                text += TextBreakdownHelper(source, this.Exert, Strings.CharacterStats.Exert, Colors.Blue);
+
+            if (this.ResetHealth)
+                text += $"Fill {Strings.CharacterStats.Health} ({source.MaxHealth})\n";
+
+            if (this.ResetStamina)
+                text += $"Fill {Strings.CharacterStats.Stamina} ({source.MaxStamina})\n";
+
+            if (this.ConstitutionUp is not null)
+                text += TextBreakdownHelper(source, this.ConstitutionUp, $"{Strings.CharacterStats.Constitution} Up", Colors.Orange);
+
+            if (this.EnduranceUp is not null)
+                text += TextBreakdownHelper(source, this.EnduranceUp, $"{Strings.CharacterStats.Endurance} Up", Colors.Orange);
+
+            if (this.SwiftnessUp is not null)
+                text += TextBreakdownHelper(source, this.SwiftnessUp, $"{Strings.CharacterStats.Swiftness} Up", Colors.Orange);
+
+            if (this.StrengthUp is not null)
+                text += TextBreakdownHelper(source, this.StrengthUp, $"{Strings.CharacterStats.Strength} Up", Colors.Orange);
+
+            if (this.ToughnessUp is not null)
+                text += TextBreakdownHelper(source, this.ToughnessUp, $"{Strings.CharacterStats.Toughness} Up", Colors.Orange);
+
+            if (this.WillUp is not null)
+                text += TextBreakdownHelper(source, this.WillUp, $"{Strings.CharacterStats.Will} Up", Colors.Orange);
+
+            if (this.FortuneUp is not null)
+                text += TextBreakdownHelper(source, this.FortuneUp, $"{Strings.CharacterStats.Fortune} Up", Colors.Orange);
+
+            if (this.StatusEffect is not null)
+            {
+                StatusEffect effect = GameInfo.Instance.GetStatusEffect(this.StatusEffect.id);
+                text += $"{effect?.Name}";
+                if (this.StatusEffect.successRate < 100)
+                    text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.StatusEffect.successRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol} chance</color>\n";
+                else text += '\n';
+            }
+
+            if (this.SuccessRate < 100)
+                text += SuccessRateHelper(source);
+
+            return text;
+        }
+        #endregion
+
+        #region Private Methods
+        private int RunCharacterStatsActionProperty(CharacterStatsActionProperty gemProperty, CharacterStats source, CalculatedAction targetAction)
+        {
+            int value = gemProperty.Calculate(source);
 
             int result = targetAction(value);
 
             return result;
         }
+
+        private string TextBreakdownHelper(CharacterStats source, CharacterStatsActionProperty actionProperty, string statsActionName, Color32 color)
+        {
+            string text = $"{statsActionName} {actionProperty.Number.TextBreakdown(source)}";
+            foreach (BF2D.Enums.CharacterStatsProperty modifier in actionProperty.Modifiers)
+            {
+                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{source.GetStatsProperty(modifier)}{Strings.CharacterStats.GetStatsPropertySymbol(modifier)}</color>";
+            }
+            text += "\n";
+            return text;
+        }
+
+        private string SuccessRateHelper(CharacterStats source)
+        {
+            if (this.SuccessRate < 0)
+                return $"Always Fails";
+
+            return $"Success Rate  <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol}</color>\n";
+        }
+        #endregion
     }
 }

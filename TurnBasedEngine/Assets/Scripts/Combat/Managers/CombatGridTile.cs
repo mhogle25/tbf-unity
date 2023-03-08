@@ -3,7 +3,7 @@ using UnityEngine;
 using BF2D.UI;
 using UnityEngine.UI;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class CombatGridTile : GridOption
     {

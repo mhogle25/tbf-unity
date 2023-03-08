@@ -6,16 +6,18 @@ namespace BF2D.Game
 {
     public static class Strings
     {
-        public const string Currency = "USD";
-        public const string Bag = "Bag";
-        public const string StatusEffect = "Status Effect";
-
         public static class System
         {
             public const string Default = "default";
         }
 
-        #region CharacterStatsProperties
+        public static class Game
+        {
+            public const string Currency = "USD";
+            public const string Bag = "Bag";
+            public const string StatusEffect = "Status Effect";
+        }
+
         public static class CharacterStats
         {
             public const string Damage = "Damage";
@@ -71,9 +73,7 @@ namespace BF2D.Game
             }
 
         }
-        #endregion
 
-        #region AnimationPropertyTerms
         public static class Animation
         {
             public const string Idle = "idle";
@@ -81,7 +81,6 @@ namespace BF2D.Game
             public const string Flashing = "flashing";
             public const string Damaged = "damaged";
         }
-        #endregion
 
         public static string IntToStringSigned(int value)
         {

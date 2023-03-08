@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using BF2D.Game;
 
-namespace BF2D.Combat.Actions
+namespace BF2D.Game.Combat.Actions
 {
     public class ItemCombatActionInfo : ICombatActionInfo
     {

@@ -198,7 +198,7 @@ namespace BF2D.Game
 
         public int GetCritMultiplier(int experience)
         {
-            return Macros.BaseCritMultiplier + Calculate(experience, this.critMultiplierRate, (level) =>
+            return Numbers.BaseCritMultiplier + Calculate(experience, this.critMultiplierRate, (level) =>
             {
                 LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
                 if (levelUpEvent is null)
@@ -209,7 +209,7 @@ namespace BF2D.Game
 
         public int GetCritChance(int experience)
         {
-            return Macros.BaseCritChance + Calculate(experience, this.critChanceRate, (level) =>
+            return Numbers.BaseCritChance + Calculate(experience, this.critChanceRate, (level) =>
             {
                 LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
                 if (levelUpEvent is null)

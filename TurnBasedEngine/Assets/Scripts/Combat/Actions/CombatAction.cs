@@ -3,9 +3,9 @@ using BF2D.UI;
 using BF2D.Game.Actions;
 using System.Collections.Generic;
 using UnityEngine;
-using BF2D.Combat.Enums;
+using BF2D.Game.Combat.Enums;
 
-namespace BF2D.Combat.Actions
+namespace BF2D.Game.Combat.Actions
 {
     public class CombatAction
     {

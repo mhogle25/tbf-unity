@@ -4,9 +4,9 @@ using BF2D.Game.Actions;
 using System;
 using BF2D.Enums;
 using BF2D.UI;
-using BF2D.Combat.Actions;
+using BF2D.Game.Combat.Actions;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class CharacterTargeterControl : OptionsGridControl
     {

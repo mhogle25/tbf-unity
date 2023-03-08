@@ -1,6 +1,5 @@
 using UnityEngine;
 using BF2D.Game;
-using BF2D.Combat.Actions;
 using BF2D.UI;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
@@ -10,7 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Numerics;
 using BF2D.Enums;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     [RequireComponent(typeof(Animator))]
     public class CharacterCombat : MonoBehaviour
@@ -77,8 +76,8 @@ namespace BF2D.Combat
 
         private readonly EventStack eventStack = new();
 
-        public CombatAction CurrentCombatAction { get { return this.currentCombatAction; } set { this.currentCombatAction = value; } }
-        private CombatAction currentCombatAction = null;
+        public Actions.CombatAction CurrentCombatAction { get { return this.currentCombatAction; } set { this.currentCombatAction = value; } }
+        private Actions.CombatAction currentCombatAction = null;
 
         public CombatGridTile Tile { set { this.assignedTile = value; } }
         private CombatGridTile assignedTile = null;
@@ -92,7 +91,7 @@ namespace BF2D.Combat
         }
 
         #region Public Utilities
-        public void SetupCombatAction(CombatAction combatAction)
+        public void SetupCombatAction(Actions.CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
             if (this.Stats.CombatAI.Enabled)

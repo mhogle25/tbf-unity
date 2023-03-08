@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using BF2D.Game;
 using System;
 using BF2D.UI;
-using BF2D.Combat.Actions;
+using BF2D.Game.Combat.Actions;
 using BF2D.Game.Actions;
 using System.Threading;
 using System.Threading.Tasks;
 using BF2D.Enums;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class CombatManager : MonoBehaviour
     {
@@ -112,7 +112,7 @@ namespace BF2D.Combat
 
                 GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
 
-                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Currency}", () =>
+                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Game.Currency}", () =>
                 {
                     GameInfo.Instance.SaveGame();
                     CancelCombat();

@@ -8,7 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class BagMenuControl : OptionsGridControl
     {
@@ -55,7 +55,7 @@ namespace BF2D.Combat
             {
                 this.controlledOptionsGrid.Add(new UIOption.Data
                 {
-                    name = BF2D.Game.Strings.Bag,
+                    name = BF2D.Game.Strings.Game.Bag,
                     text = "NULL",
                     actions = new InputButtonCollection<Action>
                     {
@@ -77,17 +77,17 @@ namespace BF2D.Combat
         {
             if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.nameText.text = BF2D.Game.Strings.Bag;
-                this.descriptionText.text = $"The {BF2D.Game.Strings.Bag.ToLower()} is empty.";
+                this.nameText.text = BF2D.Game.Strings.Game.Bag;
+                this.descriptionText.text = $"The {BF2D.Game.Strings.Game.Bag.ToLower()} is empty.";
                 return;
             }
 
             Item item = this.items[index];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
-            foreach(TargetedCharacterStatsAction statsAction in item.OnUse.TargetedGems)
+            foreach(TargetedCharacterStatsAction targetedGem in item.OnUse.TargetedGems)
             {
-                this.descriptionText.text += "-\n" + statsAction.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
+                this.descriptionText.text += "-\n" + targetedGem.Gem.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
             }
             this.descriptionText.text += "-\n";
         }

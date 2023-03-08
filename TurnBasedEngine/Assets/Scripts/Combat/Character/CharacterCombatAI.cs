@@ -1,13 +1,13 @@
 using System;
 using Newtonsoft.Json;
-using BF2D.Combat.Enums;
+using BF2D.Game.Combat.Enums;
 using BF2D.Game.Enums;
 using BF2D.Game;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using BF2D.Enums;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     [Serializable]
     public class CharacterCombatAI

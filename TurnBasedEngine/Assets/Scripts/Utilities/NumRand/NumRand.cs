@@ -171,6 +171,16 @@ namespace BF2D.Utilities
         private readonly Stack<StringOp> opStackS = new();
         private StringOp CurrentOpS { get { return this.opStackS.Peek(); } }
 
+        public int Calculate(string expression)
+        {
+            return Calculate(expression, new CalcSpecs());
+        }
+
+        public string TextBreakdown(string expression)
+        {
+            return TextBreakdown(expression, new TextSpecs());
+        }
+
         public int Calculate(string expression, CalcSpecs specs)
         {
             if (string.IsNullOrEmpty(expression))

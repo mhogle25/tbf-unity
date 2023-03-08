@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class EquipMenuControl : OptionsGridControl
     {

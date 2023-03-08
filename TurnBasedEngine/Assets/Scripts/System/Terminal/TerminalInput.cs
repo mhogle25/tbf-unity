@@ -3,8 +3,6 @@ using UnityEngine.Events;
 using TMPro;
 using System.Collections.Generic;
 using System;
-using BF2D.Game;
-using BF2D.Combat;
 using BF2D.Enums;
 using System.Text.RegularExpressions;
 using System.Linq;
@@ -17,7 +15,7 @@ namespace BF2D
     {
         private TMP_InputField inputField;
 
-        private readonly TerminalRegistry registry = new();
+        [SerializeField] private TerminalRegistry registry = null;
 
         private readonly Stack<string> historyBackward = new();
         private readonly Stack<string> historyForward = new();
@@ -58,14 +56,17 @@ namespace BF2D
                 return;
             }
 
-            this.registry[op].Invoke(args);
+            this.registry[op](args);
         }
 
         #region Private Methods
         private string[] ParseCommand(string command)
         {
             string processed = command.Trim();
+
+            //This regex splits the string by spaces, while ignoring spaces inside of parentheses
             string[] regexed = Regex.Split(processed, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
             List<string> args = new();
             for (int i = 0; i < regexed.Length; i++)
             {

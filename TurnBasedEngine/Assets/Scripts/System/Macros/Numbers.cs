@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace BF2D.Game
 {
-    public class Macros
+    public class Numbers
     {
         public const float clockSpeed = 0.03125f;
         public const int MaxPartySize = 4;

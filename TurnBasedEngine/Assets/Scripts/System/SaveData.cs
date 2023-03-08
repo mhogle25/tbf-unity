@@ -46,7 +46,7 @@ namespace BF2D.Game
                 return;
             }
 
-            if (activePlayers.Count > Macros.MaxPartySize)
+            if (activePlayers.Count > Numbers.MaxPartySize)
             {
                 Terminal.IO.LogError("[SaveData:AddPlayer] Tried to add a player but the maximum number of active players was reached.");
                 return;

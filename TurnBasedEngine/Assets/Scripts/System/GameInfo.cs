@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using BF2D.Combat;
 using BF2D.Game.Actions;
 using UnityEngine;
 using BF2D.Utilities;
@@ -60,7 +59,7 @@ namespace BF2D.Game
         [Header("Miscellaneous")]
         [SerializeField] private DialogTextboxControl systemTextbox = null;
 
-        private readonly Queue<CombatManager.InitializeInfo> queuedCombats = new();
+        private readonly Queue<Combat.CombatManager.InitializeInfo> queuedCombats = new();
 
         private void Awake()
         {
@@ -293,12 +292,12 @@ namespace BF2D.Game
             this.currentSave.AddPlayer(newPlayer);
         }
 
-        public void StageCombatInfo(CombatManager.InitializeInfo info)
+        public void StageCombatInfo(Combat.CombatManager.InitializeInfo info)
         {
             this.queuedCombats.Enqueue(info);
         }
 
-        public CombatManager.InitializeInfo UnstageCombatInfo()
+        public Combat.CombatManager.InitializeInfo UnstageCombatInfo()
         {
             if (this.queuedCombats.Count < 1)
             {

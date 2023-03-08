@@ -28,9 +28,7 @@ namespace BF2D
         private void Update()
         {
             if (Input.GetKeyDown(this.enableKey))
-            {
                 SetViewActive(!this.view.gameObject.activeSelf);
-            }
         }
 
         public void RunCommand(string command)

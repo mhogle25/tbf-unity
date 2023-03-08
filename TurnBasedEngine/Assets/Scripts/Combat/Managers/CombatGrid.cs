@@ -5,13 +5,13 @@ using System;
 using BF2D.Game;
 using UnityEngine.TextCore.Text;
 
-namespace BF2D.Combat
+namespace BF2D.Game.Combat
 {
     public class CombatGrid : MonoBehaviour
     {
         [Header("Platforms")]
-        [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[Macros.MaxPartySize];
-        [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[Macros.MaxPartySize];
+        [SerializeField] private CombatGridTile[] playerPlatforms = new CombatGridTile[Numbers.MaxPartySize];
+        [SerializeField] private CombatGridTile[] enemyPlatforms = new CombatGridTile[Numbers.MaxPartySize];
         [Header("Prefabs")]
         [SerializeField] private List<CharacterCombat> playerCombatPrefabs = new();
         [SerializeField] private List<CharacterCombat> enemyCombatPrefabs = new();
@@ -160,7 +160,7 @@ namespace BF2D.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning($"[CombatGrid:GetTotalExperience] Tried to get the total {Strings.Currency} loot from the fight but combat wasn't over.");
+                Terminal.IO.LogWarning($"[CombatGrid:GetTotalExperience] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -170,12 +170,12 @@ namespace BF2D.Combat
             return value;
         }
 
-        public List<string> GetTotalItemsLoot()
+        public IEnumerable<string> GetTotalItemsLoot()
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
                 Terminal.IO.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total items loot from the fight but combat wasn't over.");
-                return new();
+                return new List<string>();
             }
 
             List<string> totalLoot = new();
