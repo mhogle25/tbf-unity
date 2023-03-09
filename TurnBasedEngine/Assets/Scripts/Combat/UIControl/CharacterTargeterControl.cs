@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.Game.Actions;
-using System;
 using BF2D.Enums;
 using BF2D.UI;
-using BF2D.Game.Combat.Actions;
 
 namespace BF2D.Game.Combat
 {

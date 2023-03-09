@@ -1,8 +1,6 @@
-using BF2D.Enums;
 using BF2D.UI;
 using BF2D.Game.Actions;
 using System.Collections.Generic;
-using UnityEngine;
 using BF2D.Game.Combat.Enums;
 
 namespace BF2D.Game.Combat.Actions
@@ -182,7 +180,7 @@ namespace BF2D.Game.Combat.Actions
             switch (this.combatActionType)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.itemCombatAction.Info.Use(CombatManager.Instance.CurrentCharacter.Stats).OnUse.TargetedGems;
+                case CombatActionType.Item: return this.itemCombatAction.Info.Use(CombatManager.Instance.CurrentCharacter.Stats.Items).OnUse.TargetedGems;
                 default: Terminal.IO.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }

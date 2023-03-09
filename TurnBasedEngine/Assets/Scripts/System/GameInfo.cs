@@ -1,10 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using BF2D.Game.Actions;
 using UnityEngine;
 using BF2D.Utilities;
-using TMPro;
 using BF2D.Enums;
 using System;
 using BF2D.UI;
@@ -31,9 +28,9 @@ namespace BF2D.Game
         [SerializeField] private FileManager gemsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public CharacterStats Leader { get { return this.currentSave.Leader; } }
-        public IEnumerable<CharacterStats> ActivePlayers { get { return this.currentSave is null ? null : this.currentSave.ActivePlayers; } }
-        public IEnumerable<CharacterStats> InactivePlayers { get { return this.currentSave is null ? null : this.currentSave.InactivePlayers; } }
+        public IEnumerable<CharacterStats> ActivePlayers { get { return this.currentSave?.ActivePlayers; } }
+        public IEnumerable<CharacterStats> InactivePlayers { get { return this.currentSave?.InactivePlayers; } }
+        public IItemHolder Bag { get { return this.currentSave?.Bag; } }
         public bool SaveActive { get { return this.currentSave is not null; } }
         public int Currency { get { return this.currentSave.Currency; } set { this.currentSave.Currency = value; } }
         private SaveData currentSave = null;

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -11,29 +10,14 @@ namespace BF2D.Game
         [JsonIgnore] public string ID { get { return this.id; } set { this.id = value; } }
         [JsonProperty] private string id = string.Empty;
 
-        [JsonIgnore] public CharacterStats Leader
-        {
-            get
-            {
-                if (this.ActivePlayers.Count < 1)
-                    return null;
-
-                CharacterStats max = ActivePlayers[0];
-                foreach (CharacterStats character in this.ActivePlayers)
-                {
-                    if (character.GridPosition < max.GridPosition)
-                        max = character;
-                }
-
-                return max;
-            }
-        }
-
-        [JsonIgnore] public List<CharacterStats> ActivePlayers { get { return this.activePlayers; } }
+        [JsonIgnore] public IEnumerable<CharacterStats> ActivePlayers { get { return this.activePlayers; } }
         [JsonProperty] private readonly List<CharacterStats> activePlayers = new();
 
-        [JsonIgnore] public List<CharacterStats> InactivePlayers { get { return this.inactivePlayers; } }
+        [JsonIgnore] public IEnumerable<CharacterStats> InactivePlayers { get { return this.inactivePlayers; } }
         [JsonProperty] private readonly List<CharacterStats> inactivePlayers = new();
+
+        [JsonIgnore] public IItemHolder Bag { get { return this.bag; } }
+        [JsonProperty] private readonly ItemHolder bag = new();
 
         [JsonIgnore] public int Currency { get { return this.currency; } set { this.currency = value; } }
         [JsonProperty] private int currency = 0;

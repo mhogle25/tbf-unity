@@ -1,7 +1,5 @@
 using System;
-using BF2D.Enums;
 using Newtonsoft.Json;
-using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -9,7 +7,7 @@ namespace BF2D.Game
     public class ItemInfo : IUtilityEntityInfo
     {
         [JsonIgnore] public string ID { get { return this.id; } }
-        [JsonProperty] private string id = string.Empty;
+        [JsonProperty] private readonly string id = string.Empty;
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] private int count = 0;
 
@@ -35,7 +33,7 @@ namespace BF2D.Game
             this.count++;
         }
 
-        public Item Use(CharacterStats owner)
+        public Item Use(IItemHolder owner)
         {
             Get();
 
