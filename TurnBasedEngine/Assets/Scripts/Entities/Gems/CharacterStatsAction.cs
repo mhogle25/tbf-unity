@@ -28,6 +28,9 @@ namespace BF2D.Game.Actions
 
         private delegate int CalculatedAction(int value);
 
+        [JsonIgnore] public string SpriteID { get { return this.spriteID; } }
+        [JsonProperty] private readonly string spriteID = string.Empty;
+
         [JsonIgnore] public NumericProperty Damage { get { return this.damage; } }
         [JsonProperty] private readonly NumericProperty damage = null;
         [JsonIgnore] public NumericProperty DirectDamage { get { return this.directDamage; } }
@@ -66,7 +69,7 @@ namespace BF2D.Game.Actions
         [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
         [JsonProperty] private readonly int successRate = 100;
         [JsonIgnore] public Enums.CombatAlignment Alignment { get { return this.alignment; } }
-        [JsonProperty] private Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
+        [JsonProperty] private readonly Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
 
         #region Public Methods
         public string GetAnimationKey()

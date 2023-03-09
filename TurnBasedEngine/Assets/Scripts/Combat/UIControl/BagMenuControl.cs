@@ -1,12 +1,9 @@
 using BF2D.Enums;
-using BF2D.Game;
 using BF2D.Game.Actions;
 using BF2D.UI;
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace BF2D.Game.Combat
 {
@@ -17,45 +14,27 @@ namespace BF2D.Game.Combat
         [SerializeField] private Utilities.TextField descriptionText = null;
 
         private readonly List<Item> items = new();
+        private int PageCount
+        {
+            get
+            {
+                return (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount + this.controlledOptionsGrid.Size - 1) /
+                    this.controlledOptionsGrid.Size;
+            }
+        }
 
         public override void ControlInitialize()
         {
             this.items.Clear();
             this.controlledOptionsGrid.Setup(this.controlledOptionsGrid.Width, this.controlledOptionsGrid.Height);
 
-            foreach (ItemInfo itemInfo in CombatManager.Instance.CurrentCharacter.Stats.Items)
-            {
-                if (itemInfo.Get() is null)
-                    continue;
-
-                this.items.Add(itemInfo.Get());
-
-                this.controlledOptionsGrid.Add(new UIOption.Data
-                {
-                    name = itemInfo.Get().Name,
-                    icon = GameInfo.Instance.GetIcon(itemInfo.Get().SpriteID),
-                    text = itemInfo.Count.ToString(),
-                    actions = new InputButtonCollection<Action>
-                    {
-                        [InputButton.Confirm] = () =>
-                        {
-                            CombatManager.Instance.SetupItemCombat(itemInfo);
-                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
-                        },
-                        [InputButton.Back] = () =>
-                        {
-                            UIControlsManager.Instance.PassControlBack();
-                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
-                        }
-                    }
-                });
-            }
+            RefreshGrid(0);
 
             if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.controlledOptionsGrid.Add(new UIOption.Data
+                this.controlledOptionsGrid.Add(new GridOption.Data
                 {
-                    name = BF2D.Game.Strings.Game.Bag,
+                    name = Strings.Game.Bag,
                     text = "NULL",
                     actions = new InputButtonCollection<Action>
                     {
@@ -69,20 +48,23 @@ namespace BF2D.Game.Combat
             }
 
             this.controlledOptionsGrid.SetCursorToFirst();
-            OnNavigate(this.controlledOptionsGrid.CursorPosition1D);
+            OnNavigate(new OptionsGrid.NavigateInfo
+            {
+                cursorPosition1D = this.controlledOptionsGrid.CursorPosition1D
+            });
             base.ControlInitialize();
         }
 
-        public void OnNavigate(int index)
+        public void OnNavigate(OptionsGrid.NavigateInfo info)
         {
             if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.nameText.text = BF2D.Game.Strings.Game.Bag;
-                this.descriptionText.text = $"The {BF2D.Game.Strings.Game.Bag.ToLower()} is empty.";
+                this.nameText.text = Strings.Game.Bag;
+                this.descriptionText.text = $"The {Strings.Game.Bag.ToLower()} is empty.";
                 return;
             }
 
-            Item item = this.items[index];
+            Item item = this.items[info.cursorPosition1D];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
             foreach(TargetedCharacterStatsAction targetedGem in item.OnUse.TargetedGems)
@@ -90,6 +72,49 @@ namespace BF2D.Game.Combat
                 this.descriptionText.text += "-\n" + targetedGem.Gem.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
             }
             this.descriptionText.text += "-\n";
+        }
+
+        private void RefreshGrid(int index)
+        {
+            this.controlledOptionsGrid.Clear();
+
+            if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
+                return;
+
+            int startingIndex = this.controlledOptionsGrid.Size * index;
+            int count = this.controlledOptionsGrid.Size;
+            if (count > CombatManager.Instance.CurrentCharacter.Stats.ItemsCount - startingIndex)
+                count = CombatManager.Instance.CurrentCharacter.Stats.ItemsCount - startingIndex;
+
+            foreach (ItemInfo itemInfo in
+                CombatManager.Instance.CurrentCharacter.Stats.Items.InRange(startingIndex, count))
+            {
+                this.items.Add(itemInfo.Get());
+                AddGridOption(itemInfo);
+            }
+        }
+
+        private GridOption AddGridOption(ItemInfo itemInfo)
+        {
+            return this.controlledOptionsGrid.Add(new GridOption.Data
+            {
+                name = itemInfo.Name,
+                icon = itemInfo.Icon,
+                text = itemInfo.Count.ToString(),
+                actions = new InputButtonCollection<Action>
+                {
+                    [InputButton.Confirm] = () =>
+                    {
+                        CombatManager.Instance.SetupItemCombat(itemInfo);
+                        this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                    },
+                    [InputButton.Back] = () =>
+                    {
+                        UIControlsManager.Instance.PassControlBack();
+                        this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                    }
+                }
+            });
         }
     }
 }

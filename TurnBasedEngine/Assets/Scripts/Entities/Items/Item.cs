@@ -6,7 +6,7 @@ using BF2D.Game.Actions;
 namespace BF2D.Game
 {
     [Serializable]
-    public class Item : Entity, ISpriteID, IUtilityEntity
+    public class Item : Entity, IUtilityEntity
     {
         [JsonIgnore] public string SpriteID { get { return this.spriteID; } }
         [JsonProperty] protected readonly string spriteID = string.Empty;

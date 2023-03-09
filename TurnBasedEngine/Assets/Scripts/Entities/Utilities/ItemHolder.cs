@@ -32,6 +32,11 @@ namespace BF2D.Game
             return info;
         }
 
+        public IEnumerable<ItemInfo> InRange(int firstIndex, int count)
+        {
+            return GetRange(firstIndex, count);
+        }
+
         private ItemInfo AddItem(string id)
         {
             if (id == string.Empty)

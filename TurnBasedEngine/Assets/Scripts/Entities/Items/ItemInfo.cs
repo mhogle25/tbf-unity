@@ -1,5 +1,6 @@
 using System;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -16,6 +17,10 @@ namespace BF2D.Game
         [JsonIgnore] public Entity GetEntity { get { return Get(); } }
 
         [JsonIgnore] public IUtilityEntity GetUtility { get { return Get(); } }
+
+        [JsonIgnore] public Sprite Icon { get { return GameInfo.Instance.GetIcon(GetUtility.SpriteID); } }
+
+        [JsonIgnore] public string Name { get { return Get().Name; } }
 
         public ItemInfo(string id)
         {

@@ -19,19 +19,16 @@ namespace BF2D.UI
         [SerializeField] protected int gridWidth = 1;
         [SerializeField] protected int gridHeight = 1;
 
-        public OnNavigate OnNavigateEvent
+        public class NavigateInfo
         {
-            get
-            {
-                return this.onNavigateEvent;
-            }
+            public int cursorPosition1D = 0;
+            public Vector2Int cursorPosition = default;
+            public int cursorPosition1DPrev = 0;
+            public Vector2Int cursorPositionPrev = default;
         }
 
-        [Serializable]
-        public class OnNavigate : UnityEvent<int> { }
-        [SerializeField]
-        private OnNavigate onNavigateEvent = new();
-
+        public UnityEvent<NavigateInfo> OnNavigate { get { return this.onNavigate; } }
+        [SerializeField] private UnityEvent<NavigateInfo> onNavigate = new();
 
         [SerializeField] private AudioSource navigateAudioSource = null;
         [Tooltip("Enable/disable use of the confirm button with the grid")]
@@ -371,6 +368,12 @@ namespace BF2D.UI
         {
             if (this.Interactable && this.gameObject.activeSelf && this.count > 0)
             {
+                NavigateInfo info = new()
+                {
+                    cursorPosition1DPrev = this.CursorPosition1D,
+                    cursorPosition = this.CursorPosition
+                };
+
                 if (this.CurrentOption != null)
                     SetCursorAtPosition(this.cursorPosition, false);
 
@@ -420,7 +423,10 @@ namespace BF2D.UI
 
                 BF2D.Utilities.Audio.PlayAudioSource(this.navigateAudioSource);
 
-                this.onNavigateEvent.Invoke(CursorPosition1D);
+                info.cursorPosition1D = this.CursorPosition1D;
+                info.cursorPosition = this.CursorPosition;
+
+                this.onNavigate.Invoke(info);
             }
         }
         #endregion

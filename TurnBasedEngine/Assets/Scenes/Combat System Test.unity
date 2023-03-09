@@ -2506,7 +2506,7 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 4
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   navigateAudioSource: {fileID: 1961517511546848493}
@@ -2709,21 +2709,9 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 1
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   navigateAudioSource: {fileID: 1790649765}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 1782910475}
@@ -3668,21 +3656,9 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 1
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   navigateAudioSource: {fileID: 1911430208}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 414519342}
@@ -5828,7 +5804,7 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 4
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   navigateAudioSource: {fileID: 1961517511546848493}
@@ -10844,11 +10820,11 @@ MonoBehaviour:
   instantiationAxis: 0
   gridWidth: 6
   gridHeight: 3
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1210305981}
-        m_TargetAssemblyTypeName: BF2D.Combat.BagMenuControl, Assembly-CSharp
+        m_TargetAssemblyTypeName: BF2D.Game.Combat.BagMenuControl, Assembly-CSharp
         m_MethodName: OnNavigate
         m_Mode: 0
         m_Arguments:
@@ -12643,7 +12619,7 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 2
   gridHeight: 2
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   navigateAudioSource: {fileID: 504665461}
@@ -14004,7 +13980,7 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 4
   gridHeight: 2
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   navigateAudioSource: {fileID: 504665461}
@@ -15354,7 +15330,7 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 2
   gridHeight: 2
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   navigateAudioSource: {fileID: 504665461}
@@ -22988,21 +22964,9 @@ MonoBehaviour:
   instantiationAxis: 1
   gridWidth: 1
   gridHeight: 1
-  onNavigateEvent:
+  onNavigate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: 
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   navigateAudioSource: {fileID: 1611053262996418015}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 1611053263490084483}

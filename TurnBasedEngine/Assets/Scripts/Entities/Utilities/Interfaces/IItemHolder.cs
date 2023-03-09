@@ -7,5 +7,7 @@ namespace BF2D.Game
         public ItemInfo AcquireItem(string id);
 
         public ItemInfo RemoveItem(ItemInfo info);
+
+        public IEnumerable<ItemInfo> InRange(int firstIndex, int count);
     }
 }
