@@ -1,12 +1,8 @@
 using UnityEngine;
-using BF2D.Game;
-using BF2D.UI;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using System;
 using BF2D.Game.Enums;
-using System.Runtime.CompilerServices;
-using System.Numerics;
 using BF2D.Enums;
 
 namespace BF2D.Game.Combat
@@ -168,7 +164,7 @@ namespace BF2D.Game.Combat
                         this.eventStack.PushEvent(() =>
                         {
                             this.Stats.RemoveStatusEffect(info);
-                            PlayMessage($"The {info.Get().Name} on {this.Stats.Name} wore off. [P:0.1]", this.eventStack.Continue);
+                            PlayMessage($"The {info.Get().Name} on {this.Stats.Name} wore off. {Strings.DialogTextbox.BriefPause}", this.eventStack.Continue);
                         });
 
                     }
@@ -383,7 +379,7 @@ namespace BF2D.Game.Combat
                     if (info.target == this.Stats)
                         iDied = true;
 
-                    dialog.Add($"{info.target.Name} died. [P:0.1]");
+                    dialog.Add($"{info.target.Name} died. {Strings.DialogTextbox.StandardPause}");
                 }
             }
 
@@ -423,11 +419,6 @@ namespace BF2D.Game.Combat
             this.currentCombatAction = null;
         }
 
-        private void PlayDialog(List<string> dialog)
-        {
-            PlayDialog(dialog, null);
-        }
-
         private void PlayDialog(List<string> dialog, Action callback)
         {
             dialog[dialog.Count - 1] += "[E]";
@@ -442,11 +433,6 @@ namespace BF2D.Game.Combat
             });
             CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
             CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
-        }
-
-        private void PlayMessage(string message)
-        {
-            PlayMessage(message, null);
         }
 
         private void PlayMessage(string message, Action callback)

@@ -2,7 +2,6 @@ using System;
 using Newtonsoft.Json;
 using BF2D.Game.Combat.Enums;
 using BF2D.Game.Enums;
-using BF2D.Game;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using BF2D.Enums;
@@ -16,33 +15,23 @@ namespace BF2D.Game.Combat
         [JsonIgnore] private bool enabled = false;
 
         [Serializable]
-        private class Ranking<T> where T : Enum
+        private class Ranking<T> : Dictionary<T, int>
         {
-            private class RankingInfo<U>
-            {
-                [JsonIgnore] public U Value { get { return this.value; } }
-                [JsonProperty] private readonly U value = default;
-                [JsonIgnore] public int Weight { get { return this.weight; } }
-                [JsonProperty] protected readonly int weight = 0;
-            }
-
-            [JsonProperty] private readonly List<RankingInfo<T>> rankings = new();
-
             [JsonIgnore] public T Max
             {
                 get
                 {
-                    if (this.rankings.Count < 1)
+                    if (this.Count < 1)
                         return default;
 
-                    RankingInfo<T> max = this.rankings[0];
-                    foreach (RankingInfo<T> actionRanking in this.rankings)
+                    KeyValuePair<T, int> max = new(default, 0);
+                    foreach (KeyValuePair<T, int> actionRanking in this)
                     {
-                        if (actionRanking.Weight > max.Weight)
+                        if (actionRanking.Value > max.Value)
                             max = actionRanking;
                     }
 
-                    return max.Value;
+                    return max.Key;
                 }
             }
 
@@ -50,11 +39,11 @@ namespace BF2D.Game.Combat
             {
                 List<T> actionPool = new();
                 int total = 0;
-                foreach (RankingInfo<T> actionRanking in this.rankings)
+                foreach (KeyValuePair<T, int> actionRanking in this)
                 {
-                    total += actionRanking.Weight;
-                    for (int i = 0; i < actionRanking.Weight; i++)
-                        actionPool.Add(actionRanking.Value);
+                    total += actionRanking.Value;
+                    for (int i = 0; i < actionRanking.Value; i++)
+                        actionPool.Add(actionRanking.Key);
                 }
 
                 int random = UnityEngine.Random.Range(0, total);

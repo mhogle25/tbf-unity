@@ -69,7 +69,7 @@ namespace BF2D.Game.Combat
             }
         }
 
-        protected void LoadOptionsIntoGrid(OptionsGrid grid, List<CombatGridTile> initGridOptions)
+        private void LoadOptionsIntoGrid(OptionsGrid grid, List<CombatGridTile> initGridOptions)
         {
             if (grid.Width > 0 && grid.Height > 0)
             {

@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using BF2D.Enums;
-using UnityEngine;
 using BF2D.Game.Enums;
-using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game
 {

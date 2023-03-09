@@ -82,6 +82,13 @@ namespace BF2D.Game
             public const string Damaged = "damaged";
         }
 
+        public static class DialogTextbox
+        {
+            public const string BriefPause = "[P:0.2]";
+            public const string StandardPause = "[P:0.5]";
+            public const string LongPause = "[P:1]";
+        }
+
         public static string IntToStringSigned(int value)
         {
             if (value > 0)

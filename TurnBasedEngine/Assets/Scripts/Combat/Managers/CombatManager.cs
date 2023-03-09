@@ -1,13 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using BF2D.Game;
 using System;
 using BF2D.UI;
 using BF2D.Game.Combat.Actions;
-using BF2D.Game.Actions;
-using System.Threading;
-using System.Threading.Tasks;
-using BF2D.Enums;
 
 namespace BF2D.Game.Combat
 {
@@ -104,7 +99,7 @@ namespace BF2D.Game.Combat
                 {
                     ItemInfo itemInfo = GameInfo.Instance.Leader.AcquireItem(id);
                     if (itemInfo is not null)
-                        message += $"{GameInfo.Instance.Leader.Name} acquired a {itemInfo.Get().Name}. [P:0.2]";
+                        message += $"{GameInfo.Instance.Leader.Name} acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
 
                 if (!string.IsNullOrEmpty(message))

@@ -1,8 +1,6 @@
 using UnityEngine;
 using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game.Actions
 {
@@ -23,7 +21,7 @@ namespace BF2D.Game.Actions
             public string GetMessage()
             {
                 if (this.failed)
-                    return $"But {this.target.Name} was not affected. [P:0.2]";
+                    return $"But {this.target.Name} was not affected. {Strings.DialogTextbox.BriefPause}";
                 return message;
             }
         }
@@ -96,39 +94,39 @@ namespace BF2D.Game.Actions
 
             if (this.resetHealth)
             {
-                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} went up to full. [P:0.2]";
+                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Health} went up to full. {Strings.DialogTextbox.BriefPause}";
                 target.ResetHealth();
             }
             if (this.resetStamina)
             {
-                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} went up to full. [P:0.2]";
+                info.message += $"{target.Name}'s {BF2D.Game.Strings.CharacterStats.Stamina} went up to full. {Strings.DialogTextbox.BriefPause}";
                 target.ResetStamina();
             }
 
             if (this.damage is not null)
             {
                 if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
-                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.damage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
                 else
-                    info.message += $"{target.Name} took {RunNumericProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{target.Name} took {RunNumericProperty(this.damage, source, target.Damage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             }
             if (this.directDamage is not null)
             {
                 if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
-                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.directDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
                 else
-                    info.message += $"{target.Name} took {RunNumericProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                    info.message += $"{target.Name} took {RunNumericProperty(this.directDamage, source, target.DirectDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             }
             if (this.criticalDamage is not null)
-                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.[P:0.2] {target.Name} took {RunNumericProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.psychicDamage is not null)
-                info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.heal is not null)
-                info.message += $"{target.Name} gained {RunNumericProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} gained {RunNumericProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.recover is not null)
-                info.message += $"{target.Name} recovered {RunNumericProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} recovered {RunNumericProperty(this.recover, source, target.Recover)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.exert is not null)
-                info.message += $"{target.Name} exerted {RunNumericProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. [P:0.2]";
+                info.message += $"{target.Name} exerted {RunNumericProperty(this.exert, source, target.Exert)} {BF2D.Game.Strings.CharacterStats.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.statusEffect is not null)
             {
                 StatusEffect statusEffect = this.statusEffect.Get();
@@ -143,35 +141,35 @@ namespace BF2D.Game.Actions
                         if (target.ApplyStatusEffect(this.statusEffect.ID))
                         {
                             info.message += source == target ?
-                                $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. [P:0.2]" :
-                                $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. [P:0.2]";
+                                $"{source.Name} {statusEffect.Description} themself with {statusEffect.Name}. {Strings.DialogTextbox.BriefPause}" :
+                                $"{source.Name} {statusEffect.Description} {target.Name} with {statusEffect.Name}. {Strings.DialogTextbox.BriefPause}";
                         }
                         else
                         {
-                            info.message += $"{source.Name} already has {statusEffect.Name}. [P:0.2]";
+                            info.message += $"{target.Name} already has {statusEffect.Name}. {Strings.DialogTextbox.BriefPause}";
                         }
                     }
                     else
                     {
-                        info.message += $"{statusEffect.Name} failed. [P:0.2]";
+                        info.message += $"{statusEffect.Name} failed. {Strings.DialogTextbox.BriefPause}";
                     }
                 }
             }
 
             if (this.constitutionUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {RunNumericProperty(this.constitutionUp, source, target.ConstitutionUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {RunNumericProperty(this.constitutionUp, source, target.ConstitutionUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.enduranceUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {RunNumericProperty(this.enduranceUp, source, target.EnduranceUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {RunNumericProperty(this.enduranceUp, source, target.EnduranceUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.swiftnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {RunNumericProperty(this.swiftnessUp, source, target.SwiftnessUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {RunNumericProperty(this.swiftnessUp, source, target.SwiftnessUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.strengthUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {RunNumericProperty(this.strengthUp, source, target.StrengthUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {RunNumericProperty(this.strengthUp, source, target.StrengthUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.toughnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {RunNumericProperty(this.toughnessUp, source, target.ToughnessUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {RunNumericProperty(this.toughnessUp, source, target.ToughnessUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.willUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {RunNumericProperty(this.willUp, source, target.WillUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {RunNumericProperty(this.willUp, source, target.WillUp)}. {Strings.DialogTextbox.BriefPause}";
             if (this.fortuneUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {RunNumericProperty(this.fortuneUp, source, target.FortuneUp)}. [P:0.2]";
+                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {RunNumericProperty(this.fortuneUp, source, target.FortuneUp)}. {Strings.DialogTextbox.BriefPause}";
 
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
             info.targetWasRevived = targetDeadPrevious && !target.Dead;

@@ -61,89 +61,29 @@
     {
         "actionRanking":
         {
-            "rankings":         
-            [
-                {
-                    "value": "Item",
-                    "weight": 10
-                },
-                {
-                    "value": "Act",
-                    "weight": 0
-                },
-                {
-                    "value": "Equip",
-                    "weight": 0
-                },
-                {
-                    "value": "Roster",
-                    "weight": 0
-                },
-                {
-                    "value": "Event",
-                    "weight": 0
-                },
-                {
-                    "value": "Flee",
-                    "weight": 0
-                }
-            ]
+            "Item":10,
+            "Act":0,
+            "Equip":0,
+            "Roster":0,
+            "Event":0,
+            "Flee":0
         },
         "auraRanking":
         {
-            "rankings":
-            [
-                {
-                    "value": "Evil",
-                    "weight": 9
-                },
-                {
-                    "value": "Fire",
-                    "weight": 8
-                },
-                {
-                    "value": "Ice",
-                    "weight": 1
-                },
-                {
-                    "value": "Poison",
-                    "weight": 5
-                },
-                {
-                    "value": "Psychic",
-                    "weight": 1
-                },
-                {
-                    "value": "Generic",
-                    "weight": 1
-                },
-                {
-                    "value": "Chaos",
-                    "weight": 5
-                },
-                {
-                    "value": "Restoration",
-                    "weight": 1
-                }
-            ]
+            "Evil":9,
+            "Fire":8,
+            "Ice":1,
+            "Poison":5,
+            "Psychic":1,
+            "Generic":1,
+            "Chaos":5,
+            "Restoration":1
         },
         "alignmentRanking":
         {
-            "rankings":
-            [
-                {
-                    "value": "Offense",
-                    "weight": 9
-                },
-                {
-                    "value": "Neutral",
-                    "weight": 8
-                },
-                {
-                    "value": "Defense",
-                    "weight": 1
-                }
-            ]
+            "Offense":9,
+            "Neutral":8,
+            "Defense":1
         }
     }
 }
