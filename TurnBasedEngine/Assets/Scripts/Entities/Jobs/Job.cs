@@ -25,7 +25,8 @@ namespace BF2D.Game
         }
 
         [JsonProperty] private readonly float initLevelUpAmount = 10f;
-        [JsonProperty] private readonly float levelUpRate = 1.5f;
+        [JsonProperty] private readonly float levelUpRate = 1.7f;
+        [JsonProperty] private int experienceAwardDivisor = 3;
 
         [JsonProperty]
         private readonly Rate maxHealthRate = new()
@@ -90,8 +91,6 @@ namespace BF2D.Game
             amount = 1,
         };
 
-        [JsonProperty] private int experienceAwardDivisor = 3;
-
         public int GetLevel(int experience)
         {
             int level = 1;
@@ -100,7 +99,7 @@ namespace BF2D.Game
             while (experience > levelUpAmount)
             {
                 level++;
-                levelUpAmount += levelUpAmount*this.levelUpRate;
+                levelUpAmount *= this.levelUpRate;
             }
 
             return level;
@@ -115,7 +114,7 @@ namespace BF2D.Game
             {
                 action?.Invoke(level);
                 level++;
-                levelUpAmount += levelUpAmount*this.levelUpRate;
+                levelUpAmount *= this.levelUpRate;
             }
         }
 
@@ -230,7 +229,6 @@ namespace BF2D.Game
 
         public string GetLevelUpMessage(int previousExperience, int currentExperience)
         {
-
             string statsMessage = string.Empty;
             statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.MaxHealth + Strings.CharacterStats.MaxHealthSymbol, GetMaxHealthModifier(previousExperience), GetMaxHealthModifier(currentExperience));
             statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.MaxStamina + Strings.CharacterStats.MaxStaminaSymbol, GetMaxStaminaModifier(previousExperience), GetMaxStaminaModifier(currentExperience));

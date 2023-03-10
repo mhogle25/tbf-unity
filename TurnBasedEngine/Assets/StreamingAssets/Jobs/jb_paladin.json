@@ -1,4 +1,8 @@
 {
+    "auras": 
+    [
+        "Restoration"
+    ],
     "maxHealthRate": 
     {
         "skip":1,
@@ -12,26 +16,26 @@
     "speedRate": 
     {
         "skip":1,
-        "amount":2
+        "amount":1
     },
     "attackRate": 
     {
-        "skip":0,
-        "amount":2
+        "skip":1,
+        "amount":1
     },
     "defenseRate": 
     {
-        "skip":0,
-        "amount":2
+        "skip":1,
+        "amount":1
     },
     "focusRate": 
     {
         "skip":2,
-        "amount":2
+        "amount":1
     },
     "luckRate": 
     {
-        "skip":5,
+        "skip":4,
         "amount":1
     },
     "critMultiplierRate":

@@ -21,17 +21,17 @@
     },
     "attackRate": 
     {
-        "skip":0,
+        "skip":1,
         "amount":1
     },
     "defenseRate": 
     {
-        "skip":1,
+        "skip":2,
         "amount":1
     },
     "focusRate": 
     {
-        "skip":2,
+        "skip":3,
         "amount":1
     },
     "luckRate": 

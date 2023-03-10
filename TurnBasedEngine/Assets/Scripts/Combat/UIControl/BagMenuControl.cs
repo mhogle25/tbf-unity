@@ -7,26 +7,25 @@ using UnityEngine;
 
 namespace BF2D.Game.Combat
 {
-    public class BagMenuControl : OptionsGridControl
+    public class BagMenuControl : OptionsGridControlPage
     {
         [Header("Information")]
         [SerializeField] private Utilities.TextField nameText = null;
         [SerializeField] private Utilities.TextField descriptionText = null;
 
         private readonly List<Item> items = new();
-        private int PageCount
-        {
-            get
-            {
-                return (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount + this.controlledOptionsGrid.Size - 1) /
-                    this.controlledOptionsGrid.Size;
-            }
-        }
 
         public override void ControlInitialize()
         {
             this.items.Clear();
+            this.ClearOptions();
             this.controlledOptionsGrid.Setup(this.controlledOptionsGrid.Width, this.controlledOptionsGrid.Height);
+
+            foreach (ItemInfo info in CombatManager.Instance.CurrentCharacter.Stats.Items)
+            {
+                this.items.Add(info.Get());
+                AddOption(ToGridOption(info));
+            }
 
             RefreshGrid(0);
 
@@ -52,11 +51,14 @@ namespace BF2D.Game.Combat
             {
                 cursorPosition1D = this.controlledOptionsGrid.CursorPosition1D
             });
+
             base.ControlInitialize();
         }
 
-        public void OnNavigate(OptionsGrid.NavigateInfo info)
+        public override void OnNavigate(OptionsGrid.NavigateInfo info)
         {
+            base.OnNavigate(info);
+
             if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
             {
                 this.nameText.text = Strings.Game.Bag;
@@ -74,29 +76,9 @@ namespace BF2D.Game.Combat
             this.descriptionText.text += "-\n";
         }
 
-        private void RefreshGrid(int index)
+        private GridOption.Data ToGridOption(ItemInfo itemInfo)
         {
-            this.controlledOptionsGrid.Clear();
-
-            if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
-                return;
-
-            int startingIndex = this.controlledOptionsGrid.Size * index;
-            int count = this.controlledOptionsGrid.Size;
-            if (count > CombatManager.Instance.CurrentCharacter.Stats.ItemsCount - startingIndex)
-                count = CombatManager.Instance.CurrentCharacter.Stats.ItemsCount - startingIndex;
-
-            foreach (ItemInfo itemInfo in
-                CombatManager.Instance.CurrentCharacter.Stats.Items.InRange(startingIndex, count))
-            {
-                this.items.Add(itemInfo.Get());
-                AddGridOption(itemInfo);
-            }
-        }
-
-        private GridOption AddGridOption(ItemInfo itemInfo)
-        {
-            return this.controlledOptionsGrid.Add(new GridOption.Data
+            return new GridOption.Data
             {
                 name = itemInfo.Name,
                 icon = itemInfo.Icon,
@@ -114,7 +96,7 @@ namespace BF2D.Game.Combat
                         this.controlledOptionsGrid.View.gameObject.SetActive(false);
                     }
                 }
-            });
+            };
         }
     }
 }
