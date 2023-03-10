@@ -10,10 +10,10 @@ namespace BF2D.Game
     {
         [JsonIgnore] public string SpriteID { get { return this.spriteID; } }
         [JsonProperty] protected readonly string spriteID = string.Empty;
-        [JsonIgnore] public bool Consumeable { get { return this.consumeable; } }
-        [JsonProperty] protected readonly bool consumeable = true;
+        [JsonIgnore] public bool Consumable { get { return this.consumable; } }
+        [JsonProperty] protected readonly bool consumable = true;
         [JsonIgnore] public Enums.CombatAlignment Alignment { get { return this.alignment; } }
-        [JsonProperty] private Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
+        [JsonProperty] private readonly Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
         [JsonIgnore] public TargetedGameAction OnUse { get { return this.onUse; } }
         [JsonProperty] protected readonly TargetedGameAction onUse = null;
     }

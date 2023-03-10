@@ -45,7 +45,7 @@ namespace BF2D.Game
             if (this.staged is null)
                 return null;
 
-            if (this.staged.Consumeable)
+            if (this.staged.Consumable)
             {
                 this.count--;
                 if (this.count < 1)

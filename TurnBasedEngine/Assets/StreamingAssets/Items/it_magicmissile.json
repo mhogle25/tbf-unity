@@ -7,7 +7,7 @@
         "Psychic"
     ],
     "alignment":"Offense",
-    "consumeable":false,
+    "consumable":false,
     "onUse":
     {
         "message":
