@@ -36,7 +36,7 @@ namespace BF2D.Game.Enums
         public AuraTypeCollection()
         {
             enumSize = Enum.GetValues(typeof(AuraType)).Length;
-            collection = new T[enumSize];
+            collection = new T[this.enumSize];
         }
 
         public T this[AuraType index]

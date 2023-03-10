@@ -7,9 +7,8 @@ namespace BF2D.UI
 {
     public abstract class OptionsGridControlPage : OptionsGridControl
     {
-        private List<GridOption.Data> allOptions = new();
-        private int currentIndex = 0;
-        private int PageCount
+        public int CurrentPage { get { return this.currentPage; } }
+        public int PageCount
         {
             get
             {
@@ -17,8 +16,11 @@ namespace BF2D.UI
                     this.controlledOptionsGrid.Size;
             }
         }
-
         public Enums.Axis PageOrientation { get { return this.pageOrientation; } set { this.pageOrientation = value; } }
+
+        private List<GridOption.Data> allOptions = new();
+        private int currentPage = 0;
+
         [Header("Pages")]
         [SerializeField] private Enums.Axis pageOrientation = Enums.Axis.Horizontal;
 
@@ -47,9 +49,6 @@ namespace BF2D.UI
             if (this.allOptions.Count < 1)
                 return;
 
-            if (this.PageCount < 2)
-                return;
-
             int dimensionPrev = info.cursorPositionPrev.x;
             int dimension = info.cursorPosition.x;
             int dimensionMax = this.controlledOptionsGrid.Width - 1;
@@ -62,10 +61,16 @@ namespace BF2D.UI
             }
 
             if (dimensionPrev == dimensionMax && dimension == 0)
-                RefreshGrid(this.currentIndex < this.PageCount - 1 ? ++this.currentIndex : 0);
+            {
+                RefreshGrid(this.currentPage < this.PageCount - 1 ? ++this.currentPage : 0);
+                return;
+            }
 
             if (dimensionPrev == 0 && dimension == dimensionMax)
-                RefreshGrid(this.currentIndex > 0 ? --this.currentIndex : this.PageCount - 1);
+            {
+                RefreshGrid(this.currentPage > 0 ? --this.currentPage : this.PageCount - 1);
+                return;
+            }
         }
 
         protected void RefreshGrid(int index)
@@ -83,8 +88,16 @@ namespace BF2D.UI
             foreach (GridOption.Data data in
                 this.allOptions.GetRange(startingIndex, count))
             {
-                this.controlledOptionsGrid.Add(data);
+                GridOption gridOption = this.controlledOptionsGrid.Add(data);
+                gridOption.SetCursor(false);
             }
+
+            if (!this.controlledOptionsGrid.Exists(this.controlledOptionsGrid.CursorPosition))
+            {
+                this.controlledOptionsGrid.CursorPosition = this.controlledOptionsGrid.LastOptionPosition;
+            }
+
+            this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
         }
     }
 }

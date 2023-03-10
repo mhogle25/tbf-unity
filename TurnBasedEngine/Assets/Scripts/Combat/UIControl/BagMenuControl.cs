@@ -66,7 +66,7 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            Item item = this.items[info.cursorPosition1D];
+            Item item = this.items[info.cursorPosition1D + this.controlledOptionsGrid.Size * this.CurrentPage];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
             foreach(TargetedCharacterStatsAction targetedGem in item.OnUse.TargetedGems)
