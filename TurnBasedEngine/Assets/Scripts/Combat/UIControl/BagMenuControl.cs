@@ -21,10 +21,10 @@ namespace BF2D.Game.Combat
             this.ClearOptions();
             this.controlledOptionsGrid.Setup(this.controlledOptionsGrid.Width, this.controlledOptionsGrid.Height);
 
-            foreach (ItemInfo info in CombatManager.Instance.CurrentCharacter.Stats.Items)
+            foreach (ItemInfo item in CombatManager.Instance.CurrentCharacter.Stats.Items.Useable)
             {
-                this.items.Add(info.Get());
-                AddOption(ToGridOption(info));
+                this.items.Add(item.Get());
+                AddOption(ToGridOption(item));
             }
 
             RefreshGrid(0);
@@ -76,18 +76,18 @@ namespace BF2D.Game.Combat
             this.descriptionText.text += "-\n";
         }
 
-        private GridOption.Data ToGridOption(ItemInfo itemInfo)
+        private GridOption.Data ToGridOption(ItemInfo item)
         {
             return new GridOption.Data
             {
-                name = itemInfo.Name,
-                icon = itemInfo.Icon,
-                text = itemInfo.Count.ToString(),
+                name = item.Name,
+                icon = item.Icon,
+                text = item.Count.ToString(),
                 actions = new InputButtonCollection<Action>
                 {
                     [InputButton.Confirm] = () =>
                     {
-                        CombatManager.Instance.SetupItemCombat(itemInfo);
+                        CombatManager.Instance.SetupItemCombat(item);
                         this.controlledOptionsGrid.View.gameObject.SetActive(false);
                     },
                     [InputButton.Back] = () =>

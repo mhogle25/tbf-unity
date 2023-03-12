@@ -22,6 +22,10 @@ namespace BF2D.Game
 
         [JsonIgnore] public string Name { get { return Get().Name; } }
 
+        [JsonIgnore] public bool Useable { get { return Get().Useable; } }
+
+        [JsonIgnore] public bool CombatExclusive { get { return Get().CombatExclusive; } }
+
         public ItemInfo(string id)
         {
             this.id = id;

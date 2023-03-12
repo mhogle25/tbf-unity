@@ -16,5 +16,8 @@ namespace BF2D.Game
         [JsonProperty] private readonly Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
         [JsonIgnore] public TargetedGameAction OnUse { get { return this.onUse; } }
         [JsonProperty] protected readonly TargetedGameAction onUse = null;
+
+        [JsonIgnore] public bool Useable { get { return this.OnUse is not null; } }
+        [JsonIgnore] public bool CombatExclusive { get { return this.Useable && this.OnUse.CombatExclusive; } }
     }
 }

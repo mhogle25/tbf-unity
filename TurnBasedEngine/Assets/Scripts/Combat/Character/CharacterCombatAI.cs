@@ -136,7 +136,7 @@ namespace BF2D.Game.Combat
 
         private void RollItemAction()
         {
-            ItemInfo item = RollForUtility(CombatManager.Instance.CurrentCharacter.Stats.Items) as ItemInfo;
+            ItemInfo item = RollForUtility(CombatManager.Instance.CurrentCharacter.Stats.Items.Useable) as ItemInfo;
             CombatManager.Instance.SetupItemCombat(item);
         }
 

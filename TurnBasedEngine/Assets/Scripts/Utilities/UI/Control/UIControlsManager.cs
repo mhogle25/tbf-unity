@@ -30,7 +30,7 @@ namespace BF2D.UI
             UIControlsManager.instance = this;
         }
 
-        private readonly Stack<UIControl> controlChainHistory = new Stack<UIControl>();
+        private readonly Stack<UIControl> controlHistory = new Stack<UIControl>();
         private UIControl currentControl = null;
         private UIControl phantomControl = null;
         private readonly Mutex historyMutex = new();
@@ -48,9 +48,9 @@ namespace BF2D.UI
             if (this.currentControl)
                 EndControl(this.currentControl);
 
-            if (this.controlChainHistory.Count > 0)
+            if (this.controlHistory.Count > 0)
             {
-                UIControl ancestor = this.controlChainHistory.Pop();
+                UIControl ancestor = this.controlHistory.Pop();
                 StartControl(ancestor);
             } 
             else
@@ -65,14 +65,14 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            this.controlChainHistory.Push(this.currentControl);
+            this.controlHistory.Push(this.currentControl);
             this.currentControl = null;
 
-            while (this.controlChainHistory.Count > 0)
+            while (this.controlHistory.Count > 0)
             {
-                UIControl uiControl = this.controlChainHistory.Pop();
+                UIControl uiControl = this.controlHistory.Pop();
 
-                if (this.controlChainHistory.Count > 1)
+                if (this.controlHistory.Count > 1)
                 {
                     EndControl(uiControl);
                     uiControl.gameObject.SetActive(setActive);
@@ -90,15 +90,15 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            if (this.controlChainHistory.Count < 1 && this.currentControl == null)
+            if (this.controlHistory.Count < 1 && this.currentControl == null)
                 return;
 
-            this.controlChainHistory.Push(this.currentControl);
+            this.controlHistory.Push(this.currentControl);
             this.currentControl = null;
 
-            while (this.controlChainHistory.Count > 0)
+            while (this.controlHistory.Count > 0)
             {
-                UIControl uiControl = this.controlChainHistory.Pop();
+                UIControl uiControl = this.controlHistory.Pop();
                 EndControl(uiControl);
                 uiControl.gameObject.SetActive(setActive);
             }
@@ -110,7 +110,7 @@ namespace BF2D.UI
         {
             this.historyMutex.WaitOne();
 
-            this.controlChainHistory.Clear();
+            this.controlHistory.Clear();
 
             this.historyMutex.ReleaseMutex();
         }
@@ -131,7 +131,7 @@ namespace BF2D.UI
 
             if (this.currentControl)
             {
-                this.controlChainHistory.Push(this.currentControl);
+                this.controlHistory.Push(this.currentControl);
                 EndControl(this.currentControl);
             }
 

@@ -37,6 +37,20 @@ namespace BF2D.Game
             return GetRange(firstIndex, count);
         }
 
+        public IEnumerable<ItemInfo> Useable
+        {
+            get
+            {
+                List<ItemInfo> filtered = new();
+                foreach (ItemInfo item in this)
+                {
+                    if (item.Useable)
+                        filtered.Add(item);
+                }
+                return filtered;
+            }
+        }
+
         private ItemInfo AddItem(string id)
         {
             if (id == string.Empty)
