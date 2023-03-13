@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
+using BF2D.Enums;
 
 namespace BF2D.Game.Actions
 {
@@ -10,6 +11,35 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class CharacterStatsAction : Entity, IUtilityEntity
     {
+        public class NumericProperty
+        {
+            [JsonIgnore] public NumRandInt Number { get { return this.number; } }
+            [JsonProperty] private readonly NumRandInt number = new(0);
+
+            [JsonIgnore] public CharacterStatsProperty[] Modifiers { get { return this.modifiers; } }
+            [JsonProperty] private readonly CharacterStatsProperty[] modifiers = { };
+
+            public int Calculate(CharacterStats character)
+            {
+                int total = this.Number.Calculate(character);
+
+                if (this.modifiers is null)
+                    return total;
+
+                foreach (CharacterStatsProperty property in this.modifiers)
+                    total += character.GetStatsProperty(property);
+
+                return total;
+            }
+        }
+
+        [Serializable]
+        public class StatusEffectProperty : StatusEffectWrapper
+        {
+            [JsonIgnore] public int SuccessRate { get { return this.successRate; } }
+            [JsonProperty] public int successRate = 100;
+        }
+
         public class Info
         {
             public string message = string.Empty;
@@ -122,6 +152,13 @@ namespace BF2D.Game.Actions
             }
             if (this.criticalDamage is not null)
                 info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.criticalDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+            if (this.psychicDamage is not null)
+            {
+                if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
+                    info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.psychicDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+                else
+                    info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.PsychicDamage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+            }
             if (this.psychicDamage is not null)
                 info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.heal is not null)

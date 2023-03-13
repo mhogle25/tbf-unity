@@ -104,7 +104,7 @@ namespace BF2D
             LogErrorQuiet(error);
         }
 
-        public void Clear()
+        public void ClearLogs()
         {
             this.terminalOut.Clear();
         }

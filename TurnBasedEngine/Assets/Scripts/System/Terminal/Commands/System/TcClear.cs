@@ -4,7 +4,7 @@ namespace BF2D
     {
         public static void Run(string[] arguments)
         {
-            Terminal.IO.Clear();
+            Terminal.IO.ClearLogs();
         }
     }
 }

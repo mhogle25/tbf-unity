@@ -216,7 +216,6 @@ namespace BF2D.Game
         {
             int value = (damage - this.Defense) > 0 ? (damage - this.Defense) : 1;
             this.health -= value;
-            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -224,7 +223,6 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage : 1;
             this.health -= value;
-            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -232,7 +230,6 @@ namespace BF2D.Game
         {
             int value = damage > 0 ? damage * this.CurrentJob.CritMultiplier : 1;
             this.health -= value;
-            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -240,7 +237,6 @@ namespace BF2D.Game
         {
             int value = (damage - this.Focus) > 0 ? (damage - this.Focus) : 1;
             this.health -= value;
-            //Console.Log($"Health Before: {this.Health + value} Health After: {this.Health}");
             return value;
         }
 
@@ -254,7 +250,6 @@ namespace BF2D.Game
             }
 
             this.health += value;
-            //Console.Log($"Health Before: {this.Health - value} Health After: {this.Health}");
             return value;
         }
 
@@ -268,7 +263,6 @@ namespace BF2D.Game
             }
 
             this.stamina += value;
-            //Console.Log($"Stamina Before: {this.Stamina - value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -276,7 +270,6 @@ namespace BF2D.Game
         {
             int value = exertion > 0 ? exertion : 1;
             this.stamina -= value;
-            //Console.Log($"Stamina Before: {this.Stamina + value} Stamina After: {this.Stamina}");
             return value;
         }
 
@@ -284,7 +277,6 @@ namespace BF2D.Game
         {
             int healthBefore = this.Health;
             this.health = this.MaxHealth;
-            //Console.Log($"Health Before: {healthBefore} Health After: {this.Health}");
             return this.Health - healthBefore;
         }
 
@@ -292,7 +284,6 @@ namespace BF2D.Game
         {
             int staminaBefore = this.Stamina;
             this.stamina = this.MaxStamina;
-            //Console.Log($"Stamina Before: {staminaBefore} Stamina After: {this.Stamina}");
             return this.Stamina - staminaBefore;
         }
 
@@ -384,7 +375,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s itemTemplates bag but the item id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AddEffect] Tried to add an item to {this.name}'s item bag but the item id given was invalid");
                 return null;
             }
 
@@ -533,8 +524,6 @@ namespace BF2D.Game
             this.luckModifier.Equip(equipment);
             this.maxHealthModifier.Equip(equipment);
             this.maxStaminaModifier.Equip(equipment);
-
-            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private void UnequipModifierUpdate(Equipment equipment)
@@ -549,8 +538,6 @@ namespace BF2D.Game
             this.luckModifier.Unequip(equipment);
             this.maxHealthModifier.Unequip(equipment);
             this.maxStaminaModifier.Unequip(equipment);
-
-            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
         #endregion
 
@@ -590,8 +577,6 @@ namespace BF2D.Game
             this.luckModifier.ApplyStatusEffect(statusEffect);
             this.maxHealthModifier.ApplyStatusEffect(statusEffect);
             this.maxStaminaModifier.ApplyStatusEffect(statusEffect);
-
-            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private void RemoveStatusEffectModifierUpdate(StatusEffect statusEffect)
@@ -606,8 +591,6 @@ namespace BF2D.Game
             this.luckModifier.RemoveStatusEffect(statusEffect);
             this.maxHealthModifier.RemoveStatusEffect(statusEffect);
             this.maxStaminaModifier.RemoveStatusEffect(statusEffect);
-
-            //Terminal.IO.Log($"{this.speedModifier.Total} {this.attackModifier.Total} {this.defenseModifier.Total} {this.focusModifier.Total} {this.luckModifier.Total} {this.maxHealthModifier.Total} {this.maxStaminaModifier.Total}");
         }
 
         private StatusEffectInfo AddStatusEffect(string id)
