@@ -222,25 +222,25 @@ namespace BF2D.Game.Actions
             string text = string.Empty;
 
             if (this.Damage is not null)
-                text += TextBreakdownHelper(source, this.Damage, Strings.CharacterStats.Damage, Colors.Red);
+                text += TbNumericPropertyHelper(source, this.Damage, Strings.CharacterStats.Damage, Colors.Red);
 
             if (this.DirectDamage is not null)
-                text += TextBreakdownHelper(source, this.DirectDamage, Strings.CharacterStats.Damage, Colors.Red);
+                text += TbNumericPropertyHelper(source, this.DirectDamage, Strings.CharacterStats.Damage, Colors.Red);
 
             if (this.CriticalDamage is not null)
-                text += TextBreakdownHelper(source, this.CriticalDamage, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
+                text += TbNumericPropertyHelper(source, this.CriticalDamage, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
 
             if (this.PsychicDamage is not null)
-                text += TextBreakdownHelper(source, this.PsychicDamage, Strings.CharacterStats.PsychicDamage + '\n', Colors.Magenta);
+                text += TbNumericPropertyHelper(source, this.PsychicDamage, Strings.CharacterStats.PsychicDamage + '\n', Colors.Magenta);
 
             if (this.Heal is not null)
-                text += TextBreakdownHelper(source, this.Heal, Strings.CharacterStats.Heal, Colors.Green);
+                text += TbNumericPropertyHelper(source, this.Heal, Strings.CharacterStats.Heal, Colors.Green);
 
             if (this.Recover is not null)
-                text += TextBreakdownHelper(source, this.Recover, Strings.CharacterStats.Recover, Colors.Cyan);
+                text += TbNumericPropertyHelper(source, this.Recover, Strings.CharacterStats.Recover, Colors.Cyan);
 
             if (this.Exert is not null)
-                text += TextBreakdownHelper(source, this.Exert, Strings.CharacterStats.Exert, Colors.Blue);
+                text += TbNumericPropertyHelper(source, this.Exert, Strings.CharacterStats.Exert, Colors.Blue);
 
             if (this.ResetHealth)
                 text += $"Fill {Strings.CharacterStats.Health} ({source.MaxHealth})\n";
@@ -249,25 +249,25 @@ namespace BF2D.Game.Actions
                 text += $"Fill {Strings.CharacterStats.Stamina} ({source.MaxStamina})\n";
 
             if (this.ConstitutionUp is not null)
-                text += TextBreakdownHelper(source, this.ConstitutionUp, $"{Strings.CharacterStats.Constitution} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.ConstitutionUp, $"{Strings.CharacterStats.Constitution} Up", Colors.Orange);
 
             if (this.EnduranceUp is not null)
-                text += TextBreakdownHelper(source, this.EnduranceUp, $"{Strings.CharacterStats.Endurance} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.EnduranceUp, $"{Strings.CharacterStats.Endurance} Up", Colors.Orange);
 
             if (this.SwiftnessUp is not null)
-                text += TextBreakdownHelper(source, this.SwiftnessUp, $"{Strings.CharacterStats.Swiftness} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.SwiftnessUp, $"{Strings.CharacterStats.Swiftness} Up", Colors.Orange);
 
             if (this.StrengthUp is not null)
-                text += TextBreakdownHelper(source, this.StrengthUp, $"{Strings.CharacterStats.Strength} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.StrengthUp, $"{Strings.CharacterStats.Strength} Up", Colors.Orange);
 
             if (this.ToughnessUp is not null)
-                text += TextBreakdownHelper(source, this.ToughnessUp, $"{Strings.CharacterStats.Toughness} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.ToughnessUp, $"{Strings.CharacterStats.Toughness} Up", Colors.Orange);
 
             if (this.WillUp is not null)
-                text += TextBreakdownHelper(source, this.WillUp, $"{Strings.CharacterStats.Will} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.WillUp, $"{Strings.CharacterStats.Will} Up", Colors.Orange);
 
             if (this.FortuneUp is not null)
-                text += TextBreakdownHelper(source, this.FortuneUp, $"{Strings.CharacterStats.Fortune} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(source, this.FortuneUp, $"{Strings.CharacterStats.Fortune} Up", Colors.Orange);
 
             if (this.StatusEffect is not null)
             {
@@ -281,7 +281,7 @@ namespace BF2D.Game.Actions
             }
 
             if (this.SuccessRate < 100)
-                text += SuccessRateHelper(source);
+                text += TbSuccessRateHelper(source);
 
             return text;
         }
@@ -297,7 +297,7 @@ namespace BF2D.Game.Actions
             return result;
         }
 
-        private string TextBreakdownHelper(CharacterStats source, NumericProperty actionProperty, string statsActionName, Color32 color)
+        private string TbNumericPropertyHelper(CharacterStats source, NumericProperty actionProperty, string statsActionName, Color32 color)
         {
             string text = $"{statsActionName} {actionProperty.Number.TextBreakdown(source)}";
             foreach (BF2D.Enums.CharacterStatsProperty modifier in actionProperty.Modifiers)
@@ -308,7 +308,7 @@ namespace BF2D.Game.Actions
             return text;
         }
 
-        private string SuccessRateHelper(CharacterStats source)
+        private string TbSuccessRateHelper(CharacterStats source)
         {
             if (this.SuccessRate < 0)
                 return $"Always Fails";

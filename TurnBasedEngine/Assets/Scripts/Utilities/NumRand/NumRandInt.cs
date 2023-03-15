@@ -13,7 +13,6 @@ namespace BF2D.Game
         [JsonProperty] private readonly int value = 0;
 
         [JsonIgnore] private readonly NumRand calculator = new();
-        [JsonIgnore] private Regex regex = new(@"\s+");
 
         public NumRandInt(int value)
         {
@@ -29,13 +28,13 @@ namespace BF2D.Game
                     modifyEveryRandOp = source.Luck,
                     termRegistry = new System.Collections.Generic.Dictionary<string, int>
                     {
-                        { Strings.CharacterStats.Speed, source.Speed },
-                        { Strings.CharacterStats.Attack, source.Attack },
-                        { Strings.CharacterStats.Defense, source.Defense },
-                        { Strings.CharacterStats.Focus, source.Focus },
-                        { Strings.CharacterStats.Luck, source.Luck },
-                        { Strings.CharacterStats.MaxHealth, source.MaxHealth },
-                        { Strings.CharacterStats.MaxStamina, source.MaxStamina }
+                        { CharacterStatsProperty.Speed.ToString(), source.Speed },
+                        { CharacterStatsProperty.Attack.ToString(), source.Attack },
+                        { CharacterStatsProperty.Defense.ToString(), source.Defense },
+                        { CharacterStatsProperty.Focus.ToString(), source.Focus },
+                        { CharacterStatsProperty.Luck.ToString(), source.Luck },
+                        { CharacterStatsProperty.MaxHealth.ToString(), source.MaxHealth },
+                        { CharacterStatsProperty.MaxStamina.ToString(), source.MaxStamina }
                     }
                 });
             }
@@ -61,13 +60,13 @@ namespace BF2D.Game
                     randModifierColor = Colors.Cyan,
                     termRegistry = new System.Collections.Generic.Dictionary<string, string>
                     {
-                        { Strings.CharacterStats.Speed, source.GetStatsPropertyText(CharacterStatsProperty.Speed) },
-                        { Strings.CharacterStats.Attack, source.GetStatsPropertyText(CharacterStatsProperty.Attack) },
-                        { Strings.CharacterStats.Defense, source.GetStatsPropertyText(CharacterStatsProperty.Defense) },
-                        { Strings.CharacterStats.Focus, source.GetStatsPropertyText(CharacterStatsProperty.Focus) },
-                        { Strings.CharacterStats.Luck, source.GetStatsPropertyText(CharacterStatsProperty.Luck) },
-                        { this.regex.Replace(Strings.CharacterStats.MaxHealth, ""), source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
-                        { this.regex.Replace(Strings.CharacterStats.MaxStamina, ""), source.GetStatsPropertyText(CharacterStatsProperty.MaxStamina) }
+                        { CharacterStatsProperty.Speed.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Speed) },
+                        { CharacterStatsProperty.Attack.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Attack) },
+                        { CharacterStatsProperty.Defense.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Defense) },
+                        { CharacterStatsProperty.Focus.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Focus) },
+                        { CharacterStatsProperty.Luck.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Luck) },
+                        { CharacterStatsProperty.MaxHealth.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
+                        { CharacterStatsProperty.MaxStamina.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.MaxStamina) }
                     }
                 });
             }
