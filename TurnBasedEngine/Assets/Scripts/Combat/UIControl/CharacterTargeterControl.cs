@@ -42,10 +42,10 @@ namespace BF2D.Game.Combat
         public override void ControlFinalize() 
         {
             this.orphanedTextbox.View.gameObject.SetActive(false);
-            if (this.controlledOptionsGrid)
+            if (this.controlled)
             {
-                this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
-                this.controlledOptionsGrid.UtilityFinalize();
+                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
+                this.controlled.UtilityFinalize();
             }
         }
 
@@ -88,8 +88,8 @@ namespace BF2D.Game.Combat
         {
             this.stagedStatsAction.TargetInfo.CombatTargets = targets;
 
-            this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
-            this.controlledOptionsGrid.UtilityFinalize();
+            this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
+            this.controlled.UtilityFinalize();
             Continue();
         }
 
@@ -147,10 +147,10 @@ namespace BF2D.Game.Combat
         {
             if (this.stagedStatsActions.Count < 1) 
             {
-                if (this.controlledOptionsGrid)
+                if (this.controlled)
                 {
-                    this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, false);
-                    this.controlledOptionsGrid.UtilityFinalize();
+                    this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
+                    this.controlled.UtilityFinalize();
                 }
 
                 this.orphanedTextbox.UtilityFinalize();
@@ -165,18 +165,18 @@ namespace BF2D.Game.Combat
 
         private void SetupDialog(OptionsGrid followUp)
         {
-            this.orphanedTextbox.Dialog("di_targeter", 0, () =>
+            this.orphanedTextbox.Dialog("di_targeter", false, 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
-                if (this.controlledOptionsGrid && this.controlledOptionsGrid.Interactable)
+                if (this.controlled && this.controlled.Interactable)
                 {
-                    this.controlledOptionsGrid.UtilityFinalize();
+                    this.controlled.UtilityFinalize();
                 }
-                this.controlledOptionsGrid = followUp;
-                this.controlledOptionsGrid.UtilityInitialize();
-                this.controlledOptionsGrid.SetCursorAtPosition(this.controlledOptionsGrid.CursorPosition, true);
+                this.controlled = followUp;
+                this.controlled.UtilityInitialize();
+                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, true);
             },
-            new List<string>
+            new string[]
             {
                 this.stagedStatsAction.Description
             });
@@ -187,7 +187,7 @@ namespace BF2D.Game.Combat
         {
             this.orphanedTextbox.AutoPass = false;
             this.orphanedTextbox.ResponseBackEventEnabled = true; 
-            this.orphanedTextbox.ResponseEvent.AddListener((json) =>
+            this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
                 AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
                 this.stagedStatsAction.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
@@ -199,12 +199,12 @@ namespace BF2D.Game.Combat
                 UIControlsManager.Instance.PassControlBack();
                 this.orphanedTextbox.Cancel();
             });
-            this.orphanedTextbox.Dialog("di_targeter", 1, () =>
+            this.orphanedTextbox.Dialog("di_targeter", true, 1, () =>
             {
                 EndAllOfAnyEvent();
                 Continue();
             },
-            new List<string>
+            new string[]
             {
                 this.stagedStatsAction.Description
             });
@@ -213,7 +213,7 @@ namespace BF2D.Game.Combat
 
         private void EndAllOfAnyEvent()
         {
-            this.orphanedTextbox.ResponseEvent.RemoveAllListeners();
+            this.orphanedTextbox.ResponseConfirmEvent.RemoveAllListeners();
             this.orphanedTextbox.ResponseBackEvent.RemoveAllListeners();
             this.orphanedTextbox.AutoPass = true;
             this.orphanedTextbox.ResponseBackEventEnabled = false;

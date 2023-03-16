@@ -30,6 +30,7 @@ namespace BF2D.Game
         {
             return this.onUpkeep is not null;
         }
+
         public bool EOTEventExists()
         {
             return this.onEOT is not null;

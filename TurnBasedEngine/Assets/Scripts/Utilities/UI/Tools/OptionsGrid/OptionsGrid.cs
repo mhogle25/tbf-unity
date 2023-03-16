@@ -82,7 +82,7 @@ namespace BF2D.UI
         public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
 
         /// <summary>
-        /// Enable/disable use of the menu button
+        /// Enable/disable use of the back button
         /// </summary>
         public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
 
@@ -92,17 +92,17 @@ namespace BF2D.UI
         public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
 
         /// <summary>
-        /// Enable/disable use of the menu button
+        /// Enable/disable use of the attack button
         /// </summary>
         public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
 
         /// <summary>
-        /// Enable/disable use of the menu button
+        /// Enable/disable use of the pause button
         /// </summary>
         public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
 
         /// <summary>
-        /// Enable/disable use of the menu button
+        /// Enable/disable use of the select button
         /// </summary>
         public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
 

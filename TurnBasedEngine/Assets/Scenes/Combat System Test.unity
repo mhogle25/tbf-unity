@@ -2534,7 +2534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f845437011622e7438b594e0ebc95084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 234798720}
+  controlled: {fileID: 234798720}
   delay: 0.5
   speed: 0.1
   initGridOptions:
@@ -2687,7 +2687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 253219643}
+  controlled: {fileID: 253219643}
   delay: 0.5
   speed: 0.1
 --- !u!114 &253219643
@@ -3634,7 +3634,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 370945187}
+  controlled: {fileID: 0}
   delay: 0.5
   speed: 0.1
 --- !u!114 &370945187
@@ -5870,7 +5870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f845437011622e7438b594e0ebc95084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 607298861}
+  controlled: {fileID: 607298861}
   delay: 0.5
   speed: 0.1
   initGridOptions:
@@ -6556,7 +6556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 89945a54bfd28f348b85e879b30a9148, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 0}
+  controlled: {fileID: 0}
   delay: 0.5
   speed: 0.1
   orphanedTextbox: {fileID: 3762075292545349522}
@@ -7698,10 +7698,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   responsesFileManager: {fileID: 1018325318}
-  ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 253219642}
   prereqConditionChecker: {fileID: 0}
-  responseOptionEvent:
+  responseOptionConfirmEvent:
     m_PersistentCalls:
       m_Calls: []
   responseOptionBackEvent:
@@ -9062,10 +9061,9 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   responsesFileManager: {fileID: 387108273}
-  ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 370945186}
   prereqConditionChecker: {fileID: 0}
-  responseOptionEvent:
+  responseOptionConfirmEvent:
     m_PersistentCalls:
       m_Calls: []
   responseOptionBackEvent:
@@ -10868,9 +10866,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7a104f203eb7334e84cd715d24db2c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 1210305978}
+  controlled: {fileID: 1210305978}
   delay: 0.5
   speed: 0.1
+  pageOrientation: 0
   nameText: {fileID: 160502884}
   descriptionText: {fileID: 1224905531}
 --- !u!1 &1224905527
@@ -22285,7 +22284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520ed197f016ed043a0c33702d4176e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlledOptionsGrid: {fileID: 5573806232127652830}
+  controlled: {fileID: 5573806232127652830}
   delay: 0.5
   speed: 0.1
 --- !u!114 &2158157276994471364
@@ -22801,10 +22800,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   responsesFileManager: {fileID: 653874492}
-  ResponseOptionsEnabled: 1
   responseOptionsControl: {fileID: 2158157276703626550}
   prereqConditionChecker: {fileID: 0}
-  responseOptionEvent:
+  responseOptionConfirmEvent:
     m_PersistentCalls:
       m_Calls: []
   responseOptionBackEvent:

@@ -18,7 +18,7 @@ namespace BF2D.Game
                 inserts.Add(arguments[i]);
             }
 
-            GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], null, inserts);
+            GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], false, null, inserts.ToArray());
             Terminal.IO.LogQuiet("Pushed a message to the system textbox's queue. Run with 'textbox'.");
         }
     }

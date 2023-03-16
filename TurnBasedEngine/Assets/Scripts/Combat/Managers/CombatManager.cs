@@ -84,11 +84,11 @@ namespace BF2D.Game.Combat
 
             if (EnemiesAreDefeated())
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_victory", 0);
+                this.standaloneTextboxControl.Textbox.Dialog("di_victory", false, 0);
                 List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience() / this.PlayerCount);
                 foreach (JobInfo.LevelUpInfo info in infos)
                 {
-                    this.standaloneTextboxControl.Textbox.Dialog(info.levelUpDialog, 0, null, new List<string>
+                    this.standaloneTextboxControl.Textbox.Dialog(info.levelUpDialog, false, 0, null, new string[]
                     {
                         info.parent.Name
                     });
@@ -103,11 +103,11 @@ namespace BF2D.Game.Combat
                 }
 
                 if (!string.IsNullOrEmpty(message))
-                    this.standaloneTextboxControl.Textbox.Message(message);
+                    this.standaloneTextboxControl.Textbox.Message(message, false);
 
                 GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
 
-                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Game.Currency}", () =>
+                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Game.Currency}", false, () =>
                 {
                     GameInfo.Instance.SaveGame();
                     CancelCombat();
@@ -115,11 +115,11 @@ namespace BF2D.Game.Combat
             }
             else if (PlayersAreDefeated())
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_defeat", 0, CancelCombat);
+                this.standaloneTextboxControl.Textbox.Dialog("di_defeat", false, 0, CancelCombat);
             }
             else
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_draw", 0, CancelCombat);
+                this.standaloneTextboxControl.Textbox.Dialog("di_draw", false, 0, CancelCombat);
             }
 
 
@@ -244,7 +244,7 @@ namespace BF2D.Game.Combat
 
             this.combatGrid.Setup(players, enemies);
 
-            this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
+            this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, false, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
 
             Terminal.IO.LogQuiet($"Combat intialized with {CombatManager.Instance.PlayerCount} players and {CombatManager.Instance.EnemyCount} enemies.");

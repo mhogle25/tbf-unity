@@ -15,6 +15,7 @@ namespace BF2D.UI {
             public List<string> dialog;
             public int index;
             public Action callback;
+            public bool responseEnabled;
         };
 
         [Serializable]
@@ -35,36 +36,32 @@ namespace BF2D.UI {
 
         [Header("Dialog")]
         [SerializeField] private Utilities.FileManager dialogFileManager = null;
+
         //Public variables
         public float DefaultMessageSpeed = 0.05f;
         public bool MessageInterrupt = false;
         public bool AutoPass = false;
-        public UnityEvent OnEndOfQueuedDialogs { get { return this.onEndOfQueuedDialogs; } }
+
+        public UnityEvent OnEndOfQueuedDialogs { get => this.onEndOfQueuedDialogs; }
         [SerializeField] private UnityEvent onEndOfQueuedDialogs = new();
 
         [Header("Dialog Responses")]
         [SerializeField] private Utilities.FileManager responsesFileManager = null;
-        public bool ResponseOptionsEnabled = true;
         [SerializeField] private OptionsGridControl responseOptionsControl = null;
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
-        public ResponseOptionEvent ResponseEvent { get { return this.responseOptionEvent; } }
-        [SerializeField] private ResponseOptionEvent responseOptionEvent = new();
+        public ResponseOptionEvent ResponseConfirmEvent { get => this.responseOptionConfirmEvent; }
+        [SerializeField] private ResponseOptionEvent responseOptionConfirmEvent = new();
 
-        public UnityEvent ResponseBackEvent { get { return this.responseOptionBackEvent; } }
+        public UnityEvent ResponseBackEvent { get => this.responseOptionBackEvent; }
+        [SerializeField] private UnityEvent responseOptionBackEvent = new();
+
         public bool ResponseBackEventEnabled
         {
-            get
-            {
-                return this.responseOptionsControl.ControlledOptionsGrid.BackEnabled;
-            }
-            set
-            {
-                this.responseOptionsControl.ControlledOptionsGrid.BackEnabled = value;
-            }
+            get => this.responseOptionsControl.Controlled.BackEnabled;
+            set => this.responseOptionsControl.Controlled.BackEnabled = value;
         }
-        [SerializeField] private UnityEvent responseOptionBackEvent = new();
 
         [Header("Audio")]
         [SerializeField] private AudioClipCollection voiceCollection = null;
@@ -85,11 +82,10 @@ namespace BF2D.UI {
         //The dialog queue
         private readonly Queue<DialogData> dialogQueue = new();
 
-        //The current callback function
-        private Action callback = null;
+        //The current dialog data
+        private DialogData currentDialog = default;
 
         //Control Variables
-        private List<string> activeLines = null;
         private float timeAccumulator = 0f;
         private float messageSpeed = 0f;
         private int dialogIndex = 0;
@@ -132,7 +128,7 @@ namespace BF2D.UI {
         {
             base.UtilityFinalize();
             NametagDisable();
-            if (this.responseOptionsControl.ControlledOptionsGrid.View.gameObject.activeSelf)
+            if (this.responseOptionsControl.Controlled.View.gameObject.activeSelf)
                 UIControlsManager.Instance.EndPhantomControl();
             Cancel();
         }
@@ -143,27 +139,27 @@ namespace BF2D.UI {
         /// Pushes a single message to the dialog queue
         /// </summary>
         /// <param name="message">The message to be displayed</param>
-        public void Message(string message) 
+        public void Message(string message, bool responseEnabled) 
         {
-            Message(message, null);
+            Message(message, responseEnabled, null);
         }
 
         /// <summary>
         /// Pushes a single message to the dialog queue with a callback function
         /// </summary>
         /// <param name="message">The message to be displayed</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Message(string message, Action callbackFunction)
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Message(string message, bool responseEnabled, Action callback)
         {
-            Message(message, callbackFunction, null);
+            Message(message, responseEnabled, callback, null);
         }
 
         /// <summary>
         /// Pushes a single message to the dialog queue with a callback function
         /// </summary>
         /// <param name="message">The message to be displayed</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Message(string message, Action callbackFunction, List<string> inserts)
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Message(string message, bool responseEnabled, Action callback, string[] inserts)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -182,7 +178,8 @@ namespace BF2D.UI {
             {
                 dialog = lines,
                 index = 0,
-                callback = callbackFunction
+                callback = callback,
+                responseEnabled = responseEnabled
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -192,30 +189,30 @@ namespace BF2D.UI {
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
-        public void Dialog(string key, int startingLineIndex) 
+        /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
+        public void Dialog(string key, bool responseEnabled, int startingLine) 
         {
-            Dialog(key, startingLineIndex, null);
+            Dialog(key, responseEnabled, startingLine, null);
         }
 
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLineIndex, Action callbackFunction)
+        /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Dialog(string key, bool responseEnabled, int startingLine, Action callback)
         {
-            Dialog(key, startingLineIndex, callbackFunction, null);
+            Dialog(key, responseEnabled, startingLine, callback, null);
         }
 
         /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLineIndex">The line the dialog will start from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLineIndex, Action callbackFunction, List<string> inserts)
+        /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Dialog(string key, bool responseEnabled, int startingLine, Action callback, string[] inserts)
         {
             if (!this.dialogs.ContainsKey(key))
             {
@@ -225,7 +222,7 @@ namespace BF2D.UI {
 
             List<string> lines = this.dialogs[key];
 
-            if (startingLineIndex < 0 || startingLineIndex >= lines.Count)
+            if (startingLine < 0 || startingLine >= lines.Count)
             {
                 Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
                 return;
@@ -236,8 +233,9 @@ namespace BF2D.UI {
             DialogData dialogData = new()
             {
                 dialog = lines,
-                index = startingLineIndex,
-                callback = callbackFunction
+                index = startingLine,
+                callback = callback,
+                responseEnabled = responseEnabled
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -248,29 +246,29 @@ namespace BF2D.UI {
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
-        public void Dialog(List<string> lines, int dialogIndex) 
+        public void Dialog(List<string> lines, bool responseEnabled, int dialogIndex) 
         {
-            Dialog(lines, dialogIndex, null);
+            Dialog(lines, responseEnabled, dialogIndex, null);
         }
 
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction)
+        /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Dialog(List<string> lines, bool responseEnabled, int startingLine, Action callback)
         {
-            Dialog(lines, startingLineIndex, callbackFunction, null);
+            Dialog(lines, responseEnabled, startingLine, callback, null);
         }
 
         /// <summary>
         /// Pushes a dialog to the dialog queue
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLineIndex">The line the dialog starts from (0 is the first line)</param>
-        /// <param name="callbackFunction">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLineIndex, Action callbackFunction, List<string> inserts)
+        /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
+        /// <param name="callback">Called at the end of dialog</param>
+        public void Dialog(List<string> lines, bool responseEnabled, int startingLine, Action callback, string[] inserts)
         {
             if (lines is null || lines.Count < 1)
             {
@@ -278,7 +276,7 @@ namespace BF2D.UI {
                 return;
             }
 
-            if (startingLineIndex < 0 || startingLineIndex >= lines.Count)
+            if (startingLine < 0 || startingLine >= lines.Count)
             {
                 Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
                 return;
@@ -288,8 +286,9 @@ namespace BF2D.UI {
             DialogData dialogData = new()
             {
                 dialog = newLines,
-                index = startingLineIndex,
-                callback = callbackFunction
+                index = startingLine,
+                callback = callback,
+                responseEnabled = responseEnabled
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -321,11 +320,11 @@ namespace BF2D.UI {
         #endregion
 
         #region Public Static Utilities
-        public static List<string> ReplaceInsertTags(List<string> dialog, List<string> inserts)
+        public static List<string> ReplaceInsertTags(List<string> dialog, string[] inserts)
         {
             if (inserts is null)
                 return dialog;
-            if (inserts.Count < 1)
+            if (inserts.Length < 1)
                 return dialog;
 
             List<string> newDialog = new();
@@ -347,8 +346,7 @@ namespace BF2D.UI {
 
             ResetControlVariables(dialogData.index);
             this.voiceAudioSource.clip = this.defaultVoice;
-            this.activeLines = dialogData.dialog;
-            this.callback = dialogData.callback;
+            this.currentDialog = dialogData;
             this.textField.text = "";
 
             //Terminal.IO.Log("[DialogTextbox] Dialog Armed\n" + this.activeLines.Count + " lines");
@@ -407,8 +405,7 @@ namespace BF2D.UI {
                 this.continueIcon.enabled = false;
                 NametagDisable();
                 //Call the callback function if it exists
-                this.callback?.Invoke();
-                this.callback = null;
+                this.currentDialog.callback?.Invoke();
                 //Call the EOD event
                 if (this.dialogQueue.Count < 1)
                     this.onEndOfQueuedDialogs?.Invoke();
@@ -426,7 +423,6 @@ namespace BF2D.UI {
             this.messageIndex = 0;
             this.timeAccumulator = 0f;
             this.messageSpeed = DefaultMessageSpeed;
-            this.activeLines = null;
             this.pass = false;
             this.nextDialogIndex = -1;
             this.continueFlag = false;
@@ -438,13 +434,13 @@ namespace BF2D.UI {
         }
 
         private bool MessageParseAndDisplay() {
-            if (this.dialogIndex >= this.activeLines.Count)
+            if (this.dialogIndex >= this.currentDialog.dialog.Count)
             {
-                Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag? (Previous line: {this.activeLines[this.dialogIndex - 1]})");
+                Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag? (Previous line: {this.currentDialog.dialog[this.dialogIndex - 1]})");
                 return false;
             }
 
-            string message = this.activeLines[this.dialogIndex];    //Set message to the current line of dialog
+            string message = this.currentDialog.dialog[this.dialogIndex];    //Set message to the current line of dialog
 
             //If our message index is greater than the length of the message
             if (message.Length <= this.messageIndex) {
@@ -507,9 +503,9 @@ namespace BF2D.UI {
                         break;
                     case DialogTextbox.responseTag:
                         string data = ParseTag(message,ref newMessageIndex);
-                        if (!string.IsNullOrEmpty(data))
+                        if (!string.IsNullOrEmpty(data) && this.currentDialog.responseEnabled)
                         {
-                            List<ResponseData> options = new List<ResponseData>();
+                            List<ResponseData> options = new();
 
                             //Retrieve the data using Json Utility
                             if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
@@ -531,8 +527,7 @@ namespace BF2D.UI {
                                 }
                             }
 
-                            if (this.ResponseOptionsEnabled)
-                                SetupResponses(options);
+                            SetupResponses(options);
 
                             this.messageIndex = newMessageIndex + 1;
                             //this.state = null;
@@ -643,7 +638,7 @@ namespace BF2D.UI {
 
         private void SetupResponses(List<ResponseData> options)
         {
-            this.responseOptionsControl.ControlledOptionsGrid.Setup(1, options.Count);
+            this.responseOptionsControl.Controlled.Setup(1, options.Count);
 
             foreach (ResponseData option in options)
             {
@@ -657,14 +652,14 @@ namespace BF2D.UI {
                         }
                     }
 
-                    this.responseOptionsControl.ControlledOptionsGrid.Add(new UIOption.Data
+                    this.responseOptionsControl.Controlled.Add(new UIOption.Data
                     {
                         text = option.text,
                         actions = new InputButtonCollection<Action>
                         {
                             [InputButton.Confirm] = () =>
                             {
-                                this.responseOptionEvent?.Invoke(option.action.ToString());
+                                this.responseOptionConfirmEvent?.Invoke(option.action.ToString());
                                 ResponseConfirm(option.dialogIndex);
                             },
                             [InputButton.Back] = () =>
@@ -682,7 +677,7 @@ namespace BF2D.UI {
             }
 
             UIControlsManager.Instance.StartPhantomControl(this.responseOptionsControl);
-            this.responseOptionsControl.ControlledOptionsGrid.SetCursorToFirst();
+            this.responseOptionsControl.Controlled.SetCursorToFirst();
         }
 
         private void ResponseConfirm(int dialogIndex)
@@ -704,15 +699,15 @@ namespace BF2D.UI {
         #endregion
 
         #region Private Static Utilities
-        private static string ReplaceInsertTags(string message, List<string> inserts)
+        private static string ReplaceInsertTags(string message, string[] inserts)
         {
             if (inserts is null)
                 return message;
-            if (inserts.Count < 1)
+            if (inserts.Length < 1)
                 return message;
 
             string newMessage = message;
-            for (int i = 0; i < inserts.Count; i++)
+            for (int i = 0; i < inserts.Length; i++)
             {
                 newMessage = ReplaceInsertTags(newMessage, inserts[i], i);
             }

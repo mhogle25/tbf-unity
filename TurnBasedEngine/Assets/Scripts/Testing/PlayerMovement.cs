@@ -46,14 +46,15 @@ namespace BF2D
 
         public void CallTestDialogs()
         {
-            this.dialogTextboxController.Textbox.Dialog("test", 2);
-            this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.");
+            this.dialogTextboxController.Textbox.Dialog("test", true, 2);
+            this.dialogTextboxController.Textbox.Message("[N:Mr. Cool Guy]Hey hi I'm Mr. Cool Guy.", false);
             this.dialogTextboxController.Textbox.Dialog(new List<string> {
                 "[N:Jim]Hi",
                 "[N:-1]Hello",
                 "[N:Giuseppe]Whaddup[E]"
             },
-                0
+            false,
+            0
             );
         }
     }

@@ -422,12 +422,12 @@ namespace BF2D.Game.Combat
         private void PlayDialog(List<string> dialog, Action callback)
         {
             dialog[dialog.Count - 1] += "[E]";
-            CombatManager.Instance.OrphanedTextbox.Dialog(dialog, 0, () =>
+            CombatManager.Instance.OrphanedTextbox.Dialog(dialog, false, 0, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
                 callback?.Invoke();
             },
-            new List<string>
+            new string[]
             {
                 this.Stats.Name
             });
@@ -437,12 +437,12 @@ namespace BF2D.Game.Combat
 
         private void PlayMessage(string message, Action callback)
         {
-            CombatManager.Instance.OrphanedTextbox.Message(message, () =>
+            CombatManager.Instance.OrphanedTextbox.Message(message, false, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
                 callback?.Invoke();
             },
-            new List<string>
+            new string[]
             {
                 this.Stats.Name
             });

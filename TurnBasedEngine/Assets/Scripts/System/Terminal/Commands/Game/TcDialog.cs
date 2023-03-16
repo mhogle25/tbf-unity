@@ -60,7 +60,7 @@ namespace BF2D.Game
                 inserts.Add(arguments[i]);
             }
 
-            GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, startingIndex, null, inserts);
+            GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, false, startingIndex, null, inserts.ToArray());
             Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
         }
     }

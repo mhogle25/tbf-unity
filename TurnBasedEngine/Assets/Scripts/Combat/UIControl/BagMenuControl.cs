@@ -19,7 +19,7 @@ namespace BF2D.Game.Combat
         {
             this.items.Clear();
             this.ClearOptions();
-            this.controlledOptionsGrid.Setup(this.controlledOptionsGrid.Width, this.controlledOptionsGrid.Height);
+            this.controlled.Setup(this.controlled.Width, this.controlled.Height);
 
             foreach (ItemInfo item in CombatManager.Instance.CurrentCharacter.Stats.Items.Useable)
             {
@@ -31,7 +31,7 @@ namespace BF2D.Game.Combat
 
             if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.controlledOptionsGrid.Add(new GridOption.Data
+                this.controlled.Add(new GridOption.Data
                 {
                     name = Strings.Game.Bag,
                     text = "NULL",
@@ -40,16 +40,16 @@ namespace BF2D.Game.Combat
                         [InputButton.Back] = () =>
                         {
                             UIControlsManager.Instance.PassControlBack();
-                            this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                            this.controlled.View.gameObject.SetActive(false);
                         }
                     }
                 });
             }
 
-            this.controlledOptionsGrid.SetCursorToFirst();
+            this.controlled.SetCursorToFirst();
             OnNavigate(new OptionsGrid.NavigateInfo
             {
-                cursorPosition1D = this.controlledOptionsGrid.CursorPosition1D
+                cursorPosition1D = this.controlled.CursorPosition1D
             });
 
             base.ControlInitialize();
@@ -66,7 +66,7 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            Item item = this.items[info.cursorPosition1D + this.controlledOptionsGrid.Size * this.CurrentPage];
+            Item item = this.items[info.cursorPosition1D + this.controlled.Size * this.CurrentPage];
             this.nameText.text = item.Name;
             this.descriptionText.text = $"{item.Description}\n";
             foreach(TargetedCharacterStatsAction targetedGem in item.OnUse.TargetedGems)
@@ -88,12 +88,12 @@ namespace BF2D.Game.Combat
                     [InputButton.Confirm] = () =>
                     {
                         CombatManager.Instance.SetupItemCombat(item);
-                        this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                        this.controlled.View.gameObject.SetActive(false);
                     },
                     [InputButton.Back] = () =>
                     {
                         UIControlsManager.Instance.PassControlBack();
-                        this.controlledOptionsGrid.View.gameObject.SetActive(false);
+                        this.controlled.View.gameObject.SetActive(false);
                     }
                 }
             };

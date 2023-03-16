@@ -13,7 +13,7 @@ namespace BF2D.UI
         protected override void Awake()
         {
             base.Awake();
-            LoadOptionsIntoGrid(this.controlledOptionsGrid, this.initGridOptions);
+            LoadOptionsIntoGrid(this.controlled, this.initGridOptions);
         }
     }
 }
