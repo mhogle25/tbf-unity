@@ -157,10 +157,8 @@ namespace BF2D.Game.Actions
                 if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune)
                     info.message += $"{BF2D.Game.Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {RunNumericProperty(this.psychicDamage, source, target.CriticalDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
                 else
-                    info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.PsychicDamage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+                    info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             }
-            if (this.psychicDamage is not null)
-                info.message += $"{target.Name} took {RunNumericProperty(this.psychicDamage, source, target.PsychicDamage)} {BF2D.Game.Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.heal is not null)
                 info.message += $"{target.Name} gained {RunNumericProperty(this.heal, source, target.Heal)} {BF2D.Game.Strings.CharacterStats.Health.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             if (this.recover is not null)

@@ -165,6 +165,7 @@ namespace BF2D.Game.Combat
 
         private void SetupDialog(OptionsGrid followUp)
         {
+            this.orphanedTextbox.MessageInterrupt = true;
             this.orphanedTextbox.Dialog("di_targeter", false, 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
@@ -175,6 +176,7 @@ namespace BF2D.Game.Combat
                 this.controlled = followUp;
                 this.controlled.UtilityInitialize();
                 this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, true);
+                this.orphanedTextbox.MessageInterrupt = false;
             },
             new string[]
             {
@@ -185,6 +187,7 @@ namespace BF2D.Game.Combat
 
         private void AllOfAnyEvent()
         {
+            this.orphanedTextbox.MessageInterrupt = true;
             this.orphanedTextbox.AutoPass = false;
             this.orphanedTextbox.ResponseBackEventEnabled = true; 
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
@@ -216,6 +219,7 @@ namespace BF2D.Game.Combat
             this.orphanedTextbox.ResponseConfirmEvent.RemoveAllListeners();
             this.orphanedTextbox.ResponseBackEvent.RemoveAllListeners();
             this.orphanedTextbox.AutoPass = true;
+            this.orphanedTextbox.MessageInterrupt = false;
             this.orphanedTextbox.ResponseBackEventEnabled = false;
         }
     }

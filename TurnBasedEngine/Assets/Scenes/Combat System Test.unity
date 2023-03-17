@@ -22794,7 +22794,7 @@ MonoBehaviour:
   continueIcon: {fileID: 2158157277367825122}
   dialogFileManager: {fileID: 804794703}
   DefaultMessageSpeed: 0.025
-  MessageInterrupt: 1
+  MessageInterrupt: 0
   AutoPass: 1
   onEndOfQueuedDialogs:
     m_PersistentCalls:

@@ -6,5 +6,4 @@ namespace BF2D
     {
         public abstract bool CheckCondition(string json);
     }
-
 }
