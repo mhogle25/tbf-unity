@@ -12,6 +12,8 @@ namespace BF2D.Game
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] private int count = 0;
 
+        [JsonProperty] private readonly object data = null;
+
         [JsonIgnore] private Item staged = null;
 
         [JsonIgnore] public Entity GetEntity { get { return Get(); } }
@@ -26,14 +28,27 @@ namespace BF2D.Game
 
         [JsonIgnore] public bool CombatExclusive { get { return Get().CombatExclusive; } }
 
+        [JsonConstructor]
+        public ItemInfo() { }
+
         public ItemInfo(string id)
         {
             this.id = id;
         }
 
+        public ItemInfo(string id, Item customData)
+        {
+            this.id = id;
+            this.data = BF2D.Utilities.JSON.SerializeObject(customData);
+        }
+
         public Item Get()
         {
-            this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
+            if (this.data is not null)
+                this.staged ??= BF2D.Utilities.JSON.DeserializeString<Item>(this.data.ToString());
+            else 
+                this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
+
             return this.staged;
         }
 

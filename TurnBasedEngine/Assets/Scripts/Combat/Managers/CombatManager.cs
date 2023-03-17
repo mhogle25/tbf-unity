@@ -106,8 +106,15 @@ namespace BF2D.Game.Combat
                     this.standaloneTextboxControl.Textbox.Message(message, false);
 
                 GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
+                int etherUp = this.combatGrid.GetTotalEtherLoot();
+                GameInfo.Instance.Ether += etherUp;
 
-                this.standaloneTextboxControl.Textbox.Message($"The party obtained {this.combatGrid.GetTotalCurrencyLoot()}{Strings.Game.Currency}", false, () =>
+                message = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.Currency}";
+                if (etherUp > 0)
+                    message += $" and {etherUp} {Strings.Game.Ether}.";
+                else
+                    message += '.';
+                this.standaloneTextboxControl.Textbox.Message(message, false, () =>
                 {
                     GameInfo.Instance.SaveGame();
                     CancelCombat();

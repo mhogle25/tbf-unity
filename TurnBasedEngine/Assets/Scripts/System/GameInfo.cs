@@ -11,10 +11,10 @@ namespace BF2D.Game
     public class GameInfo : MonoBehaviour
     {
         //Singleton Reference
-        public static GameInfo Instance { get { return GameInfo.instance; } }
+        public static GameInfo Instance { get => GameInfo.instance; }
         private static GameInfo instance;
 
-        public DialogTextboxControl SystemTextbox { get { return this.systemTextbox; } }
+        public DialogTextboxControl SystemTextbox { get => this.systemTextbox; }
 
         [Header("Data File Managers")]
         [SerializeField] private ExternalFileManager saveFilesManager = null;
@@ -28,11 +28,12 @@ namespace BF2D.Game
         [SerializeField] private FileManager gemsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public IEnumerable<CharacterStats> ActivePlayers { get { return this.currentSave?.ActivePlayers; } }
-        public IEnumerable<CharacterStats> InactivePlayers { get { return this.currentSave?.InactivePlayers; } }
-        public IItemHolder Bag { get { return this.currentSave?.Bag; } }
-        public bool SaveActive { get { return this.currentSave is not null; } }
-        public int Currency { get { return this.currentSave.Currency; } set { this.currentSave.Currency = value; } }
+        public IEnumerable<CharacterStats> ActivePlayers { get => this.currentSave?.ActivePlayers; }
+        public IEnumerable<CharacterStats> InactivePlayers { get => this.currentSave?.InactivePlayers; }
+        public IItemHolder Bag { get => this.currentSave?.Bag; }
+        public bool SaveActive { get => this.currentSave is not null; }
+        public int Currency { get => this.currentSave.Currency; set => this.currentSave.Currency = value; }
+        public int Ether { get => this.currentSave.Ether; set => this.currentSave.Ether = value; }
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)
@@ -127,7 +128,7 @@ namespace BF2D.Game
             }
 
             this.currentSave.ID = id;
-            string newJSON = BF2D.Utilities.TextFile.SerializeObject(this.currentSave);
+            string newJSON = BF2D.Utilities.JSON.SerializeObject(this.currentSave);
             this.saveFilesManager.WriteToFile(newJSON, id);
             Terminal.IO.LogQuiet($"Saved to file with ID '{id}'");
         }
@@ -331,7 +332,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            SaveData saveData = BF2D.Utilities.TextFile.DeserializeString<SaveData>(content);
+            SaveData saveData = BF2D.Utilities.JSON.DeserializeString<SaveData>(content);
             if (saveData is null)
             {
                 Terminal.IO.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");

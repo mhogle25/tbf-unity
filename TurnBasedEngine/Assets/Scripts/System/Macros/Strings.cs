@@ -14,6 +14,7 @@ namespace BF2D.Game
         public static class Game
         {
             public const string Currency = "USD";
+            public const string Ether = "Ether";
             public const string Bag = "Bag";
             public const string StatusEffect = "Status Effect";
         }

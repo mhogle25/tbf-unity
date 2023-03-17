@@ -57,6 +57,7 @@
         }
     ],
     "currencyLoot":5,
+    "etherLoot":1,
     "combatAI": 
     {
         "actionRanking":

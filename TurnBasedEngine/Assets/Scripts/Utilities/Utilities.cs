@@ -87,36 +87,6 @@ namespace BF2D.Utilities
             return content;
         }
 
-        public static T DeserializeString<T>(string content)
-        {
-            T t;
-            try
-            {
-                t = JsonConvert.DeserializeObject<T>(content, new Newtonsoft.Json.Converters.StringEnumConverter());
-            }
-            catch
-            {
-                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. {content}");
-                return default;
-            }
-            return t;
-        }
-
-        public static string SerializeObject<T>(T obj)
-        {
-            string t;
-            try
-            {
-                t = JsonConvert.SerializeObject(obj, Formatting.Indented, new Newtonsoft.Json.Converters.StringEnumConverter());
-            }
-            catch
-            {
-                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
-                return default;
-            }
-            return t;
-        }
-
         public static int LoadTextFiles(Dictionary<string, string> collection, string path)
         {
             string[] paths;
@@ -195,6 +165,41 @@ namespace BF2D.Utilities
             {
                 Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
             }
+        }
+    }
+
+    public static class JSON
+    {
+        public static T DeserializeString<T>(string content)
+        {
+            T t;
+            try
+            {
+                t = JsonConvert.DeserializeObject<T>(content, new Newtonsoft.Json.Converters.StringEnumConverter());
+            }
+            catch (Exception x)
+            {
+                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. {content}");
+                Debug.LogError(x.Message);
+                return default;
+            }
+            return t;
+        }
+
+        public static string SerializeObject<T>(T obj)
+        {
+            string t;
+            try
+            {
+                t = JsonConvert.SerializeObject(obj, Formatting.Indented, new Newtonsoft.Json.Converters.StringEnumConverter());
+            }
+            catch (Exception x)
+            {
+                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
+                Debug.LogError(x.Message);
+                return default;
+            }
+            return t;
         }
     }
 }

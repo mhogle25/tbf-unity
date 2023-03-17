@@ -404,8 +404,8 @@ namespace BF2D
         {
             return controllerType switch
             {
-                InputController.Keyboard => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigKeyboard>(this.keyboardConfig),
-                InputController.Gamepad => BF2D.Utilities.TextFile.SerializeObject<ControlsConfigGamepad>(this.gamepadConfig),
+                InputController.Keyboard => BF2D.Utilities.JSON.SerializeObject<ControlsConfigKeyboard>(this.keyboardConfig),
+                InputController.Gamepad => BF2D.Utilities.JSON.SerializeObject<ControlsConfigGamepad>(this.gamepadConfig),
                 _ => string.Empty,
             };
         }
@@ -415,10 +415,10 @@ namespace BF2D
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    this.keyboardConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigKeyboard>(json);
+                    this.keyboardConfig = BF2D.Utilities.JSON.DeserializeString<ControlsConfigKeyboard>(json);
                     break;
                 case InputController.Gamepad:
-                    this.gamepadConfig = BF2D.Utilities.TextFile.DeserializeString<ControlsConfigGamepad>(json);
+                    this.gamepadConfig = BF2D.Utilities.JSON.DeserializeString<ControlsConfigGamepad>(json);
                     break;
                 default:
                     Terminal.IO.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");

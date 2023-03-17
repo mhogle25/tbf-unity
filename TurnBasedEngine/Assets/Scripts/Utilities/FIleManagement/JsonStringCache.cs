@@ -23,7 +23,7 @@ namespace BF2D.Utilities
                 Clear();
 
             if (this.jsons.ContainsKey(id))
-                return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[id]);
+                return BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]);
 
             string content = fileManager.LoadFile(id);
             if (string.IsNullOrEmpty(content))
@@ -32,7 +32,7 @@ namespace BF2D.Utilities
             this.jsons[id] = content;
 
             if (this.jsons.ContainsKey(id))
-                return BF2D.Utilities.TextFile.DeserializeString<T>(this.jsons[id]);
+                return BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]);
 
             return null;
         }

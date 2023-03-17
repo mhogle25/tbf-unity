@@ -8,8 +8,6 @@ namespace BF2D.Game
 {
     public class CharacterTargetInfo
     {
-        public delegate string RunAction(CharacterStats source, CharacterStats target);
-
         public IEnumerable<Combat.CharacterCombat> CombatTargets { get { return this.combatTargets; } set { this.combatTargets = value; } }
         private IEnumerable<Combat.CharacterCombat> combatTargets = null;
 

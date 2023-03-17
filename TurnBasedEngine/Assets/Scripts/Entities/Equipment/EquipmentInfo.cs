@@ -12,6 +12,8 @@ namespace BF2D.Game
         [JsonIgnore] public int Count { get { return this.count; } }
         [JsonProperty] protected int count = 0;
 
+        [JsonProperty] private readonly object data = null;
+
         [JsonIgnore] public Entity GetEntity { get { return Get(); } }
 
         [JsonIgnore] public IUtilityEntity GetUtility { get { return Get(); } }
@@ -20,13 +22,24 @@ namespace BF2D.Game
 
         [JsonIgnore] public string Name { get { return Get().Name; } }
 
+        [JsonConstructor]
+        public EquipmentInfo() { }
+
         public EquipmentInfo(string id)
         {
             this.id = id;
         }
 
+        public EquipmentInfo(string id, Equipment customData)
+        {
+            this.id = id;
+            this.data = BF2D.Utilities.JSON.SerializeObject(customData);
+        }
+
         public Equipment Get()
         {
+            if (this.data is not null)
+                return BF2D.Utilities.JSON.DeserializeString<Equipment>(this.data.ToString());
             return GameInfo.Instance.GetEquipment(this.ID);
         }
 

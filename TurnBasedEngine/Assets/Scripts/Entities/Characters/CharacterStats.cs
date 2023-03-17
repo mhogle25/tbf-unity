@@ -9,19 +9,19 @@ namespace BF2D.Game
     [Serializable]
     public class CharacterStats : Entity
     {
-        [JsonIgnore] public string PrefabID { get { return this.prefabID; } }
+        [JsonIgnore] public string PrefabID { get => this.prefabID; }
         [JsonProperty] private readonly string prefabID = string.Empty;
 
         public class StatModifier
         {
-            public CharacterStatsProperty Property { get { return this.property; } set { this.property = value; } }
+            public CharacterStatsProperty Property { get => this.property; set => this.property = value; }
             private CharacterStatsProperty property = CharacterStatsProperty.Speed;
 
-            public int Total { get { return this.Equipment + this.StatusEffect; } }
+            public int Total { get => this.Equipment + this.StatusEffect; }
 
-            public int Equipment { get { return this.equipment; } }
+            public int Equipment { get => this.equipment; }
             private int equipment = 0;
-            public int StatusEffect { get { return this.statusEffect; } }
+            public int StatusEffect { get => this.statusEffect; }
             private int statusEffect = 0;
 
             public void ApplyStatusEffect(StatusEffect statusEffect)
@@ -45,13 +45,13 @@ namespace BF2D.Game
             }
         }
 
-        [JsonIgnore] public int Level { get { return (this.CurrentJob is null ? 0 : this.CurrentJob.Level); } }
+        [JsonIgnore] public int Level { get => (this.CurrentJob is null ? 0 : this.CurrentJob.Level); }
         
-        [JsonIgnore] public bool Dead { get { return this.health < 1; } }
-        [JsonIgnore] public int Health { get { return this.health; } }
+        [JsonIgnore] public bool Dead { get => this.health < 1; }
+        [JsonIgnore] public int Health { get => this.health; }
         [JsonProperty] private int health = 0;
 
-        [JsonIgnore] public int Stamina { get { return this.stamina; } }
+        [JsonIgnore] public int Stamina { get => this.stamina; }
         [JsonProperty] private int stamina = 0;
 
         [JsonIgnore] public int MaxHealth
@@ -63,9 +63,9 @@ namespace BF2D.Game
                 return value;
             }
         }
-        [JsonIgnore] public StatModifier MaxHealthModifier { get { return this.maxHealthModifier; } }
+        [JsonIgnore] public StatModifier MaxHealthModifier { get => this.maxHealthModifier; }
         [JsonIgnore] private readonly StatModifier maxHealthModifier = new() { Property = CharacterStatsProperty.MaxHealth };
-        [JsonIgnore] public int Constitution { get { return this.constitution; } }
+        [JsonIgnore] public int Constitution { get => this.constitution; }
         [JsonProperty] private int constitution = 0;
 
         [JsonIgnore] public int MaxStamina
@@ -77,9 +77,9 @@ namespace BF2D.Game
                 return value;
             }
         }
-        [JsonIgnore] public StatModifier MaxStaminaModifier { get { return this.maxStaminaModifier; } }
+        [JsonIgnore] public StatModifier MaxStaminaModifier { get => this.maxStaminaModifier; }
         [JsonIgnore] private readonly StatModifier maxStaminaModifier = new() { Property = CharacterStatsProperty.MaxStamina };
-        [JsonIgnore] private int Endurance { get { return this.endurance; } }
+        [JsonIgnore] private int Endurance { get => this.endurance; }
         [JsonProperty] private int endurance = 0;
 
         [JsonIgnore] public int Speed 
@@ -91,9 +91,9 @@ namespace BF2D.Game
                 return value; 
             } 
         }
-        [JsonIgnore] public StatModifier SpeedModifier { get { return this.speedModifier; }}
+        [JsonIgnore] public StatModifier SpeedModifier { get => this.speedModifier; }
         [JsonIgnore] private readonly StatModifier speedModifier = new() { Property = CharacterStatsProperty.Speed };
-        [JsonIgnore] public int Swiftness { get { return this.swiftness; } }
+        [JsonIgnore] public int Swiftness { get => this.swiftness; }
         [JsonProperty] private int swiftness = 0;
 
         [JsonIgnore] public int Attack 
@@ -105,9 +105,9 @@ namespace BF2D.Game
                 return value; 
             } 
         }
-        [JsonIgnore] public StatModifier AttackModifier { get { return this.attackModifier; } }
+        [JsonIgnore] public StatModifier AttackModifier { get => this.attackModifier; }
         [JsonIgnore] private StatModifier attackModifier = new() { Property = CharacterStatsProperty.Attack };
-        [JsonIgnore] public int Strength { get { return this.strength; } }
+        [JsonIgnore] public int Strength { get => this.strength; }
         [JsonProperty] private int strength = 0;
 
         [JsonIgnore] public int Defense 
@@ -119,9 +119,9 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore] public StatModifier DefenseModifier { get { return this.defenseModifier; }}
+        [JsonIgnore] public StatModifier DefenseModifier { get => this.defenseModifier; }
         [JsonIgnore] private readonly StatModifier defenseModifier = new() { Property = CharacterStatsProperty.Defense };
-        [JsonIgnore] public int Toughness { get { return this.toughness; } }
+        [JsonIgnore] public int Toughness { get => this.toughness; }
         [JsonProperty] private int toughness = 0;
 
         [JsonIgnore] public int Focus 
@@ -133,9 +133,9 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore] public StatModifier FocusModifier { get { return this.focusModifier; } }
+        [JsonIgnore] public StatModifier FocusModifier { get => this.focusModifier; }
         [JsonIgnore] private readonly StatModifier focusModifier = new() { Property = CharacterStatsProperty.Focus };
-        [JsonIgnore] public int Will { get { return this.will; } }
+        [JsonIgnore] public int Will { get => this.will; }
         [JsonProperty] private int will = 0;
 
         [JsonIgnore] public int Luck 
@@ -147,54 +147,56 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore] public StatModifier LuckModifier { get { return this.luckModifier; } }
+        [JsonIgnore] public StatModifier LuckModifier { get => this.luckModifier; }
         [JsonIgnore] private readonly StatModifier luckModifier = new() { Property = CharacterStatsProperty.Luck };
-        [JsonIgnore] public int Fortune { get { return this.fortune; } }
+        [JsonIgnore] public int Fortune { get => this.fortune; }
         [JsonProperty] private int fortune = 0;
 
-        [JsonIgnore] public bool CritImmune { get { return this.critImmune; } }
+        [JsonIgnore] public bool CritImmune { get => this.critImmune; }
         [JsonProperty] private bool critImmune = false;
 
-        [JsonIgnore] public string Head { get { return this.head; } }
+        [JsonIgnore] public string Head { get => this.head; }
         [JsonProperty] private string head = string.Empty;
-        [JsonIgnore] public string Torso { get { return this.torso; } }
+        [JsonIgnore] public string Torso { get => this.torso; }
         [JsonProperty] private string torso = string.Empty;
-        [JsonIgnore] public string Legs { get { return this.legs; } }
+        [JsonIgnore] public string Legs { get => this.legs; }
         [JsonProperty] private string legs = string.Empty;
-        [JsonIgnore] public string Hands { get { return this.hands; } }
+        [JsonIgnore] public string Hands { get => this.hands; }
         [JsonProperty] private string hands = string.Empty;
-        [JsonIgnore] public string Feet { get { return this.feet; } }
+        [JsonIgnore] public string Feet { get => this.feet; }
         [JsonProperty] private string feet = string.Empty;
-        [JsonIgnore] public string Accessory { get { return this.accessory; } }
+        [JsonIgnore] public string Accessory { get => this.accessory; }
         [JsonProperty] private string accessory = string.Empty;
 
-        [JsonIgnore] public int GridPosition { get { return this.gridPosition; } }
+        [JsonIgnore] public int GridPosition { get => this.gridPosition; }
         [JsonProperty] private int gridPosition = 0;
 
-        [JsonIgnore] public JobInfo CurrentJob { get { return this.job; } }
+        [JsonIgnore] public JobInfo CurrentJob { get => this.job; }
         [JsonProperty] private JobInfo job = null;
-        [JsonIgnore] public IEnumerable<JobInfo> InactiveJobs { get { return this.inactiveJobs; } }
+        [JsonIgnore] public IEnumerable<JobInfo> InactiveJobs { get => this.inactiveJobs; }
         [JsonProperty] private readonly List<JobInfo> inactiveJobs = new();
 
-        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get { return this.statusEffects; } }
+        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get => this.statusEffects; }
         [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
 
-        [JsonIgnore] public int ItemsCount { get { return this.items.Count; } }
-        [JsonIgnore] public IItemHolder Items { get { return this.items; } }
+        [JsonIgnore] public int ItemsCount { get => this.items.Count; }
+        [JsonIgnore] public IItemHolder Items { get => this.items; }
         [JsonProperty] private readonly ItemHolder items = new();
-        [JsonIgnore] public int EquipmentsCount { get { return this.equipments.Count; } }
-        [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get { return this.equipments; } }
+        [JsonIgnore] public int EquipmentsCount { get => this.equipments.Count; }
+        [JsonIgnore] public IEnumerable<EquipmentInfo> Equipments { get => this.equipments; }
         [JsonProperty] private readonly List<EquipmentInfo> equipments = new();
 
-        [JsonIgnore] public Combat.CharacterCombatAI CombatAI { get { return this.combatAI; } }
+        [JsonIgnore] public Combat.CharacterCombatAI CombatAI { get => this.combatAI; }
         [JsonProperty] private readonly Combat.CharacterCombatAI combatAI = new();
 
-        [JsonIgnore] public IEnumerable<EntityLoot> ItemsLoot { get { return this.itemsLoot; } }
+        [JsonIgnore] public IEnumerable<EntityLoot> ItemsLoot { get => this.itemsLoot; }
         [JsonProperty] private readonly List<EntityLoot> itemsLoot = new();
-        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentsLoot { get { return this.equipmentsLoot; } }
+        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentsLoot { get => this.equipmentsLoot; }
         [JsonProperty] private readonly List<EntityLoot> equipmentsLoot = new();
-        [JsonIgnore] public int CurrencyLoot { get { return this.currencyLoot; } }
+        [JsonIgnore] public int CurrencyLoot { get => this.currencyLoot; }
         [JsonProperty] private readonly int currencyLoot = 1;
+        [JsonIgnore] public int EtherLoot { get => this.etherLoot; }
+        [JsonProperty] private readonly int etherLoot = 0;
 
         #region Stats Properties
         public int GetStatsProperty(CharacterStatsProperty property)

@@ -98,7 +98,7 @@ namespace BF2D.Game.Combat
             switch (target)
             {
                 case CharacterTarget.Self:
-                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.CurrentCharacter };
                     Continue();
                     return;
                 case CharacterTarget.Ally:
@@ -126,15 +126,15 @@ namespace BF2D.Game.Combat
                     Continue();
                     return;
                 case CharacterTarget.Random:
-                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomCharacter() };
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomCharacter() };
                     Continue();
                     return;
                 case CharacterTarget.RandomAlly:
-                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomPlayer() };
                     Continue();
                     return;
                 case CharacterTarget.RandomOpponent:
-                    this.stagedStatsAction.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomEnemy() };
+                    this.stagedStatsAction.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomEnemy() };
                     Continue();
                     return;
                 default:
@@ -192,7 +192,7 @@ namespace BF2D.Game.Combat
             this.orphanedTextbox.ResponseBackEventEnabled = true; 
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
-                AlignmentFlag flag = BF2D.Utilities.TextFile.DeserializeString<AlignmentFlag>(json);
+                AlignmentFlag flag = BF2D.Utilities.JSON.DeserializeString<AlignmentFlag>(json);
                 this.stagedStatsAction.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
             });
             this.orphanedTextbox.ResponseBackEvent.AddListener(() =>

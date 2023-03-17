@@ -29,7 +29,7 @@ namespace BF2D.Utilities
             if (string.IsNullOrEmpty(content))
                 return null;
 
-            this.entities[id] = BF2D.Utilities.TextFile.DeserializeString<T>(content);
+            this.entities[id] = BF2D.Utilities.JSON.DeserializeString<T>(content);
 
             if (this.entities.ContainsKey(id))
                 return this.entities[id];

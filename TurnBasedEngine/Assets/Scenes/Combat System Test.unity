@@ -15040,7 +15040,7 @@ GameObject:
   - component: {fileID: 1516352435}
   - component: {fileID: 1516352437}
   m_Layer: 0
-  m_Name: Game Grid
+  m_Name: Combat Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

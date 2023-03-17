@@ -160,13 +160,27 @@ namespace BF2D.Game.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning($"[CombatGrid:GetTotalExperience] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
+                Terminal.IO.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
                 value += character.CurrencyLoot;
+            return value;
+        }
+
+        public int GetTotalEtherLoot()
+        {
+            if (!CombatManager.Instance.CombatIsOver())
+            {
+                Terminal.IO.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.Ether} loot from the fight but combat wasn't over.");
+                return 0;
+            }
+
+            int value = 0;
+            foreach (CharacterStats character in this.defeatedEnemies)
+                value += character.EtherLoot;
             return value;
         }
 
