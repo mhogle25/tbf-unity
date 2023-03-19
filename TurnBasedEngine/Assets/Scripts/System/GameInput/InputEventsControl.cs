@@ -18,9 +18,9 @@ namespace BF2D
                 this.menuEvent.Invoke();
             }
 
-            if (InputManager.Instance.AttackPress && this.attackEnabled)
+            if (InputManager.Instance.SpecialPress && this.specialEnabled)
             {
-                this.attackEvent.Invoke();
+                this.specialEvent.Invoke();
             }
 
             if (InputManager.Instance.BackPress && this.backEnabled)

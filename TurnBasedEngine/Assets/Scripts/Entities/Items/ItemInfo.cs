@@ -7,26 +7,26 @@ namespace BF2D.Game
     [Serializable]
     public class ItemInfo : IUtilityEntityInfo
     {
-        [JsonIgnore] public string ID { get { return this.id; } }
+        [JsonIgnore] public string ID { get => this.id; }
         [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Count { get { return this.count; } }
+        [JsonIgnore] public int Count { get => this.count; }
         [JsonProperty] private int count = 0;
 
-        [JsonProperty] private readonly object data = null;
+        [JsonProperty] private readonly object custom = null;
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public Entity GetEntity { get { return Get(); } }
+        [JsonIgnore] public Entity GetEntity { get => Get(); }
 
-        [JsonIgnore] public IUtilityEntity GetUtility { get { return Get(); } }
+        [JsonIgnore] public IUtilityEntity GetUtility { get => Get(); }
 
-        [JsonIgnore] public Sprite Icon { get { return GameInfo.Instance.GetIcon(GetUtility.SpriteID); } }
+        [JsonIgnore] public Sprite Icon { get => GameInfo.Instance.GetIcon(GetUtility.SpriteID); }
 
-        [JsonIgnore] public string Name { get { return Get().Name; } }
+        [JsonIgnore] public string Name { get => Get().Name; }
 
-        [JsonIgnore] public bool Useable { get { return Get().Useable; } }
+        [JsonIgnore] public bool Useable { get => Get().Useable; }
 
-        [JsonIgnore] public bool CombatExclusive { get { return Get().CombatExclusive; } }
+        [JsonIgnore] public bool CombatExclusive { get => Get().CombatExclusive; }
 
         [JsonConstructor]
         public ItemInfo() { }
@@ -39,13 +39,13 @@ namespace BF2D.Game
         public ItemInfo(string id, Item customData)
         {
             this.id = id;
-            this.data = BF2D.Utilities.JSON.SerializeObject(customData);
+            this.custom = BF2D.Utilities.JSON.SerializeObject(customData);
         }
 
         public Item Get()
         {
-            if (this.data is not null)
-                this.staged ??= BF2D.Utilities.JSON.DeserializeString<Item>(this.data.ToString());
+            if (this.custom is not null)
+                this.staged ??= BF2D.Utilities.JSON.DeserializeString<Item>(this.custom.ToString());
             else 
                 this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
 

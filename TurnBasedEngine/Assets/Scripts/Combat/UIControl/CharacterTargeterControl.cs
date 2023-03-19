@@ -84,9 +84,9 @@ namespace BF2D.Game.Combat
             }
         }
 
-        public void SetTargets(List<CharacterCombat> targets)
+        public void SetSingleTarget(CharacterCombat target)
         {
-            this.stagedStatsAction.TargetInfo.CombatTargets = targets;
+            this.stagedStatsAction.TargetInfo.CombatTargets = new CharacterCombat[] { target };
 
             this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
             this.controlled.UtilityFinalize();

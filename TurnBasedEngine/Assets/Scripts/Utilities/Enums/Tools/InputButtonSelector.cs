@@ -17,7 +17,7 @@ namespace BF2D.Enums
         [EnumMember]
         Menu,
         [EnumMember]
-        Attack,
+        Special,
         [EnumMember]
         Pause,
         [EnumMember]

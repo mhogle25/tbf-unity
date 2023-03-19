@@ -21,8 +21,8 @@ namespace BF2D
             [JsonProperty] private protected KeyCode back = KeyCode.O;
             [JsonIgnore] public KeyCode Menu { get { return this.menu; } set { this.menu = value; } }
             [JsonProperty] private protected KeyCode menu = KeyCode.I;
-            [JsonIgnore] public KeyCode Attack { get { return this.attack; } set { this.attack = value; } }
-            [JsonProperty] private protected KeyCode attack = KeyCode.U;
+            [JsonIgnore] public KeyCode Special { get { return this.special; } set { this.special = value; } }
+            [JsonProperty] private protected KeyCode special = KeyCode.U;
             [JsonIgnore] public KeyCode Pause { get { return this.pause; } set { this.pause = value; } }
             [JsonProperty] private protected KeyCode pause = KeyCode.Escape;
             [JsonIgnore] public KeyCode Select { get { return this.select; } set { this.select = value; } }
@@ -35,7 +35,7 @@ namespace BF2D
                     InputButton.Confirm => this.confirm,
                     InputButton.Back => this.back,
                     InputButton.Menu => this.menu,
-                    InputButton.Attack => this.attack,
+                    InputButton.Special => this.special,
                     InputButton.Pause => this.pause,
                     InputButton.Select => this.select,
                     _ => throw new ArgumentException("[InputManager:ControlsConfig:GetButtonKeyCode] InputButton was null or invalid"),
@@ -174,7 +174,7 @@ namespace BF2D
                 this.confirm = KeyCode.JoystickButton0;
                 this.back = KeyCode.JoystickButton1;
                 this.menu = KeyCode.JoystickButton3;
-                this.attack = KeyCode.JoystickButton2;
+                this.special = KeyCode.JoystickButton2;
                 this.pause = KeyCode.JoystickButton7;
                 this.select = KeyCode.JoystickButton6;
             }
@@ -238,8 +238,8 @@ namespace BF2D
         public bool InputEnabled { get { return this.inputEnabled; } set { this.inputEnabled = value; } }
         private bool inputEnabled = true;
 
-        private ControlsConfigKeyboard defaultKeyboardConfig;
-        private ControlsConfigGamepad defaultGamepadConfig;
+        private readonly ControlsConfigKeyboard defaultKeyboardConfig;
+        private readonly ControlsConfigGamepad defaultGamepadConfig;
         private ControlsConfigKeyboard keyboardConfig;
         private ControlsConfigGamepad gamepadConfig;
 
@@ -257,19 +257,19 @@ namespace BF2D
         public bool Confirm { get { return GetButton(InputButton.Confirm); } }
         public bool Back { get { return GetButton(InputButton.Back); } }
         public bool Menu { get { return GetButton(InputButton.Menu); } }
-        public bool Attack { get { return GetButton(InputButton.Attack); } }
+        public bool Special { get { return GetButton(InputButton.Special); } }
         public bool Pause { get { return GetButton(InputButton.Pause); } }
         public bool Select { get { return GetButton(InputButton.Select); } }
         public bool ConfirmPress { get { return GetButtonPress(InputButton.Confirm); } }
         public bool BackPress { get { return GetButtonPress(InputButton.Back); } }
         public bool MenuPress { get { return GetButtonPress(InputButton.Menu); } }
-        public bool AttackPress { get { return GetButtonPress(InputButton.Attack); } }
+        public bool SpecialPress { get { return GetButtonPress(InputButton.Special); } }
         public bool PausePress { get { return GetButtonPress(InputButton.Pause); } }
         public bool SelectPress { get { return GetButtonPress(InputButton.Select); } }
         public bool ConfirmRelease { get { return GetButtonRelease(InputButton.Confirm); } }
         public bool BackRelease { get { return GetButtonRelease(InputButton.Back); } }
         public bool MenuRelease { get { return GetButtonRelease(InputButton.Menu); } }
-        public bool AttackRelease { get { return GetButtonRelease(InputButton.Attack); } }
+        public bool SpecialRelease { get { return GetButtonRelease(InputButton.Special); } }
         public bool PauseRelease { get { return GetButtonRelease(InputButton.Pause); } }
         public bool SelectRelease { get { return GetButtonRelease(InputButton.Select); } }
         public float HorizontalAxis { get { return GetAxis(Axis.Horizontal); } }
@@ -348,7 +348,7 @@ namespace BF2D
         {
             if (!this.inputEnabled)
                 return false;
-            return this.ConfirmPress || this.BackPress || this.MenuPress || this.AttackPress || this.PausePress || this.SelectPress;
+            return this.ConfirmPress || this.BackPress || this.MenuPress || this.SpecialPress || this.PausePress || this.SelectPress;
         }
 
         public bool GetButtonRelease(InputButton inputButton)
@@ -362,7 +362,7 @@ namespace BF2D
         {
             if (!this.inputEnabled)
                 return false;
-            return this.ConfirmRelease || this.BackRelease || this.MenuRelease || this.AttackRelease || this.PauseRelease || this.SelectRelease;
+            return this.ConfirmRelease || this.BackRelease || this.MenuRelease || this.SpecialRelease || this.PauseRelease || this.SelectRelease;
         }
 
         public float GetAxis(Axis axis)
@@ -462,7 +462,7 @@ namespace BF2D
                 Confirm = config.Confirm,
                 Back = config.Back,
                 Menu = config.Menu,
-                Attack = config.Attack,
+                Special = config.Special,
                 Pause = config.Pause,
                 Select = config.Select
             };
@@ -480,7 +480,7 @@ namespace BF2D
                 Confirm = config.Confirm,
                 Back = config.Back,
                 Menu = config.Menu,
-                Attack = config.Attack,
+                Special = config.Special,
                 Pause = config.Pause,
                 Select = config.Select,
                 JoystickThreshold = config.JoystickThreshold
@@ -558,8 +558,8 @@ namespace BF2D
                 case InputButton.Menu:
                     this.currentConfig.Menu = this.lastHitKey;
                     break;
-                case InputButton.Attack:
-                    this.currentConfig.Attack = this.lastHitKey;
+                case InputButton.Special:
+                    this.currentConfig.Special = this.lastHitKey;
                     break;
                 case InputButton.Pause:
                     this.currentConfig.Pause = this.lastHitKey;

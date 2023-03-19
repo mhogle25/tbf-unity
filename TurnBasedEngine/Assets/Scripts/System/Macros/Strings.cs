@@ -69,7 +69,7 @@ namespace BF2D.Game
                     CharacterStatsProperty.Luck => LuckSymbol,
                     CharacterStatsProperty.MaxHealth => MaxHealthSymbol,
                     CharacterStatsProperty.MaxStamina => MaxStaminaSymbol,
-                    _ => ' '
+                    _ => throw new ArgumentException("[Strings:GetStatsPropertySymbol] CharacterStatsProperty was invalid.")
                 };
             }
 

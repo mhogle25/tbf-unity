@@ -4,6 +4,7 @@ using BF2D.Game.Actions;
 using System;
 using BF2D.Game.Enums;
 using BF2D.Enums;
+using BF2D.UI;
 
 namespace BF2D.Game.Combat
 {
@@ -12,7 +13,7 @@ namespace BF2D.Game.Combat
     {
         private class AnimatorController
         {
-            public bool HasEvent { get { return this.animEvent is not null; } }
+            public bool HasEvent { get => this.animEvent is not null;  }
 
             private string animState = Strings.Animation.Idle;
             public delegate List<string> RunEvent();
@@ -87,13 +88,13 @@ namespace BF2D.Game.Combat
         }
 
         #region Public Utilities
-        public void SetupCombatAction(Actions.CombatAction combatAction)
+        public void SetupCombatAction(Actions.CombatAction combatAction, UIControl targeter)
         {
             this.currentCombatAction = combatAction;
             if (this.Stats.CombatAI.Enabled)
                 this.currentCombatAction.SetupAI(this.stats.CombatAI);
             else
-                this.currentCombatAction.SetupControlled();
+                this.currentCombatAction.SetupControlled(targeter);
         }
 
         public void RunCombatEvents()
@@ -421,7 +422,7 @@ namespace BF2D.Game.Combat
 
         private void PlayDialog(List<string> dialog, Action callback)
         {
-            dialog[dialog.Count - 1] += "[E]";
+            dialog[^1] += "[E]";
             CombatManager.Instance.OrphanedTextbox.Dialog(dialog, false, 0, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();

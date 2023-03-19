@@ -26,18 +26,17 @@ namespace BF2D.Game.Combat
         private Action listener = null;
 
         private static CombatManager instance = null;
-        public static CombatManager Instance { get { return CombatManager.instance; } }
+        public static CombatManager Instance { get => CombatManager.instance;  }
 
-        public CharacterCombat CurrentCharacter { get { return this.combatGrid.CurrentCharacter; } }
-        public IEnumerable<CharacterCombat> Players { get { return this.combatGrid.ActivePlayers; } }
-        public int PlayerCount { get { return this.combatGrid.ActivePlayers.Count; } }
-        public IEnumerable<CharacterCombat> Enemies { get { return this.combatGrid.ActiveEnemies; } }
-        public int EnemyCount { get { return this.combatGrid.ActiveEnemies.Count; } }
-        public IEnumerable<CharacterCombat> Characters { get { return this.combatGrid.ActiveCharacters; } }
-        public int CharacterCount { get { return this.combatGrid.ActivePlayers.Count + this.combatGrid.ActiveEnemies.Count; } }
+        public CharacterCombat CurrentCharacter { get => this.combatGrid.CurrentCharacter; }
+        public IEnumerable<CharacterCombat> Players { get =>  this.combatGrid.ActivePlayers;  }
+        public int PlayerCount { get => this.combatGrid.ActivePlayers.Count; }
+        public IEnumerable<CharacterCombat> Enemies { get => this.combatGrid.ActiveEnemies; }
+        public int EnemyCount { get => this.combatGrid.ActiveEnemies.Count; }
+        public IEnumerable<CharacterCombat> Characters { get => this.combatGrid.ActiveCharacters; }
+        public int CharacterCount { get => this.combatGrid.ActivePlayers.Count + this.combatGrid.ActiveEnemies.Count; }
 
-        public CharacterTargeterControl CharacterTargeter { get { return this.characterTargeter; } }
-        public DialogTextbox OrphanedTextbox { get { return this.orphanedTextbox; } }
+        public DialogTextbox OrphanedTextbox { get => this.orphanedTextbox; }
 
         private void Awake()
         {
@@ -60,7 +59,9 @@ namespace BF2D.Game.Combat
                 {
                     Info = itemInfo
                 }
-            });
+            },
+            this.characterTargeter
+            );
         }
 
         public void RunCombatEvents()

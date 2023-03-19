@@ -44,9 +44,9 @@ namespace BF2D.UI
         [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(menuEnabled))]
         [SerializeField] private AudioSource menuAudioSource = null;
         [Tooltip("Enable/disable use of the attack button with the grid")]
-        [SerializeField] private bool attackEnabled = false;
-        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(attackEnabled))]
-        [SerializeField] private AudioSource attackAudioSource = null;
+        [SerializeField] private bool specialEnabled = false;
+        [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(specialEnabled))]
+        [SerializeField] private AudioSource specialAudioSource = null;
         [Tooltip("Enable/disable use of the pause button with the grid")]
         [SerializeField] private bool pauseEnabled = false;
         [ShowIf(ActionOnConditionFail.DontDraw, ConditionOperator.AND, nameof(pauseEnabled))]
@@ -94,7 +94,7 @@ namespace BF2D.UI
         /// <summary>
         /// Enable/disable use of the attack button
         /// </summary>
-        public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
+        public bool SpecialEnabled { get { return this.specialEnabled; } set { this.specialEnabled = value; } }
 
         /// <summary>
         /// Enable/disable use of the pause button
@@ -627,7 +627,7 @@ namespace BF2D.UI
                 InputButton.Confirm => this.confirmAudioSource,
                 InputButton.Back => this.backAudioSource,
                 InputButton.Menu => this.menuAudioSource,
-                InputButton.Attack => this.attackAudioSource,
+                InputButton.Special => this.specialAudioSource,
                 InputButton.Pause => this.pauseAudioSource,
                 InputButton.Select => this.selectAudioSource,
                 _ => throw new ArgumentException("[OptionsGrid:GetAudioSource] InputButton was null or invalid")
@@ -641,7 +641,7 @@ namespace BF2D.UI
                 InputButton.Confirm => this.confirmEnabled,
                 InputButton.Back => this.backEnabled,
                 InputButton.Menu => this.menuEnabled,
-                InputButton.Attack => this.attackEnabled,
+                InputButton.Special => this.specialEnabled,
                 InputButton.Pause => this.pauseEnabled,
                 InputButton.Select => this.selectEnabled,
                 _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputButton was null or invalid")

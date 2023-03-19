@@ -17,6 +17,8 @@ namespace BF2D.Game.Combat
         public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
         [Header("Display")]
         [SerializeField] private CharacterCombat assignedCharacter = null;
+        [Header("Dependency References")]
+        [SerializeField] private CharacterTargeterControl targeter = null;
 
         public override bool Interactable
         {
@@ -74,7 +76,7 @@ namespace BF2D.Game.Combat
 
         public void TargetAssignedCharacter()
         {
-            CombatManager.Instance.CharacterTargeter.SetTargets(new List<CharacterCombat>{ assignedCharacter });
+            this.targeter.SetSingleTarget(this.assignedCharacter);
         }
     }
 }

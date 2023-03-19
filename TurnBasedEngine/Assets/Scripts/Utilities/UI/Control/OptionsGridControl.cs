@@ -44,9 +44,9 @@ namespace BF2D.UI
                 this.controlled.InvokeEvent(InputButton.Menu);
             }
 
-            if (InputManager.Instance.AttackPress)
+            if (InputManager.Instance.SpecialPress)
             {
-                this.controlled.InvokeEvent(InputButton.Attack);
+                this.controlled.InvokeEvent(InputButton.Special);
             }
 
             if (InputManager.Instance.BackPress)

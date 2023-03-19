@@ -22,10 +22,10 @@ namespace BF2D
         [SerializeField] protected bool menuEnabled = true;
         [Tooltip("The actions that will be called on menu")]
         [SerializeField] protected UnityEvent menuEvent = new();
-        public bool AttackEnabled { get { return this.attackEnabled; } set { this.attackEnabled = value; } }
-        [SerializeField] protected bool attackEnabled = true;
+        public bool SpecialEnabled { get { return this.specialEnabled; } set { this.specialEnabled = value; } }
+        [SerializeField] protected bool specialEnabled = true;
         [Tooltip("The actions that will be called on attack")]
-        [SerializeField] protected UnityEvent attackEvent = new();
+        [SerializeField] protected UnityEvent specialEvent = new();
         public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
         [SerializeField] protected bool pauseEnabled = true;
         [Tooltip("The actions that will be performed on pause")]
@@ -43,7 +43,7 @@ namespace BF2D
                 InputButton.Confirm => this.confirmEvent,
                 InputButton.Back => this.backEvent,
                 InputButton.Menu => this.menuEvent,
-                InputButton.Attack => this.attackEvent,
+                InputButton.Special => this.specialEvent,
                 InputButton.Pause => this.pauseEvent,
                 InputButton.Select => this.selectEvent,
                 _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")
@@ -57,7 +57,7 @@ namespace BF2D
                 InputButton.Confirm => this.confirmEnabled,
                 InputButton.Back => this.backEnabled,
                 InputButton.Menu => this.menuEnabled,
-                InputButton.Attack => this.attackEnabled,
+                InputButton.Special => this.specialEnabled,
                 InputButton.Pause => this.pauseEnabled,
                 InputButton.Select => this.selectEnabled,
                 _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")

@@ -129,7 +129,7 @@ namespace BF2D.Game.Combat.Actions
             }
         }
 
-        public void SetupControlled()
+        public void SetupControlled(UIControl targeter)
         {
             switch (this.combatActionType)
             {
@@ -139,7 +139,7 @@ namespace BF2D.Game.Combat.Actions
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
                     if (this.Item.Info.Get().OnUse.TargetedGems.Count > 0)
-                        UIControlsManager.Instance.TakeControl(CombatManager.Instance.CharacterTargeter);
+                        UIControlsManager.Instance.TakeControl(targeter);
                     //TODO
                     break;
                 case CombatActionType.Roster: break;

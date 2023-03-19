@@ -4203,6 +4203,7 @@ MonoBehaviour:
   healthBar: {fileID: 2126148078}
   staminaBar: {fileID: 638673024}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &414519340
 GameObject:
   m_ObjectHideFlags: 0
@@ -9924,6 +9925,7 @@ MonoBehaviour:
   healthBar: {fileID: 2070354626}
   staminaBar: {fileID: 1917493534}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1134178687
 GameObject:
   m_ObjectHideFlags: 0
@@ -10435,6 +10437,7 @@ MonoBehaviour:
   healthBar: {fileID: 774911721}
   staminaBar: {fileID: 1179595716}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1156600424
 GameObject:
   m_ObjectHideFlags: 0
@@ -14729,6 +14732,7 @@ MonoBehaviour:
   healthBar: {fileID: 678724791}
   staminaBar: {fileID: 971239463}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1489394949
 GameObject:
   m_ObjectHideFlags: 0
@@ -15674,6 +15678,7 @@ MonoBehaviour:
   healthBar: {fileID: 756308093}
   staminaBar: {fileID: 1715631141}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1618710030
 GameObject:
   m_ObjectHideFlags: 0
@@ -16881,6 +16886,7 @@ MonoBehaviour:
   healthBar: {fileID: 1812598464}
   staminaBar: {fileID: 1637091305}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1755265841
 GameObject:
   m_ObjectHideFlags: 0
@@ -19607,6 +19613,7 @@ MonoBehaviour:
   healthBar: {fileID: 132148747}
   staminaBar: {fileID: 1643873915}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1 &1995525451
 GameObject:
   m_ObjectHideFlags: 0
@@ -20858,6 +20865,7 @@ MonoBehaviour:
   healthBar: {fileID: 2141569020}
   staminaBar: {fileID: 892433090}
   assignedCharacter: {fileID: 0}
+  targeter: {fileID: 704968162}
 --- !u!1001 &326542518909501781
 PrefabInstance:
   m_ObjectHideFlags: 0
