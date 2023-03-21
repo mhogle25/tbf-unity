@@ -58,6 +58,8 @@ namespace BF2D.Game.Combat
             {
                 if (this.eventStack.Count > 0)
                     this.eventStack.Pop()?.Invoke();
+                else
+                    Terminal.IO.LogWarning("[CharacterCombat:EventStack:Continue] Called while the stack was empty");
             }
 
             public void PushEvent(Action action)
@@ -73,13 +75,13 @@ namespace BF2D.Game.Combat
 
         private readonly EventStack eventStack = new();
 
-        public Actions.CombatAction CurrentCombatAction { get { return this.currentCombatAction; } set { this.currentCombatAction = value; } }
+        public Actions.CombatAction CurrentCombatAction { get => this.currentCombatAction; set => this.currentCombatAction = value; }
         private Actions.CombatAction currentCombatAction = null;
 
-        public CombatGridTile Tile { set { this.assignedTile = value; } }
+        public CombatGridTile Tile { set => this.assignedTile = value; }
         private CombatGridTile assignedTile = null;
 
-        public CharacterStats Stats { get { return this.stats; } set { this.stats = value; } }
+        public CharacterStats Stats { get => this.stats; set => this.stats = value; }
         private CharacterStats stats = null;
 
         private void Awake()
@@ -99,7 +101,7 @@ namespace BF2D.Game.Combat
 
         public void RunCombatEvents()
         {
-            this.eventStack.PushEvent(EOTEvent);
+            this.eventStack.PushEvent(EOTEvent);                            //Finally, end the turn
 
             StagePersistentEffectEvents(StagePersistentEffectEOTEvent);     //Stage EOT persistent effect events
 
@@ -107,8 +109,7 @@ namespace BF2D.Game.Combat
 
             StagePersistentEffectEvents(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
 
-            //Run Combat
-            this.eventStack.Continue();
+            this.eventStack.Continue();                                     //Run Combat
         }
 
         public void Destroy()
@@ -145,7 +146,7 @@ namespace BF2D.Game.Combat
 
         public void AnimSwitchIdle()
         {
-            this.animatorController.ChangeAnimState(BF2D.Game.Strings.Animation.Idle);
+            this.animatorController.ChangeAnimState(Strings.Animation.Idle);
         }
         #endregion
 
@@ -156,9 +157,7 @@ namespace BF2D.Game.Combat
         {
             //Status Effect Event
             foreach (StatusEffectInfo info in this.Stats.StatusEffects)
-            {
                 stagingAction(info.Get());
-            }
 
             //Equipment Event
             foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
@@ -172,7 +171,7 @@ namespace BF2D.Game.Combat
 
                 if (equipment is null)
                 {
-                    Terminal.IO.LogError($"[CharacterCombat:StageEquipmentUpkeep] Tried to get equipment at ID {equipmentID} but failed");
+                    Terminal.IO.LogError($"[CharacterCombat:StageEquipmentUpkeep] The equipment at ID {equipmentID} does not exist");
                     continue;
                 }
 
@@ -194,10 +193,7 @@ namespace BF2D.Game.Combat
 
         private void PlayPersistentEffectEvent(UntargetedGameAction gameAction)
         {
-            PlayDialog(gameAction.Message, () =>
-            {
-                RunUntargetedGems(gameAction.Gems);
-            });
+            PlayDialog(gameAction.Message, () => RunUntargetedGems(gameAction.Gems));
         }
         #endregion
 
@@ -225,9 +221,7 @@ namespace BF2D.Game.Combat
         private void RunUntargetedGems(IEnumerable<CharacterStatsAction> actions)
         {
             foreach (CharacterStatsAction action in actions)
-            {
                 StageUntargetedGems(action);
-            }
 
             this.eventStack.Continue();
         }
@@ -252,9 +246,7 @@ namespace BF2D.Game.Combat
         private void RunTargetedGems(IEnumerable<TargetedCharacterStatsAction> actions)
         {
             foreach (TargetedCharacterStatsAction action in actions)
-            {
                 StageTargetedGems(action);
-            }
 
             this.eventStack.Continue();
         }
@@ -270,6 +262,7 @@ namespace BF2D.Game.Combat
 
                     foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
                     {
+                        //Verify that targets are still valid before executing
                         CharacterCombat verifiedTarget = target;
                         if (target.Stats.Dead)
                         {
@@ -302,6 +295,7 @@ namespace BF2D.Game.Combat
                             }
                         }
 
+                        //Execute
                         verifiedTarget.PlayAnimation(action.Gem.GetAnimationKey());
 
                         CharacterStatsAction.Info info = action.Gem.Run(this.stats, verifiedTarget.Stats);

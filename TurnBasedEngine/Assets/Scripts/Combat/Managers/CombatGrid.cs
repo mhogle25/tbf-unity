@@ -29,7 +29,7 @@ namespace BF2D.Game.Combat
         private int currentCharacterIndex = 0;
 
         #region Getter Setters
-        public List<CharacterCombat> ActivePlayers
+        public CharacterCombat[] ActivePlayers
         {
             get
             {
@@ -39,11 +39,11 @@ namespace BF2D.Game.Combat
                     if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
                         list.Add(tile.AssignedCharacter);
                 }
-                return list;
+                return list.ToArray();
             }
         }
 
-        public List<CharacterCombat> ActiveEnemies
+        public CharacterCombat[] ActiveEnemies
         {
             get
             {
@@ -53,11 +53,11 @@ namespace BF2D.Game.Combat
                     if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
                         list.Add(tile.AssignedCharacter);
                 }
-                return list;
+                return list.ToArray();
             }
         }
 
-        public List<CharacterCombat> ActiveCharacters
+        public CharacterCombat[] ActiveCharacters
         {
             get
             {
@@ -75,49 +75,49 @@ namespace BF2D.Game.Combat
                         list.Add(tile.AssignedCharacter);
                 }
 
-                return list;
+                return list.ToArray();
             }
         }
 
-        private List<CharacterCombat> AllPlayers
+        private CharacterCombat[] AllPlayers
         {
             get
             {
                 List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.playerPlatforms)
-                {
-                    if (tile.AssignedCharacter)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list;
-            }
-        }
-
-        private List<CharacterCombat> AllEnemies
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.enemyPlatforms)
-                {
-                    if (tile.AssignedCharacter)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list;
-            }
-        }
-
-        private List<CharacterCombat> AllCharacters
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-
                 foreach (CombatGridTile tile in this.playerPlatforms)
                 {
                     if (tile.AssignedCharacter)
                         list.Add(tile.AssignedCharacter);
                 }
+                return list.ToArray();
+            }
+        }
+
+        private CharacterCombat[] AllEnemies
+        {
+            get
+            {
+                List<CharacterCombat> list = new();
+                foreach (CombatGridTile tile in this.enemyPlatforms)
+                {
+                    if (tile.AssignedCharacter)
+                        list.Add(tile.AssignedCharacter);
+                }
+                return list.ToArray();
+            }
+        }
+
+        private CharacterCombat[] AllCharacters
+        {
+            get
+            {
+                List<CharacterCombat> list = new();
+
+                foreach (CombatGridTile tile in this.playerPlatforms)
+                {
+                    if (tile.AssignedCharacter)
+                        list.Add(tile.AssignedCharacter);
+                }
 
                 foreach (CombatGridTile tile in this.enemyPlatforms)
                 {
@@ -125,7 +125,7 @@ namespace BF2D.Game.Combat
                         list.Add(tile.AssignedCharacter);
                 }
 
-                return list;
+                return list.ToArray();
             }
         }
 
@@ -338,9 +338,9 @@ namespace BF2D.Game.Combat
 
         private CharacterCombat InstantiateEnemyCombat(CharacterStats enemyStats)
         {
-            CharacterCombat player = Instantiate(this.enemyCombatPrefabsDict[enemyStats.PrefabID]);
-            player.Stats = enemyStats;
-            return player;
+            CharacterCombat enemy = Instantiate(this.enemyCombatPrefabsDict[enemyStats.PrefabID]);
+            enemy.Stats = enemyStats;
+            return enemy;
         }
 
         private bool IsPlayerGridFull()

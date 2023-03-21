@@ -6,31 +6,24 @@ namespace BF2D.UI
 {
     public class UIControlsManager : MonoBehaviour
     {
-        public InputEventsControl EventsControl { get { return this.inputEventsControl; } }
+        public InputEventsControl EventsControl { get => this.inputEventsControl; }
         [SerializeField] private InputEventsControl inputEventsControl = null;
 
-        public static UIControlsManager Instance { get { return UIControlsManager.instance; } }
+        public static UIControlsManager Instance { get => UIControlsManager.instance; }
         private static UIControlsManager instance = null;
 
-        public bool PhantomControlEnabled { get { return this.phantomControl != null; } }
+        public bool PhantomControlEnabled { get => this.phantomControl != null;  }
 
         private void Awake()
         {
-            DontDestroyOnLoad(this.gameObject);
-
             //Setup of Monobehaviour Singleton
-            if (UIControlsManager.instance)
-            {
-                if (UIControlsManager.instance != this)
-                {
-                    Destroy(UIControlsManager.instance.gameObject);
-                }
-            }
+            if (UIControlsManager.instance && UIControlsManager.instance != this)
+                Destroy(UIControlsManager.instance.gameObject);
 
             UIControlsManager.instance = this;
         }
 
-        private readonly Stack<UIControl> controlHistory = new Stack<UIControl>();
+        private readonly Stack<UIControl> controlHistory = new();
         private UIControl currentControl = null;
         private UIControl phantomControl = null;
         private readonly Mutex historyMutex = new();

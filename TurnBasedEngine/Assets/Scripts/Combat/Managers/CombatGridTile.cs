@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
 using UnityEngine.UI;
@@ -14,7 +13,7 @@ namespace BF2D.Game.Combat
         [SerializeField] private Canvas displayCanvas = null;
         [SerializeField] private Slider healthBar = null;
         [SerializeField] private Slider staminaBar = null;
-        public CharacterCombat AssignedCharacter { get { return this.assignedCharacter; } }
+        public CharacterCombat AssignedCharacter { get => this.assignedCharacter; }
         [Header("Display")]
         [SerializeField] private CharacterCombat assignedCharacter = null;
         [Header("Dependency References")]
@@ -22,10 +21,7 @@ namespace BF2D.Game.Combat
 
         public override bool Interactable
         {
-            get
-            {
-                return this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
-            }
+            get => this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
         }
 
         public override bool Setup(Data optionData)

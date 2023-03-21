@@ -30,11 +30,11 @@ namespace BF2D.Game.Combat
 
         public CharacterCombat CurrentCharacter { get => this.combatGrid.CurrentCharacter; }
         public IEnumerable<CharacterCombat> Players { get =>  this.combatGrid.ActivePlayers;  }
-        public int PlayerCount { get => this.combatGrid.ActivePlayers.Count; }
+        public int PlayerCount { get => this.combatGrid.ActivePlayers.Length; }
         public IEnumerable<CharacterCombat> Enemies { get => this.combatGrid.ActiveEnemies; }
-        public int EnemyCount { get => this.combatGrid.ActiveEnemies.Count; }
+        public int EnemyCount { get => this.combatGrid.ActiveEnemies.Length; }
         public IEnumerable<CharacterCombat> Characters { get => this.combatGrid.ActiveCharacters; }
-        public int CharacterCount { get => this.combatGrid.ActivePlayers.Count + this.combatGrid.ActiveEnemies.Count; }
+        public int CharacterCount { get => this.combatGrid.ActivePlayers.Length + this.combatGrid.ActiveEnemies.Length; }
 
         public DialogTextbox OrphanedTextbox { get => this.orphanedTextbox; }
 
@@ -48,7 +48,6 @@ namespace BF2D.Game.Combat
         {
             this.listener?.Invoke();
         }
-
 
         #region Public Utilities
         public void SetupItemCombat(ItemInfo itemInfo)
@@ -157,9 +156,7 @@ namespace BF2D.Game.Combat
         {
             bool enemiesDefeated = true;
             foreach (CharacterCombat enemy in this.Enemies)
-            {
                 enemiesDefeated = enemiesDefeated && enemy.Stats.Dead;
-            }
             return enemiesDefeated;
         }
 
@@ -167,41 +164,33 @@ namespace BF2D.Game.Combat
         {
             bool playersDefeated = true;
             foreach (CharacterCombat player in this.Players)
-            {
                 playersDefeated = playersDefeated && player.Stats.Dead;
-            }
             return playersDefeated;
         }
 
         public bool PlayersAreAtFullHealth
         {
-            get
-            {
-                return CharactersAreAtFullHealth(this.Players);
-            }
+            get => CharactersAreAtFullHealth(this.Players);
         }
 
         public bool EnemiesAreAtFullHealth
         {
-            get
-            {
-                return CharactersAreAtFullHealth(this.Enemies);
-            }
+            get => CharactersAreAtFullHealth(this.Enemies);
         }
 
         public CharacterCombat RandomCharacter()
         {
-            return this.combatGrid.ActiveCharacters[UnityEngine.Random.Range(0, this.combatGrid.ActiveCharacters.Count)];
+            return this.combatGrid.ActiveCharacters[UnityEngine.Random.Range(0, this.combatGrid.ActiveCharacters.Length)];
         }
 
         public CharacterCombat RandomEnemy()
         {
-            return this.combatGrid.ActiveEnemies[UnityEngine.Random.Range(0, this.combatGrid.ActiveEnemies.Count)];
+            return this.combatGrid.ActiveEnemies[UnityEngine.Random.Range(0, this.combatGrid.ActiveEnemies.Length)];
         }
 
         public CharacterCombat RandomPlayer()
         {
-            return this.combatGrid.ActivePlayers[UnityEngine.Random.Range(0, this.combatGrid.ActivePlayers.Count)];
+            return this.combatGrid.ActivePlayers[UnityEngine.Random.Range(0, this.combatGrid.ActivePlayers.Length)];
         }
 
         public bool CharacterIsPlayer(CharacterCombat character)
@@ -272,13 +261,8 @@ namespace BF2D.Game.Combat
         private void SingletonSetup()
         {
             //Setup of Monobehaviour Singleton
-            if (CombatManager.instance)
-            {
-                if (CombatManager.instance != this)
-                {
-                    Destroy(CombatManager.instance.gameObject);
-                }
-            }
+            if (CombatManager.instance && CombatManager.instance != this)
+                Destroy(CombatManager.instance.gameObject);
 
             CombatManager.instance = this;
         }

@@ -1,29 +1,28 @@
 using Newtonsoft.Json;
 using BF2D.Enums;
 using BF2D.Game.Actions;
-using System.Collections.Generic;
 
 namespace BF2D.Game
 {
     public class PersistentEffect : Entity
     {
-        [JsonIgnore] public int SpeedModifier { get { return this.speedModifier; } }
+        [JsonIgnore] public int SpeedModifier { get => this.speedModifier; }
         [JsonProperty] private readonly int speedModifier = 0;
-        [JsonIgnore] public int AttackModifier { get { return this.attackModifier; } }
+        [JsonIgnore] public int AttackModifier { get => this.attackModifier; }
         [JsonProperty] private readonly int attackModifier = 0;
-        [JsonIgnore] public int DefenseModifier { get { return this.defenseModifier; } }
+        [JsonIgnore] public int DefenseModifier { get => this.defenseModifier; }
         [JsonProperty] private readonly int defenseModifier = 0;
-        [JsonIgnore] public int FocusModifier { get { return this.focusModifier; } }
+        [JsonIgnore] public int FocusModifier { get => this.focusModifier; }
         [JsonProperty] private readonly int focusModifier = 0;
-        [JsonIgnore] public int LuckModifier { get { return this.luckModifier; } }
+        [JsonIgnore] public int LuckModifier { get => this.luckModifier; }
         [JsonProperty] private readonly int luckModifier = 0;
-        [JsonIgnore] public int MaxHealthModifier { get { return this.maxHealthModifier; } }
+        [JsonIgnore] public int MaxHealthModifier { get => this.maxHealthModifier; }
         [JsonProperty] private readonly int maxHealthModifier = 0;
-        [JsonIgnore] public int MaxStaminaModifier { get { return this.maxStaminaModifier; } }
+        [JsonIgnore] public int MaxStaminaModifier { get => this.maxStaminaModifier; }
         [JsonProperty] private readonly int maxStaminaModifier = 0;
-        [JsonIgnore] public UntargetedGameAction OnUpkeep { get { return this.onUpkeep; } }
+        [JsonIgnore] public UntargetedGameAction OnUpkeep { get => this.onUpkeep; }
         [JsonProperty] private readonly UntargetedGameAction onUpkeep = null;
-        [JsonIgnore] public UntargetedGameAction OnEOT { get { return this.onEOT; } }
+        [JsonIgnore] public UntargetedGameAction OnEOT { get => this.onEOT; }
         [JsonProperty] private readonly UntargetedGameAction onEOT = null;
 
         public bool UpkeepEventExists()

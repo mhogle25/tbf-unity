@@ -62,10 +62,8 @@ namespace BF2D.Game
         private void Awake()
         {
             //Setup of Monobehaviour Singleton
-            if (GameInfo.instance != this && GameInfo.instance != null)
-            {
+            if (GameInfo.instance && GameInfo.instance != this)
                 Destroy(GameInfo.instance.gameObject);
-            }
 
             GameInfo.instance = this;
         }
@@ -74,9 +72,7 @@ namespace BF2D.Game
         public void ClearCaches()
         {
             foreach (ICache cache in this.externalCaches)
-            {
                 cache.Clear();
-            }
 
             this.playerTemplates.Clear();
             this.enemyTemplates.Clear();
@@ -128,7 +124,7 @@ namespace BF2D.Game
             }
 
             this.currentSave.ID = id;
-            string newJSON = BF2D.Utilities.JSON.SerializeObject(this.currentSave);
+            string newJSON = JSON.SerializeObject(this.currentSave);
             this.saveFilesManager.WriteToFile(newJSON, id);
             Terminal.IO.LogQuiet($"Saved to file with ID '{id}'");
         }
@@ -203,6 +199,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:GetIcon] ID '{id}' was invalid");
                 return null;
             }
+
             return this.iconCollection[id];
         }
 
@@ -213,6 +210,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:GetSoundEffect] ID '{id}' was invalid");
                 return null;
             }
+
             return this.soundEffectCollection[id];
         }
 
@@ -223,6 +221,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
                 return null;
             }
+
             return this.itemTemplates.Get(id, this.itemsFileManager);
         }
 
@@ -233,6 +232,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:GetEquipment] ID '{id}' was invalid");
                 return null;
             }
+
             return this.equipments.Get(id, this.equipmentsFileManager);
         }
 
@@ -243,6 +243,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:GetStatusEffect] ID '{id}' was invalid");
                 return null;
             }
+
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
         }
 
@@ -253,6 +254,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:GetCharacterStatsAction] ID '{id}' was invalid");
                 return null;
             }
+
             return this.gems.Get(id, this.gemsFileManager);
         }
 
@@ -262,6 +264,7 @@ namespace BF2D.Game
             {
                 Terminal.IO.LogWarning($"[GameInfo:GetJob] ID '{id}' was invalid");
             }
+
             return this.jobs.Get(id, this.jobsFileManager);
         }
 
@@ -286,6 +289,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");
                 return;
             }
+
             newPlayer.SetName(newName);
             this.currentSave.AddPlayer(newPlayer);
         }
@@ -298,9 +302,8 @@ namespace BF2D.Game
         public Combat.CombatManager.InitializeInfo UnstageCombatInfo()
         {
             if (this.queuedCombats.Count < 1)
-            {
                 return null;
-            }
+
             return this.queuedCombats.Dequeue();
         }
         #endregion
@@ -313,6 +316,7 @@ namespace BF2D.Game
                 Terminal.IO.LogWarning($"[GameInfo:InstantiatePlayer] ID '{id}' was invalid");
                 return null;
             }
+
             CharacterStats player = this.playerTemplates.Get(id, this.playersFileManager);
             return player.Setup();
         }
@@ -332,7 +336,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            SaveData saveData = BF2D.Utilities.JSON.DeserializeString<SaveData>(content);
+            SaveData saveData = JSON.DeserializeString<SaveData>(content);
             if (saveData is null)
             {
                 Terminal.IO.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");
