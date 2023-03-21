@@ -152,24 +152,12 @@ namespace BF2D.Game.Combat
         //Private Methods
 
         #region Stage and Run Persistent Effect Events
-        private void StagePersistentEffectEvents(Action<PersistentEffect, Action> stagingAction)
+        private void StagePersistentEffectEvents(Action<PersistentEffect> stagingAction)
         {
             //Status Effect Event
             foreach (StatusEffectInfo info in this.Stats.StatusEffects)
             {
-                stagingAction(info.Get(), () => 
-                {
-                    info.Use();
-                    if (info.RemainingDuration == 0)
-                    {
-                        this.eventStack.PushEvent(() =>
-                        {
-                            this.Stats.RemoveStatusEffect(info);
-                            PlayMessage($"The {info.Get().Name} on {this.Stats.Name} wore off. {Strings.DialogTextbox.BriefPause}", this.eventStack.Continue);
-                        });
-
-                    }
-                });
+                stagingAction(info.Get());
             }
 
             //Equipment Event
@@ -177,7 +165,7 @@ namespace BF2D.Game.Combat
             {
                 string equipmentID = this.Stats.GetEquipped(equipmentType);
 
-                if (equipmentID == string.Empty || equipmentID is null)
+                if (string.IsNullOrEmpty(equipmentID))
                     continue;
 
                 Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
@@ -188,28 +176,20 @@ namespace BF2D.Game.Combat
                     continue;
                 }
 
-                stagingAction(equipment, null);
+                stagingAction(equipment);
             }
         }
 
-        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect, Action callback)
+        private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect)
         {
             if (persistentEffect.UpkeepEventExists())
-                this.eventStack.PushEvent(() =>
-                {
-                    callback?.Invoke();
-                    PlayPersistentEffectEvent(persistentEffect.OnUpkeep);
-                });
+                this.eventStack.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnUpkeep));
         }
 
-        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect, Action callback)
+        private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect)
         {
             if (persistentEffect.EOTEventExists())
-                this.eventStack.PushEvent(() =>
-                {
-                    callback?.Invoke();
-                    PlayPersistentEffectEvent(persistentEffect.OnEOT);
-                });
+                this.eventStack.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnEOT));
         }
 
         private void PlayPersistentEffectEvent(UntargetedGameAction gameAction)
@@ -404,7 +384,24 @@ namespace BF2D.Game.Combat
         #region EOC and EOT
         private void EOTEvent()
         {
-            CombatManager.Instance.PassTurn();
+            //Finally, pass the turn
+            this.eventStack.PushEvent(CombatManager.Instance.PassTurn);
+
+            //Cleanup status effects
+            foreach (StatusEffectInfo info in this.Stats.StatusEffects)
+            {
+                StatusEffect statusEffect = info.Use();
+                if (info.RemainingDuration == 0)
+                {
+                    this.eventStack.PushEvent(() =>
+                    {
+                        this.Stats.RemoveStatusEffect(info);
+                        PlayMessage($"The {statusEffect.Name} on {this.Stats.Name} wore off. {Strings.DialogTextbox.BriefPause}", this.eventStack.Continue);
+                    });
+                }
+            }
+
+            this.eventStack.Continue();
         }
 
         private void EOCEvent()

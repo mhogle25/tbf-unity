@@ -15,12 +15,13 @@ namespace BF2D.Game
             this.remainingDuration = Get().Duration;
         }
 
-        public void Use()
+        public StatusEffect Use()
         {
-            if (this.remainingDuration < 0)
-                return;
+            if (this.remainingDuration < 1)
+                return Get();
 
             this.remainingDuration--;
+            return Get();
         }
     }
 }
