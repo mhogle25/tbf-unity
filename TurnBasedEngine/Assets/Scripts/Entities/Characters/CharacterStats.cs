@@ -475,7 +475,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:AcquireEquipment] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
+                Terminal.IO.LogError($"[CharacterStats:RemoveEquipment] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
                 return null;
             }
 
