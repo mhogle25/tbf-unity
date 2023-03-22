@@ -15,20 +15,20 @@ namespace BF2D.Utilities
         public override Dictionary<string, List<string>> LoadFilesLined()
         {
             Dictionary<string, List<string>> data = new();
-            BF2D.Utilities.TextFile.LoadTextFiles(data, Path.Combine(GetPathPrefix(), this.path));
+            BF2D.Utilities.TextFile.LoadTextFiles(data, GetPathPrefix() + '/' + this.path);
             return data;
         }
 
         public override Dictionary<string, string> LoadFiles()
         {
             Dictionary<string, string> data = new();
-            BF2D.Utilities.TextFile.LoadTextFiles(data, Path.Combine(GetPathPrefix(), this.path));
+            BF2D.Utilities.TextFile.LoadTextFiles(data, GetPathPrefix() + '/' + this.path);
             return data;
         }
 
         public override string LoadFile(string id)
         {
-            return BF2D.Utilities.TextFile.LoadFile(Path.Combine(GetPathPrefix(), this.path, $"{id}.{this.fileExtension}"));
+            return BF2D.Utilities.TextFile.LoadFile(GetPathPrefix() + '/' + this.path + '/' + $"{id}.{this.fileExtension}");
         }   
 
         public void WriteToFile(string content, string id)
@@ -39,7 +39,7 @@ namespace BF2D.Utilities
                 return;
             }
 
-            StreamWriter writer = new StreamWriter(Path.Combine(Application.persistentDataPath, this.path, $"{id}.{this.fileExtension}"), false);
+            StreamWriter writer = new(Application.persistentDataPath + '/' + this.path + '/' + $"{id}.{this.fileExtension}", false);
             writer.WriteLine(content);
             writer.Close();
         }
