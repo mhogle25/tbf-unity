@@ -28,12 +28,11 @@ namespace BF2D.Game
         [SerializeField] private FileManager gemsFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public IEnumerable<CharacterStats> ActivePlayers { get => this.currentSave?.ActivePlayers; }
-        public IEnumerable<CharacterStats> InactivePlayers { get => this.currentSave?.InactivePlayers; }
-        public IItemHolder Bag { get => this.currentSave?.Bag; }
+        public IEnumerable<CharacterStats> ActivePlayers { get => this.currentSave?.Party.ActiveCharacters; }
+        public IItemHolder Bag { get => this.currentSave?.Party.Bag; }
         public bool SaveActive { get => this.currentSave is not null; }
-        public int Currency { get => this.currentSave.Currency; set => this.currentSave.Currency = value; }
-        public int Ether { get => this.currentSave.Ether; set => this.currentSave.Ether = value; }
+        public int Currency { get => this.currentSave.Party.Currency; set => this.currentSave.Party.Currency = value; }
+        public int Ether { get => this.currentSave.Party.Ether; set => this.currentSave.Party.Ether = value; }
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)
@@ -290,8 +289,8 @@ namespace BF2D.Game
                 return;
             }
 
-            newPlayer.SetName(newName);
-            this.currentSave.AddPlayer(newPlayer);
+            newPlayer.Name = newName;
+            this.currentSave.Party.AddCharacter(newPlayer);
         }
 
         public void StageCombatInfo(Combat.CombatManager.InitializeInfo info)
@@ -343,7 +342,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            foreach (CharacterStats character in saveData.ActivePlayers)
+            foreach (CharacterStats character in saveData.Party.ActiveCharacters)
                 character.Setup();
 
             return saveData;

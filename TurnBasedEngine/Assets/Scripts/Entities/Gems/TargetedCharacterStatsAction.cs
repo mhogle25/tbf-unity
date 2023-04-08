@@ -11,22 +11,22 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class TargetedCharacterStatsAction
     {
-        [JsonIgnore] public CharacterTarget Target { get { return this.target; } }
+        [JsonIgnore] public CharacterTarget Target { get => this.target; }
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
-        [JsonIgnore] public string Description { get { return this.description.Wash(); } }
+        [JsonIgnore] public string Description { get => this.description.Wash(); }
         [JsonProperty] private readonly string description = "target";
-        [JsonIgnore] public CharacterStatsAction Gem { get { return GameInfo.Instance.GetGem(this.gemID); } }
+        [JsonIgnore] public CharacterStatsAction Gem { get => GameInfo.Instance.GetGem(this.gemID); }
         [JsonProperty] private readonly string gemID = string.Empty;
 
-        [JsonIgnore] public CharacterTargetInfo TargetInfo { get { return this.targetInfo; } }
+        [JsonIgnore] public CharacterTargetInfo TargetInfo { get => this.targetInfo; }
         [JsonIgnore] private readonly CharacterTargetInfo targetInfo = new();
 
         [JsonIgnore] public bool CombatExclusive
         {
-            get
-            {
-                return this.Target == CharacterTarget.Opponent || this.Target == CharacterTarget.AllOpponents || this.Target == CharacterTarget.RandomOpponent;
-            }
+            get =>
+                this.Target == CharacterTarget.Opponent ||
+                this.Target == CharacterTarget.AllOpponents ||
+                this.Target == CharacterTarget.RandomOpponent;
         }
     }
 }

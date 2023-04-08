@@ -22,7 +22,7 @@ namespace BF2D.Game.Actions
                 return this.cached;
             } 
         }
-        [JsonProperty] private readonly List<string> gemIDs = new();
+        [JsonProperty] private readonly string[] gemIDs = { };
         [JsonIgnore] private readonly List<CharacterStatsAction> cached = new();
 
         public void Clear()

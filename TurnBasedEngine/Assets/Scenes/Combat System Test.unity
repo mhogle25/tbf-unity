@@ -2516,8 +2516,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1961517512367908304}
   menuEnabled: 0
   menuAudioSource: {fileID: 1961517511481354188}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 1961517511117693437}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1961517510903628199}
   selectEnabled: 0
@@ -2719,8 +2719,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1135467735}
   menuEnabled: 0
   menuAudioSource: {fileID: 1411110300}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 2084542508}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1226578852}
   selectEnabled: 0
@@ -3666,8 +3666,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 429335553}
   menuEnabled: 0
   menuAudioSource: {fileID: 223300813}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 379577771}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1102578548}
   selectEnabled: 0
@@ -4185,8 +4185,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -5815,8 +5815,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1961517512367908304}
   menuEnabled: 0
   menuAudioSource: {fileID: 1961517511481354188}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 1961517511117693437}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1961517510903628199}
   selectEnabled: 0
@@ -9907,8 +9907,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -10419,8 +10419,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -10843,8 +10843,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1961517512367908304}
   menuEnabled: 0
   menuAudioSource: {fileID: 1961517511481354188}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 1961517511117693437}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1961517510903628199}
   selectEnabled: 0
@@ -12631,8 +12631,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1030562321}
   menuEnabled: 0
   menuAudioSource: {fileID: 0}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 0}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
@@ -13992,8 +13992,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1030562321}
   menuEnabled: 0
   menuAudioSource: {fileID: 0}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 0}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
@@ -14714,8 +14714,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -15343,8 +15343,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1030562321}
   menuEnabled: 0
   menuAudioSource: {fileID: 0}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 0}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 0}
   selectEnabled: 0
@@ -15660,8 +15660,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -16868,8 +16868,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -19595,8 +19595,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -20847,8 +20847,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -22120,11 +22120,6 @@ AudioSource:
   m_CorrespondingSourceObject: {fileID: 2283511345958684388, guid: d1edccc43d1499a498b399eebdc54e38, type: 3}
   m_PrefabInstance: {fileID: 326542518909501781}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &1961517511117693437 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2283511346039972008, guid: d1edccc43d1499a498b399eebdc54e38, type: 3}
-  m_PrefabInstance: {fileID: 326542518909501781}
-  m_PrefabAsset: {fileID: 0}
 --- !u!82 &1961517511481354188 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 2283511345668449945, guid: d1edccc43d1499a498b399eebdc54e38, type: 3}
@@ -22980,8 +22975,8 @@ MonoBehaviour:
   backAudioSource: {fileID: 1611053262712229090}
   menuEnabled: 0
   menuAudioSource: {fileID: 1611053263612415742}
-  attackEnabled: 0
-  attackAudioSource: {fileID: 1611053263442348239}
+  specialEnabled: 0
+  specialAudioSource: {fileID: 0}
   pauseEnabled: 0
   pauseAudioSource: {fileID: 1611053264173361301}
   selectEnabled: 0

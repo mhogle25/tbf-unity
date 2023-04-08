@@ -1,8 +1,7 @@
-using BF2D.Enums;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.Net;
 
 namespace BF2D.Game
 {
@@ -24,9 +23,9 @@ namespace BF2D.Game
             }
         }
 
-        [JsonProperty] private readonly float initLevelUpAmount = 10f;
+        [JsonProperty] private readonly long initLevelUpAmount = 3;
         [JsonProperty] private readonly float levelUpRate = 1.7f;
-        [JsonProperty] private int experienceAwardDivisor = 3;
+        [JsonProperty] private readonly int experienceAward = 1;
 
         [JsonProperty]
         private readonly Rate maxHealthRate = new()
@@ -91,159 +90,87 @@ namespace BF2D.Game
             amount = 1,
         };
 
-        public int GetLevel(int experience)
-        {
-            int level = 1;
-            float levelUpAmount = this.initLevelUpAmount;
+        public long ExperienceAward => this.experienceAward;
 
-            while (experience > levelUpAmount)
+        public int GetMaxHealthModifier(int level)
+        {
+            return Calculate(level, this.maxHealthRate, (levelUpEvent) => levelUpEvent.maxHealth);
+        }
+
+        public int GetMaxStaminaModifier(int level)
+        {
+            return Calculate(level, this.maxStaminaRate, (levelUpEvent) => levelUpEvent.maxStamina);
+        }
+
+        public int GetSpeedModifier(int level)
+        {
+            return Calculate(level, this.speedRate, (levelUpEvent) => levelUpEvent.speed);
+        }
+
+        public int GetAttackModifier(int level)
+        {
+            return Calculate(level, this.attackRate, (levelUpEvent) => levelUpEvent.attack);
+        }
+
+        public int GetDefenseModifier(int level)
+        {
+            return Calculate(level, this.defenseRate, (levelUpEvent) => levelUpEvent.defense);
+        }
+
+        public int GetFocusModifier(int level)
+        {
+            return Calculate(level, this.focusRate, (levelUpEvent) => levelUpEvent.focus);
+        }
+
+        public int GetLuckModifier(int level)
+        {
+            return Calculate(level, this.luckRate, (levelUpEvent) => levelUpEvent.luck);
+        }
+
+        public int GetCritMultiplier(int level)
+        {
+            return Numbers.BaseCritMultiplier + Calculate(level, this.critMultiplierRate, (levelUpEvent) => levelUpEvent.critMultiplier);
+        }
+
+        public int GetCritChance(int level)
+        {
+            return Numbers.BaseCritChance + Calculate(level, this.critChanceRate, (levelUpEvent) => levelUpEvent.critChance);
+        }
+
+        public bool LevelUpdate(ref long experience, ref int level)
+        {
+            float newLevelUpAmount = this.initLevelUpAmount;
+
+            for (int i = 1; i < level; i++)
+                newLevelUpAmount *= this.levelUpRate;
+
+            if (experience > newLevelUpAmount)
             {
+                experience = 0;
                 level++;
-                levelUpAmount *= this.levelUpRate;
+                return true;
             }
 
-            return level;
+            return false;
         }
 
-        public void ForEachLevel(int experience, Action<int> action)
-        {
-            int level = 1;
-            float levelUpAmount = this.initLevelUpAmount;
-
-            while (experience > levelUpAmount)
-            {
-                action?.Invoke(level);
-                level++;
-                levelUpAmount *= this.levelUpRate;
-            }
-        }
-
-        public int GetMaxHealthModifier(int experience)
-        {
-            return Calculate(experience, this.maxHealthRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.maxHealth;
-            });
-        }
-
-        public int GetMaxStaminaModifier(int experience)
-        {
-            return Calculate(experience, this.maxStaminaRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.maxStamina;
-            });
-        }
-
-        public int GetSpeedModifier(int experience)
-        {
-            return Calculate(experience, this.speedRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.speed;
-            });
-        }
-
-        public int GetAttackModifier(int experience)
-        {
-            return Calculate(experience, this.attackRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.attack;
-            });
-        }
-
-        public int GetDefenseModifier(int experience)
-        {
-            return Calculate(experience, this.defenseRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.defense;
-            });
-        }
-
-        public int GetFocusModifier(int experience)
-        {
-            return Calculate(experience, this.focusRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.focus;
-            });
-        }
-
-        public int GetLuckModifier(int experience)
-        {
-            return Calculate(experience, this.luckRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.luck;
-            });
-        }
-
-        public int GetCritMultiplier(int experience)
-        {
-            return Numbers.BaseCritMultiplier + Calculate(experience, this.critMultiplierRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.critMultiplier;
-            });
-        }
-
-        public int GetCritChance(int experience)
-        {
-            return Numbers.BaseCritChance + Calculate(experience, this.critChanceRate, (level) =>
-            {
-                LevelUpEvent levelUpEvent = GetLevelUpEvent(level);
-                if (levelUpEvent is null)
-                    return 0;
-                return levelUpEvent.critChance;
-            });
-        }
-
-        public int GetExperienceAward(int experience)
-        {
-            int modifier = 0;
-            LevelUpEvent levelup = GetLevelUpEvent(GetLevel(experience));
-            if (levelup is not null)
-                modifier = levelup.experienceAwardDivisor;
-
-            return experience / (this.experienceAwardDivisor + modifier);
-        }
-
-        public string GetLevelUpMessage(int previousExperience, int currentExperience)
+        public string GetLevelUpMessage(int previousLevel, int currentLevel)
         {
             string statsMessage = string.Empty;
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.MaxHealth + Strings.CharacterStats.MaxHealthSymbol, GetMaxHealthModifier(previousExperience), GetMaxHealthModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.MaxStamina + Strings.CharacterStats.MaxStaminaSymbol, GetMaxStaminaModifier(previousExperience), GetMaxStaminaModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Speed + Strings.CharacterStats.SpeedSymbol, GetSpeedModifier(previousExperience), GetSpeedModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Attack + Strings.CharacterStats.AttackSymbol, GetAttackModifier(previousExperience), GetAttackModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Defense + Strings.CharacterStats.DefenseSymbol, GetDefenseModifier(previousExperience), GetDefenseModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Focus + Strings.CharacterStats.FocusSymbol, GetFocusModifier(previousExperience), GetFocusModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.Luck + Strings.CharacterStats.LuckSymbol, GetLuckModifier(previousExperience), GetLuckModifier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.CritMultiplier.ToLower(), GetCritMultiplier(previousExperience), GetCritMultiplier(currentExperience));
-            statsMessage += GetLevelUpDialogHelper(Strings.CharacterStats.CritChance.ToLower(), GetCritChance(previousExperience), GetCritChance(currentExperience));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.MaxHealth + Strings.CharacterStats.MaxHealthSymbol, GetMaxHealthModifier(previousLevel), GetMaxHealthModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.MaxStamina + Strings.CharacterStats.MaxStaminaSymbol, GetMaxStaminaModifier(previousLevel), GetMaxStaminaModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.Speed + Strings.CharacterStats.SpeedSymbol, GetSpeedModifier(previousLevel), GetSpeedModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.Attack + Strings.CharacterStats.AttackSymbol, GetAttackModifier(previousLevel), GetAttackModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.Defense + Strings.CharacterStats.DefenseSymbol, GetDefenseModifier(previousLevel), GetDefenseModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.Focus + Strings.CharacterStats.FocusSymbol, GetFocusModifier(previousLevel), GetFocusModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.Luck + Strings.CharacterStats.LuckSymbol, GetLuckModifier(previousLevel), GetLuckModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.CritMultiplier.ToLower(), GetCritMultiplier(previousLevel), GetCritMultiplier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.CritChance.ToLower(), GetCritChance(previousLevel), GetCritChance(currentLevel));
 
             return statsMessage;
         }
 
-        private string GetLevelUpDialogHelper(string label, int previousValue, int currentValue)
+        private string LevelUpMessageHelper(string label, long previousValue, long currentValue)
         {
             string modified = string.Empty;
             if (previousValue == currentValue)
@@ -252,32 +179,11 @@ namespace BF2D.Game
                 modified = "increased";
             if (previousValue > currentValue)
                 modified = "decreased";
-            return $"[I:0]'s {label} {modified} by {currentValue - previousValue}. [P:0.2]";
-        }
-
-        private int Calculate(int experience, Rate rate, Func<int, int> forEach)
-        {
-            int value = 0;
-            int skipCount = 0;
-            ForEachLevel(experience, (level) =>
-            {
-                value += forEach.Invoke(level);
-
-                if (rate.skip > skipCount)
-                {
-                    skipCount++;
-                    return;
-                }
-                skipCount = 0;
-                value += rate.amount;
-            });
-
-            return value;
+            return $"[I:0]'s {label} {modified} by {Math.Abs(currentValue - previousValue)}. {Strings.DialogTextbox.BriefPause}";
         }
         #endregion
 
         #region Utilities
-
         [Serializable]
         private class LevelUpEvent
         {
@@ -296,12 +202,42 @@ namespace BF2D.Game
         }
 
         [JsonProperty] private readonly List<LevelUpEvent> levelUpEvents = new();
+        [JsonIgnore] private readonly Dictionary<int, List<LevelUpEvent>> levelUpEventsDict = new();
 
-        private LevelUpEvent GetLevelUpEvent(int level)
+        private int Calculate(int level, Rate rate, Func<LevelUpEvent, int> forEach)
         {
-            return this.levelUpEvents.Find((levelUpEvent) => levelUpEvent.level == level);
+            if (levelUpEventsDict.Count < 1)
+                LoadLevelUpEvents();
+
+            int value = 0;
+            for (int i = 1, skipCount = 0; i <= level; i++, skipCount++)
+            {
+                if (this.levelUpEventsDict.ContainsKey(i))
+                    foreach (LevelUpEvent levelUpEvent in this.levelUpEventsDict[i])
+                        value += forEach(levelUpEvent);
+
+                if (skipCount >= rate.skip)
+                {
+                    skipCount = 0;
+                    value += rate.amount;
+                }
+            }
+            return value;
         }
 
+        private void LoadLevelUpEvents()
+        {
+            this.levelUpEventsDict.Clear();
+            foreach (LevelUpEvent levelUpEvent in this.levelUpEvents)
+            {
+                if (this.levelUpEventsDict.ContainsKey(levelUpEvent.level))
+                {
+                    this.levelUpEventsDict[levelUpEvent.level].Add(levelUpEvent);
+                    continue;
+                }
+                this.levelUpEventsDict[levelUpEvent.level] = new() { levelUpEvent };
+            }
+        }
         #endregion
     }
 }

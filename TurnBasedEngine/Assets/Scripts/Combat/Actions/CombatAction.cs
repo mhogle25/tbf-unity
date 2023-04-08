@@ -7,8 +7,8 @@ namespace BF2D.Game.Combat.Actions
 {
     public class CombatAction
     {
-        public CombatActionType CombatActionType { get { return this.combatActionType; } }
-        private CombatActionType combatActionType = CombatActionType.Event;
+        public CombatActionType Type => this.type;
+        private CombatActionType type = CombatActionType.Event;
         /// <summary>
         /// Resets all other combat action types referenced in this object
         /// </summary>
@@ -16,12 +16,11 @@ namespace BF2D.Game.Combat.Actions
         { 
             get 
             { 
-                return this.actCombatAction; 
+                return this.Type == CombatActionType.Act ? this.actCombatAction : null; 
             } 
             set 
             {
-                this.combatActionType = CombatActionType.Act;
-                ResetInfos();
+                this.type = CombatActionType.Act;
                 this.actCombatAction = value;
             } 
         }
@@ -33,12 +32,11 @@ namespace BF2D.Game.Combat.Actions
         { 
             get 
             { 
-                return this.equipCombatAction; 
+                return this.Type == CombatActionType.Equip ? this.equipCombatAction : null; 
             } 
             set 
             {
-                this.combatActionType = CombatActionType.Equip;
-                ResetInfos();
+                this.type = CombatActionType.Equip;
                 this.equipCombatAction = value; 
             } 
         }
@@ -49,12 +47,11 @@ namespace BF2D.Game.Combat.Actions
         public EventCombatActionInfo Event { 
             get 
             { 
-                return this.eventCombatAction; 
+                return this.Type == CombatActionType.Event ? this.eventCombatAction : null; 
             } 
             set
             {
-                this.combatActionType = CombatActionType.Event;
-                ResetInfos();
+                this.type = CombatActionType.Event;
                 this.eventCombatAction = value; 
             } 
         }
@@ -66,12 +63,11 @@ namespace BF2D.Game.Combat.Actions
         { 
             get 
             { 
-                return this.fleeCombatAction; 
+                return this.Type == CombatActionType.Flee ? this.fleeCombatAction : null; 
             } 
             set
             {
-                this.combatActionType = CombatActionType.Flee;
-                ResetInfos();
+                this.type = CombatActionType.Flee;
                 this.fleeCombatAction = value; 
             } 
         }
@@ -83,12 +79,11 @@ namespace BF2D.Game.Combat.Actions
         { 
             get 
             { 
-                return this.itemCombatAction; 
+                return this.Type == CombatActionType.Item ? this.itemCombatAction : null; 
             } 
             set
             {
-                this.combatActionType = CombatActionType.Item;
-                ResetInfos();
+                this.type = CombatActionType.Item;
                 this.itemCombatAction = value; 
             } 
         }
@@ -100,13 +95,12 @@ namespace BF2D.Game.Combat.Actions
         { 
             get 
             { 
-                return this.rosterCombatAction; 
+                return this.Type == CombatActionType.Roster ? this.rosterCombatAction : null; 
             } 
             set 
             {
 
-                this.combatActionType = CombatActionType.Roster;
-                ResetInfos();
+                this.type = CombatActionType.Roster;
                 this.rosterCombatAction = value;
             } 
         }
@@ -116,7 +110,7 @@ namespace BF2D.Game.Combat.Actions
         {
             get
             {
-                return this.combatActionType switch
+                return this.type switch
                 {
                     CombatActionType.Flee => this.Flee,
                     CombatActionType.Act => this.Act,
@@ -131,14 +125,14 @@ namespace BF2D.Game.Combat.Actions
 
         public void SetupControlled(UIControl targeter)
         {
-            switch (this.combatActionType)
+            switch (this.type)
             {
                 case CombatActionType.Act: break;   //TODO
                 case CombatActionType.Equip: break; //TODO
                 case CombatActionType.Event: break; //TODO
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
-                    if (this.Item.Info.Get().OnUse.TargetedGems.Count > 0)
+                    if (this.Item.HasGems)
                         UIControlsManager.Instance.TakeControl(targeter);
                     //TODO
                     break;
@@ -148,14 +142,14 @@ namespace BF2D.Game.Combat.Actions
 
         public void SetupAI(CharacterCombatAI ai)
         {
-            switch (this.combatActionType)
+            switch (this.type)
             {
                 case CombatActionType.Act: break;   //TODO
                 case CombatActionType.Equip: break; //TODO
                 case CombatActionType.Event: break; //TODO
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
-                    if (this.Item.Info.Get().OnUse.TargetedGems.Count > 0)
+                    if (this.Item.HasGems)
                         ai.SetupTargetedGems();
                     //TODO
                     break;
@@ -165,36 +159,23 @@ namespace BF2D.Game.Combat.Actions
 
         public IEnumerable<TargetedCharacterStatsAction> GetTargetedGems()
         {
-            switch (this.combatActionType)
+            switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.itemCombatAction.Info.Get()?.OnUse.TargetedGems;
+                case CombatActionType.Item: return this.Item.Gems;
                 default: Terminal.IO.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }
-
         
 
         public IEnumerable<TargetedCharacterStatsAction> UseTargetedGems()
         {
-            switch (this.combatActionType)
+            switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.itemCombatAction.Info.Use(CombatManager.Instance.CurrentCharacter.Stats.Items).OnUse.TargetedGems;
+                case CombatActionType.Item: return this.Item.UseGems();
                 default: Terminal.IO.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
-        }
-
-
-
-        private void ResetInfos()
-        {
-            this.actCombatAction = null;
-            this.equipCombatAction = null;
-            this.eventCombatAction = null;
-            this.fleeCombatAction = null;
-            this.itemCombatAction = null;
-            this.rosterCombatAction = null;
         }
     }
 }

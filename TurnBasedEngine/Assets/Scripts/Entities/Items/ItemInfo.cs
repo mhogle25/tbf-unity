@@ -39,13 +39,13 @@ namespace BF2D.Game
         public ItemInfo(string id, Item customData)
         {
             this.id = id;
-            this.custom = BF2D.Utilities.JSON.SerializeObject(customData);
+            this.custom = Utilities.JSON.SerializeObject(customData);
         }
 
         public Item Get()
         {
             if (this.custom is not null)
-                this.staged ??= BF2D.Utilities.JSON.DeserializeString<Item>(this.custom.ToString());
+                this.staged ??= Utilities.JSON.DeserializeString<Item>(this.custom.ToString());
             else 
                 this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
 

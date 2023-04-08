@@ -3,6 +3,7 @@
     [
         "Restoration"
     ],
+    "name":"Paladin",
     "maxHealthRate": 
     {
         "skip":1,

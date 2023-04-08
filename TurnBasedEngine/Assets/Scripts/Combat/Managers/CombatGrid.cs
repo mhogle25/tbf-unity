@@ -29,102 +29,28 @@ namespace BF2D.Game.Combat
         private int currentCharacterIndex = 0;
 
         #region Getter Setters
-        public CharacterCombat[] ActivePlayers
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.playerPlatforms)
-                {
-                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list.ToArray();
-            }
-        }
-
-        public CharacterCombat[] ActiveEnemies
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.enemyPlatforms)
-                {
-                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list.ToArray();
-            }
-        }
-
+        public CharacterCombat[] ActivePlayers => CreateCharacterList(this.playerPlatforms, tile => !tile.AssignedCharacter.Stats.Dead).ToArray();
+        public CharacterCombat[] ActiveEnemies => CreateCharacterList(this.enemyPlatforms, tile => !tile.AssignedCharacter.Stats.Dead).ToArray();
         public CharacterCombat[] ActiveCharacters
         {
             get
             {
                 List<CharacterCombat> list = new();
-
-                foreach (CombatGridTile tile in this.playerPlatforms)
-                {
-                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
-                        list.Add(tile.AssignedCharacter);
-                }
-
-                foreach (CombatGridTile tile in this.enemyPlatforms)
-                {
-                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
-                        list.Add(tile.AssignedCharacter);
-                }
-
+                FillCharacterList(this.playerPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list).ToArray();
+                FillCharacterList(this.enemyPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list).ToArray();
                 return list.ToArray();
             }
         }
 
-        private CharacterCombat[] AllPlayers
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.playerPlatforms)
-                {
-                    if (tile.AssignedCharacter)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list.ToArray();
-            }
-        }
-
-        private CharacterCombat[] AllEnemies
-        {
-            get
-            {
-                List<CharacterCombat> list = new();
-                foreach (CombatGridTile tile in this.enemyPlatforms)
-                {
-                    if (tile.AssignedCharacter)
-                        list.Add(tile.AssignedCharacter);
-                }
-                return list.ToArray();
-            }
-        }
-
+        private CharacterCombat[] AllPlayers => CreateCharacterList(this.playerPlatforms, tile => true).ToArray();
+        private CharacterCombat[] AllEnemies => CreateCharacterList(this.enemyPlatforms, tile => true).ToArray();
         private CharacterCombat[] AllCharacters
         {
             get
             {
                 List<CharacterCombat> list = new();
-
-                foreach (CombatGridTile tile in this.playerPlatforms)
-                {
-                    if (tile.AssignedCharacter)
-                        list.Add(tile.AssignedCharacter);
-                }
-
-                foreach (CombatGridTile tile in this.enemyPlatforms)
-                {
-                    if (tile.AssignedCharacter && !tile.AssignedCharacter.Stats.Dead)
-                        list.Add(tile.AssignedCharacter);
-                }
-
+                list = FillCharacterList(this.playerPlatforms, tile => true, list);
+                list = FillCharacterList(this.enemyPlatforms, tile => true, list);
                 return list.ToArray();
             }
         }
@@ -139,7 +65,7 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Public Utilities
-        public int GetTotalExperience()
+        public long GetTotalExperience()
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
@@ -147,7 +73,7 @@ namespace BF2D.Game.Combat
                 return 0;
             }
 
-            int value = 0;
+            long value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
             {
                 value += character.CurrentJob.ExperienceAward;
@@ -339,6 +265,7 @@ namespace BF2D.Game.Combat
         private CharacterCombat InstantiateEnemyCombat(CharacterStats enemyStats)
         {
             CharacterCombat enemy = Instantiate(this.enemyCombatPrefabsDict[enemyStats.PrefabID]);
+            enemyStats.ResetHealth();
             enemy.Stats = enemyStats;
             return enemy;
         }
@@ -356,6 +283,22 @@ namespace BF2D.Game.Combat
         private bool DictsLoaded()
         {
             return this.playerCombatPrefabsDict.Count > 0 && this.enemyCombatPrefabsDict.Count > 0;
+        }
+
+        private List<CharacterCombat> CreateCharacterList(CombatGridTile[] tileArray, Predicate<CombatGridTile> predicate)
+        {
+            return FillCharacterList(tileArray, predicate, null);
+        }
+
+        private List<CharacterCombat> FillCharacterList(CombatGridTile[] tileArray, Predicate<CombatGridTile> predicate, List<CharacterCombat> listToReturn)
+        {
+            List<CharacterCombat> list = listToReturn is not null ? listToReturn : new();
+            foreach (CombatGridTile tile in tileArray)
+            {
+                if (tile.AssignedCharacter && predicate(tile))
+                    list.Add(tile.AssignedCharacter);
+            }
+            return list;
         }
         #endregion
     }

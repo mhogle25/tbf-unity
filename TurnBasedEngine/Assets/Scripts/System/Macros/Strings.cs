@@ -88,6 +88,7 @@ namespace BF2D.Game
             public const string BriefPause = "[P:0.2]";
             public const string StandardPause = "[P:0.5]";
             public const string LongPause = "[P:1]";
+            public const string End = "[E]";
         }
 
         public static string IntToStringSigned(int value)

@@ -28,12 +28,12 @@ namespace BF2D.Game
                     modifyEveryRandOp = source.Luck,
                     termRegistry = new System.Collections.Generic.Dictionary<string, int>
                     {
-                        { CharacterStatsProperty.Speed.ToString(), source.Speed },
-                        { CharacterStatsProperty.Attack.ToString(), source.Attack },
-                        { CharacterStatsProperty.Defense.ToString(), source.Defense },
-                        { CharacterStatsProperty.Focus.ToString(), source.Focus },
-                        { CharacterStatsProperty.Luck.ToString(), source.Luck },
-                        { CharacterStatsProperty.MaxHealth.ToString(), source.MaxHealth },
+                        { CharacterStatsProperty.Speed.ToString(),      source.Speed },
+                        { CharacterStatsProperty.Attack.ToString(),     source.Attack },
+                        { CharacterStatsProperty.Defense.ToString(),    source.Defense },
+                        { CharacterStatsProperty.Focus.ToString(),      source.Focus },
+                        { CharacterStatsProperty.Luck.ToString(),       source.Luck },
+                        { CharacterStatsProperty.MaxHealth.ToString(),  source.MaxHealth },
                         { CharacterStatsProperty.MaxStamina.ToString(), source.MaxStamina }
                     }
                 });
@@ -60,12 +60,12 @@ namespace BF2D.Game
                     randModifierColor = Colors.Cyan,
                     termRegistry = new System.Collections.Generic.Dictionary<string, string>
                     {
-                        { CharacterStatsProperty.Speed.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Speed) },
-                        { CharacterStatsProperty.Attack.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Attack) },
-                        { CharacterStatsProperty.Defense.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Defense) },
-                        { CharacterStatsProperty.Focus.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Focus) },
-                        { CharacterStatsProperty.Luck.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.Luck) },
-                        { CharacterStatsProperty.MaxHealth.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
+                        { CharacterStatsProperty.Speed.ToString(),      source.GetStatsPropertyText(CharacterStatsProperty.Speed) },
+                        { CharacterStatsProperty.Attack.ToString(),     source.GetStatsPropertyText(CharacterStatsProperty.Attack) },
+                        { CharacterStatsProperty.Defense.ToString(),    source.GetStatsPropertyText(CharacterStatsProperty.Defense) },
+                        { CharacterStatsProperty.Focus.ToString(),      source.GetStatsPropertyText(CharacterStatsProperty.Focus) },
+                        { CharacterStatsProperty.Luck.ToString(),       source.GetStatsPropertyText(CharacterStatsProperty.Luck) },
+                        { CharacterStatsProperty.MaxHealth.ToString(),  source.GetStatsPropertyText(CharacterStatsProperty.MaxHealth) },
                         { CharacterStatsProperty.MaxStamina.ToString(), source.GetStatsPropertyText(CharacterStatsProperty.MaxStamina) }
                     }
                 });

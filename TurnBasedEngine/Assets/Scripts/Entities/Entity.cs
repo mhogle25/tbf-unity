@@ -7,12 +7,12 @@ namespace BF2D
 {
     public class Entity
     {
-        [JsonIgnore] public string Name { get { return this.name.Wash(); } }
-        [JsonProperty] protected string name = string.Empty;
-        [JsonIgnore] public string Description { get { return this.description.Wash(); } }
-        [JsonProperty] protected readonly string description = string.Empty;
-        [JsonIgnore] public IEnumerable<AuraType> Auras { get { return this.auras; } }
-        [JsonProperty] protected readonly List<AuraType> auras = new();
+        [JsonIgnore] public string Name { get => this.name.Wash(); set => this.name = value; }
+        [JsonProperty] private string name = string.Empty;
+        [JsonIgnore] public string Description { get => this.description.Wash(); }
+        [JsonProperty] private readonly string description = string.Empty;
+        [JsonIgnore] public IEnumerable<AuraType> Auras { get => this.auras; }
+        [JsonProperty] private readonly List<AuraType> auras = new();
 
         public bool ContainsAura(AuraType aura)
         {

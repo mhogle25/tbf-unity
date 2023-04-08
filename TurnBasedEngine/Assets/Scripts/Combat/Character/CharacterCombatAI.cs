@@ -11,7 +11,7 @@ namespace BF2D.Game.Combat
     [Serializable]
     public class CharacterCombatAI
     {
-        [JsonIgnore] public bool Enabled { get { return this.enabled; } }
+        [JsonIgnore] public bool Enabled { get => this.enabled; }
         [JsonIgnore] private bool enabled = false;
 
         [Serializable]

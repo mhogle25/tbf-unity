@@ -26,7 +26,7 @@ namespace BF2D.Game.Combat
         private Action listener = null;
 
         private static CombatManager instance = null;
-        public static CombatManager Instance { get => CombatManager.instance;  }
+        public static CombatManager Instance => CombatManager.instance;
 
         public CharacterCombat CurrentCharacter { get => this.combatGrid.CurrentCharacter; }
         public IEnumerable<CharacterCombat> Players { get =>  this.combatGrid.ActivePlayers;  }
@@ -85,7 +85,7 @@ namespace BF2D.Game.Combat
             if (EnemiesAreDefeated())
             {
                 this.standaloneTextboxControl.Textbox.Dialog("di_victory", false, 0);
-                List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience() / this.PlayerCount);
+                List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
                 foreach (JobInfo.LevelUpInfo info in infos)
                 {
                     this.standaloneTextboxControl.Textbox.Dialog(info.levelUpDialog, false, 0, null, new string[]
@@ -228,16 +228,13 @@ namespace BF2D.Game.Combat
         private void Initialize(InitializeInfo initInfo)
         {
             List<CharacterStats> players = new();
-            foreach (CharacterStats character in initInfo.players)
-            {
-                players.Add(character);
-            }
-
             List<CharacterStats> enemies = new();
-            foreach(CharacterStats character in initInfo.enemies)
-            {
-                enemies.Add(character);
-            }
+
+            foreach (CharacterStats player in initInfo.players)
+                players.Add(player);
+
+            foreach (CharacterStats enemy in initInfo.enemies)
+                enemies.Add(enemy);
 
             this.combatGrid.Setup(players, enemies);
 
@@ -251,7 +248,11 @@ namespace BF2D.Game.Combat
         {
             if (this.combatGrid.CharacterIsPlayer(this.CurrentCharacter))
             {
-                UIControlsManager.Instance.TakeControl(this.mainMenu);
+                this.standaloneTextboxControl.Textbox.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.BriefPause}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", false, () =>
+                {
+                    UIControlsManager.Instance.TakeControl(this.mainMenu);
+                });
+                UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
                 return;
             }
 
@@ -267,7 +268,7 @@ namespace BF2D.Game.Combat
             CombatManager.instance = this;
         }
 
-        private List<JobInfo.LevelUpInfo> AllocateExperience(IEnumerable<CharacterCombat> characters, int experience)
+        private List<JobInfo.LevelUpInfo> AllocateExperience(IEnumerable<CharacterCombat> characters, long experience)
         {
             List<JobInfo.LevelUpInfo> infos = new();
 

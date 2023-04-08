@@ -204,7 +204,7 @@ namespace BF2D.Game.Combat
             {
                 PlayDialog(this.CurrentCombatAction.CurrentInfo.GetOpeningMessage(), () =>
                 {
-                    switch (this.CurrentCombatAction.CombatActionType)
+                    switch (this.CurrentCombatAction.Type)
                     {
                         case Enums.CombatActionType.Item:
                             RunTargetedGems(this.CurrentCombatAction.UseTargetedGems());
@@ -413,7 +413,7 @@ namespace BF2D.Game.Combat
 
         private void PlayDialog(List<string> dialog, Action callback)
         {
-            dialog[^1] += "[E]";
+            dialog[^1] += Strings.DialogTextbox.End;
             CombatManager.Instance.OrphanedTextbox.Dialog(dialog, false, 0, () =>
             {
                 CombatManager.Instance.OrphanedTextbox.UtilityFinalize();

@@ -59,7 +59,9 @@ namespace BF2D.Game.Combat
         {
             base.OnNavigate(info);
 
-            if (CombatManager.Instance.CurrentCharacter.Stats.ItemsCount < 1)
+            CharacterStats currentCharacter = CombatManager.Instance.CurrentCharacter.Stats;
+
+            if (currentCharacter.ItemsCount < 1)
             {
                 this.nameText.text = Strings.Game.Bag;
                 this.descriptionText.text = $"The {Strings.Game.Bag.ToLower()} is empty.";
@@ -68,12 +70,7 @@ namespace BF2D.Game.Combat
 
             Item item = this.items[info.cursorPosition1D + this.controlled.Size * this.CurrentPage];
             this.nameText.text = item.Name;
-            this.descriptionText.text = $"{item.Description}\n";
-            foreach(TargetedCharacterStatsAction targetedGem in item.OnUse.TargetedGems)
-            {
-                this.descriptionText.text += "-\n" + targetedGem.Gem.TextBreakdown(CombatManager.Instance.CurrentCharacter.Stats);
-            }
-            this.descriptionText.text += "-\n";
+            this.descriptionText.text = item.TextBreakdown(currentCharacter);
         }
 
         private GridOption.Data ToGridOption(ItemInfo item)

@@ -27,7 +27,9 @@ namespace BF2D.Game.Enums
         [EnumMember]
         Restoration,
         [EnumMember]
-        Nature
+        Nature,
+        [EnumMember]
+        Death
     }
 
     public class AuraTypeCollection<T>

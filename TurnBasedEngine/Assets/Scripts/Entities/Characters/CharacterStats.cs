@@ -106,7 +106,7 @@ namespace BF2D.Game
             } 
         }
         [JsonIgnore] public StatModifier AttackModifier { get => this.attackModifier; }
-        [JsonIgnore] private StatModifier attackModifier = new() { Property = CharacterStatsProperty.Attack };
+        [JsonIgnore] private readonly StatModifier attackModifier = new() { Property = CharacterStatsProperty.Attack };
         [JsonIgnore] public int Strength { get => this.strength; }
         [JsonProperty] private int strength = 0;
 
@@ -306,7 +306,7 @@ namespace BF2D.Game
         public int SwiftnessUp(int amount)
         {
             int value = amount > 0 ? amount : 1;
-            this.constitution += value;
+            this.swiftness += value;
             return value;
         }
 
@@ -334,7 +334,7 @@ namespace BF2D.Game
         public int FortuneUp(int amount)
         {
             int value = amount > 0 ? amount : 1;
-            this.will += value;
+            this.fortune += value;
             return value;
         }
         #endregion
@@ -354,17 +354,12 @@ namespace BF2D.Game
             return this;
         }
 
-        public void SetName(string newName)
-        {
-            this.name = newName;
-        }
-
         public string GetStatsPropertyText(CharacterStatsProperty property)
         {
             return $"{GetStatsProperty(property)}{Strings.CharacterStats.GetStatsPropertySymbol(property)}";
         }
 
-        public JobInfo.LevelUpInfo GrantExperience(int experience)
+        public JobInfo.LevelUpInfo GrantExperience(long experience)
         {
             return this.CurrentJob.GrantExperience(this, experience);
         }
@@ -377,7 +372,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:AcquireItem] Tried to add an item to {this.name}'s item bag but the item id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AcquireItem] Tried to add an item to {this.Name}'s item bag but the item id given was invalid");
                 return null;
             }
 
@@ -389,7 +384,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:RemoveItem] Tried to remove an item from {this.name}'s item bag but the item info given was null");
+                Terminal.IO.LogError($"[CharacterStats:RemoveItem] Tried to remove an item from {this.Name}'s item bag but the item info given was null");
                 return null;
             }
 
@@ -421,7 +416,7 @@ namespace BF2D.Game
 
             if (equipment is null)
             {
-                Terminal.IO.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.name} but the equipment given was null");
+                Terminal.IO.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.Name} but the equipment given was null");
                 return;
             }
 
@@ -463,7 +458,7 @@ namespace BF2D.Game
             
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:AcquireEquipment] Tried to add an equipment to {this.name}'s equipments bag but the equipment id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AcquireEquipment] Tried to add an equipment to {this.Name}'s equipments bag but the equipment id given was invalid");
                 return null;
             }
 
@@ -475,7 +470,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:RemoveEquipment] Tried to remove an equipment from {this.name}'s equipments bag but the equipment info given was null");
+                Terminal.IO.LogError($"[CharacterStats:RemoveEquipment] Tried to remove an equipment from {this.Name}'s equipments bag but the equipment info given was null");
                 return null;
             }
 
@@ -510,7 +505,7 @@ namespace BF2D.Game
                 case EquipmentType.Hands: this.hands = equipmentID; break;
                 case EquipmentType.Legs: this.legs = equipmentID; break;
                 case EquipmentType.Feet: this.feet = equipmentID; break;
-                default: Terminal.IO.LogError($"[CharacterStats:EquipByType] Tried to equip an equipment that didn't have a type to {this.name}"); return;
+                default: Terminal.IO.LogError($"[CharacterStats:EquipByType] Tried to equip an equipment that didn't have a type to {this.Name}"); return;
             }
         }
 
@@ -559,7 +554,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Terminal.IO.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.name} but the status effect info given was null");
+                Terminal.IO.LogError($"[CharacterStats:RemoveStatusEffect] Tried to remove a status effect from {this.Name} but the status effect info given was null");
                 return;
             }
 
@@ -599,7 +594,7 @@ namespace BF2D.Game
         {
             if (id == string.Empty)
             {
-                Terminal.IO.LogError($"[CharacterStats:AddStatusEffect] Tried to apply a status effect to {this.name} but the status effect id given was invalid");
+                Terminal.IO.LogError($"[CharacterStats:AddStatusEffect] Tried to apply a status effect to {this.Name} but the status effect id given was invalid");
                 return null;
             }
 

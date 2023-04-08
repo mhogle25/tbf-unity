@@ -4,6 +4,7 @@
         "Evil",
         "Fire"
     ],
+    "name":"Fiend",
     "maxHealthRate": 
     {
         "skip":0,

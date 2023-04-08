@@ -5,8 +5,8 @@ namespace BF2D.Game.Actions
 {
     public class TargetedGameAction : GameAction
     {
-        [JsonIgnore] public List<TargetedCharacterStatsAction> TargetedGems { get { return this.targetedGems; } }
-        [JsonProperty] private readonly List<TargetedCharacterStatsAction> targetedGems = new();
+        [JsonIgnore] public TargetedCharacterStatsAction[] TargetedGems { get { return this.targetedGems; } }
+        [JsonProperty] private readonly TargetedCharacterStatsAction[] targetedGems = { };
 
         [JsonIgnore] public bool CombatExclusive
         {
