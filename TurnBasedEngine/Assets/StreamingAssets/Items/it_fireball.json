@@ -7,7 +7,6 @@
         "Fire",
         "Psychic"
     ],
-    "alignment":"Offense",
     "consumable":false,
     "onUse":
     {

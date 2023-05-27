@@ -1,28 +1,31 @@
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class ItemInfo : IUtilityEntityInfo
     {
-        [JsonIgnore] public string ID { get => this.id; }
+        [JsonIgnore] public string ID => this.id; 
         [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Count { get => this.count; }
+        [JsonIgnore] public int Count => this.count; 
         [JsonProperty] private int count = 0;
-
-        [JsonProperty] private readonly object custom = null;
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public Entity GetEntity { get => Get(); }
+        [JsonIgnore] public Entity GetEntity => Get();
 
-        [JsonIgnore] public IUtilityEntity GetUtility { get => Get(); }
+        [JsonIgnore] public IUtilityEntity GetUtility => Get();
 
-        [JsonIgnore] public Sprite Icon { get => GameInfo.Instance.GetIcon(GetUtility.SpriteID); }
+        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(GetUtility.SpriteID);
 
-        [JsonIgnore] public string Name { get => Get().Name; }
+        [JsonIgnore] public string Name => Get().Name;
+
+        [JsonIgnore] public string Description => Get().Description;
+
+        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public bool Useable { get => Get().Useable; }
 
@@ -36,19 +39,9 @@ namespace BF2D.Game
             this.id = id;
         }
 
-        public ItemInfo(string id, Item customData)
-        {
-            this.id = id;
-            this.custom = Utilities.JSON.SerializeObject(customData);
-        }
-
         public Item Get()
         {
-            if (this.custom is not null)
-                this.staged ??= Utilities.JSON.DeserializeString<Item>(this.custom.ToString());
-            else 
-                this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
-
+            this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
             return this.staged;
         }
 

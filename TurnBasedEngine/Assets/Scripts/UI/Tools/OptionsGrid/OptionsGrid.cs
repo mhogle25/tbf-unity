@@ -3,7 +3,6 @@ using UnityEngine;
 using System;
 using BF2D.Enums;
 using BF2D.Attributes;
-using UnityEngine.UI;
 using UnityEngine.Events;
 
 namespace BF2D.UI
@@ -27,9 +26,10 @@ namespace BF2D.UI
             public Vector2Int cursorPositionPrev = default;
         }
 
-        public UnityEvent<NavigateInfo> OnNavigate { get { return this.onNavigate; } }
+        public UnityEvent<NavigateInfo> OnNavigate => this.onNavigate;
         [SerializeField] private UnityEvent<NavigateInfo> onNavigate = new();
 
+        [Header("Audio")]
         [SerializeField] private AudioSource navigateAudioSource = null;
         [Tooltip("Enable/disable use of the confirm button with the grid")]
         [SerializeField] private bool confirmEnabled = false;
@@ -59,72 +59,60 @@ namespace BF2D.UI
         /// <summary>
         /// The area of the grid (width * height)
         /// </summary>
-        public int Size { get { return this.gridWidth * this.gridHeight; } }
+        public int Size => this.gridWidth * this.gridHeight;
 
         /// <summary>
         /// Width of the grid
         /// </summary>
-        public int Width { get { return this.gridWidth; } }
+        public int Width => this.gridWidth;
 
         /// <summary>
         /// Height of the grid
         /// </summary>
-        public int Height { get { return this.gridHeight; } }
+        public int Height => this.gridHeight;
 
         /// <summary>
         /// The number of options in the grid
         /// </summary>
-        public int Count { get { return this.count; } }
+        public int Count => this.count;
 
         /// <summary>
         /// Enable/disable use of the confirm button
         /// </summary>
-        public bool ConfirmEnabled { get { return this.confirmEnabled; } set { this.confirmEnabled = value; } }
+        public bool ConfirmEnabled { get => this.confirmEnabled; set => this.confirmEnabled = value; }
 
         /// <summary>
         /// Enable/disable use of the back button
         /// </summary>
-        public bool BackEnabled { get { return this.backEnabled; } set { this.backEnabled = value; } }
+        public bool BackEnabled { get =>this.backEnabled; set => this.backEnabled = value; }
 
         /// <summary>
         /// Enable/disable use of the menu button
         /// </summary>
-        public bool MenuEnabled { get { return this.menuEnabled; } set { this.menuEnabled = value; } }
+        public bool MenuEnabled { get => this.menuEnabled; set => this.menuEnabled = value; }
 
         /// <summary>
         /// Enable/disable use of the attack button
         /// </summary>
-        public bool SpecialEnabled { get { return this.specialEnabled; } set { this.specialEnabled = value; } }
+        public bool SpecialEnabled { get => this.specialEnabled; set => this.specialEnabled = value; }
 
         /// <summary>
         /// Enable/disable use of the pause button
         /// </summary>
-        public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
+        public bool PauseEnabled { get => this.pauseEnabled; set => this.pauseEnabled = value; }
 
         /// <summary>
         /// Enable/disable use of the select button
         /// </summary>
-        public bool SelectEnabled { get { return this.selectEnabled; } set { this.selectEnabled = value; } }
+        public bool SelectEnabled { get => this.selectEnabled; set => this.selectEnabled = value; }
 
         public GridOption CurrentOption
         {
-            get
-            {
-                return At(this.cursorPosition);
-            }
-            private set
-            {
-                this.grid[this.cursorPosition.x, this.cursorPosition.y] = value;
-            }
+            get => At(this.cursorPosition);
+            private set => this.grid[this.cursorPosition.x, this.cursorPosition.y] = value;
         }
 
-        public Vector2Int LastOptionPosition
-        {
-            get
-            {
-                return Decrement(this.head);
-            }
-        }
+        public Vector2Int LastOptionPosition => Decrement(this.head);
 
         public Vector2Int CursorPosition
         {
@@ -134,9 +122,9 @@ namespace BF2D.UI
             }
             set
             {
-                if (InvalidPosition(value))
+                if (!ValidPosition(value))
                 {
-                    Terminal.IO.LogError($"[OptionsGrid:CursorPosition] Tried to set the cursor position but the new position was outside the bounds of the grid. Position: ({value.x},{value.y})");
+                    Debug.LogError($"[OptionsGrid:CursorPosition] Tried to set the cursor position but the new position was outside the bounds of the grid. Position: ({value.x},{value.y})");
                     return;
                 }
                 if (Exists(this.cursorPosition))
@@ -151,15 +139,12 @@ namespace BF2D.UI
         {
             get
             {
-                switch (this.instantiationAxis)
+                return this.instantiationAxis switch
                 {
-                    case Axis.Horizontal:
-                        return (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x;
-                    case Axis.Vertical:
-                        return (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y;
-                    default:
-                        throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}");
-                }
+                    Axis.Horizontal => (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x,
+                    Axis.Vertical => (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y,
+                    _ => throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}"),
+                };
             }
         }
 
@@ -198,20 +183,20 @@ namespace BF2D.UI
             //Base case
             if (!this.optionPrefab)
             {
-                Terminal.IO.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
+                Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
                 return null;
             }
 
             if (this.count + 1 > Size)
             {
-                Terminal.IO.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
+                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return null;
             }
 
             //Create and set up the added element
             GridOption option = Instantiate(this.optionPrefab);
             this.grid[this.head.x, this.head.y] = option;
-            option.transform.SetParent(this.container.transform);
+            option.transform.SetParent(this.container);
             option.transform.localScale = Vector3.one;
             option.Setup(optionData);
 
@@ -229,7 +214,7 @@ namespace BF2D.UI
             //Base case
             if (this.count + 1 > Size)
             {
-                Terminal.IO.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
+                Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return false;
             }
 
@@ -254,7 +239,7 @@ namespace BF2D.UI
             //Base Case
             if (this.count < 1)
             {
-                Terminal.IO.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");
+                Debug.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");
                 return;
             }
 
@@ -291,9 +276,7 @@ namespace BF2D.UI
                     }
 
                     if (this.grid[x, y] != null)
-                    {
                         queue.Enqueue(this.grid[x, y]);
-                    }
                 }
             }
 
@@ -312,18 +295,14 @@ namespace BF2D.UI
                     }
 
                     if (queue.Count > 0)
-                    {
                         this.grid[x, y] = queue.Dequeue();
-                    }
                 }
             }
 
             this.head = Decrement(this.head);
 
             if (this.cursorPosition == this.head)
-            {
                 this.cursorPosition = Decrement(this.cursorPosition);
-            }
 
             SetCursorAtPosition(this.cursorPosition, true);
         }
@@ -353,7 +332,7 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Terminal.IO.LogError("[OptionsGrid:SetCursorAtHead] Tried to set the cursor at head but the grid was null");
+                Debug.LogError("[OptionsGrid:SetCursorAtHead] Tried to set the cursor at head but the grid was null");
                 return;
             }
 
@@ -376,19 +355,19 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Terminal.IO.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
+                Debug.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
                 return;
             }
 
-            if (InvalidPosition(cursorPosition))
+            if (!ValidPosition(cursorPosition))
             {
-                Terminal.IO.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was outside the bounds of the grid.");
+                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was outside the bounds of the grid.");
                 return;
             }
 
             if (!Exists(cursorPosition))
             {
-                Terminal.IO.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was null.");
+                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was null.");
                 return;
             }
 
@@ -399,14 +378,14 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Terminal.IO.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
+                Debug.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
                 return;
             }
 
             if (this.Interactable && this.gameObject.activeSelf && ButtonEnabled(inputButton) && this.count > 0)
             {
                 this.CurrentOption.InvokeEvent(inputButton);
-                BF2D.Utilities.Audio.PlayAudioSource(GetAudioSource(inputButton));
+                Utilities.Audio.PlayAudioSource(GetAudioSource(inputButton));
             }
         }
 
@@ -465,13 +444,13 @@ namespace BF2D.UI
                             this.cursorPosition = DirectionalBFS(bfsStartingPosition, direction);
                         break;
                     default:
-                        Terminal.IO.LogError("[OptionsGrid:Navigate] Invalid direction");
+                        Debug.LogError("[OptionsGrid:Navigate] Invalid direction");
                         break;
                 }
 
                 SetCursorAtPosition(this.cursorPosition, true);
 
-                BF2D.Utilities.Audio.PlayAudioSource(this.navigateAudioSource);
+                Utilities.Audio.PlayAudioSource(this.navigateAudioSource);
 
                 info.cursorPosition1D = this.CursorPosition1D;
                 info.cursorPosition = this.CursorPosition;
@@ -482,7 +461,7 @@ namespace BF2D.UI
 
         public GridOption At(Vector2Int position)
         {
-            if (InvalidPosition(position))
+            if (!ValidPosition(position))
                 return null;
 
             return this.grid[position.x, position.y];
@@ -493,9 +472,9 @@ namespace BF2D.UI
             return At(position) != null;
         }
 
-        public bool InvalidPosition(Vector2Int position)
+        public bool ValidPosition(Vector2Int position)
         {
-            return position.x > this.gridWidth - 1 || position.x < 0 || position.y > this.gridHeight - 1 || position.y < 0;
+            return position.x < this.gridWidth && position.x >= 0 && position.y < this.gridHeight && position.y >= 0;
         }
         #endregion
 

@@ -1,5 +1,6 @@
 using Newtonsoft.Json;
 using System;
+using UnityEngine;
 
 namespace BF2D.Game.Actions
 {
@@ -24,7 +25,7 @@ namespace BF2D.Game.Actions
 
             if (statusEffect is null)
             {
-                Terminal.IO.LogError($"[CharacterStatsAction:StatusEffectProperty:Run] A status effect with id '{statusEffect}' does not exist");
+                Debug.LogError($"[CharacterStatsAction:StatusEffectProperty:Run] A status effect with id '{statusEffect}' does not exist");
             }
             else
             {

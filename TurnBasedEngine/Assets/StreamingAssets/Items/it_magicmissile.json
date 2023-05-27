@@ -6,7 +6,6 @@
     [
         "Psychic"
     ],
-    "alignment":"Offense",
     "consumable":false,
     "onUse":
     {

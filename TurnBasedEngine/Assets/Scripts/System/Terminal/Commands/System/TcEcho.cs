@@ -9,7 +9,7 @@ namespace BF2D
 
             for (int i = 1; i < arguments.Length; i++)
             {
-                Terminal.IO.LogQuiet(arguments[i]);
+                Terminal.IO.Log(arguments[i]);
             }
         }
     }

@@ -7,17 +7,8 @@ namespace BF2D
     {
         protected Dictionary<string, TerminalCommand> commands;
 
-        public TerminalCommand this[string key]
-        {
-            get
-            {
-                return this.commands[key];
-            }
-        }
+        public TerminalCommand this[string key] => this.commands[key];
 
-        public bool ContainsKey(string key)
-        {
-            return this.commands.ContainsKey(key);
-        }
+        public bool ContainsKey(string key) => this.commands.ContainsKey(key);
     }
 }

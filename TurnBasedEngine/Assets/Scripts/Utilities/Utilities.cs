@@ -35,7 +35,7 @@ namespace BF2D.Utilities
                 {
                     while (!uwr.isDone) await Task.Delay(5);
 
-                    if (uwr.result == UnityWebRequest.Result.ConnectionError) Terminal.IO.Log($"{uwr.error}");
+                    if (uwr.result == UnityWebRequest.Result.ConnectionError) Debug.Log($"{uwr.error}");
                     else
                     {
                         clip = DownloadHandlerAudioClip.GetContent(uwr);
@@ -43,7 +43,7 @@ namespace BF2D.Utilities
                 }
                 catch (Exception e)
                 {
-                    Terminal.IO.LogError($"{e.Message}, {e.StackTrace}");
+                    Debug.LogError($"{e.Message}, {e.StackTrace}");
                 }
             }
 
@@ -81,13 +81,13 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:LoadFile] The files specified by path '{path}' do not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadFile] The file at path '{path}' does not exist");
                 return string.Empty;
             }
             return content;
         }
 
-        public static int LoadTextFiles(Dictionary<string, string> collection, string path)
+        public static int LoadFiles(Dictionary<string, string> collection, string path)
         {
             string[] paths;
             try
@@ -96,33 +96,44 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFiles] The specified path '{path}' was invalid");
+                Debug.LogError($"[Utilities:TextFile:LoadTextFiles] Path '{path}' was invalid");
                 return -1;
             }
 
             foreach (string p in paths)
             {
-                LoadTextFile(collection, p);
+                LoadFile(collection, p);
             }
 
             return paths.Length;
         }
 
-        private static void LoadTextFile(Dictionary<string, string> collection, string path)
+        private static void LoadFile(Dictionary<string, string> collection, string path)
         {
+            string id;
+            string content;
+
             try
             {
-                string filename = Path.GetFileNameWithoutExtension(path);
-                string content = File.ReadAllText(path);
-                collection[filename] = content;
+                id = Path.GetFileNameWithoutExtension(path);
+                content = File.ReadAllText(path);
             } 
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' was invalid or nonexistent");
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                return;
             }
+
+            if (collection.ContainsKey(id))
+            {
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
+                return;
+            }
+
+            collection[id] = content;
         }
 
-        public static int LoadTextFiles(Dictionary<string, List<string>> collection, string path)
+        public static int LoadFiles(Dictionary<string, List<string>> collection, string path)
         {
             string[] paths;
             try
@@ -131,24 +142,26 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' does not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' was invalid");
                 return -1;
             }
 
             foreach (string p in paths)
             {
-                LoadTextFile(collection, p);
+                LoadFile(collection, p);
             }
 
             return paths.Length;
         }
 
-        private static void LoadTextFile(Dictionary<string, List<string>> collection, string path)
+        private static void LoadFile(Dictionary<string, List<string>> collection, string path)
         {
+            string id = null;
+            List<string> dialog = new();
+
             try
             {
-                string filename = Path.GetFileNameWithoutExtension(path);
-                List<string> dialog = new();
+                id = Path.GetFileNameWithoutExtension(path);
 
                 using (StreamReader stream = new(path))
                 {
@@ -158,13 +171,20 @@ namespace BF2D.Utilities
                         dialog.Add(line);
                     }
                 }
-
-                collection[filename] = dialog;
             }
             catch
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                return;
             }
+
+            if (collection.ContainsKey(id))
+            {
+                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
+                return;
+            }
+
+            collection[id] = dialog;
         }
     }
 
@@ -179,7 +199,7 @@ namespace BF2D.Utilities
             }
             catch (Exception x)
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid. {content}");
+                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to deserialize JSON but it was not valid.");
                 Debug.LogError(x.Message);
                 return default;
             }
@@ -195,7 +215,7 @@ namespace BF2D.Utilities
             }
             catch (Exception x)
             {
-                Terminal.IO.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
+                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
                 Debug.LogError(x.Message);
                 return default;
             }

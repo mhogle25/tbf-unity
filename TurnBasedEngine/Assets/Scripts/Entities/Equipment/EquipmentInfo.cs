@@ -1,26 +1,30 @@
 using System;
 using Newtonsoft.Json;
 using UnityEngine;
+using System.Collections.Generic;
+using BF2D.Enums;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class EquipmentInfo : IUtilityEntityInfo
     {
-        [JsonIgnore] public string ID { get => this.id; }
+        [JsonIgnore] public string ID => this.id;
         [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Count { get => this.count; }
+        [JsonIgnore] public int Count => this.count;
         [JsonProperty] protected int count = 0;
 
-        [JsonProperty] private readonly object custom = null;
+        [JsonIgnore] public Entity GetEntity => Get();
 
-        [JsonIgnore] public Entity GetEntity { get => Get(); }
+        [JsonIgnore] public IUtilityEntity GetUtility => Get();
 
-        [JsonIgnore] public IUtilityEntity GetUtility { get => Get(); }
+        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(this.GetUtility.SpriteID);
 
-        [JsonIgnore] public Sprite Icon { get => GameInfo.Instance.GetIcon(GetUtility.SpriteID); }
+        [JsonIgnore] public string Name => Get().Name;
 
-        [JsonIgnore] public string Name { get => Get().Name; }
+        [JsonIgnore] public string Description => Get().Description;
+
+        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonConstructor]
         public EquipmentInfo() { }
@@ -30,18 +34,7 @@ namespace BF2D.Game
             this.id = id;
         }
 
-        public EquipmentInfo(string id, Equipment customData)
-        {
-            this.id = id;
-            this.custom = BF2D.Utilities.JSON.SerializeObject(customData);
-        }
-
-        public Equipment Get()
-        {
-            if (this.custom is not null)
-                return BF2D.Utilities.JSON.DeserializeString<Equipment>(this.custom.ToString());
-            return GameInfo.Instance.GetEquipment(this.ID);
-        }
+        public Equipment Get() => GameInfo.Instance.GetEquipment(this.ID);
 
         public void Increment()
         {
@@ -52,7 +45,7 @@ namespace BF2D.Game
         {
             this.count--;
             if (this.Count < 1)
-                owner.RemoveEquipment(this);
+                owner.Equipments.RemoveEquipment(this);
         }
     }
 }

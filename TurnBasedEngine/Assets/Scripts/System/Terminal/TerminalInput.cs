@@ -52,7 +52,7 @@ namespace BF2D
 
             if (!this.registry.ContainsKey(op))
             {
-                Terminal.IO.LogWarningQuiet($"The command '{op}' does not exist.");
+                Terminal.IO.LogWarning($"The command '{op}' does not exist.");
                 return;
             }
 

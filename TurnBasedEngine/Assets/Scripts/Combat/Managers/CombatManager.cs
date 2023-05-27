@@ -241,7 +241,7 @@ namespace BF2D.Game.Combat
             this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, false, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
 
-            Terminal.IO.LogQuiet($"Combat intialized with {CombatManager.Instance.PlayerCount} players and {CombatManager.Instance.EnemyCount} enemies.");
+            Terminal.IO.Log($"Combat intialized with {CombatManager.Instance.PlayerCount} players and {CombatManager.Instance.EnemyCount} enemies.");
         }
 
         private void BeginTurn()

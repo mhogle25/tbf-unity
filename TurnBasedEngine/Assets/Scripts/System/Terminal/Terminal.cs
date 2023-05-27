@@ -1,5 +1,6 @@
 using UnityEngine.Events;
 using UnityEngine;
+using System;
 
 namespace BF2D
 {
@@ -23,6 +24,8 @@ namespace BF2D
                 Destroy(Terminal.instance.gameObject);
 
             Terminal.instance = this;
+
+            Application.logMessageReceived += LogEvent;
         }
 
         private void Update()
@@ -31,82 +34,79 @@ namespace BF2D
                 SetViewActive(!this.view.gameObject.activeSelf);
         }
 
+        private void OnDestroy() => Application.logMessageReceived -= LogEvent;
+
+        #region Public Utilities
+
         public void RunCommand(string command)
         {
             this.terminalIn.Commit(command);
         }
 
-        public void LogQuiet(int value)
+        public void ClearLogs()
         {
-            LogQuiet($"{value}");
-        }
-
-        public void Log(int value)
-        {
-            Debug.Log(value);
-            Log($"{value}");
-        }
-
-        public void LogWarningQuiet(int value)
-        {
-            LogWarningQuiet($"{value}");
-        }
-
-        public void LogWarning(int value)
-        {
-            Debug.LogWarning(value);
-            LogWarning($"{value}");
-        }
-
-        public void LogErrorQuiet(int value)
-        {
-            SetViewActive(true);
-            LogErrorQuiet($"{value}");
-        }
-
-        public void LogError(int value)
-        {
-            Debug.LogError(value);
-            LogError($"{value}");
-        }
-
-        public void LogQuiet(string message)
-        {
-            this.terminalOut.Log(message);
+            this.terminalOut.Clear();
         }
 
         public void Log(string message)
         {
-            Debug.Log(message);
-            LogQuiet(message);
-        }
-
-        public void LogWarningQuiet(string warning)
-        {
-            this.terminalOut.LogWarning(warning);
+            this.terminalOut.Log(message);
         }
 
         public void LogWarning(string warning)
         {
-            Debug.LogWarning(warning);
-            LogWarningQuiet(warning);
+            this.terminalOut.LogWarning(warning);
         }
 
-        public void LogErrorQuiet(string error)
+        public void LogError(string error)
         {
             SetViewActive(true);
             this.terminalOut.LogError(error);
         }
 
-        public void LogError(string error)
+        public void Log(int value)
         {
-            Debug.LogError(error);
-            LogErrorQuiet(error);
+            Log($"{value}");
         }
 
-        public void ClearLogs()
+        public void LogWarning(int value)
         {
-            this.terminalOut.Clear();
+            LogWarning($"{value}");
+        }
+
+        public void LogError(int value)
+        {
+            SetViewActive(true);
+            LogError($"{value}");
+        }
+
+        #endregion
+
+        private void LogEvent(string logString, string stackTrace, LogType type)
+        {
+            switch (type)
+            {
+                case LogType.Error: DebugLogError(logString); return;
+                case LogType.Assert: DebugLogWarning(logString); return;
+                case LogType.Warning: DebugLogWarning(logString); return;
+                case LogType.Log: DebugLog(logString); return;
+                case LogType.Exception: DebugLogError(logString); return;
+            }
+        }
+
+        private void DebugLog(string message)
+        {
+            Log(message);
+        }
+
+        private void DebugLogWarning(string warning)
+        {
+            LogWarning(warning);
+        }
+
+        private void DebugLogError(string error)
+        {
+            LogError(error);
         }
 
         private void SetViewActive(bool setActive)

@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using Newtonsoft.Json;
 using BF2D.Enums;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game.Actions
 {
@@ -27,7 +28,7 @@ namespace BF2D.Game.Actions
             }
         }
 
-        [JsonIgnore] public string SpriteID { get => this.spriteID; }
+        [JsonIgnore] public string SpriteID => this.spriteID;
         [JsonProperty] private readonly string spriteID = string.Empty;
 
         [JsonProperty] private readonly NumericProperty damage = null;
@@ -48,10 +49,44 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly NumericProperty willUp = null;
         [JsonProperty] private readonly NumericProperty fortuneUp = null;
 
-        [JsonIgnore] public int SuccessRate { get => this.successRate; }
+        [JsonIgnore] public int SuccessRate => this.successRate;
         [JsonProperty] private readonly int successRate = 100;
-        [JsonIgnore] public Enums.CombatAlignment Alignment { get => this.alignment; }
-        [JsonProperty] private readonly Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
+        [JsonIgnore] public CombatAlignment Alignment
+        {
+            get
+            {
+                int offensePoints = 0;
+                int defensePoints = 0;
+                int neutralPoints = 0;
+
+                offensePoints += this.damage is not null ? 1 : 0;
+                offensePoints += this.directDamage is not null ? 1 : 0;
+                offensePoints += this.criticalDamage is not null ? 1 : 0;
+                offensePoints += this.psychicDamage is not null ? 1 : 0;
+                defensePoints += this.heal is not null ? 1 : 0;
+                defensePoints += this.recover is not null ? 1 : 0;
+                offensePoints += this.exert is not null ? 1 : 0;
+                defensePoints += this.resetHealth ? 1 : 0;
+                defensePoints += this.resetStamina ? 1 : 0;
+
+                switch (this.statusEffect?.Get().Alignment)
+                {
+                    case CombatAlignment.Offense: offensePoints++; break;
+                    case CombatAlignment.Defense: defensePoints++; break;
+                    case CombatAlignment.Neutral: neutralPoints++; break;
+                }
+
+                defensePoints += this.constitutionUp is not null ? 1 : 0;
+                neutralPoints += this.enduranceUp is not null ? 1 : 0;
+                neutralPoints += this.swiftnessUp is not null ? 1 : 0;
+                offensePoints += this.strengthUp is not null ? 1 : 0;
+                defensePoints += this.toughnessUp is not null ? 1 : 0;
+                neutralPoints += this.willUp is not null ? 1 : 0;
+                neutralPoints += this.fortuneUp is not null ? 1 : 0;
+
+                return CombatAlignmentSelector.Calculate(offensePoints, defensePoints, neutralPoints);
+            }
+        } 
 
         #region Public Methods
         public string GetAnimationKey()
@@ -89,8 +124,8 @@ namespace BF2D.Game.Actions
                 target.ResetStamina();
             }
 
-            bool deathGem = ContainsAura(Enums.AuraType.Death);
-            bool deathTarget = target.ContainsAura(Enums.AuraType.Death);
+            bool deathGem = ContainsAura(AuraType.Death);
+            bool deathTarget = target.ContainsAura(AuraType.Death);
 
             if (this.damage is not null)
                 if (deathGem && deathTarget)

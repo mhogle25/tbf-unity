@@ -3,12 +3,11 @@
     [
         "Psychic"
     ],
-    "alignment":"Offense",
     "psychicDamage":
     {
         "number":
         {
-            "expression":"| 1 Focus"
+            "expression":"$ 1 Focus"
         },
         "modifiers":
         [

@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using UnityEngine;
+using BF2D.Game.Enums;
+
 namespace BF2D.Game.Actions
 {
-    public class UntargetedGameAction : GameAction, ICache
+    [Serializable]
+    public class UntargetedGameAction : GameAction, ICache, ICombatAligned
     {
         [JsonIgnore] public IEnumerable<CharacterStatsAction> Gems 
         { 
@@ -24,6 +26,8 @@ namespace BF2D.Game.Actions
         }
         [JsonProperty] private readonly string[] gemIDs = { };
         [JsonIgnore] private readonly List<CharacterStatsAction> cached = new();
+
+        [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.Gems);
 
         public void Clear()
         {

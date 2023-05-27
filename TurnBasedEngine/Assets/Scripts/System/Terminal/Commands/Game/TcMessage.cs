@@ -8,7 +8,7 @@ namespace BF2D.Game
         {
             if (arguments.Length < 2)
             {
-                Terminal.IO.LogWarningQuiet("Useage: message [text] (optional ->) [insert1] [insert2]...");
+                Terminal.IO.LogWarning("Useage: message [text] (optional ->) [insert1] [insert2]...");
                 return;
             }
 
@@ -19,7 +19,7 @@ namespace BF2D.Game
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Message(arguments[1], false, null, inserts.ToArray());
-            Terminal.IO.LogQuiet("Pushed a message to the system textbox's queue. Run with 'textbox'.");
+            Terminal.IO.Log("Pushed a message to the system textbox's queue. Run with 'textbox'.");
         }
     }
 }

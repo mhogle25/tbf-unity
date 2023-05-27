@@ -163,7 +163,7 @@ namespace BF2D.UI {
         {
             if (string.IsNullOrEmpty(message))
             {
-                Terminal.IO.LogError("[DialogTextbox] Tried to queue a message but the message was null or empty");
+                Debug.LogError("[DialogTextbox] Tried to queue a message but the message was null or empty");
                 return;
             }
 
@@ -216,7 +216,7 @@ namespace BF2D.UI {
         {
             if (!this.dialogs.ContainsKey(key))
             {
-                Terminal.IO.LogError($"[DialogTextbox] The key '{key}' was not found in the dialogs dictionary");
+                Debug.LogError($"[DialogTextbox] The key '{key}' was not found in the dialogs dictionary");
                 return;
             }
 
@@ -224,7 +224,7 @@ namespace BF2D.UI {
 
             if (startingLine < 0 || startingLine >= lines.Count)
             {
-                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
+                Debug.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
                 return;
             }
 
@@ -272,13 +272,13 @@ namespace BF2D.UI {
         {
             if (lines is null || lines.Count < 1)
             {
-                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the dialog was null or empty");
+                Debug.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the dialog was null or empty");
                 return;
             }
 
             if (startingLine < 0 || startingLine >= lines.Count)
             {
-                Terminal.IO.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
+                Debug.LogError("[DialogTextbox:Dialog] Tried to queue a dialog but the starting line index was outside the range of the dialog");
                 return;
             }
 
@@ -349,7 +349,7 @@ namespace BF2D.UI {
             this.currentDialog = dialogData;
             this.textField.text = "";
 
-            //Terminal.IO.Log("[DialogTextbox] Dialog Armed\n" + this.activeLines.Count + " lines");
+            //Debug.Log("[DialogTextbox] Dialog Armed\n" + this.activeLines.Count + " lines");
 
             this.state = MessageParseAndDisplayClocked;
         }
@@ -436,7 +436,7 @@ namespace BF2D.UI {
         private bool MessageParseAndDisplay() {
             if (this.dialogIndex >= this.currentDialog.dialog.Count)
             {
-                Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag? (Previous line: {this.currentDialog.dialog[this.dialogIndex - 1]})");
+                Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag? (Previous line: {this.currentDialog.dialog[this.dialogIndex - 1]})");
                 return false;
             }
 
@@ -497,7 +497,7 @@ namespace BF2D.UI {
                         } 
                         else
                         {
-                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Voice key '{key}' was not found in the voices dictionary");
+                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Voice key '{key}' was not found in the voices dictionary");
                         }
                         this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
                         break;
@@ -510,20 +510,20 @@ namespace BF2D.UI {
                             //Retrieve the data using Json Utility
                             if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
                             {
-                                // Terminal.IO.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
+                                // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
                                 options = DeserializeResponseData(data);
                             } 
                             else
                             {   //else, try using it as a key in the dialog options dictionary and deserialize its value
-                                //Terminal.IO.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
+                                //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
                                 if (this.dialogResponses.ContainsKey(data))
                                 {
-                                    //Terminal.IO.Log("[DialogTextbox] JSON file retrieved, deserializing...");
+                                    //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
                                     options = DeserializeResponseData(this.dialogResponses[data]);
                                 } 
                                 else
                                 {
-                                    Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
+                                    Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
                                 }
                             }
 
@@ -534,7 +534,7 @@ namespace BF2D.UI {
                         }
                         else
                         {
-                            Terminal.IO.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
+                            Debug.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
                         }
                         this.messageIndex = newMessageIndex + 1;
                         return false;
@@ -543,9 +543,9 @@ namespace BF2D.UI {
                         return false;
                     default:
                         if (tag == DialogTextbox.insertTag)
-                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
+                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
                         else
-                            Terminal.IO.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not a valid character");
+                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not a valid character");
                         Cancel();
                         return true;
                 }
@@ -571,7 +571,7 @@ namespace BF2D.UI {
             //Move to colon, check if colon exists, move on
             index++;
             if (message[index] != ':') {
-                Terminal.IO.LogError("[DialogTextbox:ParseTag] Incorrect Syntax, add ':' after tag");
+                Debug.LogError("[DialogTextbox:ParseTag] Incorrect Syntax, add ':' after tag");
             }
             index++;
 

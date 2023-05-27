@@ -34,7 +34,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Terminal.IO.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Debug.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -114,7 +114,7 @@ namespace BF2D.UI
 
             if (this.phantomControl)
             {
-                Terminal.IO.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
+                Debug.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
                 return;
             }
 
@@ -148,7 +148,7 @@ namespace BF2D.UI
         {
             if (!this.phantomControl)
             {
-                Terminal.IO.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
+                Debug.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
                 return;
             }
 

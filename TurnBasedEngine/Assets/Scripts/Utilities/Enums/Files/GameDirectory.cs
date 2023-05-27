@@ -13,7 +13,9 @@ namespace BF2D.Enums
         [EnumMember]
         Persistent,
         [EnumMember]
-        Streaming
+        Streaming,
+        [EnumMember]
+        All,
     }
 
     public class GameDirectoryCollection<T>

@@ -59,7 +59,7 @@ namespace BF2D.Game.Combat
                 if (this.eventStack.Count > 0)
                     this.eventStack.Pop()?.Invoke();
                 else
-                    Terminal.IO.LogWarning("[CharacterCombat:EventStack:Continue] Called while the stack was empty");
+                    Debug.LogWarning("[CharacterCombat:EventStack:Continue] Called while the stack was empty");
             }
 
             public void PushEvent(Action action)
@@ -162,18 +162,10 @@ namespace BF2D.Game.Combat
             //Equipment Event
             foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
             {
-                string equipmentID = this.Stats.GetEquipped(equipmentType);
-
-                if (string.IsNullOrEmpty(equipmentID))
-                    continue;
-
-                Equipment equipment = GameInfo.Instance.GetEquipment(equipmentID);
+                Equipment equipment = this.Stats.GetEquipped(equipmentType);
 
                 if (equipment is null)
-                {
-                    Terminal.IO.LogError($"[CharacterCombat:StageEquipmentUpkeep] The equipment at ID {equipmentID} does not exist");
                     continue;
-                }
 
                 stagingAction(equipment);
             }
@@ -218,9 +210,9 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Stage and Run Gems
-        private void RunUntargetedGems(IEnumerable<CharacterStatsAction> actions)
+        private void RunUntargetedGems(IEnumerable<CharacterStatsAction> gems)
         {
-            foreach (CharacterStatsAction action in actions)
+            foreach (CharacterStatsAction action in gems)
                 StageUntargetedGems(action);
 
             this.eventStack.Continue();
@@ -243,15 +235,15 @@ namespace BF2D.Game.Combat
             });
         }
 
-        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsAction> actions)
+        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsAction> targetedGems)
         {
-            foreach (TargetedCharacterStatsAction action in actions)
-                StageTargetedGems(action);
+            foreach (TargetedCharacterStatsAction targetedGem in targetedGems)
+                StageTargetedGems(targetedGem);
 
             this.eventStack.Continue();
         }
 
-        private void StageTargetedGems(TargetedCharacterStatsAction action)
+        private void StageTargetedGems(TargetedCharacterStatsAction targetedGem)
         {
             this.eventStack.PushEvent(() =>
             {
@@ -260,45 +252,45 @@ namespace BF2D.Game.Combat
                     List<CharacterStatsAction.Info> infos = new();
                     string message = string.Empty;
 
-                    foreach (CharacterCombat target in action.TargetInfo.CombatTargets)
+                    foreach (CharacterCombat target in targetedGem.TargetInfo.CombatTargets)
                     {
                         //Verify that targets are still valid before executing
                         CharacterCombat verifiedTarget = target;
                         if (target.Stats.Dead)
                         {
-                            if (action.Target == CharacterTarget.Self)
+                            if (targetedGem.Target == CharacterTarget.Self)
                             {
-                                Terminal.IO.LogError("[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed");
+                                Debug.LogError("[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed");
                                 continue;
                             }
-                            else if (action.Target == CharacterTarget.Ally ||
-                            action.Target == CharacterTarget.RandomAlly)
+                            else if (targetedGem.Target == CharacterTarget.Ally ||
+                            targetedGem.Target == CharacterTarget.RandomAlly)
                             {
                                 verifiedTarget = RollAlly();
                             }
-                            else if (action.Target == CharacterTarget.Opponent ||
-                            action.Target == CharacterTarget.RandomOpponent)
+                            else if (targetedGem.Target == CharacterTarget.Opponent ||
+                            targetedGem.Target == CharacterTarget.RandomOpponent)
                             {
                                 verifiedTarget = RollOpponent();
                             }
-                            else if (action.Target == CharacterTarget.Any ||
-                            action.Target == CharacterTarget.Random)
+                            else if (targetedGem.Target == CharacterTarget.Any ||
+                            targetedGem.Target == CharacterTarget.Random)
                             {
-                                verifiedTarget = RollCharacterAligned(action.Gem.Alignment);
+                                verifiedTarget = RollCharacterAligned(targetedGem.Gem.Alignment);
                             }
-                            else if (action.Target == CharacterTarget.All ||
-                            action.Target == CharacterTarget.AllOfAny ||
-                            action.Target == CharacterTarget.AllAllies ||
-                            action.Target == CharacterTarget.AllOpponents)
+                            else if (targetedGem.Target == CharacterTarget.All ||
+                            targetedGem.Target == CharacterTarget.AllOfAny ||
+                            targetedGem.Target == CharacterTarget.AllAllies ||
+                            targetedGem.Target == CharacterTarget.AllOpponents)
                             {
                                 continue;
                             }
                         }
 
                         //Execute
-                        verifiedTarget.PlayAnimation(action.Gem.GetAnimationKey());
+                        verifiedTarget.PlayAnimation(targetedGem.Gem.GetAnimationKey());
 
-                        CharacterStatsAction.Info info = action.Gem.Run(this.stats, verifiedTarget.Stats);
+                        CharacterStatsAction.Info info = targetedGem.Gem.Run(this.stats, verifiedTarget.Stats);
                         message += info.GetMessage();
                         infos.Add(info);
                         verifiedTarget.RefreshStatsDisplay();

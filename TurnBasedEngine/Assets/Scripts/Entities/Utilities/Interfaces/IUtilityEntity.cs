@@ -1,9 +1,7 @@
 namespace BF2D.Game
 {
-    public interface IUtilityEntity
+    public interface IUtilityEntity: ICombatAligned
     {
         public string SpriteID { get; }
-
-        public Enums.CombatAlignment Alignment { get; }
     }
 }

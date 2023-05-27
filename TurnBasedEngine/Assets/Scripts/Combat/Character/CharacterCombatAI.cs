@@ -5,6 +5,7 @@ using BF2D.Game.Enums;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using BF2D.Enums;
+using UnityEngine;
 
 namespace BF2D.Game.Combat
 {
@@ -125,7 +126,7 @@ namespace BF2D.Game.Combat
                         targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
                         break;
                     default:
-                        Terminal.IO.LogError("[CharacterCombatAI:SetupTargetedGems] The provided value for a character target was invalid");
+                        Debug.LogError("[CharacterCombatAI:SetupTargetedGems] The provided value for a character target was invalid");
                         break;
                 }
             }

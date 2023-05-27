@@ -1,17 +1,25 @@
+using BF2D.Enums;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace BF2D.Game
 {
     public class StatusEffectInfo : IEntityInfo
     {
 
-        [JsonIgnore] public string ID { get { return this.id; } }
+        [JsonIgnore] public string ID => this.id;
         [JsonProperty] protected string id = string.Empty;
 
-        [JsonIgnore] public int RemainingDuration { get { return this.remainingDuration; } }
+        [JsonIgnore] public int RemainingDuration => this.remainingDuration;
         [JsonProperty] private int remainingDuration = -1;
 
-        [JsonIgnore] public Entity GetEntity { get { return Get(); } }
+        [JsonIgnore] public Entity GetEntity => Get();
+
+        [JsonIgnore] public string Name => Get().Name;
+
+        [JsonIgnore] public string Description => Get().Description;
+
+        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         public StatusEffectInfo(string id)
         {
@@ -32,5 +40,7 @@ namespace BF2D.Game
             this.remainingDuration--;
             return Get();
         }
+
+        public int GetModifier(CharacterStatsProperty property) => Get().GetModifier(property);
     }
 }

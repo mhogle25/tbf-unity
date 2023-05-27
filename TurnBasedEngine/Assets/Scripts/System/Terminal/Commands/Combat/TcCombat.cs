@@ -10,7 +10,7 @@ namespace BF2D.Game.Combat
 
             if (arguments.Length < 3)
             {
-                Terminal.IO.LogWarningQuiet(warning);
+                Terminal.IO.LogWarning(warning);
                 return;
             }
 
@@ -19,7 +19,7 @@ namespace BF2D.Game.Combat
             GameInfo.Instance.LoadGame(saveFileID);
             if (!GameInfo.Instance.SaveActive)
             {
-                Terminal.IO.LogErrorQuiet("Save file load failed.");
+                Terminal.IO.LogError("Save file load failed.");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace BF2D.Game.Combat
                 CharacterStats enemy = GameInfo.Instance.InstantiateEnemy(arguments[i]);
                 if (enemy is null)
                 {
-                    Terminal.IO.LogErrorQuiet($"Enemy with ID {arguments[i]} does not exist.");
+                    Terminal.IO.LogError($"Enemy with ID {arguments[i]} does not exist.");
                     return;
                 }
                 enemies.Add(enemy);

@@ -6,7 +6,6 @@
     [
         "Restoration"
     ],
-    "alignment":"Defense",
     "onUse":
     {
         "message":

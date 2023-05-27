@@ -6,8 +6,8 @@ namespace BF2D
     {
         public static void Run(string[] arguments)
         {
-            Terminal.IO.LogQuiet($"Streaming Assets Path: {Application.streamingAssetsPath}");
-            Terminal.IO.LogQuiet($"Persistent Data Path: {Application.persistentDataPath}");
+            Terminal.IO.Log($"Streaming Assets Path: {Application.streamingAssetsPath}");
+            Terminal.IO.Log($"Persistent Data Path: {Application.persistentDataPath}");
         }
     }
 }

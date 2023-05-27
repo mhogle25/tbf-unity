@@ -10,7 +10,7 @@ namespace BF2D.Game
 
             if (arguments.Length < 3)
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarning(warningMessage);
                 return;
             }
 
@@ -21,7 +21,7 @@ namespace BF2D.Game
             }
             catch
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarning(warningMessage);
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace BF2D.Game
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Dialog(arguments[2], false, startingIndex, null, inserts.ToArray());
-            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
+            Terminal.IO.Log("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
         }
     }
 }

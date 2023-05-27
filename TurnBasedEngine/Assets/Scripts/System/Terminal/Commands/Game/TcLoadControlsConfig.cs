@@ -1,4 +1,5 @@
 using BF2D.Enums;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -17,7 +18,7 @@ namespace BF2D.Game
 
             if (arguments.Length < 3 || arguments.Length > 3)
             {
-                Terminal.IO.LogWarning(warningMessage);
+                Debug.LogWarning(warningMessage);
                 return;
             }
 
@@ -29,7 +30,7 @@ namespace BF2D.Game
                 controllerType = InputController.Gamepad;
             else
             {
-                Terminal.IO.LogWarning($"Unknown controller type '{arguments[1]}'. " + warningMessage);
+                Debug.LogWarning($"Unknown controller type '{arguments[1]}'. " + warningMessage);
                 return;
             }
 

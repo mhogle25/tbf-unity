@@ -2,12 +2,11 @@
     "auras": 
     [
     ],
-    "alignment":"Offense",
     "damage": 
     {
         "number":
         {
-            "expression":"| 2 5"
+            "expression":"$ 2 5"
         }
     },
     "successRate":60

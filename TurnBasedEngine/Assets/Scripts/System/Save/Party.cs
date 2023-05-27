@@ -1,20 +1,24 @@
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class Party
     {
-        [JsonIgnore] public IEnumerable<CharacterStats> ActiveCharacters { get => this.activeCharacters; }
+        [JsonIgnore] public IEnumerable<CharacterStats> ActiveCharacters => this.activeCharacters;
         [JsonProperty] private readonly List<CharacterStats> activeCharacters = new();
 
-        [JsonIgnore] public IEnumerable<CharacterStats> InactiveCharacters { get => this.inactiveCharacters; }
+        [JsonIgnore] public IEnumerable<CharacterStats> InactiveCharacters => this.inactiveCharacters;
         [JsonProperty] private readonly List<CharacterStats> inactiveCharacters = new();
 
-        [JsonIgnore] public IItemHolder Bag { get => this.bag; }
-        [JsonProperty] private readonly ItemHolder bag = new();
+        [JsonIgnore] public IItemHolder Items => this.items;
+        [JsonProperty] private readonly ItemHolder items = new();
+
+        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments;
+        [JsonProperty] private readonly EquipmentHolder equipments = new();
 
         [JsonIgnore] public int Currency { get => this.currency; set => this.currency = value; }
         [JsonProperty] private int currency = 0;
@@ -26,13 +30,13 @@ namespace BF2D.Game
         {
             if (newCharacter is null)
             {
-                Terminal.IO.LogError("[SaveData:AddPlayer] Tried to add a player but the player was null");
+                Debug.LogError("[SaveData:AddPlayer] Tried to add a player but the player was null");
                 return;
             }
 
-            if (this.activeCharacters.Count > Numbers.MaxPartySize)
+            if (this.activeCharacters.Count >= Numbers.MaxPartySize)
             {
-                Terminal.IO.LogError("[SaveData:AddPlayer] Tried to add a player but the maximum number of active players was reached.");
+                Debug.LogError("[SaveData:AddPlayer] Tried to add a player but the maximum number of active players was reached.");
                 return;
             }
 

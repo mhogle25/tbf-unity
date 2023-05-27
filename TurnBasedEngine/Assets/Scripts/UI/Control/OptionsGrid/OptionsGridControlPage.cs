@@ -18,7 +18,7 @@ namespace BF2D.UI
         }
         public Enums.Axis PageOrientation { get { return this.pageOrientation; } set { this.pageOrientation = value; } }
 
-        private List<GridOption.Data> allOptions = new();
+        private readonly List<GridOption.Data> allOptions = new();
         private int currentPage = 0;
 
         [Header("Pages")]
@@ -85,8 +85,7 @@ namespace BF2D.UI
             if (count > this.allOptions.Count - startingIndex)
                 count = this.allOptions.Count - startingIndex;
 
-            foreach (GridOption.Data data in
-                this.allOptions.GetRange(startingIndex, count))
+            foreach (GridOption.Data data in this.allOptions.GetRange(startingIndex, count))
             {
                 GridOption gridOption = this.controlled.Add(data);
                 gridOption.SetCursor(false);

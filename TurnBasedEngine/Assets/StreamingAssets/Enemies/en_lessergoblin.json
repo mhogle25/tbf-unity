@@ -6,7 +6,7 @@
         "Evil"
     ],
     "prefabID":"goblin",
-    "health":6,
+    "health":1,
     "stamina":1,
     "constitution":5,
     "endurance":1,

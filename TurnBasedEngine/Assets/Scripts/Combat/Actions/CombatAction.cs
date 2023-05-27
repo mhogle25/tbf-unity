@@ -2,6 +2,7 @@ using BF2D.UI;
 using BF2D.Game.Actions;
 using System.Collections.Generic;
 using BF2D.Game.Combat.Enums;
+using UnityEngine;
 
 namespace BF2D.Game.Combat.Actions
 {
@@ -162,8 +163,8 @@ namespace BF2D.Game.Combat.Actions
             switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.Gems;
-                default: Terminal.IO.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
+                case CombatActionType.Item: return this.Item.TargetedGems;
+                default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }
         
@@ -173,8 +174,8 @@ namespace BF2D.Game.Combat.Actions
             switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.UseGems();
-                default: Terminal.IO.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
+                case CombatActionType.Item: return this.Item.UseTargetedGems();
+                default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }
     }

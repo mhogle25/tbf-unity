@@ -3,6 +3,7 @@ using System;
 using BF2D.Utilities;
 using BF2D.Enums;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -40,7 +41,7 @@ namespace BF2D.Game
             }
             catch (Exception x)
             {
-                Terminal.IO.LogError(x.ToString());
+                Debug.LogError(x.ToString());
                 return 0;
             }
         }
@@ -72,7 +73,7 @@ namespace BF2D.Game
             }
             catch (Exception x)
             {
-                Terminal.IO.LogError(x.Message);
+                Debug.LogError(x.Message);
                 return string.Empty;
             }
         }

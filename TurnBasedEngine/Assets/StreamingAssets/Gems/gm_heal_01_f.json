@@ -3,12 +3,11 @@
     [
         "Restoration"
     ],
-    "alignment":"Defense",
     "heal": 
     {
         "number":
         {
-            "expression":"| 1 10"
+            "expression":"$ 1 10"
         },
         "modifiers":
         [

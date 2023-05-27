@@ -5,7 +5,6 @@
     "auras":
     [
     ],
-    "alignment":"Defense",
     "onUse":
     {
         "message":

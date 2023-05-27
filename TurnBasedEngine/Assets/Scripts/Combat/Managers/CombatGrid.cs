@@ -69,7 +69,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
+                Debug.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -86,7 +86,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -100,7 +100,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.Ether} loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.Ether} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -114,7 +114,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Terminal.IO.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total items loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total items loot from the fight but combat wasn't over.");
                 return new List<string>();
             }
 
@@ -141,7 +141,7 @@ namespace BF2D.Game.Combat
             {
                 if (IsPlayerGridFull())
                 {
-                    Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate a player combat but the grid was full");
                     continue;
                 }
                 CharacterCombat playerCombat = InstantiatePlayerCombat(playerStats);
@@ -154,7 +154,7 @@ namespace BF2D.Game.Combat
             {
                 if (IsEnemyGridFull())
                 {
-                    Terminal.IO.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
+                    Debug.LogWarning("[CombatGrid:Setup] Tried to instantiate an enemy combat but the grid was full");
                     continue;
                 }
                 CharacterCombat enemyCombat = InstantiateEnemyCombat(enemyStats);

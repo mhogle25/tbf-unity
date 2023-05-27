@@ -6,13 +6,13 @@ namespace BF2D.Game
         {
             if (!GameInfo.Instance.SystemTextbox.Textbox.Armed)
             {
-                Terminal.IO.LogWarningQuiet("The system textbox wasn't armed.");
+                Terminal.IO.LogWarning("The system textbox wasn't armed.");
                 return;
             }
 
             if (UI.UIControlsManager.Instance.PhantomControlEnabled)
             {
-                Terminal.IO.LogWarningQuiet("Can't run system textbox while another phantom UI control is active.");
+                Terminal.IO.LogWarning("Can't run system textbox while another phantom UI control is active.");
                 return;
             }
 

@@ -1,7 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 namespace BF2D
 {
@@ -11,7 +9,7 @@ namespace BF2D
 
         private readonly Dictionary<string, AudioClip> audioClipsDict = new();
 
-        public AudioClip this[string id] { get { return Get(id); } }
+        public AudioClip this[string id] { get => Get(id); }
 
         private void Awake()
         {
@@ -35,7 +33,7 @@ namespace BF2D
         {
             if (!this.audioClipsDict.ContainsKey(id))
             {
-                Terminal.IO.LogError($"[SpriteCollection] The audio collection did not contain a sound for id {id}");
+                Debug.LogError($"[SpriteCollection] The audio collection did not contain a sound for id {id}");
                 return null;
             }
 

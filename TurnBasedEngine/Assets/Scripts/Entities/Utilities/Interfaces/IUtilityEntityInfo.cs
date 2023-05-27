@@ -7,7 +7,5 @@ namespace BF2D.Game
         public IUtilityEntity GetUtility { get; }
 
         public Sprite Icon { get; }
-
-        public string Name { get; }
     }
 }

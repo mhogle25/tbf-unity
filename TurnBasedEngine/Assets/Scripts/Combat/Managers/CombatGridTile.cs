@@ -26,7 +26,7 @@ namespace BF2D.Game.Combat
 
         public override bool Setup(Data optionData)
         {
-            Terminal.IO.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");
+            Debug.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");
             throw new System.NotImplementedException();
         }
 

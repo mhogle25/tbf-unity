@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.IO;
 
 namespace BF2D.Utilities
 {
@@ -43,7 +42,7 @@ namespace BF2D.Utilities
 
             if (!this.cachedData.ContainsKey(id))
             {
-                Terminal.IO.LogError($"[InternalFileManager: LoadFile] The text asset {id} didnt exist.");
+                Debug.LogError($"[InternalFileManager: LoadFile] The text asset {id} didnt exist.");
                 return string.Empty;
             }
 

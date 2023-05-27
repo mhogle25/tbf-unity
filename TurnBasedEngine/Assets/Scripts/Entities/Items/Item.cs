@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using BF2D.Game.Actions;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
@@ -9,12 +9,12 @@ namespace BF2D.Game
     public class Item : Entity, IUtilityEntity
     {
         [JsonIgnore] public string SpriteID { get => this.spriteID; }
-        [JsonProperty] protected readonly string spriteID = string.Empty;
         [JsonIgnore] public bool Consumable { get => this.consumable; }
-        [JsonProperty] protected readonly bool consumable = true;
-        [JsonIgnore] public Enums.CombatAlignment Alignment { get => this.alignment; }
-        [JsonProperty] private readonly Enums.CombatAlignment alignment = Enums.CombatAlignment.Neutral;
         [JsonIgnore] public TargetedGameAction OnUse { get => this.onUse; }
+        [JsonIgnore] public CombatAlignment Alignment => this.OnUse?.Alignment ?? CombatAlignment.Neutral;
+
+        [JsonProperty] protected readonly bool consumable = true;
+        [JsonProperty] protected readonly string spriteID = string.Empty;
         [JsonProperty] protected readonly TargetedGameAction onUse = null;
 
         [JsonIgnore] public bool Useable { get => this.OnUse is not null; }
@@ -26,7 +26,7 @@ namespace BF2D.Game
 
             foreach (TargetedCharacterStatsAction targetedGem in this.OnUse.TargetedGems)
             {
-                description += "-\n" + targetedGem.Gem.TextBreakdown(source);
+                description += $"-\n{targetedGem.Gem.TextBreakdown(source)}";
             }
             description += "-\n";
             if (!this.Consumable)

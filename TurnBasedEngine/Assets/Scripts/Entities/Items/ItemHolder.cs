@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -12,7 +14,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Terminal.IO.LogError($"[ItemHolder:AcquireItem] Tried to add an item with id {id} to an item bag but the item id given was invalid");
+                Debug.LogError($"[ItemHolder:AcquireItem] Tried to add an item with id {id} to an item bag but the item id given was invalid");
                 return null;
             }
 
@@ -24,7 +26,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Terminal.IO.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given was null");
+                Debug.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given was null");
                 return null;
             }
 
@@ -32,28 +34,11 @@ namespace BF2D.Game
             return info;
         }
 
-        public IEnumerable<ItemInfo> InRange(int firstIndex, int count)
-        {
-            return GetRange(firstIndex, count);
-        }
-
-        public IEnumerable<ItemInfo> Useable
-        {
-            get
-            {
-                List<ItemInfo> filtered = new();
-                foreach (ItemInfo item in this)
-                {
-                    if (item.Useable)
-                        filtered.Add(item);
-                }
-                return filtered;
-            }
-        }
+        public IEnumerable<ItemInfo> Useable => this.Where(info => info.Useable);
 
         private ItemInfo AddItem(string id)
         {
-            if (id == string.Empty)
+            if (string.IsNullOrEmpty(id))
                 return null;
 
             foreach (ItemInfo info in this)

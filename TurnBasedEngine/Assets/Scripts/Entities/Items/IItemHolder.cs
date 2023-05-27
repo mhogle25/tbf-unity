@@ -8,8 +8,6 @@ namespace BF2D.Game
 
         public ItemInfo RemoveItem(ItemInfo info);
 
-        public IEnumerable<ItemInfo> InRange(int firstIndex, int count);
-
         public IEnumerable<ItemInfo> Useable { get; }
     }
 }

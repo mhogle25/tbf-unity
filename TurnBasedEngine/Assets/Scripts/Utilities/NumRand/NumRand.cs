@@ -7,7 +7,7 @@ namespace BF2D.Utilities
     [Serializable]
     public class NumRand
     {
-        private const char OP_RANGE = '|';
+        private const char OP_RANGE = '$';
         private const char OP_ADD = '+';
         private const char OP_SUB = '-';
         private const char OP_MULT = '*';
@@ -86,7 +86,7 @@ namespace BF2D.Utilities
                     int value = UnityEngine.Random.Range((int) min, (int) max);
 
                     if (specs.showLogs)
-                        Terminal.IO.Log($"Random Value: {value}");
+                        Debug.Log($"Random Value: {value}");
 
                     value += specs.modifyEveryRandOp is null ? 0 : (int) specs.modifyEveryRandOp;
 
@@ -97,7 +97,7 @@ namespace BF2D.Utilities
                         value = (int) min;
 
                     if (specs.showLogs)
-                        Terminal.IO.Log($"After Specs: {value}");
+                        Debug.Log($"After Specs: {value}");
 
                     return value;
                 }
@@ -262,7 +262,7 @@ namespace BF2D.Utilities
             }
 
             if (specs.showLogs)
-                Terminal.IO.Log($"Final Value: {stagedValue}");
+                Debug.Log($"Final Value: {stagedValue}");
             return (int) stagedValue;
         }
 
@@ -295,7 +295,7 @@ namespace BF2D.Utilities
                     continue;
                 }
 
-                string arg = null;
+                string arg;
                 if (stagedValue is not null)
                 {
                     arg = $"({stagedValue})";

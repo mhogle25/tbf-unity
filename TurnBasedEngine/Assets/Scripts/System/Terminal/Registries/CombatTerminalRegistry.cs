@@ -38,6 +38,7 @@ namespace BF2D.Game.Combat
                 { "savegame", TcSaveGame.Run },
                 { "saveconfig", TcSaveControlsConfig.Run },
                 { "loadconfig", TcLoadControlsConfig.Run },
+                { "numrand", TcNumRand.Run }
             };
         }
     }

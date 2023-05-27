@@ -386,7 +386,7 @@ namespace BF2D
                     this.gamepadConfig = CloneGamepadConfig(this.defaultGamepadConfig);
                     break;
                 default:
-                    Terminal.IO.LogError("[InputManager:ResetConfig] InputController was null or invalid");
+                    Debug.LogError("[InputManager:ResetConfig] InputController was null or invalid");
                     return;
             }
         }
@@ -421,7 +421,7 @@ namespace BF2D
                     this.gamepadConfig = BF2D.Utilities.JSON.DeserializeString<ControlsConfigGamepad>(json);
                     break;
                 default:
-                    Terminal.IO.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");
+                    Debug.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");
                     break;
             }
 
@@ -497,7 +497,7 @@ namespace BF2D
             };
 
             if (this.currentConfig is null)
-                Terminal.IO.LogError("[InputManager:ReloadCurrentConfig] InputController was null or invalid");
+                Debug.LogError("[InputManager:ReloadCurrentConfig] InputController was null or invalid");
         }
 
         private void StateGamepadConnected()
@@ -543,7 +543,7 @@ namespace BF2D
 
             if (IsKeyCodeBlacklisted(this.lastHitKey))
             {
-                Terminal.IO.LogWarning($"[InputManager:StateSetCurrentConfigButton] Tried to bind key '{this.lastHitKey}' to '{inputButton}' but the key was blacklisted.");
+                Debug.LogWarning($"[InputManager:StateSetCurrentConfigButton] Tried to bind key '{this.lastHitKey}' to '{inputButton}' but the key was blacklisted.");
                 return;
             }
 
@@ -568,7 +568,7 @@ namespace BF2D
                     this.currentConfig.Select = this.lastHitKey;
                     break;
                 default:
-                    Terminal.IO.LogError("[InputManager:StateSetCurrentConfigButton] InputButton was null or invalid");
+                    Debug.LogError("[InputManager:StateSetCurrentConfigButton] InputButton was null or invalid");
                     break;
             }
 
@@ -584,7 +584,7 @@ namespace BF2D
 
             if (IsKeyCodeBlacklisted(this.lastHitKey))
             {
-                Terminal.IO.LogWarning($"[InputManager:StateSetCurrentKeyboardDirection] Tried to bind key '{this.lastHitKey}' to '{inputDirection}' but the key was blacklisted.");
+                Debug.LogWarning($"[InputManager:StateSetCurrentKeyboardDirection] Tried to bind key '{this.lastHitKey}' to '{inputDirection}' but the key was blacklisted.");
                 return;
             }
 
@@ -603,7 +603,7 @@ namespace BF2D
                     this.keyboardConfig.Right = this.lastHitKey;
                     break;
                 default:
-                    Terminal.IO.LogError("[InputManager:StateSetKeyboardDirection] InputDirection was null or invalid");
+                    Debug.LogError("[InputManager:StateSetKeyboardDirection] InputDirection was null or invalid");
                     break;
             }
 

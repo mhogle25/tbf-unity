@@ -36,7 +36,7 @@
     },
     "luckRate": 
     {
-        "skip":4,
+        "skip":6,
         "amount":1
     },
     "critMultiplierRate":

@@ -10,7 +10,7 @@ namespace BF2D.Game
 
             if (arguments.Length < 4)
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarning(warningMessage);
                 return;
             }
 
@@ -21,7 +21,7 @@ namespace BF2D.Game
             }
             catch
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarning(warningMessage);
                 return;
             }
 
@@ -32,19 +32,19 @@ namespace BF2D.Game
             }
             catch
             {
-                Terminal.IO.LogWarningQuiet(warningMessage);
+                Terminal.IO.LogWarning(warningMessage);
                 return;
             }
 
             if (length > arguments.Length - 3)
             {
-                Terminal.IO.LogWarningQuiet("Length was greater than the number of lines. " + warningMessage);
+                Terminal.IO.LogWarning("Length was greater than the number of lines. " + warningMessage);
                 return;
             }
 
             if (startingIndex >= length)
             {
-                Terminal.IO.LogWarningQuiet("Starting index was outside the range of the dialog. " + warningMessage);
+                Terminal.IO.LogWarning("Starting index was outside the range of the dialog. " + warningMessage);
                 return;
             }
 
@@ -61,7 +61,7 @@ namespace BF2D.Game
             }
 
             GameInfo.Instance.SystemTextbox.Textbox.Dialog(dialog, false, startingIndex, null, inserts.ToArray());
-            Terminal.IO.LogQuiet("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
+            Terminal.IO.Log("Pushed a dialog to the system textbox's queue. Run with 'textbox'.");
         }
     }
 }
