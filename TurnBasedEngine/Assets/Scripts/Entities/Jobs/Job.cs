@@ -94,47 +94,47 @@ namespace BF2D.Game
 
         public int GetMaxHealthModifier(int level)
         {
-            return Calculate(level, this.maxHealthRate, (levelUpEvent) => levelUpEvent.maxHealth);
+            return Calculate(level, this.maxHealthRate, levelUpEvent => levelUpEvent.maxHealth);
         }
 
         public int GetMaxStaminaModifier(int level)
         {
-            return Calculate(level, this.maxStaminaRate, (levelUpEvent) => levelUpEvent.maxStamina);
+            return Calculate(level, this.maxStaminaRate, levelUpEvent => levelUpEvent.maxStamina);
         }
 
         public int GetSpeedModifier(int level)
         {
-            return Calculate(level, this.speedRate, (levelUpEvent) => levelUpEvent.speed);
+            return Calculate(level, this.speedRate, levelUpEvent => levelUpEvent.speed);
         }
 
         public int GetAttackModifier(int level)
         {
-            return Calculate(level, this.attackRate, (levelUpEvent) => levelUpEvent.attack);
+            return Calculate(level, this.attackRate, levelUpEvent => levelUpEvent.attack);
         }
 
         public int GetDefenseModifier(int level)
         {
-            return Calculate(level, this.defenseRate, (levelUpEvent) => levelUpEvent.defense);
+            return Calculate(level, this.defenseRate, levelUpEvent => levelUpEvent.defense);
         }
 
         public int GetFocusModifier(int level)
         {
-            return Calculate(level, this.focusRate, (levelUpEvent) => levelUpEvent.focus);
+            return Calculate(level, this.focusRate, levelUpEvent => levelUpEvent.focus);
         }
 
         public int GetLuckModifier(int level)
         {
-            return Calculate(level, this.luckRate, (levelUpEvent) => levelUpEvent.luck);
+            return Calculate(level, this.luckRate, levelUpEvent => levelUpEvent.luck);
         }
 
         public int GetCritMultiplier(int level)
         {
-            return Numbers.BaseCritMultiplier + Calculate(level, this.critMultiplierRate, (levelUpEvent) => levelUpEvent.critMultiplier);
+            return Numbers.BaseCritMultiplier + Calculate(level, this.critMultiplierRate, levelUpEvent => levelUpEvent.critMultiplier);
         }
 
         public int GetCritChance(int level)
         {
-            return Numbers.BaseCritChance + Calculate(level, this.critChanceRate, (levelUpEvent) => levelUpEvent.critChance);
+            return Numbers.BaseCritChance + Calculate(level, this.critChanceRate, levelUpEvent => levelUpEvent.critChance);
         }
 
         public bool LevelUpdate(ref long experience, ref int level)

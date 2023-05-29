@@ -96,7 +96,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFiles] Path '{path}' was invalid");
+                Debug.LogError($"[Utilities:TextFile:LoadFiles] Path '{path}' was invalid");
                 return -1;
             }
 
@@ -120,13 +120,13 @@ namespace BF2D.Utilities
             } 
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadFile] The file at path '{path}' does not exist");
                 return;
             }
 
             if (collection.ContainsKey(id))
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
+                Debug.LogError($"[Utilities:TextFile:LoadFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
                 return;
             }
 
@@ -142,7 +142,7 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Path '{path}' was invalid");
+                Debug.LogError($"[Utilities:TextFile:LoadFiles] Path '{path}' was invalid");
                 return -1;
             }
 
@@ -174,13 +174,13 @@ namespace BF2D.Utilities
             }
             catch
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] The file at path '{path}' does not exist");
+                Debug.LogError($"[Utilities:TextFile:LoadFile] The file at path '{path}' does not exist");
                 return;
             }
 
             if (collection.ContainsKey(id))
             {
-                Debug.LogError($"[Utilities:TextFile:LoadTextFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
+                Debug.LogError($"[Utilities:TextFile:LoadFile] Tried to add a file with a duplicate ID to the collection (ID: {id})");
                 return;
             }
 
@@ -215,7 +215,7 @@ namespace BF2D.Utilities
             }
             catch (Exception x)
             {
-                Debug.LogError($"[Utilities:TextFile:DeserializeString] Tried to serialize JSON but it was not valid.");
+                Debug.LogError($"[Utilities:TextFile:SerializeObject] Tried to serialize JSON but it was not valid.");
                 Debug.LogError(x.Message);
                 return default;
             }

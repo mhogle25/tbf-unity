@@ -1,9 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using System;
-using BF2D.Game;
-using UnityEngine.TextCore.Text;
 
 namespace BF2D.Game.Combat
 {
@@ -55,13 +53,7 @@ namespace BF2D.Game.Combat
             }
         }
 
-        public CharacterCombat CurrentCharacter
-        {
-            get
-            {
-                return this.characterQueue[this.currentCharacterIndex]; 
-            }
-        }
+        public CharacterCombat CurrentCharacter => this.characterQueue[this.currentCharacterIndex];
         #endregion
 
         #region Public Utilities
@@ -75,9 +67,7 @@ namespace BF2D.Game.Combat
 
             long value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
-            {
                 value += character.CurrentJob.ExperienceAward;
-            }
             
             return value;
         }
@@ -121,23 +111,25 @@ namespace BF2D.Game.Combat
             List<string> totalLoot = new();
             foreach (CharacterStats character in this.defeatedEnemies)
                 foreach (EntityLoot loot in character.ItemsLoot)
-                    for (int i = 0; i < loot.Count; i++)
-                        if (Utilities.Probability.Roll(character, loot.Probability))
-                            totalLoot.Add(loot.ID);
+                    loot.RollForLoot(totalLoot);
+
             return totalLoot;
         }
 
-        public void Setup(List<CharacterStats> players, List<CharacterStats> enemies)
+        public void Setup(IEnumerable<CharacterStats> players, IEnumerable<CharacterStats> enemies)
         {
+            List<CharacterStats> playersOrdered = new(players);
+            List<CharacterStats> enemiesOrdered = new(enemies);
+
             this.defeatedEnemies.Clear();
 
             if (!DictsLoaded())
                 LoadCharacterPrefabs();
 
-            players.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
-            enemies.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
+            playersOrdered.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
+            enemiesOrdered.Sort((x, y) => x.GridPosition.CompareTo(y.GridPosition));
 
-            foreach (CharacterStats playerStats in players)
+            foreach (CharacterStats playerStats in playersOrdered)
             {
                 if (IsPlayerGridFull())
                 {
@@ -150,7 +142,7 @@ namespace BF2D.Game.Combat
                 this.playersCount++;
             }
 
-            foreach (CharacterStats enemyStats in enemies)
+            foreach (CharacterStats enemyStats in enemiesOrdered)
             {
                 if (IsEnemyGridFull())
                 {
@@ -164,7 +156,6 @@ namespace BF2D.Game.Combat
             }
 
             SpeedSort();
-
         }
 
         public void PassTurn()
@@ -217,16 +208,12 @@ namespace BF2D.Game.Combat
         public void GridReset()
         {
             foreach (CombatGridTile tile in this.playerPlatforms)
-            {
                 if (tile.AssignedCharacter != null)
                     tile.AssignedCharacter.Destroy();
-            }
 
             foreach (CombatGridTile tile in this.enemyPlatforms)
-            {
                 if (tile.AssignedCharacter != null)
                     tile.AssignedCharacter.Destroy();
-            }
 
             this.characterQueue.Clear();
             this.defeatedEnemies.Clear();
@@ -245,14 +232,10 @@ namespace BF2D.Game.Combat
         private void LoadCharacterPrefabs()
         {
             foreach (CharacterCombat combatPrefab in this.playerCombatPrefabs)
-            {
                 this.playerCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
-            }
 
             foreach (CharacterCombat combatPrefab in this.enemyCombatPrefabs)
-            {
                 this.enemyCombatPrefabsDict.Add(combatPrefab.name, combatPrefab);
-            }
         }
         
         private CharacterCombat InstantiatePlayerCombat(CharacterStats playerStats)
@@ -280,24 +263,18 @@ namespace BF2D.Game.Combat
             return this.enemiesCount >= this.enemyPlatforms.Length;
         }
 
-        private bool DictsLoaded()
-        {
-            return this.playerCombatPrefabsDict.Count > 0 && this.enemyCombatPrefabsDict.Count > 0;
-        }
+        private bool DictsLoaded() => this.playerCombatPrefabsDict.Count > 0 && this.enemyCombatPrefabsDict.Count > 0;
 
-        private List<CharacterCombat> CreateCharacterList(CombatGridTile[] tileArray, Predicate<CombatGridTile> predicate)
-        {
-            return FillCharacterList(tileArray, predicate, null);
-        }
+        private List<CharacterCombat> CreateCharacterList(CombatGridTile[] tileArray, Predicate<CombatGridTile> predicate) => FillCharacterList(tileArray, predicate, null);
 
         private List<CharacterCombat> FillCharacterList(CombatGridTile[] tileArray, Predicate<CombatGridTile> predicate, List<CharacterCombat> listToReturn)
         {
             List<CharacterCombat> list = listToReturn is not null ? listToReturn : new();
+
             foreach (CombatGridTile tile in tileArray)
-            {
                 if (tile.AssignedCharacter && predicate(tile))
                     list.Add(tile.AssignedCharacter);
-            }
+
             return list;
         }
         #endregion

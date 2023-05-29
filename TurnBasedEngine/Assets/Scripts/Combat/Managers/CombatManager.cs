@@ -168,15 +168,9 @@ namespace BF2D.Game.Combat
             return playersDefeated;
         }
 
-        public bool PlayersAreAtFullHealth
-        {
-            get => CharactersAreAtFullHealth(this.Players);
-        }
+        public bool PlayersAreAtFullHealth() => CharactersAreAtFullHealth(this.Players);
 
-        public bool EnemiesAreAtFullHealth
-        {
-            get => CharactersAreAtFullHealth(this.Enemies);
-        }
+        public bool EnemiesAreAtFullHealth() => CharactersAreAtFullHealth(this.Enemies);
 
         public CharacterCombat RandomCharacter()
         {
@@ -227,16 +221,7 @@ namespace BF2D.Game.Combat
 
         private void Initialize(InitializeInfo initInfo)
         {
-            List<CharacterStats> players = new();
-            List<CharacterStats> enemies = new();
-
-            foreach (CharacterStats player in initInfo.players)
-                players.Add(player);
-
-            foreach (CharacterStats enemy in initInfo.enemies)
-                enemies.Add(enemy);
-
-            this.combatGrid.Setup(players, enemies);
+            this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
             this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, false, 0, BeginTurn);
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);

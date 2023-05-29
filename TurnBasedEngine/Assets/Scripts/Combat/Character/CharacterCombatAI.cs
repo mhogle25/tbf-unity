@@ -176,7 +176,7 @@ namespace BF2D.Game.Combat
                     if (entity.GetEntity.ContainsAura(this.auraRanking.Max))
                         list.Add(entity);
 
-            if (CombatManager.Instance.EnemiesAreAtFullHealth && !allRestoration)
+            if (CombatManager.Instance.EnemiesAreAtFullHealth() && !allRestoration)
             {
                 list.RemoveAll((entity) => entity.GetEntity.ContainsAura(AuraType.Restoration));
 

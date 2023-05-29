@@ -2,12 +2,24 @@ using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class Party
     {
+        [JsonIgnore] public CharacterStats PartyLeader
+        {
+            get
+            {
+                CharacterStats smallestGridPosition = this.activeCharacters[0];
+                foreach (CharacterStats character in this.activeCharacters)
+                    if (character.GridPosition < smallestGridPosition.GridPosition)
+                        smallestGridPosition = character;
+                return smallestGridPosition;
+            }
+        }
         [JsonIgnore] public IEnumerable<CharacterStats> ActiveCharacters => this.activeCharacters;
         [JsonProperty] private readonly List<CharacterStats> activeCharacters = new();
 

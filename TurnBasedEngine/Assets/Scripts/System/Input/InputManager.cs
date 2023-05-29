@@ -8,7 +8,6 @@ namespace BF2D
 {
     public class InputManager : MonoBehaviour
     {
-
         [Serializable]
         public abstract class ControlsConfig
         {

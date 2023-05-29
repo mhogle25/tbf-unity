@@ -16,10 +16,10 @@ namespace BF2D.Utilities
             Dictionary<string, List<string>> data = new();
 
             if (this.directory == GameDirectory.Persistent || this.directory == GameDirectory.All)
-                TextFile.LoadFiles(data, Application.persistentDataPath + '/' + this.path);
+                TextFile.LoadFiles(data, Path.GetFullPath(Path.Combine(Application.persistentDataPath, this.path)));
 
             if (this.directory == GameDirectory.Streaming || this.directory == GameDirectory.All)
-                TextFile.LoadFiles(data, Application.streamingAssetsPath + '/' + this.path);
+                TextFile.LoadFiles(data, Path.GetFullPath(Path.Combine(Application.streamingAssetsPath, this.path)));
 
             return data;
         }
@@ -29,10 +29,10 @@ namespace BF2D.Utilities
             Dictionary<string, string> data = new();
 
             if (this.directory == GameDirectory.Persistent || this.directory == GameDirectory.All)
-                TextFile.LoadFiles(data, Application.persistentDataPath + '/' + this.path);
+                TextFile.LoadFiles(data, Path.GetFullPath(Path.Combine(Application.persistentDataPath, this.path)));
 
             if (this.directory == GameDirectory.Streaming || this.directory == GameDirectory.All)
-                TextFile.LoadFiles(data, Application.streamingAssetsPath + '/' + this.path);
+                TextFile.LoadFiles(data, Path.GetFullPath(Path.Combine(Application.streamingAssetsPath, this.path)));
 
             return data;
         }
@@ -43,10 +43,10 @@ namespace BF2D.Utilities
             string streamingContent = null;
 
             if (this.directory == GameDirectory.Persistent || this.directory == GameDirectory.All)
-                persistentContent = TextFile.LoadFile(Application.persistentDataPath + '/' + this.path + '/' + $"{id}.{this.fileExtension}");
+                persistentContent = TextFile.LoadFile(Path.GetFullPath(Path.Combine(Application.persistentDataPath, this.path, $"{id}.{this.fileExtension}")));
 
             if (this.directory == GameDirectory.Streaming || this.directory == GameDirectory.All)
-                streamingContent = TextFile.LoadFile(Application.streamingAssetsPath + '/' + this.path + '/' + $"{id}.{this.fileExtension}");
+                streamingContent = TextFile.LoadFile(Path.GetFullPath(Path.Combine(Application.streamingAssetsPath, this.path, $"{id}.{this.fileExtension}")));
 
             if (!string.IsNullOrEmpty(persistentContent) && !string.IsNullOrEmpty(streamingContent))
             {
@@ -65,7 +65,7 @@ namespace BF2D.Utilities
                 return;
             }
 
-            StreamWriter writer = new(Application.persistentDataPath + '/' + this.path + '/' + $"{id}.{this.fileExtension}", false);
+            StreamWriter writer = new(Path.GetFullPath(Path.Combine(Application.persistentDataPath, this.path, $"{id}.{this.fileExtension}")), false);
             writer.WriteLine(content);
             writer.Close();
         }
