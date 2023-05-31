@@ -16,7 +16,7 @@ namespace BF2D.Game
             this.owner = owner;
         }
 
-        private readonly ItemInfo itemInfo = null;
+        private ItemInfo itemInfo = null;
         private readonly IItemHolder owner = null;
         private int index = 0;
 
@@ -36,7 +36,11 @@ namespace BF2D.Game
 
             targetedGems[this.index].SetGemID(gemID);
 
-            return GameInfo.Instance.WriteItem(newItem, () => this.itemInfo.Decrement(this.owner));
+            return GameInfo.Instance.WriteItem(newItem, () =>
+            {
+                this.itemInfo.Decrement(this.owner);
+                this.itemInfo = this.owner.AcquireItem(newItem.ID);
+            });
         }
     }
 }

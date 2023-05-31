@@ -73,7 +73,6 @@ namespace BF2D.Game
 
             writer?.Overwrite();
             Terminal.IO.Log($"Embued {itemInfo.Name} with {gem.Name} as {newName}.");
-            character.Items.AcquireItem(writer?.ID);
             Terminal.IO.Log($"Gave {newName} to {character.Name}.");
             gameInfo.SaveGame();
         }
