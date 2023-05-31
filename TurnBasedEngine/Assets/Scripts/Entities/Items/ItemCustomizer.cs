@@ -24,8 +24,7 @@ namespace BF2D.Game
 
         public Utilities.FileWriter EmbueGem(string gemID, string newName)
         {
-            string newItemID = Guid.NewGuid().ToString("N");
-            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(newItemID, newName);
+            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Guid.NewGuid().ToString("N"), newName);
 
             TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGems;
 
@@ -37,11 +36,7 @@ namespace BF2D.Game
 
             targetedGems[this.index].SetGemID(gemID);
 
-            return GameInfo.Instance.WriteItem(newItem, () =>
-            {
-                this.itemInfo.Decrement(this.owner);
-                GameInfo.Instance.DeleteItemIfCustom(this.itemInfo.ID);
-            });
+            return GameInfo.Instance.WriteItem(newItem, () => this.itemInfo.Decrement(this.owner));
         }
     }
 }

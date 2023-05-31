@@ -31,7 +31,21 @@ namespace BF2D.Game
             }
 
             Remove(info);
+            GameInfo.Instance.DeleteItemIfCustom(info.ID);
+
             return info;
+        }
+
+        public ItemInfo TransferItem(ItemInfo info, IItemHolder reciever)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given was null");
+                return null;
+            }
+
+            Remove(info);
+            return reciever.AcquireItem(info.ID); 
         }
 
         public IEnumerable<ItemInfo> Useable => this.Where(info => info.Useable);
