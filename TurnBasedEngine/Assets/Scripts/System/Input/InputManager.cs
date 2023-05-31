@@ -14,6 +14,7 @@ namespace BF2D
             [JsonIgnore] public abstract string ID { get; set; }
 
             [JsonIgnore] public abstract InputController ControlType { get; }
+
             [JsonIgnore] public KeyCode Confirm { get { return this.confirm; } set { this.confirm = value; } }
             [JsonProperty] private protected KeyCode confirm = KeyCode.P;
             [JsonIgnore] public KeyCode Back { get { return this.back; } set { this.back = value; } }
@@ -68,6 +69,7 @@ namespace BF2D
 
             [JsonIgnore] public override InputController ControlType { get { return ControlsConfigKeyboard.controlType; } }
             private const InputController controlType = InputController.Keyboard;
+
             [JsonIgnore] public KeyCode Up { get { return this.up; } set { this.up = value; } }
             [JsonProperty] private KeyCode up = KeyCode.W;
             [JsonIgnore] public KeyCode Left { get { return this.left; } set { this.left = value; } }
@@ -246,8 +248,8 @@ namespace BF2D
         private KeyCode lastHitKey;
 
         private Action states;
-        private Action buttonLambda;
-        private Action directionLambda;
+        private Action buttonEvent;
+        private Action directionEvent;
 
         public bool Up { get { return GetDirection(InputDirection.Up); } }
         public bool Left { get { return GetDirection(InputDirection.Left); } }
@@ -429,20 +431,20 @@ namespace BF2D
 
         public void SetCurrentConfigButton(InputButton inputButton)
         {
-            buttonLambda = () =>
+            this.buttonEvent = () =>
             {
                 StateSetCurrentConfigButton(inputButton);
             };
-            states += buttonLambda;
+            this.states += this.buttonEvent;
         }
 
         public void SetKeyboardDirection(InputDirection inputDirection)
         {
-            directionLambda = () =>
+            this.directionEvent = () =>
             {
                 StateSetKeyboardDirection(inputDirection);
             };
-            states += directionLambda;
+            this.states += this.directionEvent;
         }
 
         /// <summary>
@@ -571,7 +573,7 @@ namespace BF2D
                     break;
             }
 
-            states -= buttonLambda;
+            states -= this.buttonEvent;
         }
 
         private void StateSetKeyboardDirection(InputDirection inputDirection)
@@ -606,7 +608,7 @@ namespace BF2D
                     break;
             }
 
-            states -= directionLambda;
+            states -= this.directionEvent;
         }
 
         private bool IsKeyCodeBlacklisted(KeyCode code)

@@ -10,6 +10,9 @@ namespace BF2D.Game
     [Serializable]
     public class CharacterStats : Entity
     {
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonProperty] private string id = string.Empty;
+
         [JsonIgnore] public string PrefabID { get => this.prefabID; }
         [JsonProperty] private readonly string prefabID = string.Empty;
 

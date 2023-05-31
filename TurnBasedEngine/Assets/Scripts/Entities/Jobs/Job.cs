@@ -8,7 +8,6 @@ namespace BF2D.Game
     [Serializable]
     public class Job : Entity
     {
-
         #region Character Stats
         [Serializable]
         private class Rate
@@ -22,6 +21,9 @@ namespace BF2D.Game
                 this.amount += modification.amount;
             }
         }
+
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] private string id = string.Empty;
 
         [JsonProperty] private readonly long initLevelUpAmount = 3;
         [JsonProperty] private readonly float levelUpRate = 1.6f;

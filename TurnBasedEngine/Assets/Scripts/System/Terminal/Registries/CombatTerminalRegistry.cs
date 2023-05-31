@@ -24,7 +24,7 @@ namespace BF2D.Game.Combat
                 //
                 //
 
-                { "help", TcCombatHelp.Run },
+                //{ "help", TcCombatHelp.Run },
                 { "echo", TcEcho.Run },
                 { "clear", TcClear.Run },
                 { "paths", TcPaths.Run },
@@ -36,9 +36,11 @@ namespace BF2D.Game.Combat
                 { "textbox", TcRunTextbox.Run },
                 { "clearcaches", TcClearCaches.Run },
                 { "savegame", TcSaveGame.Run },
+                { "loadgame", TcLoadGame.Run },
                 { "saveconfig", TcSaveControlsConfig.Run },
                 { "loadconfig", TcLoadControlsConfig.Run },
-                { "numrand", TcNumRand.Run }
+                { "numrand", TcNumRand.Run },
+                { "embueitem", TcEmbueItem.Run }
             };
         }
     }

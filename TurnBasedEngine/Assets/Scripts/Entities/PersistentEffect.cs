@@ -2,11 +2,15 @@ using Newtonsoft.Json;
 using BF2D.Enums;
 using BF2D.Game.Actions;
 using BF2D.Game.Enums;
+using System;
 
 namespace BF2D.Game
 {
     public class PersistentEffect : Entity, ICombatAligned
     {
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] private string id = string.Empty;
+
         [JsonIgnore] public virtual int SpeedModifier => this.speedModifier;
         [JsonIgnore] public virtual int AttackModifier => this.attackModifier;
         [JsonIgnore] public virtual int DefenseModifier => this.defenseModifier;
@@ -21,6 +25,9 @@ namespace BF2D.Game
         {
             get
             {
+                if (this.alignment is not null)
+                    return (CombatAlignment) this.alignment;
+
                 int offensePoints = 0;
                 int defensePoints = 0;
                 int neutralPoints = 0;
@@ -37,6 +44,7 @@ namespace BF2D.Game
             }
         }
 
+        [JsonProperty] private CombatAlignment? alignment = null;
         [JsonProperty] private readonly int speedModifier = 0;
         [JsonProperty] private readonly int attackModifier = 0;
         [JsonProperty] private readonly int defenseModifier = 0;
@@ -62,7 +70,7 @@ namespace BF2D.Game
                 CharacterStatsProperty.Luck => this.LuckModifier,
                 CharacterStatsProperty.MaxHealth => this.MaxHealthModifier,
                 CharacterStatsProperty.MaxStamina => this.MaxStaminaModifier,
-                _ => 0
+                _ => throw new ArgumentException($"[PeristentEffect:GetModifier] The given CharacterStatsProperty was null or invalid")
             };
         }
     }

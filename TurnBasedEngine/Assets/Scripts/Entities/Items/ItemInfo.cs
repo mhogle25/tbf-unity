@@ -45,11 +45,6 @@ namespace BF2D.Game
             return this.staged;
         }
 
-        public void Increment()
-        {
-            this.count++;
-        }
-
         public Item Use(IItemHolder owner)
         {
             Get();
@@ -58,13 +53,21 @@ namespace BF2D.Game
                 return null;
 
             if (this.staged.Consumable)
-            {
-                this.count--;
-                if (this.count < 1)
-                    owner.RemoveItem(this);
-            }
+                Decrement(owner);
 
             return ResetStaged();
+        }
+
+        public void Increment()
+        {
+            this.count++;
+        }
+
+        public void Decrement(IItemHolder owner)
+        {
+            this.count--;
+            if (this.count < 1)
+                owner.RemoveItem(this);
         }
 
         public Item ResetStaged()

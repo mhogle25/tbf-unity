@@ -5,14 +5,29 @@ using BF2D.Utilities;
 
 namespace BF2D
 {
-    public class Entity
+    public abstract class Entity
     {
+        [JsonIgnore] public abstract string ID { get; set; }
         [JsonIgnore] public string Name { get => this.name.Wash(); set => this.name = value; }
-        [JsonProperty] private string name = string.Empty;
         [JsonIgnore] public string Description { get => this.description.Wash(); }
-        [JsonProperty] private readonly string description = string.Empty;
         [JsonIgnore] public IEnumerable<AuraType> Auras { get => this.auras; }
+
+        [JsonProperty] private string name = string.Empty;
+        [JsonProperty] private readonly string description = string.Empty;
         [JsonProperty] private readonly List<AuraType> auras = new();
+
+        public T Setup<T>(string id) where T : Entity
+        {
+            this.ID = id;
+            return (T) this;
+        }
+
+        public T Setup<T>(string id, string name) where T : Entity
+        {
+            this.ID = id;
+            this.name = name;
+            return (T) this;
+        }
 
         public bool ContainsAura(AuraType aura)
         {

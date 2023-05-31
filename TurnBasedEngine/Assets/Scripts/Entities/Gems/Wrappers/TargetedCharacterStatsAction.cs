@@ -15,7 +15,7 @@ namespace BF2D.Game.Actions
 
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";
-        [JsonProperty] private readonly string gemID = string.Empty;
+        [JsonProperty] private string gemID = string.Empty;
 
         [JsonIgnore] public CharacterTargetInfo TargetInfo { get => this.targetInfo; }
         [JsonIgnore] private readonly CharacterTargetInfo targetInfo = new();
@@ -29,5 +29,7 @@ namespace BF2D.Game.Actions
         }
 
         [JsonIgnore] public CombatAlignment Alignment => this.Gem?.Alignment ?? CombatAlignment.Neutral;
+
+        public void SetGemID(string newId) => this.gemID = newId;
     }
 }

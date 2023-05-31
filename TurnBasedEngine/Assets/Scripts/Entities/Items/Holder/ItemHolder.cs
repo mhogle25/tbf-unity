@@ -36,6 +36,17 @@ namespace BF2D.Game
 
         public IEnumerable<ItemInfo> Useable => this.Where(info => info.Useable);
 
+        public ItemInfo GetItem(string id)
+        {
+            foreach (ItemInfo info in this)
+            {
+                if (info.ID == id)
+                    return info;
+            }
+
+            return null;
+        }
+
         private ItemInfo AddItem(string id)
         {
             if (string.IsNullOrEmpty(id))

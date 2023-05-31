@@ -38,6 +38,11 @@ namespace BF2D.Game
         [JsonIgnore] public int Ether { get => this.ether; set => this.ether = value; }
         [JsonProperty] private int ether = 0;
 
+        public CharacterStats GetCharacter(string id)
+        {
+            return this.activeCharacters.Find(character => character.ID == id);
+        }
+
         public void AddCharacter(CharacterStats newCharacter)
         {
             if (newCharacter is null)

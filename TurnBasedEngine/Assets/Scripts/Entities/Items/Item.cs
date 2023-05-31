@@ -8,6 +8,9 @@ namespace BF2D.Game
     [Serializable]
     public class Item : Entity, IUtilityEntity
     {
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] private string id = string.Empty;
+
         [JsonIgnore] public string SpriteID { get => this.spriteID; }
         [JsonIgnore] public bool Consumable { get => this.consumable; }
         [JsonIgnore] public TargetedGameAction OnUse { get => this.onUse; }
@@ -18,7 +21,7 @@ namespace BF2D.Game
         [JsonProperty] protected readonly TargetedGameAction onUse = null;
 
         [JsonIgnore] public bool Useable { get => this.OnUse is not null; }
-        [JsonIgnore] public bool CombatExclusive { get => this.Useable && this.OnUse.CombatExclusive; } 
+        [JsonIgnore] public bool CombatExclusive { get => this.Useable && this.OnUse.CombatExclusive; }
 
         public string TextBreakdown(CharacterStats source)
         {

@@ -23,16 +23,16 @@ namespace BF2D.Utilities
                 Clear();
 
             if (this.jsons.ContainsKey(id))
-                return BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]);
+                return (T) BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
 
-            string content = fileManager.LoadFile(id);
-            if (string.IsNullOrEmpty(content))
+            string json = fileManager.LoadFile(id);
+            if (string.IsNullOrEmpty(json))
                 return null;
 
-            this.jsons[id] = content;
+            this.jsons[id] = json;
 
             if (this.jsons.ContainsKey(id))
-                return BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]);
+                return (T) BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
 
             return null;
         }

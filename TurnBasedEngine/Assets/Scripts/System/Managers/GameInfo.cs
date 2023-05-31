@@ -22,8 +22,8 @@ namespace BF2D.Game
         [SerializeField] private ExternalFileManager gamepadControlsConfigFilesManager = null;
         [SerializeField] private FileManager playersFileManager = null;
         [SerializeField] private FileManager enemiesFileManager = null;
-        [SerializeField] private FileManager itemsFileManager = null;
-        [SerializeField] private FileManager equipmentsFileManager = null;
+        [SerializeField] private ExternalFileManager itemsFileManager = null;
+        [SerializeField] private ExternalFileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
         [SerializeField] private FileManager gemsFileManager = null;
         [SerializeField] private FileManager runesFileManager = null;
@@ -42,7 +42,11 @@ namespace BF2D.Game
         private readonly JsonStringCache<CharacterStats> enemyTemplates = new(5);
         private readonly JsonStringCache<Item> itemTemplates = new(20);
 
+        //Moddeable entity cloning cache
+        private readonly JsonStringCache<Equipment> equipmentTemplates = new(10);
+
         //Object caches (no instantiation on get, single instance data classes)
+        private readonly JsonEntityCache<Item> items = new(10);
         private readonly JsonEntityCache<Equipment> equipments = new(10);
         private readonly JsonEntityCache<StatusEffect> statusEffects = new(10);
         private readonly JsonEntityCache<CharacterStatsAction> gems = new(10);
@@ -70,7 +74,7 @@ namespace BF2D.Game
             GameInfo.instance = this;
         }
 
-        #region Public Methods
+        #region Cache Management
         public void ClearCaches()
         {
             foreach (ICache cache in this.externalCaches)
@@ -79,6 +83,9 @@ namespace BF2D.Game
             this.playerTemplates.Clear();
             this.enemyTemplates.Clear();
             this.itemTemplates.Clear();
+            this.equipmentTemplates.Clear();
+
+            this.items.Clear();
             this.statusEffects.Clear();
             this.equipments.Clear();
             this.gems.Clear();
@@ -97,13 +104,12 @@ namespace BF2D.Game
         {
             this.externalCaches.Remove(cache);
         }
+        #endregion
 
+        #region Save Management
         public void NewGame(string saveID, string playerPrefabID, string playerName)
         {
-            SaveData newGame = new()
-            {
-                ID = saveID
-            };
+            SaveData newGame = new SaveData().Setup(saveID);
             this.currentSave = newGame;
             NewPlayer(playerPrefabID, playerName);
         }
@@ -112,7 +118,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameInfo:SaveGame] Save failed, there was no game loaded");
+                Debug.LogWarning("[GameInfo:SaveGame] Save failed, there was no game loaded.");
                 return;
             }
 
@@ -123,21 +129,64 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameInfo:SaveGameAs] Save failed, there was no game loaded");
+                Debug.LogWarning("[GameInfo:SaveGameAs] Save failed, there was no game loaded.");
                 return;
             }
 
-            this.currentSave.ID = id;
+            this.currentSave.Setup(id);
             string newJSON = JSON.SerializeObject(this.currentSave);
-            this.saveFilesManager.WriteToFile(newJSON, id);
+            this.saveFilesManager.WriteToFile(id, newJSON);
             Terminal.IO.Log($"Saved to file with ID '{id}'");
         }
 
-        public void LoadGame(string id)
+        public bool LoadGame()
         {
-            this.currentSave = LoadSaveData(id);
+            if (this.currentSave is null)
+            {
+                Debug.LogWarning("[GameInfo:LoadGame] Load failed, there was no game loaded.");
+                return false;
+            }
+
+            return LoadGame(this.currentSave.ID);
         }
 
+        public bool LoadGame(string id)
+        {
+            this.currentSave = LoadSaveData(id);
+
+            if (this.currentSave is null)
+                return false;
+
+            return true;
+        }
+
+        private SaveData LoadSaveData(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
+                return null;
+            }
+
+            string content = this.saveFilesManager.LoadFile(id);
+            if (string.IsNullOrEmpty(content))
+            {
+                Debug.LogWarning($"[GameInfo:LoadSaveData] The contents of the save file at id '{id}' were empty");
+                return null;
+            }
+
+            SaveData saveData = JSON.DeserializeString<SaveData>(content);
+            if (saveData is null)
+            {
+                Debug.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");
+                return null;
+            }
+
+            return saveData.Setup(id);
+        }
+        #endregion
+
+        #region Controls Config Management
         public void NewControlsConfig(InputController controllerType)
         {
             InputManager.Instance.ResetConfig(controllerType);
@@ -162,11 +211,11 @@ namespace BF2D.Game
             {
                 case InputController.Keyboard:
                     InputManager.Instance.KeyboardID = id;
-                    this.keyboardControlsConfigFilesManager.WriteToFile(newJSON, id);
+                    this.keyboardControlsConfigFilesManager.WriteToFile(id, newJSON);
                     break;
                 case InputController.Gamepad:
                     InputManager.Instance.GamepadID = id;
-                    this.gamepadControlsConfigFilesManager.WriteToFile(newJSON, id);
+                    this.gamepadControlsConfigFilesManager.WriteToFile(id, newJSON);
                     break;
                 default:
                     Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
@@ -195,7 +244,64 @@ namespace BF2D.Game
 
             Terminal.IO.Log($"{controllerType} config with id '{id}' was loaded");
         }
+        #endregion
 
+        #region Character Management
+        public CharacterStats GetActivePlayer(string id)
+        {
+            return this.currentSave?.Party.GetCharacter(id);
+        }
+
+        public void NewPlayer(string id, string newName)
+        {
+            CharacterStats newPlayer = InstantiatePlayer(id);
+            if (newPlayer is null)
+                return;
+
+            newPlayer.Name = newName;
+            this.currentSave.Party.AddCharacter(newPlayer);
+        }
+
+        public CharacterStats InstantiateEnemy(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
+                return null;
+            }
+            CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
+            return enemy;
+        }
+
+        private CharacterStats InstantiatePlayer(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogWarning($"[GameInfo:InstantiatePlayer] ID '{id}' was invalid");
+                return null;
+            }
+
+            CharacterStats player = this.playerTemplates.Get(id, this.playersFileManager);
+            return player;
+        }
+        #endregion
+
+        #region Combat Management
+        public void StageCombatInfo(Combat.CombatManager.InitializeInfo info)
+        {
+            this.queuedCombats.Enqueue(info);
+        }
+
+        public Combat.CombatManager.InitializeInfo UnstageCombatInfo()
+        {
+            if (this.queuedCombats.Count < 1)
+                return null;
+
+            return this.queuedCombats.Dequeue();
+        }
+        #endregion
+
+        #region Static Asset Getters
         public Sprite GetIcon(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -217,16 +323,18 @@ namespace BF2D.Game
 
             return this.soundEffectCollection[id];
         }
+        #endregion
 
-        public Item InstantiateItem(string id)
+        #region Entity Getters
+        public Item GetItem(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameInfo:GetItem] ID '{id}' was invalid");
                 return null;
             }
 
-            return this.itemTemplates.Get(id, this.itemsFileManager);
+            return this.items.Get(id, this.itemsFileManager);
         }
 
         public Equipment GetEquipment(string id)
@@ -282,83 +390,82 @@ namespace BF2D.Game
 
             return this.jobs.Get(id, this.jobsFileManager);
         }
+        #endregion
 
-        public CharacterStats InstantiateEnemy(string id)
+        #region Entity Instantiators
+        public Item InstantiateItem(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
                 return null;
             }
-            CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
-            if (enemy is null)
-                return null;
-            return enemy;
+
+            return this.itemTemplates.Get(id, this.itemsFileManager);
         }
 
-        public void NewPlayer(string id, string newName)
+        public Equipment InstantiateEquipment(string id)
         {
-            CharacterStats newPlayer = InstantiatePlayer(id);
-            if (newPlayer is null)
+            if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning("[GameInfo:NewPlayer] InstantiatePlayer failed");
-                return;
+                Debug.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
+                return null;
             }
 
-            newPlayer.Name = newName;
-            this.currentSave.Party.AddCharacter(newPlayer);
-        }
-
-        public void StageCombatInfo(Combat.CombatManager.InitializeInfo info)
-        {
-            this.queuedCombats.Enqueue(info);
-        }
-
-        public Combat.CombatManager.InitializeInfo UnstageCombatInfo()
-        {
-            if (this.queuedCombats.Count < 1)
-                return null;
-
-            return this.queuedCombats.Dequeue();
+            return this.equipmentTemplates.Get(id, this.itemsFileManager);
         }
         #endregion
 
-        #region Private Utilities
-        private CharacterStats InstantiatePlayer(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogWarning($"[GameInfo:InstantiatePlayer] ID '{id}' was invalid");
-                return null;
-            }
+        #region Entity Write/Overwrite
+        /// <summary>
+        /// Wraps an item in a callback object that will write/overwrite that entity at its ID
+        /// </summary>
+        /// <param name="item">Item to write</param>
+        /// <returns>Item file writer</returns>
+        public FileWriter WriteItem(Item item, Action callback) => new FileWriter(
+            this.itemsFileManager,
+            item.ID,
+            Utilities.JSON.SerializeObject(item),
+            callback
+        );
 
-            CharacterStats player = this.playerTemplates.Get(id, this.playersFileManager);
-            return player;
+        /// <summary>
+        /// Wraps an equipment in a callback object that will write/overwrite that entity at its ID
+        /// </summary>
+        /// <param name="equipment">Equipment to write</param>
+        /// <returns>Equipment file writer</returns>
+        public FileWriter WriteEquipment(Equipment equipment, Action callback) => new FileWriter(
+            this.equipmentsFileManager,
+            equipment.ID,
+            Utilities.JSON.SerializeObject(equipment),
+            callback
+        );
+        #endregion
+
+        #region Custom Entity Delete
+        public void DeleteItemIfCustom(string id)
+        {
+            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
+                return;
+
+            DeleteItem(id);
         }
 
-        private SaveData LoadSaveData(string id)
+        public void DeleteItem(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (!this.itemsFileManager.FileExists(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
-                return null;
+                Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
+                return;
             }
 
-            string content = this.saveFilesManager.LoadFile(id);
-            if (string.IsNullOrEmpty(content))
+            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
             {
-                Debug.LogWarning($"[GameInfo:LoadSaveData] The contents of the save file at id '{id}' were empty");
-                return null;
+                Debug.LogError("[GameInfo:DeleteItem] Tried to delete a static item from the streaming assets directory.");
+                return;
             }
 
-            SaveData saveData = JSON.DeserializeString<SaveData>(content);
-            if (saveData is null)
-            {
-                Debug.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");
-                return null;
-            }
-
-            return saveData;
+            this.itemsFileManager.DeleteFile(id);
         }
         #endregion
     }

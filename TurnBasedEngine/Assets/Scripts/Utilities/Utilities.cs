@@ -71,7 +71,6 @@ namespace BF2D.Utilities
 
     public static class TextFile
     {
-
         public static string LoadFile(string path)
         {
             string content;
@@ -85,6 +84,14 @@ namespace BF2D.Utilities
                 return string.Empty;
             }
             return content;
+        }
+
+        public static string LoadFileQuiet(string path)
+        {
+            if (File.Exists(path))
+                return LoadFile(path);
+
+            return string.Empty;
         }
 
         public static int LoadFiles(Dictionary<string, string> collection, string path)

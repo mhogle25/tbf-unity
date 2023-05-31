@@ -36,13 +36,7 @@ namespace BF2D
 
         private void OnDestroy() => Application.logMessageReceived -= LogEvent;
 
-        #region Public Utilities
-
-        public void RunCommand(string command)
-        {
-            this.terminalIn.Commit(command);
-        }
-
+        #region Logging
         public void ClearLogs()
         {
             this.terminalOut.Clear();
@@ -79,7 +73,18 @@ namespace BF2D
             SetViewActive(true);
             LogError($"{value}");
         }
+        #endregion
 
+        #region Commands
+        public void RunCommand(string command)
+        {
+            this.terminalIn.Commit(command);
+        }
+
+        public void RunCommand(string commandID, params string[] arguments)
+        {
+            this.terminalIn.Commit(commandID, arguments);
+        }
         #endregion
 
         private void LogEvent(string logString, string stackTrace, LogType type)

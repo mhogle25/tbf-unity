@@ -3170,7 +3170,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: Items
   fileExtension: json
-  directory: 1
+  directory: 2
 --- !u!1 &292172391
 GameObject:
   m_ObjectHideFlags: 0
@@ -6741,7 +6741,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   path: Equipments
   fileExtension: json
-  directory: 1
+  directory: 2
 --- !u!1 &756308091
 GameObject:
   m_ObjectHideFlags: 0
@@ -22921,6 +22921,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8895202215873812168, guid: 1b1ae34120e95b340af27e954a987ebc, type: 3}
       propertyPath: menuEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8895202215873812168, guid: 1b1ae34120e95b340af27e954a987ebc, type: 3}
+      propertyPath: specialEnabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8895202215873812168, guid: 1b1ae34120e95b340af27e954a987ebc, type: 3}

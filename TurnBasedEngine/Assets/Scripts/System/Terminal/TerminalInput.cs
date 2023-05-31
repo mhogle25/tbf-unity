@@ -23,6 +23,7 @@ namespace BF2D
 
         private void Awake()
         {
+            this.historyBackward.Push("embueitem it_vorpalsword ch_vaporknight gm_burning_01 0 Brisingr");
             this.historyBackward.Push("combat save1 en_lessergoblin en_lessergoblin en_lessergoblin en_lessergoblin");
             this.inputField = GetComponent<TMP_InputField>();
         }
@@ -57,6 +58,17 @@ namespace BF2D
             }
 
             this.registry[op](args);
+        }
+
+        public void Commit(string op, string[] arguments)
+        {
+            if (!this.registry.ContainsKey(op))
+            {
+                Terminal.IO.LogWarning($"The operation '{op}' does not exist.");
+                return;
+            }
+
+            this.registry[op](arguments);
         }
 
         #region Private Methods
