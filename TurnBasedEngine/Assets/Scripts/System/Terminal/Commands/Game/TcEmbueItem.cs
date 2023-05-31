@@ -55,7 +55,7 @@ namespace BF2D.Game
             }
             catch (Exception x)
             {
-                Terminal.IO.LogError(x.ToString());
+                Terminal.IO.LogError(x.Message);
                 return;
             }
 

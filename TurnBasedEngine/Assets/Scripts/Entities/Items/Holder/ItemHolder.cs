@@ -30,8 +30,12 @@ namespace BF2D.Game
                 return null;
             }
 
+            GameInfo gameInfo = GameInfo.Instance;
+
             Remove(info);
-            GameInfo.Instance.DeleteItemIfCustom(info.ID);
+
+            if (gameInfo.ItemHasSingleReference(info.ID))
+                gameInfo.DeleteItemIfCustom(info.ID);
 
             return info;
         }
@@ -40,7 +44,7 @@ namespace BF2D.Game
         {
             if (info is null)
             {
-                Debug.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given was null");
+                Debug.LogError($"[ItemHolder:TransferItem] Tried to remove an item from an item bag but the item info given was null");
                 return null;
             }
 
@@ -60,6 +64,8 @@ namespace BF2D.Game
 
             return null;
         }
+
+        public bool HasItem(string id) => GetItem(id) is not null;
 
         private ItemInfo AddItem(string id)
         {

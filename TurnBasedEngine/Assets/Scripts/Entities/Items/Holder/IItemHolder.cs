@@ -12,6 +12,8 @@ namespace BF2D.Game
 
         public ItemInfo GetItem(string id);
 
+        public bool HasItem(string id);
+
         public IEnumerable<ItemInfo> Useable { get; }
     }
 }

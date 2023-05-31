@@ -473,6 +473,36 @@ namespace BF2D.Game
             this.itemsFileManager.DeleteFile(id);
         }
         #endregion
+
+        #region Misc Utilities
+        public bool ItemHasSingleReference(string id)
+        {
+            int referenceCount = 0;
+
+            if (this.currentSave is null)
+                return false;
+
+            foreach (CharacterStats character in this.ActivePlayers)
+            {
+                if (character.Items.HasItem(id))
+                    referenceCount++;
+            }
+
+            foreach (CharacterStats character in this.currentSave.Party.InactiveCharacters)
+            {
+                if (character.Items.HasItem(id))
+                    referenceCount++;
+            }
+
+            if (this.currentSave.Party.Items.HasItem(id))
+                referenceCount++;
+
+            if (referenceCount == 1)
+                return true;
+
+            return false;
+        }
+        #endregion
     }
 
 }
