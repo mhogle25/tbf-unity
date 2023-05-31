@@ -4,7 +4,7 @@ namespace BF2D.Game
     {
         public static void Run(string[] arguments)
         {
-            if (!GameInfo.Instance.SystemTextbox.Textbox.Armed)
+            if (!GameCtx.Instance.SystemTextbox.Textbox.Armed)
             {
                 Terminal.IO.LogWarning("The system textbox wasn't armed.");
                 return;
@@ -16,7 +16,7 @@ namespace BF2D.Game
                 return;
             }
 
-            UI.UIControlsManager.Instance.StartPhantomControl(GameInfo.Instance.SystemTextbox);
+            UI.UIControlsManager.Instance.StartPhantomControl(GameCtx.Instance.SystemTextbox);
         }
     }
 }

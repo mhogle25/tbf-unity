@@ -14,11 +14,11 @@ namespace BF2D.Game.Actions
         [JsonIgnore] public string ID => this.id;
         [JsonIgnore] public int Count => this.count;
         [JsonIgnore] public string Name => GetEntity().Name;
-        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(GetUtility().SpriteID);
+        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
         [JsonIgnore] public string Description => GetEntity().Description;
         [JsonIgnore] public IEnumerable<AuraType> Auras => GetEntity().Auras;
 
-        public CharacterStatsAction Get() => GameInfo.Instance.GetGem(this.ID);
+        public CharacterStatsAction Get() => GameCtx.Instance.GetGem(this.ID);
         public Entity GetEntity() => Get();
         public IUtilityEntity GetUtility() => Get();
 

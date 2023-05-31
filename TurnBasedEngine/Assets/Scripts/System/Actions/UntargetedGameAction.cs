@@ -17,7 +17,7 @@ namespace BF2D.Game.Actions
 
                 foreach (string id in this.gemIDs)
                 {
-                    CharacterStatsAction gem = GameInfo.Instance.GetGem(id);
+                    CharacterStatsAction gem = GameCtx.Instance.GetGem(id);
                     if (gem is not null)
                         this.cached.Add(gem);
                 }
@@ -36,12 +36,12 @@ namespace BF2D.Game.Actions
 
         public UntargetedGameAction()
         {
-            GameInfo.Instance.RegisterCache(this);
+            GameCtx.Instance.RegisterCache(this);
         }
 
         ~UntargetedGameAction()
         {
-            GameInfo.Instance.RemoveExternalCache(this);
+            GameCtx.Instance.RemoveExternalCache(this);
         }
     }
 }

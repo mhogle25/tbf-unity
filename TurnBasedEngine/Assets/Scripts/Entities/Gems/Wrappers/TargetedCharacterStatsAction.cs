@@ -11,7 +11,7 @@ namespace BF2D.Game.Actions
     {
         [JsonIgnore] public CharacterTarget Target => this.target;
         [JsonIgnore] public string Description => this.description.Wash();
-        [JsonIgnore] public CharacterStatsAction Gem => GameInfo.Instance.GetGem(this.gemID);
+        [JsonIgnore] public CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
 
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";

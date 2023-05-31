@@ -4,7 +4,7 @@ namespace BF2D.Game
     {
         public static void Run(string[] arguments)
         {
-            GameInfo.Instance.ClearCaches();
+            GameCtx.Instance.ClearCaches();
         }
     }
 }

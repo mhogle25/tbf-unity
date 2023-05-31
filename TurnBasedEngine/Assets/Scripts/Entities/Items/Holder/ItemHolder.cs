@@ -34,7 +34,7 @@ namespace BF2D.Game
                 return;
             }
 
-            GameInfo gameInfo = GameInfo.Instance;
+            GameCtx gameInfo = GameCtx.Instance;
 
             Remove(info);
 

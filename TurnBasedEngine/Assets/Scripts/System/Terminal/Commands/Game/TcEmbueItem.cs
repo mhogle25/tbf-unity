@@ -27,7 +27,7 @@ namespace BF2D.Game
             string gemIndex = arguments[4];
             string newName = arguments[5];
 
-            GameInfo gameInfo = GameInfo.Instance;
+            GameCtx gameInfo = GameCtx.Instance;
 
             if (!gameInfo.SaveActive)
             {

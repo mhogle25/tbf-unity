@@ -1704,7 +1704,7 @@ GameObject:
   - component: {fileID: 160691922}
   - component: {fileID: 160691923}
   m_Layer: 0
-  m_Name: Game Info
+  m_Name: Game Context
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

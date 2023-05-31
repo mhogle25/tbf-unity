@@ -15,7 +15,7 @@ namespace BF2D.Game
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(GetUtility().SpriteID);
+        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
 
         [JsonIgnore] public string Name => Get().Name;
 
@@ -39,7 +39,7 @@ namespace BF2D.Game
 
         public Item Get()
         {
-            this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
+            this.staged ??= GameCtx.Instance.InstantiateItem(this.id);
             return this.staged;
         }
 

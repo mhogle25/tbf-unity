@@ -6,14 +6,14 @@ namespace BF2D.Game
         {
             if (arguments.Length == 1)
             {
-                GameInfo.Instance.SaveGame();
+                GameCtx.Instance.SaveGame();
                 return;
             }
 
             for (int i = 1; i < arguments.Length; i++)
             {
                 string newSaveFileID = arguments[i];
-                GameInfo.Instance.SaveGameAs(newSaveFileID);
+                GameCtx.Instance.SaveGameAs(newSaveFileID);
             }
         }
     }

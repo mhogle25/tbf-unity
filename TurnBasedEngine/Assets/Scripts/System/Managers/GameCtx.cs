@@ -8,11 +8,11 @@ using BF2D.UI;
 
 namespace BF2D.Game
 {
-    public class GameInfo : MonoBehaviour
+    public class GameCtx : MonoBehaviour
     {
         //Singleton Reference
-        public static GameInfo Instance => GameInfo.instance;
-        private static GameInfo instance;
+        public static GameCtx Instance => GameCtx.instance;
+        private static GameCtx instance;
 
         public DialogTextboxControl SystemTextbox => this.systemTextbox;
 
@@ -73,10 +73,10 @@ namespace BF2D.Game
         private void Awake()
         {
             //Setup of Monobehaviour Singleton
-            if (GameInfo.instance && GameInfo.instance != this)
-                Destroy(GameInfo.instance.gameObject);
+            if (GameCtx.instance && GameCtx.instance != this)
+                Destroy(GameCtx.instance.gameObject);
 
-            GameInfo.instance = this;
+            GameCtx.instance = this;
         }
 
         #region Cache Management

@@ -31,14 +31,14 @@ namespace BF2D.Game
 
             if (arguments.Length == 2)
             {
-                GameInfo.Instance.SaveControlsConfig(controllerType);
+                GameCtx.Instance.SaveControlsConfig(controllerType);
                 return;
             }
 
             for (int i = 2; i < arguments.Length; i++)
             {
                 string newControlsConfigID = arguments[i];
-                GameInfo.Instance.SaveControlsConfigAs(controllerType, newControlsConfigID);
+                GameCtx.Instance.SaveControlsConfigAs(controllerType, newControlsConfigID);
             }
         }
     }

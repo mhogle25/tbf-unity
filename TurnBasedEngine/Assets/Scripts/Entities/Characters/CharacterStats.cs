@@ -211,12 +211,12 @@ namespace BF2D.Game
         //
         // Equipment Properties
         //
-        [JsonIgnore] public Equipment Head { get => string.IsNullOrEmpty(this.head) ? null : GameInfo.Instance.GetEquipment(this.head); }
-        [JsonIgnore] public Equipment Torso { get => string.IsNullOrEmpty(this.torso) ? null : GameInfo.Instance.GetEquipment(this.torso); }
-        [JsonIgnore] public Equipment Legs { get => string.IsNullOrEmpty(this.legs) ? null : GameInfo.Instance.GetEquipment(this.legs); }
-        [JsonIgnore] public Equipment Hands { get => string.IsNullOrEmpty(this.hands) ? null : GameInfo.Instance.GetEquipment(this.hands); }
-        [JsonIgnore] public Equipment Feet { get => string.IsNullOrEmpty(this.feet) ? null : GameInfo.Instance.GetEquipment(this.feet); }
-        [JsonIgnore] public Equipment Accessory { get => string.IsNullOrEmpty(this.accessory) ? null : GameInfo.Instance.GetEquipment(this.accessory); }
+        [JsonIgnore] public Equipment Head { get => string.IsNullOrEmpty(this.head) ? null : GameCtx.Instance.GetEquipment(this.head); }
+        [JsonIgnore] public Equipment Torso { get => string.IsNullOrEmpty(this.torso) ? null : GameCtx.Instance.GetEquipment(this.torso); }
+        [JsonIgnore] public Equipment Legs { get => string.IsNullOrEmpty(this.legs) ? null : GameCtx.Instance.GetEquipment(this.legs); }
+        [JsonIgnore] public Equipment Hands { get => string.IsNullOrEmpty(this.hands) ? null : GameCtx.Instance.GetEquipment(this.hands); }
+        [JsonIgnore] public Equipment Feet { get => string.IsNullOrEmpty(this.feet) ? null : GameCtx.Instance.GetEquipment(this.feet); }
+        [JsonIgnore] public Equipment Accessory { get => string.IsNullOrEmpty(this.accessory) ? null : GameCtx.Instance.GetEquipment(this.accessory); }
         [JsonProperty] private string head = null;
         [JsonProperty] private string torso = null;
         [JsonProperty] private string legs = null;

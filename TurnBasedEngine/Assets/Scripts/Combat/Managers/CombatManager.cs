@@ -97,7 +97,7 @@ namespace BF2D.Game.Combat
                 string message = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalItemsLoot())
                 {
-                    ItemInfo itemInfo = GameInfo.Instance.PartyItems.AcquireItem(id);
+                    ItemInfo itemInfo = GameCtx.Instance.PartyItems.AcquireItem(id);
                     if (itemInfo is not null)
                         message += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
@@ -105,9 +105,9 @@ namespace BF2D.Game.Combat
                 if (!string.IsNullOrEmpty(message))
                     this.standaloneTextboxControl.Textbox.Message(message, false);
 
-                GameInfo.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
+                GameCtx.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
                 int etherUp = this.combatGrid.GetTotalEtherLoot();
-                GameInfo.Instance.Ether += etherUp;
+                GameCtx.Instance.Ether += etherUp;
 
                 message = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.Currency}";
                 if (etherUp > 0)
@@ -116,7 +116,7 @@ namespace BF2D.Game.Combat
                     message += '.';
                 this.standaloneTextboxControl.Textbox.Message(message, false, () =>
                 {
-                    GameInfo.Instance.SaveGame();
+                    GameCtx.Instance.SaveGame();
                     CancelCombat();
                 });
             }
@@ -201,7 +201,7 @@ namespace BF2D.Game.Combat
         #region Listeners
         private void CombatInfoListen()
         {
-            InitializeInfo combatInfo = GameInfo.Instance.UnstageCombatInfo();
+            InitializeInfo combatInfo = GameCtx.Instance.UnstageCombatInfo();
             if (combatInfo is null)
                 return;
 

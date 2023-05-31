@@ -34,7 +34,7 @@ namespace BF2D.Game
 
         public EquipMod Get()
         {
-            return GameInfo.Instance.GetRune(this.ID);
+            return GameCtx.Instance.GetRune(this.ID);
         }
 
         public Entity GetEntity() => Get();

@@ -14,7 +14,7 @@ namespace BF2D.Game
 
             if (arguments.Length == 1)
             {
-                if (GameInfo.Instance.LoadGame())
+                if (GameCtx.Instance.LoadGame())
                     Terminal.IO.Log($"Reloaded save file.");
 
                 return;
@@ -22,7 +22,7 @@ namespace BF2D.Game
 
             string saveFileID = arguments[1];
 
-            if (GameInfo.Instance.LoadGame(saveFileID))
+            if (GameCtx.Instance.LoadGame(saveFileID))
                 Terminal.IO.Log($"Loaded save at ID '{saveFileID}'.");
         }
     }

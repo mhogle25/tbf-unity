@@ -11,8 +11,8 @@ namespace BF2D.Game
 
             if (arguments.Length == 1)
             {
-                GameInfo.Instance.LoadControlsConfig(InputController.Keyboard, Strings.System.Default);
-                GameInfo.Instance.LoadControlsConfig(InputController.Gamepad, Strings.System.Default);
+                GameCtx.Instance.LoadControlsConfig(InputController.Keyboard, Strings.System.Default);
+                GameCtx.Instance.LoadControlsConfig(InputController.Gamepad, Strings.System.Default);
                 return;
             }
 
@@ -34,7 +34,7 @@ namespace BF2D.Game
                 return;
             }
 
-            GameInfo.Instance.LoadControlsConfig(controllerType, arguments[2]);
+            GameCtx.Instance.LoadControlsConfig(controllerType, arguments[2]);
         }
     }
 }

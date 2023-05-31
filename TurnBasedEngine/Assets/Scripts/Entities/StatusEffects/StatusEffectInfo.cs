@@ -27,7 +27,7 @@ namespace BF2D.Game
 
         public StatusEffect Get()
         {
-            return GameInfo.Instance.GetStatusEffect(this.ID);
+            return GameCtx.Instance.GetStatusEffect(this.ID);
         }
 
         public Entity GetEntity() => Get();

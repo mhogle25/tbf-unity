@@ -16,8 +16,8 @@ namespace BF2D.Game.Combat
 
             string saveFileID = arguments[1];
 
-            GameInfo.Instance.LoadGame(saveFileID);
-            if (!GameInfo.Instance.SaveActive)
+            GameCtx.Instance.LoadGame(saveFileID);
+            if (!GameCtx.Instance.SaveActive)
             {
                 Terminal.IO.LogError("Save file load failed.");
                 return;
@@ -26,7 +26,7 @@ namespace BF2D.Game.Combat
             List<CharacterStats> enemies = new();
             for (int i = 2; i < arguments.Length; i++)
             {
-                CharacterStats enemy = GameInfo.Instance.InstantiateEnemy(arguments[i]);
+                CharacterStats enemy = GameCtx.Instance.InstantiateEnemy(arguments[i]);
                 if (enemy is null)
                 {
                     Terminal.IO.LogError($"Enemy with ID {arguments[i]} does not exist.");
@@ -37,9 +37,9 @@ namespace BF2D.Game.Combat
 
             CombatManager.Instance.CancelCombat();
 
-            GameInfo.Instance.StageCombatInfo(new CombatManager.InitializeInfo
+            GameCtx.Instance.StageCombatInfo(new CombatManager.InitializeInfo
             {
-                players = GameInfo.Instance.ActivePlayers,
+                players = GameCtx.Instance.ActivePlayers,
                 enemies = enemies
             });
         }

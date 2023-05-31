@@ -14,7 +14,7 @@ namespace BF2D.Game
         [JsonIgnore] public int Count => this.count;
         [JsonProperty] protected int count = 0;
 
-        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(this.GetUtility().SpriteID);
+        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(this.GetUtility().SpriteID);
 
         [JsonIgnore] public string Name => Get().Name;
 
@@ -30,7 +30,7 @@ namespace BF2D.Game
             this.id = id;
         }
 
-        public Equipment Get() => GameInfo.Instance.GetEquipment(this.ID);
+        public Equipment Get() => GameCtx.Instance.GetEquipment(this.ID);
 
         public Entity GetEntity() => Get();
 

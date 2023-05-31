@@ -30,7 +30,7 @@ namespace BF2D.Game
         [JsonIgnore] public int Level => this.level;
         [JsonProperty] private int level = 1;
 
-        public Job Get() => GameInfo.Instance.GetJob(this.id);
+        public Job Get() => GameCtx.Instance.GetJob(this.id);
 
         public Entity GetEntity() => Get();
 
