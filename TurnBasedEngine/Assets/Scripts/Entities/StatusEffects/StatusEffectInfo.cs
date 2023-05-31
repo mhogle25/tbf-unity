@@ -13,8 +13,6 @@ namespace BF2D.Game
         [JsonIgnore] public int RemainingDuration => this.remainingDuration;
         [JsonProperty] private int remainingDuration = -1;
 
-        [JsonIgnore] public Entity GetEntity => Get();
-
         [JsonIgnore] public string Name => Get().Name;
 
         [JsonIgnore] public string Description => Get().Description;
@@ -31,6 +29,8 @@ namespace BF2D.Game
         {
             return GameInfo.Instance.GetStatusEffect(this.ID);
         }
+
+        public Entity GetEntity() => Get();
 
         public StatusEffect Use()
         {

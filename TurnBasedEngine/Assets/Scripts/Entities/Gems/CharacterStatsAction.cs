@@ -28,10 +28,6 @@ namespace BF2D.Game.Actions
             }
         }
 
-
-        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
-        [JsonIgnore] private string id = string.Empty;
-
         [JsonProperty] private readonly string spriteID = string.Empty;
         [JsonProperty] private readonly int successRate = 100;
         [JsonProperty] private CombatAlignment? alignment = null;
@@ -54,7 +50,8 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly NumericProperty willUp = null;
         [JsonProperty] private readonly NumericProperty fortuneUp = null;
 
-
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] private string id = string.Empty;
         [JsonIgnore] public string SpriteID => this.spriteID;
         [JsonIgnore] public int SuccessRate => this.successRate;
         [JsonIgnore] public CombatAlignment Alignment

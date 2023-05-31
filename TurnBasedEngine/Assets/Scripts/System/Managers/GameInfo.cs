@@ -11,10 +11,10 @@ namespace BF2D.Game
     public class GameInfo : MonoBehaviour
     {
         //Singleton Reference
-        public static GameInfo Instance { get => GameInfo.instance; }
+        public static GameInfo Instance => GameInfo.instance;
         private static GameInfo instance;
 
-        public DialogTextboxControl SystemTextbox { get => this.systemTextbox; }
+        public DialogTextboxControl SystemTextbox => this.systemTextbox;
 
         [Header("Data File Managers")]
         [SerializeField] private ExternalFileManager saveFilesManager = null;
@@ -29,12 +29,18 @@ namespace BF2D.Game
         [SerializeField] private FileManager runesFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
-        public IEnumerable<CharacterStats> ActivePlayers { get => this.currentSave?.Party.ActiveCharacters; }
-        public IItemHolder Bag { get => this.currentSave?.Party.Items; }
         public bool SaveActive { get => this.currentSave is not null; }
+
+        public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
+        public IEnumerable<CharacterStats> ActivePlayers => this.currentSave?.Party.ActiveCharacters;
+
+        public IItemHolder PartyItems => this.currentSave?.Party.Items;
+        public IEquipmentHolder PartyEquipments => this.currentSave?.Party.Equipments;
+        public ICharacterStatsActionHolder PartyGems => this.currentSave?.Party.Gems;
+
         public int Currency { get => this.currentSave.Party.Currency; set => this.currentSave.Party.Currency = value; }
         public int Ether { get => this.currentSave.Party.Ether; set => this.currentSave.Party.Ether = value; }
+
         private SaveData currentSave = null;
 
         //String Caches (instantiate on get, modifiable discardable data classes)

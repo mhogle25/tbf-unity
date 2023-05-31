@@ -6,7 +6,7 @@ namespace BF2D.Game
     {
         public ItemInfo AcquireItem(string id);
 
-        public ItemInfo RemoveItem(ItemInfo info);
+        public void RemoveItem(ItemInfo info);
 
         public ItemInfo TransferItem(ItemInfo info, IItemHolder reciever);
 

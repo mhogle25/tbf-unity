@@ -156,33 +156,33 @@ namespace BF2D.Game.Combat
             bool allRestoration = true;
             foreach (IUtilityEntityInfo entity in entities)
             {
-                if (!entity.GetEntity.ContainsAura(AuraType.Restoration))
+                if (!entity.GetEntity().ContainsAura(AuraType.Restoration))
                     allRestoration = false;
-                if (entity.GetUtility.Alignment == alignment)
+                if (entity.GetUtility().Alignment == alignment)
                     list.Add(entity);
             }
 
             foreach(IEntityInfo entity in entities)
-                if (entity.GetEntity.ContainsAura(aura))
+                if (entity.GetEntity().ContainsAura(aura))
                     list.Add(entity);
 
             if (list.Count < 1)
                 foreach (IUtilityEntityInfo entity in entities)
-                    if (entity.GetUtility.Alignment == this.alignmentRanking.Max)
+                    if (entity.GetUtility().Alignment == this.alignmentRanking.Max)
                         list.Add(entity);
 
             if (list.Count < 1)
                 foreach (IEntityInfo entity in entities)
-                    if (entity.GetEntity.ContainsAura(this.auraRanking.Max))
+                    if (entity.GetEntity().ContainsAura(this.auraRanking.Max))
                         list.Add(entity);
 
             if (CombatManager.Instance.EnemiesAreAtFullHealth() && !allRestoration)
             {
-                list.RemoveAll((entity) => entity.GetEntity.ContainsAura(AuraType.Restoration));
+                list.RemoveAll((entity) => entity.GetEntity().ContainsAura(AuraType.Restoration));
 
                 if (list.Count < 1)
                     foreach (IEntityInfo entity in entities)
-                        if (!entity.GetEntity.ContainsAura(AuraType.Restoration))
+                        if (!entity.GetEntity().ContainsAura(AuraType.Restoration))
                             list.Add(entity);
             }
             else

@@ -6,7 +6,7 @@ namespace BF2D.Game
     {
         public string ID { get; }
 
-        public Entity GetEntity { get; }
+        public Entity GetEntity();
 
         public string Name { get; }
 

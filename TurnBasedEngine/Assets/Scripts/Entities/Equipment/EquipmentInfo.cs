@@ -14,11 +14,7 @@ namespace BF2D.Game
         [JsonIgnore] public int Count => this.count;
         [JsonProperty] protected int count = 0;
 
-        [JsonIgnore] public Entity GetEntity => Get();
-
-        [JsonIgnore] public IUtilityEntity GetUtility => Get();
-
-        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(this.GetUtility.SpriteID);
+        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(this.GetUtility().SpriteID);
 
         [JsonIgnore] public string Name => Get().Name;
 
@@ -36,16 +32,19 @@ namespace BF2D.Game
 
         public Equipment Get() => GameInfo.Instance.GetEquipment(this.ID);
 
+        public Entity GetEntity() => Get();
+
+        public IUtilityEntity GetUtility() => Get();
+
         public void Increment()
         {
             this.count++;
         }
 
-        public void Decrement(CharacterStats owner)
+        public void Decrement(IEquipmentHolder owner)
         {
-            this.count--;
-            if (this.Count < 1)
-                owner.Equipments.RemoveEquipment(this);
+            if (--this.count < 1)
+                owner.RemoveEquipment(this);
         }
     }
 }

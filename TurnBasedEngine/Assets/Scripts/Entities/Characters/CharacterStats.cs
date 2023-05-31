@@ -423,7 +423,7 @@ namespace BF2D.Game
                 return;
             }
 
-            info.Decrement(this);
+            info.Decrement(this.Equipments);
             EquipByType(equipment.Type, info.ID);
         }
 

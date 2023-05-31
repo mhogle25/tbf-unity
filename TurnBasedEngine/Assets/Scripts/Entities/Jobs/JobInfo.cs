@@ -32,7 +32,7 @@ namespace BF2D.Game
 
         public Job Get() => GameInfo.Instance.GetJob(this.id);
 
-        [JsonIgnore] public Entity GetEntity => Get();
+        public Entity GetEntity() => Get();
 
         [JsonIgnore] public int MaxHealthModifier => Get().GetMaxHealthModifier(this.Level);
         [JsonIgnore] public int MaxStaminaModifier =>  Get().GetMaxStaminaModifier(this.Level);

@@ -22,12 +22,16 @@ namespace BF2D.Game
             return info;
         }
 
-        public ItemInfo RemoveItem(ItemInfo info)
+        /// <summary>
+        /// Removes an item from the holder and deletes its datafile if it is a generated item. Use when customizing (transforming) or deleting an item.
+        /// </summary>
+        /// <param name="info">The item info to remove</param>
+        public void RemoveItem(ItemInfo info)
         {
             if (info is null)
             {
                 Debug.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given was null");
-                return null;
+                return;
             }
 
             GameInfo gameInfo = GameInfo.Instance;
@@ -37,9 +41,15 @@ namespace BF2D.Game
             if (info.Generated)
                 gameInfo.DeleteItemIfCustom(info.ID);
 
-            return info;
+            return;
         }
 
+        /// <summary>
+        /// Moves an item from one holder to another
+        /// </summary>
+        /// <param name="info">The item info to move</param>
+        /// <param name="reciever">The recieving holder</param>
+        /// <returns>The recieved item info</returns>
         public ItemInfo TransferItem(ItemInfo info, IItemHolder reciever)
         {
             if (info is null)

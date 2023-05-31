@@ -11,11 +11,7 @@ namespace BF2D.Game
         [JsonIgnore] public string ID => this.id;
         [JsonProperty] private string id = string.Empty;
 
-        [JsonIgnore] public Entity GetEntity => Get();
-
-        public IUtilityEntity GetUtility => Get();
-
-        public Sprite Icon { get; }
+        [JsonIgnore] public Sprite Icon { get; }
 
         [JsonIgnore] public string Name => Get().Name;
 
@@ -40,5 +36,9 @@ namespace BF2D.Game
         {
             return GameInfo.Instance.GetRune(this.ID);
         }
+
+        public Entity GetEntity() => Get();
+
+        public IUtilityEntity GetUtility() => Get();
     }
 }

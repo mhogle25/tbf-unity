@@ -1,4 +1,5 @@
 using System;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
@@ -35,23 +36,26 @@ namespace BF2D.Game
             }
 
             CharacterStats character = gameInfo.GetActivePlayer(characterID);
-            ItemInfo itemInfo = character.Items.GetItem(itemID);
 
+            ItemInfo itemInfo = character.Items.GetItem(itemID);
             if (itemInfo is null)
             {
                 Terminal.IO.LogError($"Tried to embue an item that wasn't in {character.Name}'s inventory.");
                 return;
             }
 
-            Actions.CharacterStatsAction gem = gameInfo.GetGem(gemID);
+            CharacterStatsActionInfo gemInfo = gameInfo.PartyGems.GetGem(gemID);
+            if (gemInfo is null)
+            {
+                Terminal.IO.LogError($"Tried to embue an item with a gem that wasn't in the party's inventory.");
+                return;
+            }
 
             ItemCustomizer itemCustomizer = new(itemInfo, character.Items);
 
-            Utilities.FileWriter? writer = null;
             try
             {
                 itemCustomizer.SetIndex(int.Parse(gemIndex));
-                writer = itemCustomizer.EmbueGem(gem.ID, newName);
             }
             catch (Exception x)
             {
@@ -59,20 +63,24 @@ namespace BF2D.Game
                 return;
             }
 
-            if ((bool) writer?.FileExistsStreaming)
+            Utilities.FileWriter writer = itemCustomizer.EmbueGem(gemInfo, gameInfo.PartyGems, newName);
+            if (writer is null)
+                return;
+
+            if ((bool) writer.FileExistsStreaming)
             {
-                Terminal.IO.LogError($"Can't embue {itemInfo.Name} with new ID '{writer?.ID}'. A static item with that ID already exists.");
+                Terminal.IO.LogError($"Can't embue {itemInfo.Name} with new ID '{writer.ID}'. A static item with that ID already exists.");
                 return;
             }
 
-            if ((bool) writer?.FileExists)
+            if ((bool) writer.FileExists)
             {
-                Terminal.IO.LogError($"Can't embue {itemInfo.Name} with new ID '{writer?.ID}'. A custom item with that ID already exists.");
+                Terminal.IO.LogError($"Can't embue {itemInfo.Name} with new ID '{writer.ID}'. A custom item with that ID already exists.");
                 return;
             }
 
-            writer?.Overwrite();
-            Terminal.IO.Log($"Embued {itemInfo.Name} with {gem.Name} as {newName}.");
+            writer.Overwrite();
+            Terminal.IO.Log($"Embued {itemInfo.Name} with {gemInfo.Name} as {newName}.");
             Terminal.IO.Log($"Gave {newName} to {character.Name}.");
             gameInfo.SaveGame();
         }

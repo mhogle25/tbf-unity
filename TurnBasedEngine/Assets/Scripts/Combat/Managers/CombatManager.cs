@@ -97,7 +97,7 @@ namespace BF2D.Game.Combat
                 string message = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalItemsLoot())
                 {
-                    ItemInfo itemInfo = GameInfo.Instance.Bag.AcquireItem(id);
+                    ItemInfo itemInfo = GameInfo.Instance.PartyItems.AcquireItem(id);
                     if (itemInfo is not null)
                         message += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }

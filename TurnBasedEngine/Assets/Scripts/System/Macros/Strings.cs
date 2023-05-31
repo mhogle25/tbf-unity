@@ -11,9 +11,14 @@ namespace BF2D.Game
             public const string Default = "default";
             public const char GeneratedIDPrefix = '_';
 
-            public static string GeneratedID(string id)
+            public static bool IsGeneratedID(string id)
             {
-                return $"{System.GeneratedIDPrefix}{id}";
+                return id[0] == Strings.System.GeneratedIDPrefix;
+            }
+
+            public static string GenerateID()
+            {
+                return $"{System.GeneratedIDPrefix}{Guid.NewGuid().ToString("N")}";
             }
         }
 

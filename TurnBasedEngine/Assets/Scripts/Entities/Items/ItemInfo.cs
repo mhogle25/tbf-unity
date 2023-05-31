@@ -15,17 +15,13 @@ namespace BF2D.Game
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public Entity GetEntity => Get();
-
-        [JsonIgnore] public IUtilityEntity GetUtility => Get();
-
-        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(GetUtility.SpriteID);
+        [JsonIgnore] public Sprite Icon => GameInfo.Instance.GetIcon(GetUtility().SpriteID);
 
         [JsonIgnore] public string Name => Get().Name;
 
         [JsonIgnore] public string Description => Get().Description;
 
-        [JsonIgnore] public bool Generated => this.ID[0] == Strings.System.GeneratedIDPrefix;
+        [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
         [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
@@ -46,6 +42,10 @@ namespace BF2D.Game
             this.staged ??= GameInfo.Instance.InstantiateItem(this.id);
             return this.staged;
         }
+
+        public Entity GetEntity() => Get();
+
+        public IUtilityEntity GetUtility() => Get();
 
         public Item Use(IItemHolder owner)
         {

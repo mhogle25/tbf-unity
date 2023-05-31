@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
@@ -31,6 +32,9 @@ namespace BF2D.Game
 
         [JsonIgnore] public IEquipmentHolder Equipments => this.equipments;
         [JsonProperty] private readonly EquipmentHolder equipments = new();
+
+        [JsonIgnore] public ICharacterStatsActionHolder Gems => this.gems;
+        [JsonProperty] private readonly CharacterStatsActionHolder gems = new();
 
         [JsonIgnore] public int Currency { get => this.currency; set => this.currency = value; }
         [JsonProperty] private int currency = 0;

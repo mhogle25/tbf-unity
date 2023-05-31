@@ -3,8 +3,15 @@ using UnityEngine;
 
 namespace BF2D.Utilities
 {
-    public struct FileWriter
+    public class FileWriter
     {
+        public FileWriter(ExternalFileManager fileManager, string id, string content)
+        {
+            this.fileManager = fileManager;
+            this.id = id;
+            this.content = content;
+        }
+
         public FileWriter(ExternalFileManager fileManager, string id, string content, Action callback)
         {
             this.fileManager = fileManager;
@@ -17,10 +24,10 @@ namespace BF2D.Utilities
         public bool FileExistsStreaming => this.fileManager.FileExists(this.id, Enums.GameDirectory.Streaming);
         public string ID => this.id;
 
-        private readonly ExternalFileManager fileManager;
-        private readonly string id;
-        private readonly string content;
-        private readonly Action callback;
+        private readonly ExternalFileManager fileManager = null;
+        private readonly string id = string.Empty;
+        private readonly string content = string.Empty;
+        private readonly Action callback = null;
 
         /// <summary>
         /// Writes to the file unless a file with a matching ID exists in the streaming assets folder.

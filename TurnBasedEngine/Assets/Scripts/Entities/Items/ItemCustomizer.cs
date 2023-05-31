@@ -22,22 +22,29 @@ namespace BF2D.Game
 
         public void SetIndex(int index) => this.index = index;
 
-        public Utilities.FileWriter EmbueGem(string gemID, string newName)
+        public Utilities.FileWriter EmbueGem(CharacterStatsActionInfo gem, ICharacterStatsActionHolder gemOwner, string newName)
         {
-            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GeneratedID(Guid.NewGuid().ToString("N")), newName);
+            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
 
             TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGems;
 
             if (targetedGems is null || targetedGems.Length < 1)
-                throw new Exception("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item with no gem slots.");
+            {
+                Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item with no gem slots.");
+                return null;
+            }
 
             if (this.index < 0 || this.index >= targetedGems.Length)
-                throw new Exception("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item in an invalid slot.");
+            {
+                Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item in an invalid slot.");
+                return null;
+            }
 
-            targetedGems[this.index].SetGemID(gemID);
+            targetedGems[this.index].SetGemID(gem.ID);
 
             return GameInfo.Instance.WriteItem(newItem, () =>
             {
+                gem.Decrement(gemOwner);
                 this.itemInfo.Decrement(this.owner);
                 this.itemInfo = this.owner.AcquireItem(newItem.ID);
             });
