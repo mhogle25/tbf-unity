@@ -22,10 +22,6 @@ namespace BF2D.Game
             return info;
         }
 
-        /// <summary>
-        /// Removes an item from the holder and deletes its datafile if it is a generated item. Use when customizing (transforming) or deleting an item.
-        /// </summary>
-        /// <param name="info">The item info to remove</param>
         public void RemoveItem(ItemInfo info)
         {
             if (info is null)
@@ -34,32 +30,39 @@ namespace BF2D.Game
                 return;
             }
 
-            GameCtx gameInfo = GameCtx.Instance;
+            if (!Contains(info))
+            {
+                Debug.LogError($"[ItemHolder:RemoveItem] Tried to remove an item from an item bag but the item info given wasn't in the bag");
+                return;
+            }
 
-            Remove(info);
+            if (info.Decrement() < 1)
+            {
+                Remove(info);
 
-            if (info.Generated)
-                gameInfo.DeleteItemIfCustom(info.ID);
-
-            return;
+                if (info.Generated)
+                    GameCtx.Instance.DeleteItemIfCustom(info.ID);
+            }
         }
 
-        /// <summary>
-        /// Moves an item from one holder to another
-        /// </summary>
-        /// <param name="info">The item info to move</param>
-        /// <param name="reciever">The recieving holder</param>
-        /// <returns>The recieved item info</returns>
-        public ItemInfo TransferItem(ItemInfo info, IItemHolder reciever)
+        public ItemInfo TransferItem(ItemInfo info, IItemHolder receiver)
         {
             if (info is null)
             {
-                Debug.LogError($"[ItemHolder:TransferItem] Tried to remove an item from an item bag but the item info given was null");
+                Debug.LogError($"[ItemHolder:TransferItem] Tried to transfer an item from an item bag but the item info given was null");
                 return null;
             }
 
-            Remove(info);
-            return reciever.AcquireItem(info.ID); 
+            if (!Contains(info))
+            {
+                Debug.LogError($"[ItemHolder:TransferItem] Tried to transfer an item from an item bag but the item info given wasn't in the bag");
+                return null;
+            }
+
+            if (info.Decrement() < 1)
+                Remove(info);
+
+            return receiver.AcquireItem(info.ID); 
         }
 
         public IEnumerable<ItemInfo> Useable => this.Where(info => info.Useable);
@@ -74,8 +77,6 @@ namespace BF2D.Game
 
             return null;
         }
-
-        public bool HasItem(string id) => GetItem(id) is not null;
 
         private ItemInfo AddItem(string id)
         {

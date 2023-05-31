@@ -11,6 +11,9 @@ namespace BF2D.Game
         [JsonIgnore] public string ID => this.id;
         [JsonProperty] private string id = string.Empty;
 
+        [JsonIgnore] public int Count => this.count;
+        [JsonProperty] private int count = 0;
+
         [JsonIgnore] public Sprite Icon { get; }
 
         [JsonIgnore] public string Name => Get().Name;
@@ -40,5 +43,15 @@ namespace BF2D.Game
         public Entity GetEntity() => Get();
 
         public IUtilityEntity GetUtility() => Get();
+
+        public int Increment()
+        {
+            return ++this.count;
+        }
+
+        public int Decrement()
+        {
+            return --this.count;
+        }
     }
 }

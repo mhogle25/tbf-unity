@@ -1,10 +1,14 @@
+using System.Collections.Generic;
+
 namespace BF2D.Game.Actions
 {
-    public interface ICharacterStatsActionHolder
+    public interface ICharacterStatsActionHolder : IEnumerable<CharacterStatsActionInfo>
     {
         public CharacterStatsActionInfo AcquireGem(string id);
 
-        public CharacterStatsActionInfo RemoveGem(CharacterStatsActionInfo info);
+        public string ExtractGem(CharacterStatsActionInfo info);
+
+        public CharacterStatsActionInfo TransferGem(CharacterStatsActionInfo info, ICharacterStatsActionHolder receiver);
 
         public CharacterStatsActionInfo GetGem(string id);
     }

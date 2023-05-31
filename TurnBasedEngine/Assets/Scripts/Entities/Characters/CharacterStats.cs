@@ -250,12 +250,15 @@ namespace BF2D.Game
         [JsonIgnore] public int GridPosition { get => this.gridPosition; }
         [JsonProperty] private int gridPosition = 0;
 
-        [JsonIgnore] public IEnumerable<EntityLoot> ItemsLoot { get => this.itemsLoot; }
-        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentsLoot { get => this.equipmentsLoot; }
+        // Loot
+        [JsonIgnore] public IEnumerable<EntityLoot> ItemLoot { get => this.itemLoot; }
+        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentLoot { get => this.equipmentLoot; }
+        [JsonIgnore] public IEnumerable<EntityLoot> GemLoot { get => this.gemLoot; }
         [JsonIgnore] public int CurrencyLoot { get => this.currencyLoot; }
         [JsonIgnore] public int EtherLoot { get => this.etherLoot; }
-        [JsonProperty] private readonly List<EntityLoot> itemsLoot = new();
-        [JsonProperty] private readonly List<EntityLoot> equipmentsLoot = new();
+        [JsonProperty] private readonly List<EntityLoot> itemLoot = new();
+        [JsonProperty] private readonly List<EntityLoot> equipmentLoot = new();
+        [JsonProperty] private readonly List<EntityLoot> gemLoot = new();
         [JsonProperty] private readonly int currencyLoot = 1;
         [JsonProperty] private readonly int etherLoot = 0;
 
@@ -423,8 +426,8 @@ namespace BF2D.Game
                 return;
             }
 
-            info.Decrement(this.Equipments);
-            EquipByType(equipment.Type, info.ID);
+            string id = this.Equipments.ExtractEquipment(info);
+            EquipByType(equipment.Type, id);
         }
 
         public void Unequip(EquipmentType equipmentType)

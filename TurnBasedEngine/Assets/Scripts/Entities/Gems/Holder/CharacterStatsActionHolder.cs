@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace BF2D.Game.Actions
 {
+    [Serializable]
     public class CharacterStatsActionHolder : List<CharacterStatsActionInfo>, ICharacterStatsActionHolder
     {
         public CharacterStatsActionInfo AcquireGem(string id)
@@ -19,7 +21,7 @@ namespace BF2D.Game.Actions
             return info;
         }
 
-        public CharacterStatsActionInfo RemoveGem(CharacterStatsActionInfo info)
+        public string ExtractGem(CharacterStatsActionInfo info)
         {
             if (info is null)
             {
@@ -27,8 +29,36 @@ namespace BF2D.Game.Actions
                 return null;
             }
 
-            Remove(info);
-            return info;
+            if (!Contains(info))
+            {
+                Debug.LogError($"[CharacterStatsActionHolder:RemoveGem] Tried to remove a gem from a gem bag but the gem info given wasn't in the bag");
+                return null;
+            }
+
+            if (info.Decrement() < 1)
+                Remove(info);
+
+            return info.ID;
+        }
+
+        public CharacterStatsActionInfo TransferGem(CharacterStatsActionInfo info, ICharacterStatsActionHolder receiver)
+        {
+            if (info is null)
+            {
+                Debug.LogError($"[CharacterStatsActionHolder:TransferGem] Tried to transfer a gem from a gem bag but the gem info given was null");
+                return null;
+            }
+
+            if (!Contains(info))
+            {
+                Debug.LogError($"[CharacterStatsActionHolder:TransferGem] Tried to transfer a gem from a gem bag but the gem info given wasn't in the bag");
+                return null;
+            }
+
+            if (info.Decrement() < 1)
+                Remove(info);
+
+            return receiver.AcquireGem(info.ID);
         }
 
         public CharacterStatsActionInfo GetGem(string id)

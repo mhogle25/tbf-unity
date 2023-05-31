@@ -22,6 +22,8 @@ namespace BF2D.Game
 
         [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
+        [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
+
         [JsonConstructor]
         public EquipmentInfo() { }
 
@@ -36,15 +38,14 @@ namespace BF2D.Game
 
         public IUtilityEntity GetUtility() => Get();
 
-        public void Increment()
+        public int Increment()
         {
-            this.count++;
+            return ++this.count;
         }
 
-        public void Decrement(IEquipmentHolder owner)
+        public int Decrement()
         {
-            if (--this.count < 1)
-                owner.RemoveEquipment(this);
+            return --this.count;
         }
     }
 }

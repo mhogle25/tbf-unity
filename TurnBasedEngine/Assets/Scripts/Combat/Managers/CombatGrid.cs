@@ -100,20 +100,37 @@ namespace BF2D.Game.Combat
             return value;
         }
 
-        public IEnumerable<string> GetTotalItemsLoot()
+        public IEnumerable<string> GetTotalItemLoot()
         {
             if (!CombatManager.Instance.CombatIsOver())
             {
-                Debug.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total items loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total item loot from the fight but combat wasn't over.");
                 return new List<string>();
             }
 
-            List<string> totalLoot = new();
-            foreach (CharacterStats character in this.defeatedEnemies)
-                foreach (EntityLoot loot in character.ItemsLoot)
-                    loot.RollForLoot(totalLoot);
+            return GetTotalLoot(character => character.ItemLoot);
+        }
 
-            return totalLoot;
+        public IEnumerable<string> GetTotalEquipmentLoot()
+        {
+            if (!CombatManager.Instance.CombatIsOver())
+            {
+                Debug.LogWarning($"[CombatGrid:GetTotalEquipmentsLoot] Tried to get the total equipment loot from the fight but combat wasn't over.");
+                return new List<string>();
+            }
+
+            return GetTotalLoot(character => character.EquipmentLoot);
+        }
+
+        public IEnumerable<string> GetTotalGemLoot()
+        {
+            if (!CombatManager.Instance.CombatIsOver())
+            {
+                Debug.LogWarning($"[CombatGrid:GetTotalGemsLoot] Tried to get the total gem loot from the fight but combat wasn't over.");
+                return new List<string>();
+            }
+
+            return GetTotalLoot(character => character.GemLoot);
         }
 
         public void Setup(IEnumerable<CharacterStats> players, IEnumerable<CharacterStats> enemies)
@@ -276,6 +293,17 @@ namespace BF2D.Game.Combat
                     list.Add(tile.AssignedCharacter);
 
             return list;
+        }
+
+        private IEnumerable<string> GetTotalLoot(Func<CharacterStats, IEnumerable<EntityLoot>> lootCollectionDelegate)
+        {
+            List<string> totalLoot = new();
+
+            foreach (CharacterStats character in this.defeatedEnemies)
+                foreach (EntityLoot loot in lootCollectionDelegate(character))
+                    loot.RollForLoot(totalLoot);
+
+            return totalLoot;
         }
         #endregion
     }

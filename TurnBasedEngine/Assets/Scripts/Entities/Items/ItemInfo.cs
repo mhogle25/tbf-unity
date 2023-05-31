@@ -55,20 +55,19 @@ namespace BF2D.Game
                 return null;
 
             if (this.staged.Consumable)
-                Decrement(owner);
+                owner.RemoveItem(this);
 
             return ResetStaged();
         }
 
-        public void Increment()
+        public int Increment()
         {
-            this.count++;
+            return ++this.count;
         }
 
-        public void Decrement(IItemHolder owner)
+        public int Decrement()
         {
-            if (--this.count < 1)
-                owner.RemoveItem(this);
+            return --this.count;
         }
 
         public Item ResetStaged()

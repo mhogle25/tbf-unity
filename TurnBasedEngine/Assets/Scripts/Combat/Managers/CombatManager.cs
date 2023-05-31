@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using BF2D.UI;
 using BF2D.Game.Combat.Actions;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game.Combat
 {
@@ -94,27 +95,54 @@ namespace BF2D.Game.Combat
                     });
                 }
 
-                string message = string.Empty;
-                foreach (string id in this.combatGrid.GetTotalItemsLoot())
+                // Item Loot
+                string itemLootMessage = string.Empty;
+                foreach (string id in this.combatGrid.GetTotalItemLoot())
                 {
                     ItemInfo itemInfo = GameCtx.Instance.PartyItems.AcquireItem(id);
                     if (itemInfo is not null)
-                        message += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                        itemLootMessage += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
 
-                if (!string.IsNullOrEmpty(message))
-                    this.standaloneTextboxControl.Textbox.Message(message, false);
+                if (!string.IsNullOrEmpty(itemLootMessage))
+                    this.standaloneTextboxControl.Textbox.Message(itemLootMessage, false);
 
+                // Equipment Loot
+                string equipmentLootMessage = string.Empty;
+                foreach (string id in this.combatGrid.GetTotalEquipmentLoot())
+                {
+                    EquipmentInfo equipmentInfo = GameCtx.Instance.PartyEquipments.AcquireEquipment(id);
+                    if (equipmentInfo is not null)
+                        equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                }
+
+                if (!string.IsNullOrEmpty(equipmentLootMessage))
+                    this.standaloneTextboxControl.Textbox.Message(equipmentLootMessage, false);
+
+                // Gem Loot
+                string gemLootMessage = string.Empty;
+                foreach (string id in this.combatGrid.GetTotalGemLoot())
+                {
+                    CharacterStatsActionInfo gemInfo = GameCtx.Instance.PartyGems.AcquireGem(id);
+                    if (gemInfo is not null)
+                        gemLootMessage += $"Acquired a {gemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                }
+
+                if (!string.IsNullOrEmpty(gemLootMessage))
+                    this.standaloneTextboxControl.Textbox.Message(gemLootMessage, false);
+
+
+                // Point Loot
                 GameCtx.Instance.Currency += this.combatGrid.GetTotalCurrencyLoot();
                 int etherUp = this.combatGrid.GetTotalEtherLoot();
                 GameCtx.Instance.Ether += etherUp;
 
-                message = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.Currency}";
+                string pointLootMessage = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.Currency}";
                 if (etherUp > 0)
-                    message += $" and {etherUp} {Strings.Game.Ether}.";
+                    pointLootMessage += $" and {etherUp} {Strings.Game.Ether}.";
                 else
-                    message += '.';
-                this.standaloneTextboxControl.Textbox.Message(message, false, () =>
+                    pointLootMessage += '.';
+                this.standaloneTextboxControl.Textbox.Message(pointLootMessage, false, () =>
                 {
                     GameCtx.Instance.SaveGame();
                     CancelCombat();
@@ -128,7 +156,6 @@ namespace BF2D.Game.Combat
             {
                 this.standaloneTextboxControl.Textbox.Dialog("di_draw", false, 0, CancelCombat);
             }
-
 
             UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
         }

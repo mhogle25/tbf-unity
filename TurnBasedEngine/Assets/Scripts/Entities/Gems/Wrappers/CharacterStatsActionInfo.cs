@@ -26,15 +26,14 @@ namespace BF2D.Game.Actions
         public CharacterStatsActionInfo() { }
         public CharacterStatsActionInfo(string id) => this.id = id;
 
-        public void Increment()
+        public int Increment()
         {
-            this.count++;
+            return ++this.count;
         }
 
-        public void Decrement(ICharacterStatsActionHolder owner)
+        public int Decrement()
         {
-            if (--this.count < 1)
-                owner.RemoveGem(this);
+            return --this.count;
         }
     }
 }

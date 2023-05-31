@@ -456,21 +456,30 @@ namespace BF2D.Game
         #region Custom Entity Delete
         public void DeleteItemIfCustom(string id)
         {
-            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
-                return;
-
-            DeleteItem(id);
-        }
-
-        public void DeleteItem(string id)
-        {
             if (!this.itemsFileManager.FileExists(id))
             {
                 Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
                 return;
             }
 
+            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
+                return;
+
             this.itemsFileManager.DeleteFile(id);
+        }
+
+        public void DeleteEquipmentIfCustom(string id)
+        {
+            if (!this.equipmentsFileManager.FileExists(id))
+            {
+                Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
+                return;
+            }
+
+            if (this.equipmentsFileManager.FileExists(id, GameDirectory.Streaming))
+                return;
+
+            this.equipmentsFileManager.DeleteFile(id);
         }
         #endregion
     }

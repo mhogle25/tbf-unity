@@ -27,15 +27,15 @@ namespace BF2D.Game
             string gemIndex = arguments[4];
             string newName = arguments[5];
 
-            GameCtx gameInfo = GameCtx.Instance;
+            GameCtx ctx = GameCtx.Instance;
 
-            if (!gameInfo.SaveActive)
+            if (!ctx.SaveActive)
             {
                 Terminal.IO.LogError($"Tried to give {newName} to a character but no party was active. Try loading a save file first.");
                 return;
             }
 
-            CharacterStats character = gameInfo.GetActivePlayer(characterID);
+            CharacterStats character = ctx.GetActivePlayer(characterID);
 
             ItemInfo itemInfo = character.Items.GetItem(itemID);
             if (itemInfo is null)
@@ -44,7 +44,7 @@ namespace BF2D.Game
                 return;
             }
 
-            CharacterStatsActionInfo gemInfo = gameInfo.PartyGems.GetGem(gemID);
+            CharacterStatsActionInfo gemInfo = ctx.PartyGems.GetGem(gemID);
             if (gemInfo is null)
             {
                 Terminal.IO.LogError($"Tried to embue an item with a gem that wasn't in the party's inventory.");
@@ -63,7 +63,7 @@ namespace BF2D.Game
                 return;
             }
 
-            Utilities.FileWriter writer = itemCustomizer.EmbueGem(gemInfo, gameInfo.PartyGems, newName);
+            Utilities.FileWriter writer = itemCustomizer.EmbueGem(gemInfo, ctx.PartyGems, newName);
             if (writer is null)
                 return;
 
@@ -82,7 +82,7 @@ namespace BF2D.Game
             writer.Overwrite();
             Terminal.IO.Log($"Embued {itemInfo.Name} with {gemInfo.Name} as {newName}.");
             Terminal.IO.Log($"Gave {newName} to {character.Name}.");
-            gameInfo.SaveGame();
+            ctx.SaveGame();
         }
     }
 }
