@@ -46,7 +46,6 @@ namespace BF2D.Game
         private readonly JsonStringCache<Equipment> equipmentTemplates = new(10);
 
         //Object caches (no instantiation on get, single instance data classes)
-        private readonly JsonEntityCache<Item> items = new(10);
         private readonly JsonEntityCache<Equipment> equipments = new(10);
         private readonly JsonEntityCache<StatusEffect> statusEffects = new(10);
         private readonly JsonEntityCache<CharacterStatsAction> gems = new(10);
@@ -83,9 +82,9 @@ namespace BF2D.Game
             this.playerTemplates.Clear();
             this.enemyTemplates.Clear();
             this.itemTemplates.Clear();
+
             this.equipmentTemplates.Clear();
 
-            this.items.Clear();
             this.statusEffects.Clear();
             this.equipments.Clear();
             this.gems.Clear();
@@ -135,7 +134,15 @@ namespace BF2D.Game
 
             this.currentSave.Setup(id);
             string newJSON = JSON.SerializeObject(this.currentSave);
-            this.saveFilesManager.WriteToFile(id, newJSON);
+            try
+            {
+                this.saveFilesManager.WriteToFile(id, newJSON);
+            }
+            catch (Exception x)
+            {
+                Debug.LogError(x.Message);
+                return;
+            }
             Terminal.IO.Log($"Saved to file with ID '{id}'");
         }
 
@@ -207,19 +214,27 @@ namespace BF2D.Game
         {
             string newJSON = InputManager.Instance.SerializeConfig(controllerType);
 
-            switch (controllerType)
+            try
             {
-                case InputController.Keyboard:
-                    InputManager.Instance.KeyboardID = id;
-                    this.keyboardControlsConfigFilesManager.WriteToFile(id, newJSON);
-                    break;
-                case InputController.Gamepad:
-                    InputManager.Instance.GamepadID = id;
-                    this.gamepadControlsConfigFilesManager.WriteToFile(id, newJSON);
-                    break;
-                default:
-                    Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
-                    break;
+                switch (controllerType)
+                {
+                    case InputController.Keyboard:
+                        InputManager.Instance.KeyboardID = id;
+                        this.keyboardControlsConfigFilesManager.WriteToFile(id, newJSON);
+                        break;
+                    case InputController.Gamepad:
+                        InputManager.Instance.GamepadID = id;
+                        this.gamepadControlsConfigFilesManager.WriteToFile(id, newJSON);
+                        break;
+                    default:
+                        Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
+                        break;
+                }
+            }
+            catch (Exception x)
+            {
+                Debug.LogError(x.Message);
+                return;
             }
 
             Terminal.IO.Log($"{controllerType} config saved to file with ID '{id}'");
@@ -326,16 +341,6 @@ namespace BF2D.Game
         #endregion
 
         #region Entity Getters
-        public Item GetItem(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogWarning($"[GameInfo:GetItem] ID '{id}' was invalid");
-                return null;
-            }
-
-            return this.items.Get(id, this.itemsFileManager);
-        }
 
         public Equipment GetEquipment(string id)
         {

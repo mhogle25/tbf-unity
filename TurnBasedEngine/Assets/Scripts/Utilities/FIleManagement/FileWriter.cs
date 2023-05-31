@@ -29,7 +29,16 @@ namespace BF2D.Utilities
         {
             if (!this.FileExistsStreaming)
             {
-                this.fileManager.WriteToFile(this.id, this.content);
+                try
+                {
+                    this.fileManager.WriteToFile(this.id, this.content);
+                }
+                catch (Exception x)
+                {
+                    Debug.LogError(x.Message);
+                    return;
+                }
+
                 this.callback?.Invoke();
             }
         }

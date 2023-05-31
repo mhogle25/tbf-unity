@@ -89,10 +89,7 @@ namespace BF2D.Utilities
         public void WriteToFile(string id, string content)
         {
             if (this.directory == GameDirectory.Streaming)
-            {
-                Debug.LogWarning("[ExternalFileManager:WriteToFile] Cannot write to a streaming assets file, they are readonly.");
-                return;
-            }
+                throw new Exception("[ExternalFileManager:WriteToFile] Cannot write to a streaming assets file, they are readonly.");
 
             StreamWriter writer = new(Path.GetFullPath(Path.Combine(Application.persistentDataPath, this.path, $"{id}.{this.fileExtension}")), false);
             writer.WriteLine(content);
