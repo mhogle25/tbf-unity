@@ -67,8 +67,7 @@ namespace BF2D.Game
 
         public void Decrement(IItemHolder owner)
         {
-            this.count--;
-            if (this.count < 1)
+            if (--this.count < 1)
                 owner.RemoveItem(this);
         }
 

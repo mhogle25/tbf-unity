@@ -143,7 +143,7 @@ namespace BF2D.Game
                 Debug.LogError(x.Message);
                 return;
             }
-            Terminal.IO.Log($"Saved to file with ID '{id}'");
+            Terminal.IO.Log($"Saved at ID '{id}'");
         }
 
         public bool LoadGame()
@@ -237,7 +237,7 @@ namespace BF2D.Game
                 return;
             }
 
-            Terminal.IO.Log($"{controllerType} config saved to file with ID '{id}'");
+            Terminal.IO.Log($"{controllerType} config saved at ID '{id}'");
         }
 
         public void LoadControlsConfig(InputController controllerType, string id)
@@ -461,12 +461,6 @@ namespace BF2D.Game
             if (!this.itemsFileManager.FileExists(id))
             {
                 Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
-                return;
-            }
-
-            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
-            {
-                Debug.LogError("[GameInfo:DeleteItem] Tried to delete a static item from the streaming assets directory.");
                 return;
             }
 
