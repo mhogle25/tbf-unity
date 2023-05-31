@@ -9,6 +9,12 @@ namespace BF2D.Game
         public static class System
         {
             public const string Default = "default";
+            public const char GeneratedIDPrefix = '_';
+
+            public static string GeneratedID(string id)
+            {
+                return $"{System.GeneratedIDPrefix}{id}";
+            }
         }
 
         public static class Game

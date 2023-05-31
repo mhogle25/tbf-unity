@@ -24,7 +24,7 @@ namespace BF2D.Game
 
         public Utilities.FileWriter EmbueGem(string gemID, string newName)
         {
-            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Guid.NewGuid().ToString("N"), newName);
+            Item newItem = GameInfo.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GeneratedID(Guid.NewGuid().ToString("N")), newName);
 
             TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGems;
 

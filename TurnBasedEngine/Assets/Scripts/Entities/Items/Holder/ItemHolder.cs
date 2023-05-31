@@ -34,7 +34,7 @@ namespace BF2D.Game
 
             Remove(info);
 
-            if (gameInfo.ItemHasSingleReference(info.ID))
+            if (info.Generated)
                 gameInfo.DeleteItemIfCustom(info.ID);
 
             return info;

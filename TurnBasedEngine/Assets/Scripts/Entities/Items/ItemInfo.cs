@@ -25,6 +25,8 @@ namespace BF2D.Game
 
         [JsonIgnore] public string Description => Get().Description;
 
+        [JsonIgnore] public bool Generated => this.ID[0] == Strings.System.GeneratedIDPrefix;
+
         [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public bool Useable { get => Get().Useable; }
