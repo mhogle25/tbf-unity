@@ -23,6 +23,7 @@ namespace BF2D.Game
         }
         [JsonIgnore] public IEnumerable<CharacterStats> ActiveCharacters => this.activeCharacters;
         [JsonProperty] private readonly List<CharacterStats> activeCharacters = new();
+        [JsonIgnore] private readonly Dictionary<string, CharacterStats> activeCharactersIndex = new();
 
         [JsonIgnore] public IEnumerable<CharacterStats> InactiveCharacters => this.inactiveCharacters;
         [JsonProperty] private readonly List<CharacterStats> inactiveCharacters = new();
@@ -44,7 +45,14 @@ namespace BF2D.Game
 
         public CharacterStats GetCharacter(string id)
         {
-            return this.activeCharacters.Find(character => character.ID == id);
+            if (this.activeCharactersIndex.Count < 1)
+                foreach (CharacterStats character in this.activeCharacters)
+                    this.activeCharactersIndex[character.ID] = character;
+
+            if (!this.activeCharactersIndex.ContainsKey(id))
+                return null;
+
+            return this.activeCharactersIndex[id];
         }
 
         public void AddCharacter(CharacterStats newCharacter)
@@ -62,6 +70,7 @@ namespace BF2D.Game
             }
 
             this.activeCharacters.Add(newCharacter);
+            this.activeCharactersIndex[newCharacter.ID] = newCharacter;
         }
     }
 }

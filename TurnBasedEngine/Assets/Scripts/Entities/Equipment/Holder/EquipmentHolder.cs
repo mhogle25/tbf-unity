@@ -23,12 +23,14 @@ namespace BF2D.Game
 
             if (info.Decrement() < 1)
             {
-                Remove(info);
+                RemoveAndForget(info);
 
                 if (info.Generated)
                     GameCtx.Instance.DeleteEquipmentIfCustom(info.ID);
             }
         }
+
+        public void Destroy(string id) => Destroy(Get(id));
 
         public string Extract(EquipmentInfo info)
         {
@@ -45,9 +47,11 @@ namespace BF2D.Game
             }
 
             if (info.Decrement() < 1)
-                Remove(info);
+                RemoveAndForget(info);
 
             return info.ID;
         }
+
+        public string Extract(string id) => Extract(Get(id));
     }
 }

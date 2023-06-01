@@ -24,12 +24,14 @@ namespace BF2D.Game
 
             if (info.Decrement() < 1)
             {
-                Remove(info);
+                RemoveAndForget(info);
 
                 if (info.Generated)
                     GameCtx.Instance.DeleteItemIfCustom(info.ID);
             }
         }
+
+        public void Destroy(string id) => Destroy(Get(id));
 
         public IEnumerable<ItemInfo> Useable => this.Where(info => info.Useable);
     }

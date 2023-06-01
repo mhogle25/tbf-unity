@@ -1,10 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using Newtonsoft.Json;
 
 namespace BF2D.Game
 {
+    [Serializable]
     public class UtilityEntityHolder<T> : List<T> where T : UtilityEntityInfo, new()
     {
+        [JsonIgnore] protected readonly Dictionary<string, T> utilityEntityIndex = new();
+
         public T Acquire(string id)
         {
             T info = AddIfNone(id);
@@ -34,18 +39,21 @@ namespace BF2D.Game
             }
 
             if (info.Decrement() < 1)
-                Remove(info);
+                RemoveAndForget(info);
 
             return receiver.Acquire(info.ID);
         }
 
+        public T Transfer(string id, IUtilityEntityHolder<T> receiver) => Transfer(Get(id), receiver);
+
         public T Get(string id)
         {
-            foreach (T info in this)
-            {
-                if (info.ID == id)
-                    return info;
-            }
+            if (this.utilityEntityIndex.Count < 1)
+                foreach (T info in this)
+                    this.utilityEntityIndex[info.ID] = info;
+
+            if (this.utilityEntityIndex.ContainsKey(id))
+                return this.utilityEntityIndex[id];
 
             return null;
         }
@@ -66,7 +74,14 @@ namespace BF2D.Game
                 ID = id
             };
             Add(newInfo);
+            this.utilityEntityIndex[newInfo.ID] = newInfo;
             return newInfo;
+        }
+
+        protected void RemoveAndForget(T info)
+        {
+            Remove(info);
+            this.utilityEntityIndex[info.ID] = null;
         }
     }
 }

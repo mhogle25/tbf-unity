@@ -22,9 +22,11 @@ namespace BF2D.Game.Actions
             }
 
             if (info.Decrement() < 1)
-                Remove(info);
+                RemoveAndForget(info);
 
             return info.ID;
         }
+
+        public string Extract(string id) => Extract(Get(id));
     }
 }

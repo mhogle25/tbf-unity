@@ -8,6 +8,8 @@ namespace BF2D.Game
 
         public T Transfer(T info, IUtilityEntityHolder<T> receiver);
 
+        public T Transfer(string id, IUtilityEntityHolder<T> receiver);
+
         public T Get(string id);
     }
 }
