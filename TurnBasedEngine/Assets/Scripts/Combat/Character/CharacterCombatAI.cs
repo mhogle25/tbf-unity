@@ -146,7 +146,7 @@ namespace BF2D.Game.Combat
             return this.actionRanking.Roll();
         }
 
-        private IEntityInfo RollForUtility(IEnumerable<IUtilityEntityInfo> entities)
+        private IEntityInfo RollForUtility(IEnumerable<UtilityEntityInfo> entities)
         {
             AuraType aura = this.auraRanking.Roll();
             CombatAlignment alignment = this.alignmentRanking.Roll();
@@ -154,7 +154,7 @@ namespace BF2D.Game.Combat
             List<IEntityInfo> list = new();
 
             bool allRestoration = true;
-            foreach (IUtilityEntityInfo entity in entities)
+            foreach (UtilityEntityInfo entity in entities)
             {
                 if (!entity.GetEntity().ContainsAura(AuraType.Restoration))
                     allRestoration = false;
@@ -167,7 +167,7 @@ namespace BF2D.Game.Combat
                     list.Add(entity);
 
             if (list.Count < 1)
-                foreach (IUtilityEntityInfo entity in entities)
+                foreach (UtilityEntityInfo entity in entities)
                     if (entity.GetUtility().Alignment == this.alignmentRanking.Max)
                         list.Add(entity);
 

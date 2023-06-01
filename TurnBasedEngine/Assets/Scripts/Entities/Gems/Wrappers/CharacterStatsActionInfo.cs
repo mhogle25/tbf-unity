@@ -6,32 +6,28 @@ using BF2D.Game.Enums;
 
 namespace BF2D.Game.Actions
 {
-    public class CharacterStatsActionInfo : IUtilityEntityInfo
+    public class CharacterStatsActionInfo : UtilityEntityInfo
     {
-        [JsonProperty] private readonly string id = string.Empty;
+        [JsonProperty] private string id = string.Empty;
         [JsonProperty] private int count = 0;
 
-        [JsonIgnore] public string ID => this.id;
-        [JsonIgnore] public int Count => this.count;
-        [JsonIgnore] public string Name => GetEntity().Name;
-        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
-        [JsonIgnore] public string Description => GetEntity().Description;
-        [JsonIgnore] public IEnumerable<AuraType> Auras => GetEntity().Auras;
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] public override int Count => this.count;
+        [JsonIgnore] public override string Name => GetEntity().Name;
+        [JsonIgnore] public override Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
+        [JsonIgnore] public override string Description => GetEntity().Description;
+        [JsonIgnore] public override IEnumerable<AuraType> Auras => GetEntity().Auras;
 
         public CharacterStatsAction Get() => GameCtx.Instance.GetGem(this.ID);
-        public Entity GetEntity() => Get();
-        public IUtilityEntity GetUtility() => Get();
+        public override Entity GetEntity() => Get();
+        public override IUtilityEntity GetUtility() => Get();
 
-        [JsonConstructor]
-        public CharacterStatsActionInfo() { }
-        public CharacterStatsActionInfo(string id) => this.id = id;
-
-        public int Increment()
+        public override int Increment()
         {
             return ++this.count;
         }
 
-        public int Decrement()
+        public override int Decrement()
         {
             return --this.count;
         }

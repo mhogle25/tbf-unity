@@ -6,21 +6,21 @@ using UnityEngine;
 
 namespace BF2D.Game
 {
-    public class EquipModInfo : IUtilityEntityInfo
+    public class EquipModInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public string ID => this.id;
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
         [JsonProperty] private string id = string.Empty;
 
-        [JsonIgnore] public int Count => this.count;
+        [JsonIgnore] public override int Count => this.count;
         [JsonProperty] private int count = 0;
 
-        [JsonIgnore] public Sprite Icon { get; }
+        [JsonIgnore] public override Sprite Icon { get; }
 
-        [JsonIgnore] public string Name => Get().Name;
+        [JsonIgnore] public override string Name => Get().Name;
 
-        [JsonIgnore] public string Description => Get().Description;
+        [JsonIgnore] public override string Description => Get().Description;
 
-        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
+        [JsonIgnore] public override IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public int SpeedModifier => Get().SpeedModifier;
         [JsonIgnore] public int AttackModifier => Get().AttackModifier;
@@ -40,16 +40,16 @@ namespace BF2D.Game
             return GameCtx.Instance.GetRune(this.ID);
         }
 
-        public Entity GetEntity() => Get();
+        public override Entity GetEntity() => Get();
 
-        public IUtilityEntity GetUtility() => Get();
+        public override IUtilityEntity GetUtility() => Get();
 
-        public int Increment()
+        public override int Increment()
         {
             return ++this.count;
         }
 
-        public int Decrement()
+        public override int Decrement()
         {
             return --this.count;
         }

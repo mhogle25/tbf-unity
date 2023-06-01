@@ -7,43 +7,35 @@ using BF2D.Enums;
 namespace BF2D.Game
 {
     [Serializable]
-    public class EquipmentInfo : IUtilityEntityInfo
+    public class EquipmentInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public string ID => this.id;
-        [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Count => this.count;
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonProperty] private string id = string.Empty;
+        [JsonIgnore] public override int Count => this.count;
         [JsonProperty] protected int count = 0;
 
-        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(this.GetUtility().SpriteID);
+        [JsonIgnore] public override Sprite Icon => GameCtx.Instance.GetIcon(this.GetUtility().SpriteID);
 
-        [JsonIgnore] public string Name => Get().Name;
+        [JsonIgnore] public override string Name => Get().Name;
 
-        [JsonIgnore] public string Description => Get().Description;
+        [JsonIgnore] public override string Description => Get().Description;
 
-        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
+        [JsonIgnore] public override IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
-        [JsonConstructor]
-        public EquipmentInfo() { }
-
-        public EquipmentInfo(string id)
-        {
-            this.id = id;
-        }
-
         public Equipment Get() => GameCtx.Instance.GetEquipment(this.ID);
 
-        public Entity GetEntity() => Get();
+        public override Entity GetEntity() => Get();
 
-        public IUtilityEntity GetUtility() => Get();
+        public override IUtilityEntity GetUtility() => Get();
 
-        public int Increment()
+        public override int Increment()
         {
             return ++this.count;
         }
 
-        public int Decrement()
+        public override int Decrement()
         {
             return --this.count;
         }

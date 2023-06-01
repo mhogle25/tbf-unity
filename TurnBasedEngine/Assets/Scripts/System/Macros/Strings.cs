@@ -30,7 +30,7 @@ namespace BF2D.Game
             public const string StatusEffect = "Status Effect";
         }
 
-        public static class CharacterStats
+        public static class Character
         {
             public const string Damage = "Damage";
             public const string CriticalDamage = "Critical";
@@ -83,7 +83,6 @@ namespace BF2D.Game
                     _ => throw new ArgumentException("[Strings:GetStatsPropertySymbol] CharacterStatsProperty was invalid.")
                 };
             }
-
         }
 
         public static class Animation

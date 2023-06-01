@@ -37,14 +37,14 @@ namespace BF2D.Game
 
             CharacterStats character = ctx.GetActivePlayer(characterID);
 
-            ItemInfo itemInfo = character.Items.GetItem(itemID);
+            ItemInfo itemInfo = character.Items.Get(itemID);
             if (itemInfo is null)
             {
                 Terminal.IO.LogError($"Tried to embue an item that wasn't in {character.Name}'s inventory.");
                 return;
             }
 
-            CharacterStatsActionInfo gemInfo = ctx.PartyGems.GetGem(gemID);
+            CharacterStatsActionInfo gemInfo = ctx.PartyGems.Get(gemID);
             if (gemInfo is null)
             {
                 Terminal.IO.LogError($"Tried to embue an item with a gem that wasn't in the party's inventory.");

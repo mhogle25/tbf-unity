@@ -437,7 +437,8 @@ namespace BF2D.UI {
             if (this.dialogIndex >= this.currentDialog.dialog.Count)
             {
                 Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tried to parse but the dialog index was out of range. Did you forget to use an end tag? (Previous line: {this.currentDialog.dialog[this.dialogIndex - 1]})");
-                return false;
+                Cancel();
+                return true;
             }
 
             string message = this.currentDialog.dialog[this.dialogIndex];    //Set message to the current line of dialog
@@ -451,96 +452,20 @@ namespace BF2D.UI {
             }
 
             //Begin tag parsing
-            if (message[this.messageIndex] == '[') {
+            if (message[this.messageIndex] == '[')
+            {
                 //Take and read tag
                 char tag = message[this.messageIndex + 1];
                 int newMessageIndex = this.messageIndex;
-                switch (tag) {
-                    case DialogTextbox.pauseTag:                                                    //Case: Pause for seconds
-                        float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
-                        this.timeAccumulator += wait;
-                        this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
-                        break;
-                    case DialogTextbox.speedTag:                                                    //Case: New text speed
-                        float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
-                        newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
-                        this.messageSpeed = newSpeed;
-                        this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
-                        break;
-                    case DialogTextbox.nameTag:                                                     //Case: Orator name
-                        string name = ParseTag(message, ref newMessageIndex);
-                        if (name == DialogTextbox.defaultValue.ToString())
-                        {
-                            NametagDisable();
-                        } 
-                        else
-                        {
-                            NametagEnable(name);
-                        }
-                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
-                        break;
-                    case DialogTextbox.jumpTag:                                                         //Case: Jump
-                        int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
-                        this.dialogIndex = newDialogIndex;
-                        this.messageIndex = 0;
-                        break;
-                    case DialogTextbox.voiceTag:                                                        //Case: Voice
-                        string key = ParseTag(message, ref newMessageIndex);
-
-                        if (this.voiceCollection.Contains(key))
-                        {
-                            this.voiceAudioSource.clip = this.voiceCollection.Get(key);
-                        } 
-                        else if (key == DialogTextbox.defaultValue.ToString())
-                        {
-                            this.voiceAudioSource.clip = this.defaultVoice;
-                        } 
-                        else
-                        {
-                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Voice key '{key}' was not found in the voices dictionary");
-                        }
-                        this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
-                        break;
-                    case DialogTextbox.responseTag:
-                        string data = ParseTag(message,ref newMessageIndex);
-                        if (!string.IsNullOrEmpty(data) && this.currentDialog.responseEnabled)
-                        {
-                            List<ResponseData> options = new();
-
-                            //Retrieve the data using Json Utility
-                            if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
-                            {
-                                // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
-                                options = DeserializeResponseData(data);
-                            } 
-                            else
-                            {   //else, try using it as a key in the dialog options dictionary and deserialize its value
-                                //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
-                                if (this.dialogResponses.ContainsKey(data))
-                                {
-                                    //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
-                                    options = DeserializeResponseData(this.dialogResponses[data]);
-                                } 
-                                else
-                                {
-                                    Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
-                                }
-                            }
-
-                            SetupResponses(options);
-
-                            this.messageIndex = newMessageIndex + 1;
-                            //this.state = null;
-                        }
-                        else
-                        {
-                            Debug.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
-                        }
-                        this.messageIndex = newMessageIndex + 1;
-                        return false;
-                    case DialogTextbox.endTag:
-                        this.state = EndOfDialog;
-                        return false;
+                switch (tag)
+                {
+                    case DialogTextbox.pauseTag: PauseAction(message, ref newMessageIndex); break;   //Case: Pause for seconds
+                    case DialogTextbox.speedTag: SpeedAction(message, ref newMessageIndex); break;   //Case: New text speed
+                    case DialogTextbox.nameTag: NametagAction(message, ref newMessageIndex); break;  //Case: Orator name
+                    case DialogTextbox.jumpTag: JumpAction(message, ref newMessageIndex); break;     //Case: Jump
+                    case DialogTextbox.voiceTag: VoiceAction(message, ref newMessageIndex); break;   //Case: Voice
+                    case DialogTextbox.responseTag: ResponseAction(message, ref newMessageIndex); return false;
+                    case DialogTextbox.endTag: this.state = EndOfDialog; return false;
                     default:
                         if (tag == DialogTextbox.insertTag)
                             Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
@@ -549,7 +474,9 @@ namespace BF2D.UI {
                         Cancel();
                         return true;
                 }
-            } else { //Basic character
+            }
+            else
+            { //Basic character
                 if (message[this.messageIndex] != ' ')
                 {
                     BF2D.Utilities.Audio.PlayAudioSource(this.voiceAudioSource);
@@ -563,6 +490,100 @@ namespace BF2D.UI {
             }
 
             return true;
+        }
+
+        private void PauseAction(string message, ref int newMessageIndex)
+        {
+            float wait = float.Parse(ParseTag(message, ref newMessageIndex));           //Add a pause to the time accumulator
+            this.timeAccumulator += wait;
+            this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
+        }
+
+        private void SpeedAction(string message, ref int newMessageIndex)
+        {
+            float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
+            newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
+            this.messageSpeed = newSpeed;
+            this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
+        }
+
+        private void NametagAction(string message, ref int newMessageIndex)
+        {
+            string name = ParseTag(message, ref newMessageIndex);
+            if (name == DialogTextbox.defaultValue.ToString())
+            {
+                NametagDisable();
+            }
+            else
+            {
+                NametagEnable(name);
+            }
+            this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+        }
+
+        private void JumpAction(string message, ref int newMessageIndex)
+        {
+            int newDialogIndex = int.Parse(ParseTag(message, ref newMessageIndex));
+            this.dialogIndex = newDialogIndex;
+            this.messageIndex = 0;
+        }
+
+        private void VoiceAction(string message, ref int newMessageIndex)
+        {
+            string key = ParseTag(message, ref newMessageIndex);
+
+            if (this.voiceCollection.Contains(key))
+            {
+                this.voiceAudioSource.clip = this.voiceCollection.Get(key);
+            }
+            else if (key == DialogTextbox.defaultValue.ToString())
+            {
+                this.voiceAudioSource.clip = this.defaultVoice;
+            }
+            else
+            {
+                Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Voice key '{key}' was not found in the voices dictionary");
+            }
+            this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
+        }
+
+        private void ResponseAction(string message, ref int newMessageIndex)
+        {
+            string data = ParseTag(message, ref newMessageIndex);
+            if (!string.IsNullOrEmpty(data) && this.currentDialog.responseEnabled)
+            {
+                List<ResponseData> options = new();
+
+                //Retrieve the data using Json Utility
+                if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
+                {
+                    // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
+                    options = DeserializeResponseData(data);
+                }
+                else
+                {   //else, try using it as a key in the dialog options dictionary and deserialize its value
+                    //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
+                    if (this.dialogResponses.ContainsKey(data))
+                    {
+                        //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
+                        options = DeserializeResponseData(this.dialogResponses[data]);
+                    }
+                    else
+                    {
+                        Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
+                    }
+                }
+
+                SetupResponses(options);
+
+                this.messageIndex = newMessageIndex + 1;
+                //this.state = null;
+            }
+            else
+            {
+                Debug.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
+            }
+            this.messageIndex = newMessageIndex + 1;
         }
 
         private string ParseTag(string message, ref int index) {

@@ -406,7 +406,15 @@ namespace BF2D.Game
         #region Generic Public Utilities
         public string GetStatsPropertyText(CharacterStatsProperty property)
         {
-            return $"{GetStatsProperty(property)}{Strings.CharacterStats.GetStatsPropertySymbol(property)}";
+            return $"{GetStatsProperty(property)}{Strings.Character.GetStatsPropertySymbol(property)}";
+        }
+
+        public string GetModifierText(CharacterStatsProperty property)
+        {
+            if (GetStatsProperty(property) < 1)
+                return string.Empty;
+
+            return $"+{GetStatsPropertyText(property)}";
         }
 
         public JobInfo.LevelUpInfo GrantExperience(long experience)
@@ -426,7 +434,7 @@ namespace BF2D.Game
                 return;
             }
 
-            string id = this.Equipments.ExtractEquipment(info);
+            string id = this.Equipments.Extract(info);
             EquipByType(equipment.Type, id);
         }
 
@@ -434,7 +442,7 @@ namespace BF2D.Game
         {
             string id = GetEquippedID(equipmentType);
             EquipByType(equipmentType, null);
-            this.Equipments.AcquireEquipment(id);
+            this.Equipments.Acquire(id);
         }
 
         public bool IsEquipped(EquipmentType equipmentType)

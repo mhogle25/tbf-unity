@@ -99,7 +99,7 @@ namespace BF2D.Game.Combat
                 string itemLootMessage = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalItemLoot())
                 {
-                    ItemInfo itemInfo = GameCtx.Instance.PartyItems.AcquireItem(id);
+                    ItemInfo itemInfo = GameCtx.Instance.PartyItems.Acquire(id);
                     if (itemInfo is not null)
                         itemLootMessage += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
@@ -111,7 +111,7 @@ namespace BF2D.Game.Combat
                 string equipmentLootMessage = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalEquipmentLoot())
                 {
-                    EquipmentInfo equipmentInfo = GameCtx.Instance.PartyEquipments.AcquireEquipment(id);
+                    EquipmentInfo equipmentInfo = GameCtx.Instance.PartyEquipments.Acquire(id);
                     if (equipmentInfo is not null)
                         equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
@@ -123,7 +123,7 @@ namespace BF2D.Game.Combat
                 string gemLootMessage = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalGemLoot())
                 {
-                    CharacterStatsActionInfo gemInfo = GameCtx.Instance.PartyGems.AcquireGem(id);
+                    CharacterStatsActionInfo gemInfo = GameCtx.Instance.PartyGems.Acquire(id);
                     if (gemInfo is not null)
                         gemLootMessage += $"Acquired a {gemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }

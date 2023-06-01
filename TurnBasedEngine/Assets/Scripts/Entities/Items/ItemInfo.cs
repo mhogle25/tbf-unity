@@ -6,36 +6,28 @@ using System.Collections.Generic;
 namespace BF2D.Game
 {
     [Serializable]
-    public class ItemInfo : IUtilityEntityInfo
+    public class ItemInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public string ID => this.id; 
-        [JsonProperty] private readonly string id = string.Empty;
-        [JsonIgnore] public int Count => this.count; 
+        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonProperty] private string id = string.Empty;
+        [JsonIgnore] public override int Count => this.count; 
         [JsonProperty] private int count = 0;
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
+        [JsonIgnore] public override Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
 
-        [JsonIgnore] public string Name => Get().Name;
+        [JsonIgnore] public override string Name => Get().Name;
 
-        [JsonIgnore] public string Description => Get().Description;
+        [JsonIgnore] public override string Description => Get().Description;
 
         [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
-        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
+        [JsonIgnore] public override IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public bool Useable { get => Get().Useable; }
 
         [JsonIgnore] public bool CombatExclusive { get => Get().CombatExclusive; }
-
-        [JsonConstructor]
-        public ItemInfo() { }
-
-        public ItemInfo(string id)
-        {
-            this.id = id;
-        }
 
         public Item Get()
         {
@@ -43,9 +35,9 @@ namespace BF2D.Game
             return this.staged;
         }
 
-        public Entity GetEntity() => Get();
+        public override Entity GetEntity() => Get();
 
-        public IUtilityEntity GetUtility() => Get();
+        public override IUtilityEntity GetUtility() => Get();
 
         public Item Use(IItemHolder owner)
         {
@@ -55,17 +47,17 @@ namespace BF2D.Game
                 return null;
 
             if (this.staged.Consumable)
-                owner.RemoveItem(this);
+                owner.Destroy(this);
 
             return ResetStaged();
         }
 
-        public int Increment()
+        public override int Increment()
         {
             return ++this.count;
         }
 
-        public int Decrement()
+        public override int Decrement()
         {
             return --this.count;
         }

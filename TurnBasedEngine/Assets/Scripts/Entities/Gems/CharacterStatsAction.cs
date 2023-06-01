@@ -120,13 +120,13 @@ namespace BF2D.Game.Actions
 
             if (this.resetHealth)
             {
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Health} went up to full. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Health} went up to full. {Strings.DialogTextbox.BriefPause}";
                 target.ResetHealth();
             }
 
             if (this.resetStamina)
             {
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Stamina} went up to full. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Stamina} went up to full. {Strings.DialogTextbox.BriefPause}";
                 target.ResetStamina();
             }
 
@@ -164,34 +164,34 @@ namespace BF2D.Game.Actions
                     info.message += RnDamageHelper(this.heal, target.Damage, source, target, false);
 
             if (this.recover is not null)
-                info.message += $"{target.Name} recovered {this.recover.Run(source, target.Recover)} {Strings.CharacterStats.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name} recovered {this.recover.Run(source, target.Recover)} {Strings.Character.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.exert is not null)
-                info.message += $"{target.Name} exerted {this.exert.Run(source, target.Exert)} {Strings.CharacterStats.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name} exerted {this.exert.Run(source, target.Exert)} {Strings.Character.Stamina.ToLower()}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.statusEffect is not null)
                 info.message += this.statusEffect.Run(source, target);
 
             if (this.constitutionUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Constitution} went up by {this.constitutionUp.Run(source, target.ConstitutionUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Constitution} went up by {this.constitutionUp.Run(source, target.ConstitutionUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.enduranceUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Endurance} went up by {this.enduranceUp.Run(source, target.EnduranceUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Endurance} went up by {this.enduranceUp.Run(source, target.EnduranceUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.swiftnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Swiftness} went up by {this.swiftnessUp.Run(source, target.SwiftnessUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Swiftness} went up by {this.swiftnessUp.Run(source, target.SwiftnessUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.strengthUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Strength} went up by {this.strengthUp.Run(source, target.StrengthUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Strength} went up by {this.strengthUp.Run(source, target.StrengthUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.toughnessUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Toughness} went up by {this.toughnessUp.Run(source, target.ToughnessUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Toughness} went up by {this.toughnessUp.Run(source, target.ToughnessUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.willUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Will} went up by {this.willUp.Run(source, target.WillUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Will} went up by {this.willUp.Run(source, target.WillUp)}. {Strings.DialogTextbox.BriefPause}";
 
             if (this.fortuneUp is not null)
-                info.message += $"{target.Name}'s {Strings.CharacterStats.Fortune} went up by {this.fortuneUp.Run(source, target.FortuneUp)}. {Strings.DialogTextbox.BriefPause}";
+                info.message += $"{target.Name}'s {Strings.Character.Fortune} went up by {this.fortuneUp.Run(source, target.FortuneUp)}. {Strings.DialogTextbox.BriefPause}";
 
 
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
@@ -205,59 +205,59 @@ namespace BF2D.Game.Actions
             string text = string.Empty;
 
             if (this.damage is not null)
-                text += TbNumericPropertyHelper(this.damage, source, Strings.CharacterStats.Damage, Colors.Red);
+                text += TbNumericPropertyHelper(this.damage, source, Strings.Character.Damage, Colors.Red);
 
             if (this.directDamage is not null)
-                text += TbNumericPropertyHelper(this.directDamage, source, Strings.CharacterStats.Damage, Colors.Red);
+                text += TbNumericPropertyHelper(this.directDamage, source, Strings.Character.Damage, Colors.Red);
 
             if (this.criticalDamage is not null)
-                text += TbNumericPropertyHelper(this.criticalDamage, source, Strings.CharacterStats.CriticalDamage, Colors.Yellow);
+                text += TbNumericPropertyHelper(this.criticalDamage, source, Strings.Character.CriticalDamage, Colors.Yellow);
 
             if (this.psychicDamage is not null)
-                text += TbNumericPropertyHelper(this.psychicDamage, source, Strings.CharacterStats.PsychicDamage + '\n', Colors.Magenta);
+                text += TbNumericPropertyHelper(this.psychicDamage, source, Strings.Character.PsychicDamage + '\n', Colors.Magenta);
 
             if (this.heal is not null)
-                text += TbNumericPropertyHelper(this.heal, source, Strings.CharacterStats.Heal, Colors.Green);
+                text += TbNumericPropertyHelper(this.heal, source, Strings.Character.Heal, Colors.Green);
 
             if (this.recover is not null)
-                text += TbNumericPropertyHelper(this.recover, source, Strings.CharacterStats.Recover, Colors.Cyan);
+                text += TbNumericPropertyHelper(this.recover, source, Strings.Character.Recover, Colors.Cyan);
 
             if (this.exert is not null)
-                text += TbNumericPropertyHelper(this.exert, source, Strings.CharacterStats.Exert, Colors.Blue);
+                text += TbNumericPropertyHelper(this.exert, source, Strings.Character.Exert, Colors.Blue);
 
             if (this.resetHealth)
-                text += $"Fill {Strings.CharacterStats.Health} ({source.MaxHealth})\n";
+                text += $"Fill {Strings.Character.Health} ({source.MaxHealth})\n";
 
             if (this.resetStamina)
-                text += $"Fill {Strings.CharacterStats.Stamina} ({source.MaxStamina})\n";
+                text += $"Fill {Strings.Character.Stamina} ({source.MaxStamina})\n";
 
             if (this.constitutionUp is not null)
-                text += TbNumericPropertyHelper(this.constitutionUp, source, $"{Strings.CharacterStats.Constitution} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.constitutionUp, source, $"{Strings.Character.Constitution} Up", Colors.Orange);
 
             if (this.enduranceUp is not null)
-                text += TbNumericPropertyHelper(this.enduranceUp, source, $"{Strings.CharacterStats.Endurance} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.enduranceUp, source, $"{Strings.Character.Endurance} Up", Colors.Orange);
 
             if (this.swiftnessUp is not null)
-                text += TbNumericPropertyHelper(this.swiftnessUp, source, $"{Strings.CharacterStats.Swiftness} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.swiftnessUp, source, $"{Strings.Character.Swiftness} Up", Colors.Orange);
 
             if (this.strengthUp is not null)
-                text += TbNumericPropertyHelper(this.strengthUp, source, $"{Strings.CharacterStats.Strength} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.strengthUp, source, $"{Strings.Character.Strength} Up", Colors.Orange);
 
             if (this.toughnessUp is not null)
-                text += TbNumericPropertyHelper(this.toughnessUp, source, $"{Strings.CharacterStats.Toughness} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.toughnessUp, source, $"{Strings.Character.Toughness} Up", Colors.Orange);
 
             if (this.willUp is not null)
-                text += TbNumericPropertyHelper(this.willUp, source, $"{Strings.CharacterStats.Will} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.willUp, source, $"{Strings.Character.Will} Up", Colors.Orange);
 
             if (this.fortuneUp is not null)
-                text += TbNumericPropertyHelper(this.fortuneUp, source, $"{Strings.CharacterStats.Fortune} Up", Colors.Orange);
+                text += TbNumericPropertyHelper(this.fortuneUp, source, $"{Strings.Character.Fortune} Up", Colors.Orange);
 
             if (this.statusEffect is not null)
             {
                 StatusEffect effect = this.statusEffect.Get();
                 text += $"{effect?.Name}";
                 if (this.statusEffect.successRate < 100)
-                    text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.statusEffect.successRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol} chance</color>";
+                    text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.statusEffect.successRate}%{source.GetModifierText(CharacterStatsProperty.Luck)} chance</color>";
                 if (!effect.Singleton)
                     text += ", stackable";
                 text += '\n';
@@ -277,25 +277,25 @@ namespace BF2D.Game.Actions
             if (Utilities.Probability.Roll(source, source.CurrentJob.CritChance) && !target.CritImmune && critEnabled)
                 message += RnCriticalDamageHelper(numericProperty, source, target);
             else
-                message += $"{target.Name} took {numericProperty.Run(source, action)} {Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+                message += $"{target.Name} took {numericProperty.Run(source, action)} {Strings.Character.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
             return message;
         }
 
         private string RnCriticalDamageHelper(NumericProperty numericProperty, CharacterStats source, CharacterStats target)
         {
-            return $"{Strings.CharacterStats.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {numericProperty.Run(source, target.CriticalDamage)} {Strings.CharacterStats.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+            return $"{Strings.Character.CriticalDamage}.{Strings.DialogTextbox.BriefPause} {target.Name} took {numericProperty.Run(source, target.CriticalDamage)} {Strings.Character.Damage.ToLower()}. {Strings.DialogTextbox.BriefPause}";
         }
 
         private string RnHealHelper(NumericProperty numericProperty, CharacterStats source, CharacterStats target)
         {
-            return $"{target.Name} gained {numericProperty.Run(source, target.Heal)} {Strings.CharacterStats.Health.ToLower()}. {Strings.DialogTextbox.BriefPause}";
+            return $"{target.Name} gained {numericProperty.Run(source, target.Heal)} {Strings.Character.Health.ToLower()}. {Strings.DialogTextbox.BriefPause}";
         }
 
         private string TbNumericPropertyHelper(NumericProperty numericProperty, CharacterStats source, string statsActionName, Color32 color)
         {
             string text = $"{statsActionName} {numericProperty.Number.TextBreakdown(source)}";
             foreach (CharacterStatsProperty modifier in numericProperty.Modifiers)
-                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>+{source.GetStatsProperty(modifier)}{Strings.CharacterStats.GetStatsPropertySymbol(modifier)}</color>";
+                text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{source.GetModifierText(modifier)}</color>";
             text += '\n';
             return text;
         }
@@ -305,7 +305,7 @@ namespace BF2D.Game.Actions
             if (this.SuccessRate < 0)
                 return $"Always Fails";
 
-            return $"Success Rate <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%+{source.Luck}{Strings.CharacterStats.LuckSymbol}</color>\n";
+            return $"Success Rate <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%{source.GetModifierText(CharacterStatsProperty.Luck)}</color>\n";
         }
         #endregion
     }

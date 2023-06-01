@@ -159,15 +159,15 @@ namespace BF2D.Game
         public string GetLevelUpMessage(int previousLevel, int currentLevel)
         {
             string statsMessage = string.Empty;
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.MaxHealth}{Strings.CharacterStats.MaxHealthSymbol}", GetMaxHealthModifier(previousLevel), GetMaxHealthModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.MaxStamina}{Strings.CharacterStats.MaxStaminaSymbol}", GetMaxStaminaModifier(previousLevel), GetMaxStaminaModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.Speed}{Strings.CharacterStats.SpeedSymbol}", GetSpeedModifier(previousLevel), GetSpeedModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.Attack}{Strings.CharacterStats.AttackSymbol}", GetAttackModifier(previousLevel), GetAttackModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.Defense}{Strings.CharacterStats.DefenseSymbol}", GetDefenseModifier(previousLevel), GetDefenseModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.Focus}{Strings.CharacterStats.FocusSymbol}", GetFocusModifier(previousLevel), GetFocusModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.CharacterStats.Luck}{Strings.CharacterStats.LuckSymbol}", GetLuckModifier(previousLevel), GetLuckModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.CritMultiplier.ToLower(), GetCritMultiplier(previousLevel), GetCritMultiplier(currentLevel));
-            statsMessage += LevelUpMessageHelper(Strings.CharacterStats.CritChance.ToLower(), GetCritChance(previousLevel), GetCritChance(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.MaxHealth}{Strings.Character.MaxHealthSymbol}", GetMaxHealthModifier(previousLevel), GetMaxHealthModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.MaxStamina}{Strings.Character.MaxStaminaSymbol}", GetMaxStaminaModifier(previousLevel), GetMaxStaminaModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.Speed}{Strings.Character.SpeedSymbol}", GetSpeedModifier(previousLevel), GetSpeedModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.Attack}{Strings.Character.AttackSymbol}", GetAttackModifier(previousLevel), GetAttackModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.Defense}{Strings.Character.DefenseSymbol}", GetDefenseModifier(previousLevel), GetDefenseModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.Focus}{Strings.Character.FocusSymbol}", GetFocusModifier(previousLevel), GetFocusModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.Luck}{Strings.Character.LuckSymbol}", GetLuckModifier(previousLevel), GetLuckModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.Character.CritMultiplier.ToLower(), GetCritMultiplier(previousLevel), GetCritMultiplier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.Character.CritChance.ToLower(), GetCritChance(previousLevel), GetCritChance(currentLevel));
 
             return statsMessage;
         }

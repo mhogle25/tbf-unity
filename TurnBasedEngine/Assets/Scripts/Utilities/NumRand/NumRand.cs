@@ -215,7 +215,7 @@ namespace BF2D.Utilities
             while (this.opStackF.Count > 0)
             {
                 if (i >= operations.Length)
-                    throw new Exception($"[NumRand:TextBreakdownParser] Syntax Error: Incomplete operation -> {expression}");
+                    throw new Exception($"[NumRand:CalculateParser] Syntax Error: Incomplete operation -> {expression}");
 
                 if (i < operations.Length && IsAnOperator(operations[i]))
                 {

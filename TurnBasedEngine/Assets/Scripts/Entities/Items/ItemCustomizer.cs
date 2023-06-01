@@ -44,9 +44,9 @@ namespace BF2D.Game
 
             return GameCtx.Instance.WriteItem(newItem, () =>
             {
-                gemOwner.ExtractGem(gem);
-                this.owner.RemoveItem(this.itemInfo);
-                this.itemInfo = this.owner.AcquireItem(newItem.ID);
+                gemOwner.Extract(gem);
+                this.owner.Destroy(this.itemInfo);
+                this.itemInfo = this.owner.Acquire(newItem.ID);
             });
         }
     }

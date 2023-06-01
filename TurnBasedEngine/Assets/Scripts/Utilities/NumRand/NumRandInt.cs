@@ -57,7 +57,7 @@ namespace BF2D.Game
             {
                 return TextBreakdown(new NumRand.TextSpecs
                 {
-                    modifyEveryRandOp = $"+{source.GetStatsPropertyText(CharacterStatsProperty.Luck)}",
+                    modifyEveryRandOp = source.GetModifierText(CharacterStatsProperty.Luck),
                     randModifierColor = Colors.Cyan,
                     termRegistry = new System.Collections.Generic.Dictionary<string, string>
                     {
