@@ -23,7 +23,8 @@ namespace BF2D.Game
 
         public Item Get()
         {
-            this.staged ??= GameCtx.Instance.InstantiateItem(this.ID);
+            Item item = GameCtx.Instance.InstantiateItem(this.ID);
+            this.staged ??= item;
             return this.staged;
         }
 

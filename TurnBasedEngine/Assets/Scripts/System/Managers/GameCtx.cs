@@ -328,7 +328,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetIcon] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetIcon] ID '{id}' was invalid");
                 return null;
             }
 
@@ -339,7 +339,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetSoundEffect] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetSoundEffect] ID '{id}' was invalid");
                 return null;
             }
 
@@ -352,7 +352,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetEquipment] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetEquipment] ID '{id}' was invalid");
                 return null;
             }
 
@@ -363,7 +363,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetStatusEffect] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetStatusEffect] ID '{id}' was invalid");
                 return null;
             }
 
@@ -374,7 +374,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetGem] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetGem] ID '{id}' was invalid");
                 return null;
             }
 
@@ -385,7 +385,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetRune] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetRune] ID '{id}' was invalid");
                 return null;
             }
 
@@ -396,7 +396,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:GetJob] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:GetJob] ID '{id}' was invalid");
                 return null;
             }
 
@@ -409,7 +409,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiateItem] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:InstantiateItem] ID '{id}' was invalid");
                 return null;
             }
 
@@ -420,7 +420,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiateEquipment] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:InstantiateEquipment] ID '{id}' was invalid");
                 return null;
             }
 
@@ -431,7 +431,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiateGem] ID '{id}' was invalid");
+                Debug.LogError($"[GameCtx:InstantiateGem] ID '{id}' was invalid");
                 return null;
             }
 
