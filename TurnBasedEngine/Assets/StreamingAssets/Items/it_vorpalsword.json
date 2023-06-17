@@ -15,7 +15,7 @@
         "targetedGems": 
         [
             {
-                "target":"Opponent",
+                "target":"AllOfAny",
                 "description":"attack",
                 "gemID":"gm_damage_01_a"
             }

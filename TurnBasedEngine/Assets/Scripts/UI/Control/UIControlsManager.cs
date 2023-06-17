@@ -6,13 +6,17 @@ namespace BF2D.UI
 {
     public class UIControlsManager : MonoBehaviour
     {
-        public InputEventsControl EventsControl { get => this.inputEventsControl; }
+        public InputEventsControl SystemInputEvents => this.inputEventsControl;
         [SerializeField] private InputEventsControl inputEventsControl = null;
 
-        public static UIControlsManager Instance { get => UIControlsManager.instance; }
+        public static UIControlsManager Instance => UIControlsManager.instance;
         private static UIControlsManager instance = null;
 
-        public bool PhantomControlEnabled { get => this.phantomControl != null;  }
+        private readonly Dictionary<string, Stack<UIControl>> controlHistory = new() { { Game.Strings.UI.MainThread, new() } };
+        private readonly Stack<string> threadHistory = new();
+        private UIControl currentControl = null;
+
+        private string currentThreadID = Game.Strings.UI.MainThread;
 
         private void Awake()
         {
@@ -23,49 +27,34 @@ namespace BF2D.UI
             UIControlsManager.instance = this;
         }
 
-        private readonly Stack<UIControl> controlHistory = new();
-        private UIControl currentControl = null;
-        private UIControl phantomControl = null;
-        private readonly Mutex historyMutex = new();
-
         public void PassControlBack()
         {
-            this.historyMutex.WaitOne();
-
-            if (this.phantomControl)
-            {
-                Debug.LogWarning("[UIControlsManager:PassControlBack] Cannot perform UIControl History operations while a phantom UIControl is active.");
-                return;
-            }
-
             if (this.currentControl)
                 EndControl(this.currentControl);
 
-            if (this.controlHistory.Count > 0)
-            {
-                UIControl ancestor = this.controlHistory.Pop();
-                StartControl(ancestor);
-            } 
-            else
-            {
-                this.currentControl = null;
-            }
+            if (this.threadHistory.Count > 0 && this.controlHistory[this.currentThreadID].Count < 1)
+                this.currentThreadID = this.threadHistory.Pop();
 
-            this.historyMutex.ReleaseMutex();
+            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
+
+            if (stack.Count > 0)
+                StartControl(stack.Pop());
+            else
+                this.currentControl = null;
         }
 
         public void PassControlBackToFirst(bool setActive)
         {
-            this.historyMutex.WaitOne();
+            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
 
-            this.controlHistory.Push(this.currentControl);
+            stack.Push(this.currentControl);
             this.currentControl = null;
 
-            while (this.controlHistory.Count > 0)
+            while (stack.Count > 0)
             {
-                UIControl uiControl = this.controlHistory.Pop();
+                UIControl uiControl = stack.Pop();
 
-                if (this.controlHistory.Count > 1)
+                if (stack.Count > 1)
                 {
                     EndControl(uiControl);
                     uiControl.gameObject.SetActive(setActive);
@@ -75,93 +64,98 @@ namespace BF2D.UI
                     StartControl(uiControl);
                 }
             }
+        }
 
-            this.historyMutex.ReleaseMutex();
+        public void PassControlBackToFirst(bool setActive, string threadID)
+        {
+            if (!this.controlHistory.ContainsKey(threadID))
+            {
+                Debug.LogError($"[UIControlsManager:PassControlBackToFirst] Invalid thread ID '{threadID}'");
+                return;
+            }
+
+            ChangeThread(threadID);
+            PassControlBackToFirst(setActive);
         }
 
         public void ResetControlChain(bool setActive)
-        {
-            this.historyMutex.WaitOne();
+        { 
+            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
 
-            if (this.controlHistory.Count < 1 && this.currentControl == null)
+            if (stack.Count < 1 && this.currentControl == null)
                 return;
 
-            this.controlHistory.Push(this.currentControl);
+            stack.Push(this.currentControl);
             this.currentControl = null;
 
-            while (this.controlHistory.Count > 0)
+            while (stack.Count > 0)
             {
-                UIControl uiControl = this.controlHistory.Pop();
+                UIControl uiControl = stack.Pop();
                 EndControl(uiControl);
                 uiControl.gameObject.SetActive(setActive);
             }
+        }
 
-            this.historyMutex.ReleaseMutex();
+        public void ResetControlChain(bool setActive, string threadID)
+        {
+            if (!this.controlHistory.ContainsKey(threadID))
+            {
+                Debug.LogError($"[UIControlsManager:ResetControlChain] Invalid thread ID '{threadID}'");
+                return;
+            }
+
+            ChangeThread(threadID);
+            ResetControlChain(setActive);
         }
 
         public void ClearControlChainHistory()
         {
-            this.historyMutex.WaitOne();
+            this.controlHistory[this.currentThreadID].Clear();
+        }
 
-            this.controlHistory.Clear();
+        public void ClearControlChainHistory(string threadID)
+        {
+            if (!this.controlHistory.ContainsKey(threadID))
+            {
+                Debug.LogError($"[UIControlsManager:ClearControlChainHistory] Invalid thread ID '{threadID}'");
+                return;
+            }
 
-            this.historyMutex.ReleaseMutex();
+            ChangeThread(threadID);
+            ClearControlChainHistory();
         }
 
         public void TakeControl(UIControl uiControl)
         {
-            this.historyMutex.WaitOne();
-
-            if (this.phantomControl)
-            {
-                Debug.LogWarning("[UIControlsManager:TakeControl] Cannot perform UIControl History operations while a phantom UIControl is active.");
-                return;
-            }
-
             //Dont give control to the component that is already in control
             if (Object.ReferenceEquals(this.currentControl, uiControl))
                 return;
 
             if (this.currentControl)
             {
-                this.controlHistory.Push(this.currentControl);
+                this.controlHistory[this.currentThreadID].Push(this.currentControl);
                 EndControl(this.currentControl);
             }
 
             StartControl(uiControl);
-
-            this.historyMutex.ReleaseMutex();
         }
 
-        public void StartPhantomControl(UIControl uiControl)
+        public void TakeControl(UIControl uiControl, string threadID)
         {
-            if (this.phantomControl)
-                EndControlGeneric(this.phantomControl);
-
-            this.phantomControl = uiControl;
-            StartControlGeneric(this.phantomControl);
-            if (this.currentControl)
-                this.currentControl.enabled = false;
-        }
-
-        public void EndPhantomControl()
-        {
-            if (!this.phantomControl)
+            if (!this.controlHistory.ContainsKey(threadID))
             {
-                Debug.LogWarning("[UIControlsManager:EndPhantomControl] Tried to end a phantom UIControl but none were active.");
+                Debug.LogError($"[UIControlsManager:TakeControl] Invalid thread ID '{threadID}'");
                 return;
             }
 
-            EndControlGeneric(this.phantomControl);
-            this.phantomControl = null;
-            if (this.currentControl)
-                this.currentControl.enabled = true;
+            TakeControl(uiControl);
+            ChangeThread(threadID);
         }
 
         private void StartControl(UIControl uiControl)
         {
-            StartControlGeneric(uiControl);
             this.currentControl = uiControl;
+            StartControlGeneric(uiControl);
         }
 
         private void EndControl(UIControl uiControl)
@@ -169,14 +163,25 @@ namespace BF2D.UI
             EndControlGeneric(uiControl);
         }
 
-        private void StartControlGeneric(UIControl uiControl)
+        private void ChangeThread(string threadID)
+        {
+            if (!this.controlHistory.ContainsKey(threadID))
+                this.controlHistory[threadID] = new();
+
+            if (this.threadHistory.Count > 0 && this.threadHistory.Peek() != this.currentThreadID)
+                this.threadHistory.Push(this.currentThreadID);
+
+            this.currentThreadID = threadID;
+        }
+
+        public static void StartControlGeneric(UIControl uiControl)
         {
             uiControl.gameObject.SetActive(true);
             uiControl.enabled = true;
             uiControl.ControlInitialize();
         }
 
-        private static void EndControlGeneric(UIControl uiControl)
+        public static void EndControlGeneric(UIControl uiControl)
         {
             uiControl.enabled = false;
             uiControl.ControlFinalize();

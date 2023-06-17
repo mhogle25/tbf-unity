@@ -25,7 +25,7 @@ namespace BF2D.Game
         [SerializeField] private ExternalFileManager itemsFileManager = null;
         [SerializeField] private ExternalFileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
-        [SerializeField] private FileManager gemsFileManager = null;
+        [SerializeField] private ExternalFileManager gemsFileManager = null;
         [SerializeField] private FileManager runesFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
@@ -50,6 +50,7 @@ namespace BF2D.Game
 
         //Moddeable entity cloning cache
         private readonly JsonStringCache<Equipment> equipmentTemplates = new(10);
+        private readonly JsonStringCache<CharacterStatsAction> gemTemplates = new(10);
 
         //Object caches (no instantiation on get, single instance data classes)
         private readonly JsonEntityCache<Equipment> equipments = new(10);
@@ -123,7 +124,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameInfo:SaveGame] Save failed, there was no game loaded.");
+                Debug.LogWarning("[GameCtx:SaveGame] Save failed, there was no game loaded.");
                 return;
             }
 
@@ -134,7 +135,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameInfo:SaveGameAs] Save failed, there was no game loaded.");
+                Debug.LogWarning("[GameCtx:SaveGameAs] Save failed, there was no game loaded.");
                 return;
             }
 
@@ -156,7 +157,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameInfo:LoadGame] Load failed, there was no game loaded.");
+                Debug.LogWarning("[GameCtx:LoadGame] Load failed, there was no game loaded.");
                 return false;
             }
 
@@ -177,21 +178,21 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
 
             string content = this.saveFilesManager.LoadFile(id);
             if (string.IsNullOrEmpty(content))
             {
-                Debug.LogWarning($"[GameInfo:LoadSaveData] The contents of the save file at id '{id}' were empty");
+                Debug.LogWarning($"[GameCtx:LoadSaveData] The contents of the save file at id '{id}' were empty");
                 return null;
             }
 
             SaveData saveData = JSON.DeserializeString<SaveData>(content);
             if (saveData is null)
             {
-                Debug.LogError($"[GameInfo:LoadSaveData] The JSON at id '{id}' was invalid");
+                Debug.LogError($"[GameCtx:LoadSaveData] The JSON at id '{id}' was invalid");
                 return null;
             }
 
@@ -211,7 +212,7 @@ namespace BF2D.Game
             {
                 InputController.Keyboard => InputManager.Instance.KeyboardID,
                 InputController.Gamepad => InputManager.Instance.GamepadID,
-                _ => throw new ArgumentException("[GameInfo:SaveControlsConfig] InputController enum value was invalid")
+                _ => throw new ArgumentException("[GameCtx:SaveControlsConfig] InputController enum value was invalid")
             };
             SaveControlsConfigAs(controllerType, id);
         }
@@ -233,7 +234,7 @@ namespace BF2D.Game
                         this.gamepadControlsConfigFilesManager.WriteToFile(id, newJSON);
                         break;
                     default:
-                        Debug.LogError("[GameInfo:SaveControlsConfigAs] InputController enum value was invalid");
+                        Debug.LogError("[GameCtx:SaveControlsConfigAs] InputController enum value was invalid");
                         break;
                 }
             }
@@ -257,7 +258,7 @@ namespace BF2D.Game
 
             if (string.IsNullOrEmpty(newJSON))
             {
-                Debug.LogError("[GameInfo:LoadControlsConfig] Fetch failed");
+                Debug.LogError("[GameCtx:LoadControlsConfig] Fetch failed");
                 return;
             }
 
@@ -287,7 +288,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateEnemy] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
             CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
@@ -298,7 +299,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiatePlayer] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:InstantiatePlayer] ID '{id}' was invalid");
                 return null;
             }
 
@@ -327,7 +328,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetIcon] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetIcon] ID '{id}' was invalid");
                 return null;
             }
 
@@ -338,7 +339,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetSoundEffect] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetSoundEffect] ID '{id}' was invalid");
                 return null;
             }
 
@@ -347,12 +348,11 @@ namespace BF2D.Game
         #endregion
 
         #region Entity Getters
-
         public Equipment GetEquipment(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetEquipment] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetEquipment] ID '{id}' was invalid");
                 return null;
             }
 
@@ -363,7 +363,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetStatusEffect] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetStatusEffect] ID '{id}' was invalid");
                 return null;
             }
 
@@ -374,7 +374,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetGem] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetGem] ID '{id}' was invalid");
                 return null;
             }
 
@@ -385,7 +385,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetRune] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetRune] ID '{id}' was invalid");
                 return null;
             }
 
@@ -396,7 +396,8 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:GetJob] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:GetJob] ID '{id}' was invalid");
+                return null;
             }
 
             return this.jobs.Get(id, this.jobsFileManager);
@@ -408,7 +409,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:InstantiateItem] ID '{id}' was invalid");
                 return null;
             }
 
@@ -419,11 +420,22 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameInfo:InstantiateItem] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameCtx:InstantiateEquipment] ID '{id}' was invalid");
                 return null;
             }
 
-            return this.equipmentTemplates.Get(id, this.itemsFileManager);
+            return this.equipmentTemplates.Get(id, this.equipmentsFileManager);
+        }
+
+        public CharacterStatsAction InstantiateGem(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                Debug.LogWarning($"[GameCtx:InstantiateGem] ID '{id}' was invalid");
+                return null;
+            }
+
+            return this.gemTemplates.Get(id, this.gemsFileManager);
         }
         #endregion
 
@@ -436,7 +448,7 @@ namespace BF2D.Game
         public FileWriter WriteItem(Item item, Action callback) => new FileWriter(
             this.itemsFileManager,
             item.ID,
-            Utilities.JSON.SerializeObject(item),
+            JSON.SerializeObject(item),
             callback
         );
 
@@ -448,7 +460,19 @@ namespace BF2D.Game
         public FileWriter WriteEquipment(Equipment equipment, Action callback) => new FileWriter(
             this.equipmentsFileManager,
             equipment.ID,
-            Utilities.JSON.SerializeObject(equipment),
+            JSON.SerializeObject(equipment),
+            callback
+        );
+
+        /// <summary>
+        /// Wraps a gem in a callback object that will write/overwrite that entity at its ID
+        /// </summary>
+        /// <param name="gem">Gem to write</param>
+        /// <returns>Gem file writer</returns>
+        public FileWriter WriteGem(CharacterStatsAction gem, Action callback) => new FileWriter(
+            this.gemsFileManager,
+            gem.ID,
+            JSON.SerializeObject(gem),
             callback
         );
         #endregion
@@ -456,30 +480,32 @@ namespace BF2D.Game
         #region Custom Entity Delete
         public void DeleteItemIfCustom(string id)
         {
-            if (!this.itemsFileManager.FileExists(id))
-            {
-                Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
-                return;
-            }
-
-            if (this.itemsFileManager.FileExists(id, GameDirectory.Streaming))
-                return;
-
-            this.itemsFileManager.DeleteFile(id);
+            DeleteEntityIfCustom(id, this.itemsFileManager, "Item");
         }
 
         public void DeleteEquipmentIfCustom(string id)
         {
-            if (!this.equipmentsFileManager.FileExists(id))
+            DeleteEntityIfCustom(id, this.equipmentsFileManager, "Equipment");
+        }
+
+        public void DeleteGemIfCustom(string id)
+        {
+            DeleteEntityIfCustom(id, this.gemsFileManager, "Gem");
+        }
+
+        private void DeleteEntityIfCustom(string id, ExternalFileManager fileManager, string label)
+        {
+            if (!fileManager.FileExists(id))
             {
-                Debug.LogError($"[GameInfo:DeleteItem] The file at ID {id} does not exist.");
+                Debug.LogError($"[GameCtx:Delete{label}IfCustom] The file at ID {id} does not exist.");
                 return;
             }
 
-            if (this.equipmentsFileManager.FileExists(id, GameDirectory.Streaming))
+            if (fileManager.FileExists(id, GameDirectory.Streaming))
                 return;
 
-            this.equipmentsFileManager.DeleteFile(id);
+            fileManager.DeleteFile(id);
+            ClearCaches();
         }
         #endregion
     }

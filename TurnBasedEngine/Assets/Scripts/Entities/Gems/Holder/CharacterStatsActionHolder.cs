@@ -1,32 +1,34 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
 namespace BF2D.Game.Actions
 {
     [Serializable]
     public class CharacterStatsActionHolder : UtilityEntityHolder<CharacterStatsActionInfo>, ICharacterStatsActionHolder
     {
-        public string Extract(CharacterStatsActionInfo info)
+        public void Destroy(CharacterStatsActionInfo info)
         {
             if (info is null)
             {
-                Debug.LogError($"[CharacterStatsActionHolder:RemoveGem] Tried to remove a gem from a gem bag but the gem info given was null");
-                return null;
+                Debug.LogError($"[CharacterStatsActionHolder:Destroy] Tried to remove a gem from a bag but the info given was null");
+                return;
             }
 
             if (!Contains(info))
             {
-                Debug.LogError($"[CharacterStatsActionHolder:RemoveGem] Tried to remove a gem from a gem bag but the gem info given wasn't in the bag");
-                return null;
+                Debug.LogError($"[CharacterStatsActionHolder:Destroy] Tried to remove a gem from a bag but the info given wasn't in the bag");
+                return;
             }
 
             if (info.Decrement() < 1)
+            {
                 RemoveAndForget(info);
 
-            return info.ID;
+                if (info.Generated)
+                    GameCtx.Instance.DeleteGemIfCustom(info.ID);
+            }
         }
 
-        public string Extract(string id) => Extract(Get(id));
+        public void Destroy(string id) => Destroy(Get(id));
     }
 }

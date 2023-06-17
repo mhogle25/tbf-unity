@@ -6,7 +6,7 @@ using System;
 
 namespace BF2D.Game
 {
-    public class PersistentEffect : Entity, ICombatAligned
+    public abstract class PersistentEffect : Entity, ICombatAligned
     {
         [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
         [JsonIgnore] private string id = string.Empty;
@@ -26,7 +26,7 @@ namespace BF2D.Game
             get
             {
                 if (this.alignment is not null)
-                    return (CombatAlignment) this.alignment;
+                    return this.alignment.GetValueOrDefault();
 
                 int offensePoints = 0;
                 int defensePoints = 0;
@@ -44,7 +44,7 @@ namespace BF2D.Game
             }
         }
 
-        [JsonProperty] private CombatAlignment? alignment = null;
+        [JsonProperty] private readonly CombatAlignment? alignment = null;
         [JsonProperty] private readonly int speedModifier = 0;
         [JsonProperty] private readonly int attackModifier = 0;
         [JsonProperty] private readonly int defenseModifier = 0;

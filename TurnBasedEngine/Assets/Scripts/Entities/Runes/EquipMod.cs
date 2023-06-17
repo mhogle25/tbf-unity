@@ -9,5 +9,7 @@ namespace BF2D.Game
     {
         [JsonIgnore] public string SpriteID => this.spriteID;
         [JsonProperty] private readonly string spriteID = string.Empty;
+
+        public Entity GetEntity() => this;
     }
 }

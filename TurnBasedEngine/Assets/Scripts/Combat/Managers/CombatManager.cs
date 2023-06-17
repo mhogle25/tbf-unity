@@ -29,15 +29,15 @@ namespace BF2D.Game.Combat
         private static CombatManager instance = null;
         public static CombatManager Instance => CombatManager.instance;
 
-        public CharacterCombat CurrentCharacter { get => this.combatGrid.CurrentCharacter; }
-        public IEnumerable<CharacterCombat> Players { get =>  this.combatGrid.ActivePlayers;  }
-        public int PlayerCount { get => this.combatGrid.ActivePlayers.Length; }
-        public IEnumerable<CharacterCombat> Enemies { get => this.combatGrid.ActiveEnemies; }
-        public int EnemyCount { get => this.combatGrid.ActiveEnemies.Length; }
-        public IEnumerable<CharacterCombat> Characters { get => this.combatGrid.ActiveCharacters; }
-        public int CharacterCount { get => this.combatGrid.ActivePlayers.Length + this.combatGrid.ActiveEnemies.Length; }
+        public CharacterCombat CurrentCharacter => this.combatGrid.CurrentCharacter; 
+        public IEnumerable<CharacterCombat> Players =>  this.combatGrid.ActivePlayers;  
+        public int PlayerCount => this.combatGrid.ActivePlayers.Length; 
+        public IEnumerable<CharacterCombat> Enemies => this.combatGrid.ActiveEnemies; 
+        public int EnemyCount => this.combatGrid.ActiveEnemies.Length; 
+        public IEnumerable<CharacterCombat> Characters => this.combatGrid.ActiveCharacters; 
+        public int CharacterCount => this.combatGrid.ActivePlayers.Length + this.combatGrid.ActiveEnemies.Length; 
 
-        public DialogTextbox OrphanedTextbox { get => this.orphanedTextbox; }
+        public DialogTextbox OrphanedTextbox => this.orphanedTextbox; 
 
         private void Awake()
         {
@@ -53,15 +53,13 @@ namespace BF2D.Game.Combat
         #region Public Utilities
         public void SetupItemCombat(ItemInfo itemInfo)
         {
-            this.CurrentCharacter.SetupCombatAction(new CombatAction
+            this.CurrentCharacter.SetupCombatAction(this.characterTargeter, new CombatAction
             {
                 Item = new ItemCombatActionInfo
                 {
                     Info = itemInfo
                 }
-            },
-            this.characterTargeter
-            );
+            });
         }
 
         public void RunCombatEvents()
@@ -85,11 +83,11 @@ namespace BF2D.Game.Combat
 
             if (EnemiesAreDefeated())
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_victory", false, 0);
+                this.standaloneTextboxControl.Dialog("di_victory", 0);
                 List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
                 foreach (JobInfo.LevelUpInfo info in infos)
                 {
-                    this.standaloneTextboxControl.Textbox.Dialog(info.levelUpDialog, false, 0, null, new string[]
+                    this.standaloneTextboxControl.Dialog(info.levelUpDialog, 0, null, new string[]
                     {
                         info.parent.Name
                     });
@@ -105,7 +103,7 @@ namespace BF2D.Game.Combat
                 }
 
                 if (!string.IsNullOrEmpty(itemLootMessage))
-                    this.standaloneTextboxControl.Textbox.Message(itemLootMessage, false);
+                    this.standaloneTextboxControl.Message(itemLootMessage);
 
                 // Equipment Loot
                 string equipmentLootMessage = string.Empty;
@@ -117,7 +115,7 @@ namespace BF2D.Game.Combat
                 }
 
                 if (!string.IsNullOrEmpty(equipmentLootMessage))
-                    this.standaloneTextboxControl.Textbox.Message(equipmentLootMessage, false);
+                    this.standaloneTextboxControl.Message(equipmentLootMessage);
 
                 // Gem Loot
                 string gemLootMessage = string.Empty;
@@ -129,7 +127,7 @@ namespace BF2D.Game.Combat
                 }
 
                 if (!string.IsNullOrEmpty(gemLootMessage))
-                    this.standaloneTextboxControl.Textbox.Message(gemLootMessage, false);
+                    this.standaloneTextboxControl.Message(gemLootMessage);
 
 
                 // Point Loot
@@ -142,7 +140,7 @@ namespace BF2D.Game.Combat
                     pointLootMessage += $" and {etherUp} {Strings.Game.Ether}.";
                 else
                     pointLootMessage += '.';
-                this.standaloneTextboxControl.Textbox.Message(pointLootMessage, false, () =>
+                this.standaloneTextboxControl.Message(pointLootMessage, () =>
                 {
                     GameCtx.Instance.SaveGame();
                     CancelCombat();
@@ -150,14 +148,14 @@ namespace BF2D.Game.Combat
             }
             else if (PlayersAreDefeated())
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_defeat", false, 0, CancelCombat);
+                this.standaloneTextboxControl.Dialog("di_defeat", 0, CancelCombat);
             }
             else
             {
-                this.standaloneTextboxControl.Textbox.Dialog("di_draw", false, 0, CancelCombat);
+                this.standaloneTextboxControl.Dialog("di_draw", 0, CancelCombat);
             }
 
-            UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+            this.standaloneTextboxControl.TakeControl();
         }
 
         public void CancelCombat()
@@ -250,8 +248,8 @@ namespace BF2D.Game.Combat
         {
             this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
-            this.standaloneTextboxControl.Textbox.Dialog(initInfo.openingDialogKey, false, 0, BeginTurn);
-            UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+            this.standaloneTextboxControl.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
+            this.standaloneTextboxControl.TakeControl();
 
             Terminal.IO.Log($"Combat intialized with {CombatManager.Instance.PlayerCount} players and {CombatManager.Instance.EnemyCount} enemies.");
         }
@@ -260,11 +258,11 @@ namespace BF2D.Game.Combat
         {
             if (this.combatGrid.CharacterIsPlayer(this.CurrentCharacter))
             {
-                this.standaloneTextboxControl.Textbox.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.BriefPause}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", false, () =>
+                this.standaloneTextboxControl.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.BriefPause}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", () =>
                 {
                     UIControlsManager.Instance.TakeControl(this.mainMenu);
                 });
-                UIControlsManager.Instance.TakeControl(this.standaloneTextboxControl);
+                this.standaloneTextboxControl.TakeControl();
                 return;
             }
 

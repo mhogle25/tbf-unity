@@ -90,7 +90,7 @@ namespace BF2D.Game.Combat
         }
 
         #region Public Utilities
-        public void SetupCombatAction(Actions.CombatAction combatAction, UIControl targeter)
+        public void SetupCombatAction(UIControl targeter, Actions.CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
             if (this.Stats.CombatAI.Enabled)
@@ -405,33 +405,52 @@ namespace BF2D.Game.Combat
 
         private void PlayDialog(List<string> dialog, Action callback)
         {
+            DialogTextbox textbox = CombatManager.Instance.OrphanedTextbox;
             dialog[^1] += Strings.DialogTextbox.End;
-            CombatManager.Instance.OrphanedTextbox.Dialog(dialog, false, 0, () =>
+
+            textbox.Dialog(dialog, 0, () =>
             {
-                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
+                FinalizeTextbox(textbox);
                 callback?.Invoke();
             },
             new string[]
             {
                 this.Stats.Name
             });
-            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
-            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+
+            InitializeTextbox(textbox);
         }
 
         private void PlayMessage(string message, Action callback)
         {
-            CombatManager.Instance.OrphanedTextbox.Message(message, false, () =>
+            DialogTextbox textbox = CombatManager.Instance.OrphanedTextbox;
+
+            textbox.Message(message, () =>
             {
-                CombatManager.Instance.OrphanedTextbox.UtilityFinalize();
+                FinalizeTextbox(textbox);
                 callback?.Invoke();
             },
             new string[]
             {
                 this.Stats.Name
             });
-            CombatManager.Instance.OrphanedTextbox.View.gameObject.SetActive(true);
-            CombatManager.Instance.OrphanedTextbox.UtilityInitialize();
+
+            InitializeTextbox(textbox);
+        }
+
+        private void InitializeTextbox(DialogTextbox textbox)
+        {
+            textbox.View.gameObject.SetActive(true);
+            textbox.autoPass = true;
+            textbox.messageInterrupt = false;
+            textbox.UtilityInitialize();
+        }
+
+        private void FinalizeTextbox(DialogTextbox textbox)
+        {
+            textbox.autoPass = default;
+            textbox.messageInterrupt = default;
+            textbox.UtilityFinalize();
         }
         #endregion
     }

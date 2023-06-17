@@ -24,7 +24,7 @@ namespace BF2D
         [SerializeField] protected UnityEvent menuEvent = new();
         public bool SpecialEnabled { get { return this.specialEnabled; } set { this.specialEnabled = value; } }
         [SerializeField] protected bool specialEnabled = true;
-        [Tooltip("The actions that will be called on attack")]
+        [Tooltip("The actions that will be called on special")]
         [SerializeField] protected UnityEvent specialEvent = new();
         public bool PauseEnabled { get { return this.pauseEnabled; } set { this.pauseEnabled = value; } }
         [SerializeField] protected bool pauseEnabled = true;
@@ -37,7 +37,6 @@ namespace BF2D
 
         public UnityEvent GetInputEvent(InputButton inputButton)
         {
-
             return inputButton switch
             {
                 InputButton.Confirm => this.confirmEvent,
@@ -46,7 +45,7 @@ namespace BF2D
                 InputButton.Special => this.specialEvent,
                 InputButton.Pause => this.pauseEvent,
                 InputButton.Select => this.selectEvent,
-                _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")
+                _ => throw new ArgumentException("[InputEvents:GetInputEvent] InputButton was null or invalid")
             };
         }
 
@@ -60,7 +59,7 @@ namespace BF2D
                 InputButton.Special => this.specialEnabled,
                 InputButton.Pause => this.pauseEnabled,
                 InputButton.Select => this.selectEnabled,
-                _ => throw new ArgumentException("[UIOption] InputButton was null or invalid")
+                _ => throw new ArgumentException("[InputEvents:InputEventEnabled] InputButton was null or invalid")
             };
         }
     }

@@ -1,10 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using BF2D.Game.Actions;
 using UnityEngine;
-using BF2D.UI;
-using System.Text.RegularExpressions;
-using System;
 
 namespace BF2D.Game
 {
@@ -37,6 +32,12 @@ namespace BF2D.Game
             if (this.index < 0 || this.index >= targetedGems.Length)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item in an invalid slot.");
+                return null;
+            }
+
+            if (gem.HasStatsUp && !newItem.Consumable)
+            {
+                Debug.LogError("[ItemCustomizer:EmbueGem] Cannot embue a stat modifier gem to a non-consumable item.");
                 return null;
             }
 

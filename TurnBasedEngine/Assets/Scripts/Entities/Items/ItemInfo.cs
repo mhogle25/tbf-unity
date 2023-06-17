@@ -8,20 +8,12 @@ namespace BF2D.Game
     [Serializable]
     public class ItemInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
-        [JsonProperty] private string id = string.Empty;
-        [JsonIgnore] public override int Count => this.count; 
-        [JsonProperty] private int count = 0;
 
         [JsonIgnore] private Item staged = null;
 
         [JsonIgnore] public override Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
 
-        [JsonIgnore] public override string Name => Get().Name;
-
         [JsonIgnore] public override string Description => Get().Description;
-
-        [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
         [JsonIgnore] public override IEnumerable<Enums.AuraType> Auras => Get().Auras;
 
@@ -31,7 +23,7 @@ namespace BF2D.Game
 
         public Item Get()
         {
-            this.staged ??= GameCtx.Instance.InstantiateItem(this.id);
+            this.staged ??= GameCtx.Instance.InstantiateItem(this.ID);
             return this.staged;
         }
 
@@ -50,16 +42,6 @@ namespace BF2D.Game
                 owner.Destroy(this);
 
             return ResetStaged();
-        }
-
-        public override int Increment()
-        {
-            return ++this.count;
-        }
-
-        public override int Decrement()
-        {
-            return --this.count;
         }
 
         public Item ResetStaged()

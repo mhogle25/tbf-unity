@@ -1,28 +1,39 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace BF2D.Game
 {
     public abstract class UtilityEntityInfo : IEntityInfo
     {
-        public abstract string ID { get; set; }
+        [JsonProperty] private string id = string.Empty;
+        [JsonProperty] private int count = 0;
 
-        public abstract int Count { get; }
+        [JsonIgnore] public string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] public int Count => this.count;
 
         public abstract Entity GetEntity();
 
-        public abstract string Name { get; }
+        [JsonIgnore] public string Name => GetEntity().Name;
 
-        public abstract string Description { get; }
+        [JsonIgnore] public abstract string Description { get; }
 
-        public abstract IEnumerable<Enums.AuraType> Auras { get; }
+        [JsonIgnore] public abstract IEnumerable<Enums.AuraType> Auras { get; }
+
+        [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
         public abstract IUtilityEntity GetUtility();
 
-        public abstract Sprite Icon { get; }
+        [JsonIgnore] public abstract Sprite Icon { get; }
 
-        public abstract int Increment();
+        public int Increment()
+        {
+            return ++this.count;
+        }
 
-        public abstract int Decrement();
+        public int Decrement()
+        {
+            return --this.count;
+        }
     }
 }

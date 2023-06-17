@@ -8,14 +8,15 @@ using TMPro;
 using Newtonsoft.Json;
 using BF2D.Enums;
 
-namespace BF2D.UI {
-    public class DialogTextbox : UIUtility {
+namespace BF2D.UI
+{
+    public class DialogTextbox : UIUtility
+    {
         private struct DialogData
         {
             public List<string> dialog;
             public int index;
             public Action callback;
-            public bool responseEnabled;
         };
 
         [Serializable]
@@ -38,11 +39,11 @@ namespace BF2D.UI {
         [SerializeField] private Utilities.FileManager dialogFileManager = null;
 
         //Public variables
-        public float DefaultMessageSpeed = 0.05f;
-        public bool MessageInterrupt = false;
-        public bool AutoPass = false;
+        public float defaultMessageSpeed = 0.05f;
+        public bool messageInterrupt = false;
+        public bool autoPass = false;
 
-        public UnityEvent OnEndOfQueuedDialogs { get => this.onEndOfQueuedDialogs; }
+        public UnityEvent OnEndOfQueuedDialogs => this.onEndOfQueuedDialogs;
         [SerializeField] private UnityEvent onEndOfQueuedDialogs = new();
 
         [Header("Dialog Responses")]
@@ -51,10 +52,10 @@ namespace BF2D.UI {
         [SerializeField] private GameCondition prereqConditionChecker = null;
         
         [Serializable] public class ResponseOptionEvent : UnityEvent<string> { }
-        public ResponseOptionEvent ResponseConfirmEvent { get => this.responseOptionConfirmEvent; }
+        public ResponseOptionEvent ResponseConfirmEvent => this.responseOptionConfirmEvent;
         [SerializeField] private ResponseOptionEvent responseOptionConfirmEvent = new();
 
-        public UnityEvent ResponseBackEvent { get => this.responseOptionBackEvent; }
+        public UnityEvent ResponseBackEvent => this.responseOptionBackEvent;
         [SerializeField] private UnityEvent responseOptionBackEvent = new();
 
         public bool ResponseBackEventEnabled
@@ -121,15 +122,13 @@ namespace BF2D.UI {
         public override void UtilityInitialize()
         {
             base.UtilityInitialize();
-            this.state = DialogQueueHandler;
+            this.state = StateDialogQueue;
         }
 
         public override void UtilityFinalize()
         {
             base.UtilityFinalize();
             NametagDisable();
-            if (this.responseOptionsControl.Controlled.View.gameObject.activeSelf)
-                UIControlsManager.Instance.EndPhantomControl();
             Cancel();
         }
         #endregion
@@ -139,9 +138,9 @@ namespace BF2D.UI {
         /// Pushes a single message to the dialog queue
         /// </summary>
         /// <param name="message">The message to be displayed</param>
-        public void Message(string message, bool responseEnabled) 
+        public void Message(string message) 
         {
-            Message(message, responseEnabled, null);
+            Message(message, null);
         }
 
         /// <summary>
@@ -149,9 +148,9 @@ namespace BF2D.UI {
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, bool responseEnabled, Action callback)
+        public void Message(string message, Action callback)
         {
-            Message(message, responseEnabled, callback, null);
+            Message(message, callback, null);
         }
 
         /// <summary>
@@ -159,7 +158,7 @@ namespace BF2D.UI {
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, bool responseEnabled, Action callback, string[] inserts)
+        public void Message(string message, Action callback, string[] inserts)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -178,8 +177,7 @@ namespace BF2D.UI {
             {
                 dialog = lines,
                 index = 0,
-                callback = callback,
-                responseEnabled = responseEnabled
+                callback = callback
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -190,9 +188,9 @@ namespace BF2D.UI {
         /// </summary>
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
-        public void Dialog(string key, bool responseEnabled, int startingLine) 
+        public void Dialog(string key, int startingLine) 
         {
-            Dialog(key, responseEnabled, startingLine, null);
+            Dialog(key, startingLine, null);
         }
 
         /// <summary>
@@ -201,9 +199,9 @@ namespace BF2D.UI {
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, bool responseEnabled, int startingLine, Action callback)
+        public void Dialog(string key, int startingLine, Action callback)
         {
-            Dialog(key, responseEnabled, startingLine, callback, null);
+            Dialog(key, startingLine, callback, null);
         }
 
         /// <summary>
@@ -212,7 +210,7 @@ namespace BF2D.UI {
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, bool responseEnabled, int startingLine, Action callback, string[] inserts)
+        public void Dialog(string key, int startingLine, Action callback, string[] inserts)
         {
             if (!this.dialogs.ContainsKey(key))
             {
@@ -235,7 +233,6 @@ namespace BF2D.UI {
                 dialog = lines,
                 index = startingLine,
                 callback = callback,
-                responseEnabled = responseEnabled
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -245,10 +242,10 @@ namespace BF2D.UI {
         /// Pushes a dialog to the dialog queue
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="dialogIndex">The line the dialog starts from (0 is the first line)</param>
-        public void Dialog(List<string> lines, bool responseEnabled, int dialogIndex) 
+        /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
+        public void Dialog(List<string> lines,  int startingLine) 
         {
-            Dialog(lines, responseEnabled, dialogIndex, null);
+            Dialog(lines, startingLine, null);
         }
 
         /// <summary>
@@ -257,9 +254,9 @@ namespace BF2D.UI {
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, bool responseEnabled, int startingLine, Action callback)
+        public void Dialog(List<string> lines, int startingLine, Action callback)
         {
-            Dialog(lines, responseEnabled, startingLine, callback, null);
+            Dialog(lines, startingLine, callback, null);
         }
 
         /// <summary>
@@ -268,7 +265,7 @@ namespace BF2D.UI {
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, bool responseEnabled, int startingLine, Action callback, string[] inserts)
+        public void Dialog(List<string> lines, int startingLine, Action callback, string[] inserts)
         {
             if (lines is null || lines.Count < 1)
             {
@@ -288,7 +285,6 @@ namespace BF2D.UI {
                 dialog = newLines,
                 index = startingLine,
                 callback = callback,
-                responseEnabled = responseEnabled
             };
 
             this.dialogQueue.Enqueue(dialogData);
@@ -302,11 +298,11 @@ namespace BF2D.UI {
             if (!this.Interactable)
                 return;
 
-            if (this.state == MessageParseAndDisplayClocked && MessageInterrupt) // If the confirm button is pressed and interrupt is on, switch to instantaneous parse
+            if (this.state == StateMessageParseAndDisplay && messageInterrupt) // If the confirm button is pressed and interrupt is on, switch to instantaneous parse
             {
                 MessageParseAndDisplayInstantaneous();
             }
-            else if (this.state == EndOfLine || this.state == EndOfDialog)
+            else if (this.state == StateEndOfLine || this.state == StateEndOfDialog)
             {
                 this.continueFlag = true;
             }
@@ -315,7 +311,7 @@ namespace BF2D.UI {
         public void Cancel()
         {
             this.dialogQueue.Clear();
-            this.state = DialogQueueHandler;
+            this.state = StateDialogQueue;
         }
         #endregion
 
@@ -337,7 +333,7 @@ namespace BF2D.UI {
         #endregion
 
         #region States
-        private void DialogQueueHandler()
+        private void StateDialogQueue()
         {
             if (this.dialogQueue.Count < 1)
                 return;
@@ -351,10 +347,10 @@ namespace BF2D.UI {
 
             //Debug.Log("[DialogTextbox] Dialog Armed\n" + this.activeLines.Count + " lines");
 
-            this.state = MessageParseAndDisplayClocked;
+            this.state = StateMessageParseAndDisplay;
         }
 
-        private void MessageParseAndDisplayClocked() {
+        private void StateMessageParseAndDisplay() {
             //Message Parse Statement
             if (Time.time > this.timeAccumulator) {
                 this.timeAccumulator = Time.time + this.messageSpeed;       //Implement time increment
@@ -362,11 +358,11 @@ namespace BF2D.UI {
             }
         }
 
-        private void EndOfLine() {
+        private void StateEndOfLine() {
             if (!this.continueIcon.enabled)
                 this.continueIcon.enabled = true;
 
-            if (this.AutoPass)
+            if (this.autoPass)
                 Continue();
 
             if (this.continueFlag || this.pass) {
@@ -385,18 +381,18 @@ namespace BF2D.UI {
                     this.dialogIndex++;                     //Increment dialog index to the next line of dialog
                 }
                 this.messageIndex = 0;                      //Reset the message index to be on the first character of the line
-                this.state = MessageParseAndDisplayClocked; //Change the state to MessageParseAndDisplay
+                this.state = StateMessageParseAndDisplay; //Change the state to MessageParseAndDisplay
             }
         }
 
-        private void EndOfDialog() {
+        private void StateEndOfDialog() {
             if (this.nextDialogIndex != DialogTextbox.defaultValue)
-                this.state = EndOfLine;
+                this.state = StateEndOfLine;
 
             if (!this.continueIcon.enabled)
                 this.continueIcon.enabled = true;
 
-            if (this.AutoPass)
+            if (this.autoPass)
                 Continue();
 
             if (this.continueFlag || this.pass) {
@@ -410,7 +406,7 @@ namespace BF2D.UI {
                 if (this.dialogQueue.Count < 1)
                     this.onEndOfQueuedDialogs?.Invoke();
                 //Reset the State
-                this.state = DialogQueueHandler;
+                this.state = StateDialogQueue;
             }
         }
         #endregion
@@ -422,7 +418,7 @@ namespace BF2D.UI {
             this.dialogIndex = dialogIndex;
             this.messageIndex = 0;
             this.timeAccumulator = 0f;
-            this.messageSpeed = DefaultMessageSpeed;
+            this.messageSpeed = this.defaultMessageSpeed;
             this.pass = false;
             this.nextDialogIndex = -1;
             this.continueFlag = false;
@@ -446,7 +442,7 @@ namespace BF2D.UI {
             //If our message index is greater than the length of the message
             if (message.Length <= this.messageIndex) {
                 //Change the state to Eol
-                this.state = EndOfLine;
+                this.state = StateEndOfLine;
 
                 return false;
             }
@@ -465,7 +461,7 @@ namespace BF2D.UI {
                     case DialogTextbox.jumpTag: JumpAction(message, ref newMessageIndex); break;     //Case: Jump
                     case DialogTextbox.voiceTag: VoiceAction(message, ref newMessageIndex); break;   //Case: Voice
                     case DialogTextbox.responseTag: ResponseAction(message, ref newMessageIndex); return false;
-                    case DialogTextbox.endTag: this.state = EndOfDialog; return false;
+                    case DialogTextbox.endTag: this.state = StateEndOfDialog; return false;
                     default:
                         if (tag == DialogTextbox.insertTag)
                             Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
@@ -478,9 +474,7 @@ namespace BF2D.UI {
             else
             { //Basic character
                 if (message[this.messageIndex] != ' ')
-                {
                     BF2D.Utilities.Audio.PlayAudioSource(this.voiceAudioSource);
-                }
 
                 string currentMessage = this.textField.text;
                 currentMessage += message[this.messageIndex];
@@ -502,7 +496,7 @@ namespace BF2D.UI {
         private void SpeedAction(string message, ref int newMessageIndex)
         {
             float newSpeed = float.Parse(ParseTag(message, ref newMessageIndex));
-            newSpeed = newSpeed >= 0 ? newSpeed : DefaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
+            newSpeed = newSpeed >= 0 ? newSpeed : defaultMessageSpeed;                  //If the new speed is less than 0, set it to the default speed
             this.messageSpeed = newSpeed;
             this.messageIndex = newMessageIndex + 1;                                    //Increment the message index accordingly
         }
@@ -511,13 +505,9 @@ namespace BF2D.UI {
         {
             string name = ParseTag(message, ref newMessageIndex);
             if (name == DialogTextbox.defaultValue.ToString())
-            {
                 NametagDisable();
-            }
             else
-            {
                 NametagEnable(name);
-            }
             this.messageIndex = newMessageIndex + 1;                                        //Increment the message index accordingly
         }
 
@@ -550,39 +540,37 @@ namespace BF2D.UI {
         private void ResponseAction(string message, ref int newMessageIndex)
         {
             string data = ParseTag(message, ref newMessageIndex);
-            if (!string.IsNullOrEmpty(data) && this.currentDialog.responseEnabled)
-            {
-                List<ResponseData> options = new();
 
-                //Retrieve the data using Json Utility
-                if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
-                {
-                    // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
-                    options = DeserializeResponseData(data);
-                }
-                else
-                {   //else, try using it as a key in the dialog options dictionary and deserialize its value
-                    //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
-                    if (this.dialogResponses.ContainsKey(data))
-                    {
-                        //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
-                        options = DeserializeResponseData(this.dialogResponses[data]);
-                    }
-                    else
-                    {
-                        Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
-                    }
-                }
-
-                SetupResponses(options);
-
-                this.messageIndex = newMessageIndex + 1;
-                //this.state = null;
-            }
-            else
+            if (string.IsNullOrEmpty(data))
             {
                 Debug.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
+                return;
             }
+
+            List<ResponseData> options;
+
+            //Retrieve the data using Json Utility
+            if (ValidJson(data))   //If it looks like a JSON, try to deserialize it
+            {
+                // Debug.Log("[DialogTextbox] Response option data is a JSON, deserializing...");
+                options = DeserializeResponseData(data);
+            }
+            else
+            {   //else, try using it as a key in the dialog options dictionary and deserialize its value
+                //Debug.Log("[DialogTextbox] Response option data was not a JSON, retrieving JSON file by key...");
+                if (this.dialogResponses.ContainsKey(data))
+                {
+                    //Debug.Log("[DialogTextbox] JSON file retrieved, deserializing...");
+                    options = DeserializeResponseData(this.dialogResponses[data]);
+                }
+                else
+                {
+                    Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
+                    return;
+                }
+            }
+
+            SetupResponses(options);
             this.messageIndex = newMessageIndex + 1;
         }
 
@@ -591,7 +579,8 @@ namespace BF2D.UI {
             index++;
             //Move to colon, check if colon exists, move on
             index++;
-            if (message[index] != ':') {
+            if (message[index] != ':')
+            {
                 Debug.LogError("[DialogTextbox:ParseTag] Incorrect Syntax, add ':' after tag");
             }
             index++;
@@ -600,7 +589,8 @@ namespace BF2D.UI {
             string valueString = string.Empty;              //Float before conversion
 
             Stack<char> stack = new Stack<char>();
-            while (character != ']' || stack.Count > 0) {
+            while (character != ']' || stack.Count > 0)
+            {
                 valueString += character;
 
                 if (character == '[')
@@ -619,12 +609,14 @@ namespace BF2D.UI {
             return valueString;                 
         }
 
-        private void NametagEnable(string name) {
+        private void NametagEnable(string name)
+        {
             this.nametag.gameObject.SetActive(true);
             this.nametagTextField.text = name;
         }
 
-        private void NametagDisable() {
+        private void NametagDisable()
+        {
             this.nametag.gameObject.SetActive(false);
         }
 
@@ -634,9 +626,8 @@ namespace BF2D.UI {
             {
                 object rd = JsonConvert.DeserializeObject<object>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
             } 
-            catch (Exception x)
+            catch
             {
-                x.ToString();
                 return false;
             }
 
@@ -652,7 +643,8 @@ namespace BF2D.UI {
             }
             catch (Exception x)
             {
-                throw x;
+                Debug.LogError(x.Message);
+                return new List<ResponseData>();
             }
             return responseData;
         }
@@ -665,13 +657,8 @@ namespace BF2D.UI {
             {
                 try
                 {
-                    if (this.prereqConditionChecker)
-                    {
-                        if (this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
-                        {
-                            continue;
-                        }
-                    }
+                    if (this.prereqConditionChecker && this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
+                        continue;
 
                     this.responseOptionsControl.Controlled.Add(new UIOption.Data
                     {
@@ -697,24 +684,23 @@ namespace BF2D.UI {
                 }
             }
 
-            UIControlsManager.Instance.StartPhantomControl(this.responseOptionsControl);
+            UIControlsManager.StartControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.Controlled.SetCursorToFirst();
         }
 
         private void ResponseConfirm(int dialogIndex)
         {
             if (dialogIndex != DialogTextbox.defaultValue)
-            {
                 this.nextDialogIndex = dialogIndex;
-            }
+
             FinalizeResponse();
             this.pass = true;
-            this.state = MessageParseAndDisplayClocked;
+            this.state = StateMessageParseAndDisplay;
         }
 
         private void FinalizeResponse()
         {
-            UIControlsManager.Instance.EndPhantomControl();
+            UIControlsManager.EndControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.gameObject.SetActive(false);
         }
         #endregion
@@ -729,9 +715,8 @@ namespace BF2D.UI {
 
             string newMessage = message;
             for (int i = 0; i < inserts.Length; i++)
-            {
                 newMessage = ReplaceInsertTags(newMessage, inserts[i], i);
-            }
+
             return newMessage;
         }
 

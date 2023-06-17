@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -9,15 +8,17 @@ namespace BF2D.Game
     {
         public void Destroy(EquipmentInfo info)
         {
+            const string destroyTag = "[EquipmentHolder:Destroy]";
+
             if (info is null)
             {
-                Debug.LogError($"[ItemHolder:DestroyEquipment] Tried to remove an equipment from an equipment bag but the equipment info given was null");
+                Debug.LogError($"{destroyTag} Tried to remove an equipment from a bag but the info given was null");
                 return;
             }
 
             if (!Contains(info))
             {
-                Debug.LogError($"[ItemHolder:DestroyEquipment] Tried to remove an equipment from an equipment bag but the equipment info given wasn't in the bag");
+                Debug.LogError($"{destroyTag} Tried to remove an equipment from a bag but the info given wasn't in the bag");
                 return;
             }
 
@@ -31,27 +32,5 @@ namespace BF2D.Game
         }
 
         public void Destroy(string id) => Destroy(Get(id));
-
-        public string Extract(EquipmentInfo info)
-        {
-            if (info is null)
-            {
-                Debug.LogError($"[ItemHolder:ExtractEquipment] Tried to extract an equipment from an item bag but the equipment info given was null");
-                return string.Empty;
-            }
-
-            if (!Contains(info))
-            {
-                Debug.LogError($"[ItemHolder:ExtractEquipment] Tried to extract an equipment from an equipment bag but the equipment info given wasn't in the bag");
-                return string.Empty;
-            }
-
-            if (info.Decrement() < 1)
-                RemoveAndForget(info);
-
-            return info.ID;
-        }
-
-        public string Extract(string id) => Extract(Get(id));
     }
 }

@@ -7696,9 +7696,9 @@ MonoBehaviour:
   nametagTextField: {fileID: 292172392}
   continueIcon: {fileID: 550871904}
   dialogFileManager: {fileID: 1748236651}
-  DefaultMessageSpeed: 0.025
-  MessageInterrupt: 1
-  AutoPass: 0
+  defaultMessageSpeed: 0.02
+  messageInterrupt: 0
+  autoPass: 0
   onEndOfQueuedDialogs:
     m_PersistentCalls:
       m_Calls:
@@ -7828,6 +7828,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogTextbox: {fileID: 831339452}
+  threadID: main
 --- !u!1001 &839711158
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9053,9 +9054,9 @@ MonoBehaviour:
   nametagTextField: {fileID: 62380130}
   continueIcon: {fileID: 38398678}
   dialogFileManager: {fileID: 1976019433}
-  DefaultMessageSpeed: 0.025
-  MessageInterrupt: 1
-  AutoPass: 0
+  defaultMessageSpeed: 0.02
+  messageInterrupt: 0
+  autoPass: 0
   onEndOfQueuedDialogs:
     m_PersistentCalls:
       m_Calls:
@@ -9063,18 +9064,6 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1825664406}
-        m_TargetAssemblyTypeName: BF2D.Game.GameManager, Assembly-CSharp
-        m_MethodName: EndPhantomControl
-        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -9109,6 +9098,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogTextbox: {fileID: 1040462394}
+  threadID: system
 --- !u!114 &1040462396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17977,7 +17967,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1825664405}
-  - component: {fileID: 1825664406}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -18004,18 +17993,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1825664406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1825664404}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 782e29afe0ded594e94c02caad8c6efe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1835836583
 GameObject:
   m_ObjectHideFlags: 0
@@ -22911,9 +22888,9 @@ MonoBehaviour:
   nametagTextField: {fileID: 7819217480724047634}
   continueIcon: {fileID: 2158157277367825122}
   dialogFileManager: {fileID: 804794703}
-  DefaultMessageSpeed: 0.025
-  MessageInterrupt: 0
-  AutoPass: 1
+  defaultMessageSpeed: 0.02
+  messageInterrupt: 0
+  autoPass: 0
   onEndOfQueuedDialogs:
     m_PersistentCalls:
       m_Calls: []

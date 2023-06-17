@@ -30,7 +30,7 @@ namespace BF2D.Game.Actions
 
         [JsonProperty] private readonly string spriteID = string.Empty;
         [JsonProperty] private readonly int successRate = 100;
-        [JsonProperty] private CombatAlignment? alignment = null;
+        [JsonProperty] private readonly CombatAlignment? alignment = null;
 
         [JsonProperty] private readonly NumericProperty damage = null;
         [JsonProperty] private readonly NumericProperty directDamage = null;
@@ -42,6 +42,8 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly bool resetHealth = false;
         [JsonProperty] private readonly bool resetStamina = false;
         [JsonProperty] private readonly StatusEffectProperty statusEffect = null;
+
+        // Stats Up
         [JsonProperty] private readonly NumericProperty constitutionUp = null;
         [JsonProperty] private readonly NumericProperty enduranceUp = null;
         [JsonProperty] private readonly NumericProperty swiftnessUp = null;
@@ -59,7 +61,7 @@ namespace BF2D.Game.Actions
             get
             {
                 if (this.alignment is not null)
-                    return (CombatAlignment) this.alignment;
+                    return this.alignment.GetValueOrDefault();
 
                 int offensePoints = 0;
                 int defensePoints = 0;
@@ -92,9 +94,16 @@ namespace BF2D.Game.Actions
 
                 return CombatAlignmentSelector.Calculate(offensePoints, defensePoints, neutralPoints);
             }
-        } 
+        }
+
+        [JsonIgnore]
+        public bool HasStatsUp => this.constitutionUp is not null || this.enduranceUp is not null || this.swiftnessUp is not null ||
+                                  this.strengthUp is not null || this.toughnessUp is not null || this.willUp is not null ||
+                                  this.fortuneUp is not null;
 
         #region Public Methods
+        public Entity GetEntity() => this;
+
         public string GetAnimationKey()
         {
             if (this.criticalDamage is not null || this.psychicDamage is not null || this.directDamage is not null || this.damage is not null)

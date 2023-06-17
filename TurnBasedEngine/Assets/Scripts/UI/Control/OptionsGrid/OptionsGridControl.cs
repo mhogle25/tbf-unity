@@ -19,7 +19,7 @@ namespace BF2D.UI
         private InputDirection direction = InputDirection.Left;
         private float timeAccumulator = 0f;
 
-        private Action state = null;
+        protected Action state = null;
 
         protected virtual void Awake()
         {

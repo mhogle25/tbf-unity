@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace BF2D.Game
 {
     [Serializable]
-    public class UtilityEntityHolder<T> : List<T> where T : UtilityEntityInfo, new()
+    public class UtilityEntityHolder<T> : List<T>, IUtilityEntityHolder<T> where T : UtilityEntityInfo, new()
     {
         [JsonIgnore] protected readonly Dictionary<string, T> utilityEntityIndex = new();
 
@@ -16,7 +16,7 @@ namespace BF2D.Game
 
             if (info is null)
             {
-                Debug.LogError($"[UtilityEntityHolder:Acquire] Tried to add an entity with id {id} to a bag but the id given was invalid");
+                Debug.LogError($"[UtilityEntityHolder:Acquire] Tried to add an entity with id '{id}' to a bag but the id given was invalid");
                 return null;
             }
 
@@ -26,25 +26,40 @@ namespace BF2D.Game
 
         public T Transfer(T info, IUtilityEntityHolder<T> receiver)
         {
+            string id = Extract(info);
+
+            if (receiver is null)
+            {
+                Debug.LogError("[UtilityEntityHolder:Transfer] Tried to transfer an entity from a bag but the receiver given was null");
+                return null;
+            }
+
+            return receiver.Acquire(id);
+        }
+
+        public T Transfer(string id, IUtilityEntityHolder<T> receiver) => Transfer(Get(id), receiver);
+
+        public string Extract(T info)
+        {
             if (info is null)
             {
-                Debug.LogError($"[UtilityEntityHolder:Transfer] Tried to transfer an entity from a bag but the info given was null");
+                Debug.LogError("[UtilityEntityHolder:Extract] Tried to extract an entity from a bag but the info given was null");
                 return null;
             }
 
             if (!Contains(info))
             {
-                Debug.LogError($"[UtilityEntityHolder:Transfer] Tried to transfer an entity from a bag but the info given wasn't in the bag");
+                Debug.LogError("[UtilityEntityHolder:Extract] Tried to extract an entity from a bag but the info given wasn't in the bag");
                 return null;
             }
 
             if (info.Decrement() < 1)
                 RemoveAndForget(info);
 
-            return receiver.Acquire(info.ID);
+            return info.ID;
         }
 
-        public T Transfer(string id, IUtilityEntityHolder<T> receiver) => Transfer(Get(id), receiver);
+        public string Extract(string id) => Extract(Get(id));
 
         public T Get(string id)
         {
@@ -63,11 +78,8 @@ namespace BF2D.Game
             if (string.IsNullOrEmpty(id))
                 return null;
 
-            foreach (T info in this)
-            {
-                if (info.ID == id)
-                    return info;
-            }
+            if (Get(id) is not null)
+                return Get(id);
 
             T newInfo = new()
             {

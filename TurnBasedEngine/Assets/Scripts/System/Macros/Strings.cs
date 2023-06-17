@@ -1,5 +1,4 @@
 using BF2D.Enums;
-using UnityEngine.Animations;
 using System;
 
 namespace BF2D.Game
@@ -13,12 +12,12 @@ namespace BF2D.Game
 
             public static bool IsGeneratedID(string id)
             {
-                return id[0] == Strings.System.GeneratedIDPrefix;
+                return id[0] == System.GeneratedIDPrefix;
             }
 
             public static string GenerateID()
             {
-                return $"{System.GeneratedIDPrefix}{Guid.NewGuid().ToString("N")}";
+                return $"{System.GeneratedIDPrefix}{Guid.NewGuid():N}";
             }
         }
 
@@ -99,6 +98,12 @@ namespace BF2D.Game
             public const string StandardPause = "[P:0.5]";
             public const string LongPause = "[P:1]";
             public const string End = "[E]";
+        }
+
+        public static class UI
+        {
+            public const string MainThread = "main";
+            public const string SystemThread = "system";
         }
 
         public static string IntToStringSigned(int value)

@@ -4,7 +4,7 @@ namespace BF2D.Game.Combat
     {
         public static void Run(string[] arguments)
         {
-            GameCtx.Instance.SystemTextbox.Textbox.Dialog("help_combat", false, 0, null);
+            GameCtx.Instance.SystemTextbox.Dialog("help_combat", 0, null);
             TcRunTextbox.Run(null);
         }
     }

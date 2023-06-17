@@ -28,6 +28,19 @@ namespace BF2D.Game.Actions
                 this.Target == CharacterTarget.RandomOpponent;
         }
 
+        [JsonIgnore]
+        public bool AutoTargetable
+        {
+            get =>
+                this.Target == CharacterTarget.Self ||
+                this.Target == CharacterTarget.All ||
+                this.Target == CharacterTarget.AllAllies ||
+                this.Target == CharacterTarget.AllOpponents ||
+                this.Target == CharacterTarget.Random ||
+                this.Target == CharacterTarget.RandomAlly ||
+                this.Target == CharacterTarget.RandomOpponent;
+        }
+
         [JsonIgnore] public CombatAlignment Alignment => this.Gem?.Alignment ?? CombatAlignment.Neutral;
 
         public void SetGemID(string newId) => this.gemID = newId;

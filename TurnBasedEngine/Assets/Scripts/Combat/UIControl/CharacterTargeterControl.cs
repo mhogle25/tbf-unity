@@ -33,9 +33,8 @@ namespace BF2D.Game.Combat
             this.stagedTargetedGems.Clear();
             this.stagedTargetedGem = null;
             foreach (TargetedCharacterStatsAction targetedGem in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGems())
-            {
                 this.stagedTargetedGems.Enqueue(targetedGem);
-            }
+
             Continue();
         }
 
@@ -62,9 +61,7 @@ namespace BF2D.Game.Combat
             base.Update();
 
             if (InputManager.Instance.ConfirmPress)
-            {
                 this.orphanedTextbox.Continue();
-            }
         }
 
         private void LoadOptionsIntoGrid(OptionsGrid grid, List<CombatGridTile> initGridOptions)
@@ -78,18 +75,13 @@ namespace BF2D.Game.Combat
             if (initGridOptions != null && initGridOptions.Count > 0)
             {
                 foreach (CombatGridTile tile in initGridOptions)
-                {
                     grid.Add(tile);
-                }
             }
         }
 
         public void SetSingleTarget(CharacterCombat target)
         {
             this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { target };
-
-            this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
-            this.controlled.UtilityFinalize();
             Continue();
         }
 
@@ -145,38 +137,40 @@ namespace BF2D.Game.Combat
 
         private void Continue()
         {
+            if (this.controlled)
+            {
+                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
+                this.controlled.UtilityFinalize();
+            }
+
             if (this.stagedTargetedGems.Count < 1) 
             {
-                if (this.controlled)
-                {
-                    this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
-                    this.controlled.UtilityFinalize();
-                }
-
                 this.orphanedTextbox.UtilityFinalize();
                 this.orphanedTextbox.View.gameObject.SetActive(false);
 
                 CombatManager.Instance.RunCombatEvents();
                 return;
             }
+
             this.stagedTargetedGem = this.stagedTargetedGems.Dequeue();
             TargeterSetup(this.stagedTargetedGem.Target);
         }
 
         private void SetupDialog(OptionsGrid followUp)
         {
-            this.orphanedTextbox.MessageInterrupt = true;
-            this.orphanedTextbox.Dialog("di_targeter", false, 0, () =>
+            this.orphanedTextbox.messageInterrupt = true;
+            this.orphanedTextbox.autoPass = true;
+            this.orphanedTextbox.Dialog("di_targeter", 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
                 if (this.controlled && this.controlled.Interactable)
-                {
                     this.controlled.UtilityFinalize();
-                }
+
                 this.controlled = followUp;
                 this.controlled.UtilityInitialize();
                 this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, true);
-                this.orphanedTextbox.MessageInterrupt = false;
+                this.orphanedTextbox.messageInterrupt = default;
+                this.orphanedTextbox.autoPass = default;
             },
             new string[]
             {
@@ -187,12 +181,12 @@ namespace BF2D.Game.Combat
 
         private void AllOfAnyEvent()
         {
-            this.orphanedTextbox.MessageInterrupt = true;
-            this.orphanedTextbox.AutoPass = false;
+            this.orphanedTextbox.messageInterrupt = true;
+            this.orphanedTextbox.autoPass = false;
             this.orphanedTextbox.ResponseBackEventEnabled = true; 
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
-                AlignmentFlag flag = BF2D.Utilities.JSON.DeserializeString<AlignmentFlag>(json);
+                AlignmentFlag flag = Utilities.JSON.DeserializeString<AlignmentFlag>(json);
                 this.stagedTargetedGem.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
             });
             this.orphanedTextbox.ResponseBackEvent.AddListener(() =>
@@ -202,7 +196,7 @@ namespace BF2D.Game.Combat
                 UIControlsManager.Instance.PassControlBack();
                 this.orphanedTextbox.Cancel();
             });
-            this.orphanedTextbox.Dialog("di_targeter", true, 1, () =>
+            this.orphanedTextbox.Dialog("di_targeter", 1, () =>
             {
                 EndAllOfAnyEvent();
                 Continue();
@@ -218,9 +212,9 @@ namespace BF2D.Game.Combat
         {
             this.orphanedTextbox.ResponseConfirmEvent.RemoveAllListeners();
             this.orphanedTextbox.ResponseBackEvent.RemoveAllListeners();
-            this.orphanedTextbox.AutoPass = true;
-            this.orphanedTextbox.MessageInterrupt = false;
-            this.orphanedTextbox.ResponseBackEventEnabled = false;
+            this.orphanedTextbox.autoPass = default;
+            this.orphanedTextbox.messageInterrupt = default;
+            this.orphanedTextbox.ResponseBackEventEnabled = default;
         }
     }
 }

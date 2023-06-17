@@ -8,15 +8,7 @@ namespace BF2D.Game
 {
     public class EquipModInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
-        [JsonProperty] private string id = string.Empty;
-
-        [JsonIgnore] public override int Count => this.count;
-        [JsonProperty] private int count = 0;
-
         [JsonIgnore] public override Sprite Icon { get; }
-
-        [JsonIgnore] public override string Name => Get().Name;
 
         [JsonIgnore] public override string Description => Get().Description;
 
@@ -43,15 +35,5 @@ namespace BF2D.Game
         public override Entity GetEntity() => Get();
 
         public override IUtilityEntity GetUtility() => Get();
-
-        public override int Increment()
-        {
-            return ++this.count;
-        }
-
-        public override int Decrement()
-        {
-            return --this.count;
-        }
     }
 }
