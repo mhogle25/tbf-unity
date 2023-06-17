@@ -29,7 +29,7 @@ namespace BF2D.Game
         [SerializeField] private FileManager runesFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
 
-        public bool SaveActive { get => this.currentSave is not null; }
+        public bool SaveActive => this.currentSave is not null;
 
         public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
         public IEnumerable<CharacterStats> ActivePlayers => this.currentSave?.Party.ActiveCharacters;

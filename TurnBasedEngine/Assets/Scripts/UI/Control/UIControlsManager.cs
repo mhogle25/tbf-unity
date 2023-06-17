@@ -16,7 +16,9 @@ namespace BF2D.UI
         private readonly Stack<string> threadHistory = new();
         private UIControl currentControl = null;
 
-        private string currentThreadID = Game.Strings.UI.MainThread;
+        private Stack<UIControl> CurrentStack => this.controlHistory[this.currentThreadID];
+
+        [SerializeField] private string currentThreadID = Game.Strings.UI.MainThread;
 
         private void Awake()
         {
@@ -32,20 +34,34 @@ namespace BF2D.UI
             if (this.currentControl)
                 EndControl(this.currentControl);
 
-            if (this.threadHistory.Count > 0 && this.controlHistory[this.currentThreadID].Count < 1)
+            if (this.threadHistory.Count > 0 && this.CurrentStack.Count < 1)
+            {
                 this.currentThreadID = this.threadHistory.Pop();
 
-            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
+                // Debug.Log($"Popped thread from history: {this.currentThreadID}");
+            }
 
+            Stack<UIControl> stack = this.CurrentStack;
+            
             if (stack.Count > 0)
-                StartControl(stack.Pop());
+            {
+                UIControl uiControl = stack.Pop();
+
+                //Debug.Log($"Pass Control back to: {uiControl.name} from: {this.currentControl.name}");
+
+                StartControl(uiControl);
+            }
             else
+            {
+                // Debug.Log($"Pass Control back from: {this.currentControl.name}");
+
                 this.currentControl = null;
+            }
         }
 
         public void PassControlBackToFirst(bool setActive)
         {
-            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
+            Stack<UIControl> stack = this.CurrentStack;
 
             stack.Push(this.currentControl);
             this.currentControl = null;
@@ -57,10 +73,15 @@ namespace BF2D.UI
                 if (stack.Count > 1)
                 {
                     EndControl(uiControl);
+
+                    // Debug.Log($"Pass control back from: {uiControl.name}");
+
                     uiControl.gameObject.SetActive(setActive);
                 }
                 else
                 {
+                    // Debug.Log($"Pass Control back to: {uiControl.name}");
+
                     StartControl(uiControl);
                 }
             }
@@ -68,19 +89,13 @@ namespace BF2D.UI
 
         public void PassControlBackToFirst(bool setActive, string threadID)
         {
-            if (!this.controlHistory.ContainsKey(threadID))
-            {
-                Debug.LogError($"[UIControlsManager:PassControlBackToFirst] Invalid thread ID '{threadID}'");
-                return;
-            }
-
             ChangeThread(threadID);
             PassControlBackToFirst(setActive);
         }
 
         public void ResetControlChain(bool setActive)
-        { 
-            Stack<UIControl> stack = this.controlHistory[this.currentThreadID];
+        {
+            Stack<UIControl> stack = this.CurrentStack;
 
             if (stack.Count < 1 && this.currentControl == null)
                 return;
@@ -91,6 +106,9 @@ namespace BF2D.UI
             while (stack.Count > 0)
             {
                 UIControl uiControl = stack.Pop();
+
+                // Debug.Log($"Pass control back from: {uiControl.name}");
+
                 EndControl(uiControl);
                 uiControl.gameObject.SetActive(setActive);
             }
@@ -98,42 +116,32 @@ namespace BF2D.UI
 
         public void ResetControlChain(bool setActive, string threadID)
         {
-            if (!this.controlHistory.ContainsKey(threadID))
-            {
-                Debug.LogError($"[UIControlsManager:ResetControlChain] Invalid thread ID '{threadID}'");
-                return;
-            }
-
             ChangeThread(threadID);
             ResetControlChain(setActive);
         }
 
         public void ClearControlChainHistory()
         {
-            this.controlHistory[this.currentThreadID].Clear();
+            this.CurrentStack.Clear();
         }
 
         public void ClearControlChainHistory(string threadID)
         {
-            if (!this.controlHistory.ContainsKey(threadID))
-            {
-                Debug.LogError($"[UIControlsManager:ClearControlChainHistory] Invalid thread ID '{threadID}'");
-                return;
-            }
-
             ChangeThread(threadID);
             ClearControlChainHistory();
         }
 
         public void TakeControl(UIControl uiControl)
         {
+            // Debug.Log($"Take Control: {uiControl.name}");
+
             //Dont give control to the component that is already in control
             if (Object.ReferenceEquals(this.currentControl, uiControl))
                 return;
 
             if (this.currentControl)
             {
-                this.controlHistory[this.currentThreadID].Push(this.currentControl);
+                this.CurrentStack.Push(this.currentControl);
                 EndControl(this.currentControl);
             }
 
@@ -142,12 +150,6 @@ namespace BF2D.UI
 
         public void TakeControl(UIControl uiControl, string threadID)
         {
-            if (!this.controlHistory.ContainsKey(threadID))
-            {
-                Debug.LogError($"[UIControlsManager:TakeControl] Invalid thread ID '{threadID}'");
-                return;
-            }
-
             TakeControl(uiControl);
             ChangeThread(threadID);
         }
@@ -168,10 +170,19 @@ namespace BF2D.UI
             if (!this.controlHistory.ContainsKey(threadID))
                 this.controlHistory[threadID] = new();
 
-            if (this.threadHistory.Count > 0 && this.threadHistory.Peek() != this.currentThreadID)
-                this.threadHistory.Push(this.currentThreadID);
+            string topOfThreadHistory = this.currentThreadID;
+
+            // Debug.Log($"New Thread: {threadID} Top Of Thread History: {topOfThreadHistory}");
+
+            if (threadID != topOfThreadHistory)
+            {
+                this.threadHistory.Push(topOfThreadHistory);
+                //Debug.Log($"Pushed thread: {topOfThreadHistory}");
+            }
 
             this.currentThreadID = threadID;
+
+            // Debug.Log($"Changed thread to: {threadID}");
         }
 
         public static void StartControlGeneric(UIControl uiControl)
