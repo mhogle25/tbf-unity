@@ -26,8 +26,16 @@ namespace BF2D.Game
         [SerializeField] private ExternalFileManager equipmentsFileManager = null;
         [SerializeField] private FileManager statusEffectsFileManager = null;
         [SerializeField] private ExternalFileManager gemsFileManager = null;
-        [SerializeField] private FileManager runesFileManager = null;
+        [SerializeField] private ExternalFileManager runesFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
+
+        //AssetCollections
+        [Header("Asset Collections")]
+        [SerializeField] private SpriteCollection iconCollection = null;
+        [SerializeField] private AudioClipCollection soundEffectCollection = null;
+
+        [Header("Miscellaneous")]
+        [SerializeField] private DialogTextboxControl systemTextbox = null;
 
         public bool SaveActive => this.currentSave is not null;
 
@@ -60,14 +68,6 @@ namespace BF2D.Game
         private readonly JsonEntityCache<Job> jobs = new(10);
 
         private readonly List<ICache> externalCaches = new();
-
-        //AssetCollections
-        [Header("Asset Collections")]
-        [SerializeField] private SpriteCollection iconCollection = null;
-        [SerializeField] private AudioClipCollection soundEffectCollection = null;
-
-        [Header("Miscellaneous")]
-        [SerializeField] private DialogTextboxControl systemTextbox = null;
 
         private readonly Queue<Combat.CombatManager.InitializeInfo> queuedCombats = new();
 
@@ -288,7 +288,6 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
             CharacterStats enemy = this.enemyTemplates.Get(id, this.enemiesFileManager);
@@ -299,7 +298,6 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiatePlayer] ID '{id}' was invalid");
                 return null;
             }
 
@@ -328,7 +326,6 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogError($"[GameCtx:GetIcon] ID '{id}' was invalid");
                 return null;
             }
 
@@ -339,7 +336,6 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogError($"[GameCtx:GetSoundEffect] ID '{id}' was invalid");
                 return null;
             }
 
@@ -351,10 +347,7 @@ namespace BF2D.Game
         public Equipment GetEquipment(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:GetEquipment] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.equipments.Get(id, this.equipmentsFileManager);
         }
@@ -362,10 +355,7 @@ namespace BF2D.Game
         public StatusEffect GetStatusEffect(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:GetStatusEffect] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
         }
@@ -373,10 +363,7 @@ namespace BF2D.Game
         public CharacterStatsAction GetGem(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:GetGem] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.gems.Get(id, this.gemsFileManager);
         }
@@ -384,10 +371,7 @@ namespace BF2D.Game
         public EquipMod GetRune(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:GetRune] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.runes.Get(id, this.runesFileManager);
         }
@@ -395,10 +379,7 @@ namespace BF2D.Game
         public Job GetJob(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:GetJob] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.jobs.Get(id, this.jobsFileManager);
         }
@@ -408,10 +389,7 @@ namespace BF2D.Game
         public Item InstantiateItem(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:InstantiateItem] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.itemTemplates.Get(id, this.itemsFileManager);
         }
@@ -419,10 +397,7 @@ namespace BF2D.Game
         public Equipment InstantiateEquipment(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:InstantiateEquipment] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.equipmentTemplates.Get(id, this.equipmentsFileManager);
         }
@@ -430,10 +405,7 @@ namespace BF2D.Game
         public CharacterStatsAction InstantiateGem(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
-                Debug.LogError($"[GameCtx:InstantiateGem] ID '{id}' was invalid");
                 return null;
-            }
 
             return this.gemTemplates.Get(id, this.gemsFileManager);
         }
@@ -491,6 +463,11 @@ namespace BF2D.Game
         public void DeleteGemIfCustom(string id)
         {
             DeleteEntityIfCustom(id, this.gemsFileManager, "Gem");
+        }
+
+        public void DeleteRuneIfCustom(string id)
+        {
+            DeleteEntityIfCustom(id, this.runesFileManager, "Rune");
         }
 
         private void DeleteEntityIfCustom(string id, ExternalFileManager fileManager, string label)

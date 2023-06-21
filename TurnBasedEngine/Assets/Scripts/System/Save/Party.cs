@@ -22,25 +22,25 @@ namespace BF2D.Game
             }
         }
         [JsonIgnore] public IEnumerable<CharacterStats> ActiveCharacters => this.activeCharacters;
+        [JsonIgnore] public IEnumerable<CharacterStats> InactiveCharacters => this.inactiveCharacters;
+
+        [JsonIgnore] public IItemHolder Items => this.items;
+        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments;
+        [JsonIgnore] public ICharacterStatsActionHolder Gems => this.gems;
+        [JsonIgnore] public IEquipModHolder Runes => this.runes;
+        [JsonIgnore] public int Currency { get => this.currency; set => this.currency = value; }
+        [JsonIgnore] public int Ether { get => this.ether; set => this.ether = value; }
+
         [JsonProperty] private readonly List<CharacterStats> activeCharacters = new();
         [JsonIgnore] private readonly Dictionary<string, CharacterStats> activeCharactersIndex = new();
 
-        [JsonIgnore] public IEnumerable<CharacterStats> InactiveCharacters => this.inactiveCharacters;
         [JsonProperty] private readonly List<CharacterStats> inactiveCharacters = new();
 
-        [JsonIgnore] public IItemHolder Items => this.items;
         [JsonProperty] private readonly ItemHolder items = new();
-
-        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments;
         [JsonProperty] private readonly EquipmentHolder equipments = new();
-
-        [JsonIgnore] public ICharacterStatsActionHolder Gems => this.gems;
         [JsonProperty] private readonly CharacterStatsActionHolder gems = new();
-
-        [JsonIgnore] public int Currency { get => this.currency; set => this.currency = value; }
+        [JsonProperty] private readonly EquipModHolder runes = new();
         [JsonProperty] private int currency = 0;
-
-        [JsonIgnore] public int Ether { get => this.ether; set => this.ether = value; }
         [JsonProperty] private int ether = 0;
 
         public CharacterStats GetCharacter(string id)

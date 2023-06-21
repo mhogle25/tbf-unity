@@ -21,7 +21,5 @@ namespace BF2D.Game.Actions
         }
 
         [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.TargetedGems);
-
-
     }
 }

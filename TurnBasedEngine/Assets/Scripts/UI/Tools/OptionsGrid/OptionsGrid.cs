@@ -127,11 +127,13 @@ namespace BF2D.UI
                     Debug.LogError($"[OptionsGrid:CursorPosition] Tried to set the cursor position but the new position was outside the bounds of the grid. Position: ({value.x},{value.y})");
                     return;
                 }
+
                 if (Exists(this.cursorPosition))
+                {
                     SetCursorAtPosition(this.cursorPosition, false);
-                this.cursorPosition = value;
-                if (Exists(this.cursorPosition))
+                    this.cursorPosition = value;
                     SetCursorAtPosition(this.cursorPosition, true);
+                }
             }
         }
 
@@ -374,6 +376,14 @@ namespace BF2D.UI
             At(cursorPosition).SetCursor(value);
         }
 
+        public void SetCursorToLastElseFirst()
+        {
+            if (Exists(this.CursorPosition))
+                SetCursorAtPosition(this.CursorPosition, true);
+            else
+                SetCursorToFirst();
+        }
+
         public void InvokeEvent(InputButton inputButton)
         {
             if (this.grid is null)
@@ -482,7 +492,7 @@ namespace BF2D.UI
         public override void UtilityInitialize()
         {
             base.UtilityInitialize();
-            SetCursorToFirst();
+            SetCursorToLastElseFirst();
         }
         #endregion
 

@@ -88,23 +88,23 @@ namespace BF2D.Game.Combat
                         targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
                         break;
                     case CharacterTarget.Ally:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnEnemy(targetedGem.Gem) };
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnEnemy(targetedGem) };
                         break;
                     case CharacterTarget.AllAllies:
                         targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Players;
                         break;
                     case CharacterTarget.Opponent:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAPlayer(targetedGem.Gem) };
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAPlayer(targetedGem) };
                         break;
                     case CharacterTarget.AllOpponents:
                         targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
                         break;
                     case CharacterTarget.Any:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(targetedGem.Gem) };
+                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(targetedGem) };
                         break;
                     case CharacterTarget.AllOfAny:
-                        targetedGem.TargetInfo.CombatTargets = targetedGem.Gem.Alignment == CombatAlignment.Offense ||
-                        targetedGem.Gem.Alignment == CombatAlignment.Neutral ?
+                        targetedGem.TargetInfo.CombatTargets = targetedGem.Alignment == CombatAlignment.Offense ||
+                        targetedGem.Alignment == CombatAlignment.Neutral ?
                         CombatManager.Instance.Players :
                         CombatManager.Instance.Enemies;
 
@@ -196,7 +196,7 @@ namespace BF2D.Game.Combat
             return list[random];
         }
 
-        private CharacterCombat PickAnEnemy(CharacterStatsAction gem)
+        private CharacterCombat PickAnEnemy(TargetedCharacterStatsAction gem)
         { 
             List<CharacterCombat> enemies = new();
             foreach (CharacterCombat enemy in CombatManager.Instance.Enemies)
@@ -211,7 +211,7 @@ namespace BF2D.Game.Combat
             return enemies[UnityEngine.Random.Range(0, enemies.Count)];
         }
 
-        private CharacterCombat PickAPlayer(CharacterStatsAction gem)
+        private CharacterCombat PickAPlayer(TargetedCharacterStatsAction gem)
         {
             List<CharacterCombat> players = new();
             foreach (CharacterCombat player in CombatManager.Instance.Players)
@@ -220,7 +220,7 @@ namespace BF2D.Game.Combat
             return players[UnityEngine.Random.Range(0, players.Count)];
         }
 
-        private CharacterCombat PickACharacter(CharacterStatsAction gem)
+        private CharacterCombat PickACharacter(TargetedCharacterStatsAction gem)
         {
             List<CharacterCombat> characters = new();
             foreach (CharacterCombat character in CombatManager.Instance.Enemies)
@@ -259,7 +259,7 @@ namespace BF2D.Game.Combat
             return chosen;
         }
 
-        private bool HealLogicCheck(CharacterStatsAction gem)
+        private bool HealLogicCheck(TargetedCharacterStatsAction gem)
         {
             return gem.ContainsAura(AuraType.Restoration) &&
                 (gem.Alignment == CombatAlignment.Defense || gem.Alignment == CombatAlignment.Neutral) &&

@@ -168,7 +168,7 @@ namespace BF2D.Game.Combat
 
                 this.controlled = followUp;
                 this.controlled.UtilityInitialize();
-                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, true);
+                this.controlled.SetCursorToFirst();
                 this.orphanedTextbox.messageInterrupt = default;
                 this.orphanedTextbox.autoPass = default;
             },

@@ -9,15 +9,16 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class TargetedCharacterStatsAction : ICombatAligned
     {
-        [JsonIgnore] public CharacterTarget Target => this.target;
-        [JsonIgnore] public string Description => this.description.Wash();
-        [JsonIgnore] public CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
 
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";
         [JsonProperty] private string gemID = string.Empty;
+        [JsonIgnore] private CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
 
-        [JsonIgnore] public CharacterTargetInfo TargetInfo { get => this.targetInfo; }
+        [JsonIgnore] public CharacterTarget Target => this.target;
+        [JsonIgnore] public string Description => this.description.Wash();
+
+        [JsonIgnore] public CharacterTargetInfo TargetInfo => this.targetInfo;
         [JsonIgnore] private readonly CharacterTargetInfo targetInfo = new();
 
         [JsonIgnore] public bool CombatExclusive
@@ -42,6 +43,14 @@ namespace BF2D.Game.Actions
         }
 
         [JsonIgnore] public CombatAlignment Alignment => this.Gem?.Alignment ?? CombatAlignment.Neutral;
+
+        public bool ContainsAura(AuraType aura) => this.Gem.ContainsAura(aura);
+
+        public string GetAnimationKey() => this.Gem.GetAnimationKey();
+
+        public CharacterStatsAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target);
+
+        public string TextBreakdown(CharacterStats source) => this.Gem.TextBreakdown(source);
 
         public void SetGemID(string newId) => this.gemID = newId;
     }

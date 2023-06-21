@@ -7,18 +7,20 @@ namespace BF2D.UI
     public class UIControlsManager : MonoBehaviour
     {
         public InputEventsControl SystemInputEvents => this.inputEventsControl;
+        [Header("Utilities")]
         [SerializeField] private InputEventsControl inputEventsControl = null;
+        [Header("Info")]
+        [SerializeField] private string currentThreadID = Game.Strings.UI.MainThread;
+        [SerializeField] private UIControl currentControl = null;
 
         public static UIControlsManager Instance => UIControlsManager.instance;
         private static UIControlsManager instance = null;
 
         private readonly Dictionary<string, Stack<UIControl>> controlHistory = new() { { Game.Strings.UI.MainThread, new() } };
         private readonly Stack<string> threadHistory = new();
-        private UIControl currentControl = null;
 
         private Stack<UIControl> CurrentStack => this.controlHistory[this.currentThreadID];
 
-        [SerializeField] private string currentThreadID = Game.Strings.UI.MainThread;
 
         private void Awake()
         {

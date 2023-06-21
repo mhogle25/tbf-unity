@@ -3,6 +3,7 @@
     "description":"blessed",
     "auras": 
     [
+        "Restoration"
     ],
     "duration":5,
     "speedModifier":0,
@@ -18,9 +19,11 @@
         [
             "The light of the gods shines upon [I:0].[E]"
         ],
-        "gemIDs":
+        "untargetedGems":
         [
-            "gm_basicheal_02"
+            {
+                "gemID": "gm_basicheal_02"
+            }
         ]
     }
 }

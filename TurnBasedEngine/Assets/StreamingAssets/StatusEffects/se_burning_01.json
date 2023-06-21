@@ -20,9 +20,11 @@
         [
             "The flames continue to sear [I:0]'s flesh.[E]"
         ],
-        "gemIDs":
+        "untargetedGems":
         [
-            "gm_basicdamage_01"
+            {
+                "gemID": "gm_basicdamage_01"
+            }
         ]
     }
 }

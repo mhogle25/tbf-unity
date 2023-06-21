@@ -210,15 +210,15 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Stage and Run Gems
-        private void RunUntargetedGems(IEnumerable<CharacterStatsAction> gems)
+        private void RunUntargetedGems(IEnumerable<UntargetedCharacterStatsAction> gems)
         {
-            foreach (CharacterStatsAction action in gems)
-                StageUntargetedGems(action);
+            foreach (UntargetedCharacterStatsAction gem in gems)
+                StageUntargetedGems(gem);
 
             this.eventStack.Continue();
         }
 
-        private void StageUntargetedGems(CharacterStatsAction gem)
+        private void StageUntargetedGems(UntargetedCharacterStatsAction gem)
         {
             this.eventStack.PushEvent(() =>
             {
@@ -226,7 +226,7 @@ namespace BF2D.Game.Combat
                 {
                     PlayAnimation(gem.GetAnimationKey());
 
-                    CharacterStatsAction.Info info = gem.Run(this.Stats, this.Stats);
+                    CharacterStatsAction.Info info = gem.Run(this.Stats);
                     List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
                     dialog.Insert(0, info.GetMessage());
                     RefreshStatsDisplay();
@@ -276,7 +276,7 @@ namespace BF2D.Game.Combat
                             else if (targetedGem.Target == CharacterTarget.Any ||
                             targetedGem.Target == CharacterTarget.Random)
                             {
-                                verifiedTarget = RollCharacterAligned(targetedGem.Gem.Alignment);
+                                verifiedTarget = RollCharacterAligned(targetedGem.Alignment);
                             }
                             else if (targetedGem.Target == CharacterTarget.All ||
                             targetedGem.Target == CharacterTarget.AllOfAny ||
@@ -288,9 +288,9 @@ namespace BF2D.Game.Combat
                         }
 
                         //Execute
-                        verifiedTarget.PlayAnimation(targetedGem.Gem.GetAnimationKey());
+                        verifiedTarget.PlayAnimation(targetedGem.GetAnimationKey());
 
-                        CharacterStatsAction.Info info = targetedGem.Gem.Run(this.stats, verifiedTarget.Stats);
+                        CharacterStatsAction.Info info = targetedGem.Run(this.stats, verifiedTarget.Stats);
                         message += info.GetMessage();
                         infos.Add(info);
                         verifiedTarget.RefreshStatsDisplay();

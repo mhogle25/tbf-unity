@@ -46,7 +46,6 @@ namespace BF2D.Game.Combat
                 });
             }
 
-            this.controlled.SetCursorToFirst();
             OnNavigate(new OptionsGrid.NavigateInfo
             {
                 cursorPosition1D = this.controlled.CursorPosition1D

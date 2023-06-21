@@ -19,9 +19,11 @@
         [
             "The Vapor Helm shimmers magically on [I:0]'s head.[E]"
         ],
-        "gemIDs":
+        "untargetedGems":
         [
-            "gm_basicheal_01"
+            {
+                "gemID": "gm_basicheal_01"
+            }
         ]
     }
 }
