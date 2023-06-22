@@ -14,7 +14,7 @@
         [
             "[I:0] cast Fireball.[E]"
         ],
-        "targetedGems": 
+        "targetedGemSlots": 
         [
             {
                 "target":"Opponent",

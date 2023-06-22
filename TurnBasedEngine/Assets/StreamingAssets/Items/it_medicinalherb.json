@@ -12,7 +12,7 @@
         [
             "[I:0] used the medicinal herb's healing properties.[E]"
         ],
-        "targetedGems": 
+        "targetedGemSlots": 
         [
             {
                 "target":"Any",

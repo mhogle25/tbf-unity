@@ -21,7 +21,7 @@ namespace BF2D.Game
         {
             Equipment newEquipment = GameCtx.Instance.InstantiateEquipment(this.equipmentInfo.ID).Setup<Equipment>(Strings.System.GenerateID(), newName);
 
-            EquipModWrapper[] slots = newEquipment.Runes;
+            EquipModSlot[] slots = newEquipment.RuneSlots;
 
             if (slots is null || slots.Length < 1)
             {
@@ -35,7 +35,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            newEquipment.Runes[this.index].SetRuneID(runeInfo.ID);
+            newEquipment.RuneSlots[this.index].SetRuneID(runeInfo.ID);
 
             return GameCtx.Instance.WriteEquipment(newEquipment, () =>
             {

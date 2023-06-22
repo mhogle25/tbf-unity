@@ -19,7 +19,7 @@
         [
             "The light of the gods shines upon [I:0].[E]"
         ],
-        "untargetedGems":
+        "gemSlots":
         [
             {
                 "gemID": "gm_basicheal_02"

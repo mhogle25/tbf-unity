@@ -10,6 +10,9 @@ namespace BF2D.Game
     [Serializable]
     public class NumRandInt
     {
+        [JsonIgnore] public string Expression => this.expression;
+        [JsonIgnore] public int Value => this.value;
+
         [JsonProperty] private readonly string expression = string.Empty;
         [JsonProperty] private readonly int value = 0;
 

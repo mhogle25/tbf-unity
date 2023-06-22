@@ -12,11 +12,15 @@
         [
             "[I:0] performed a calculated strike.[E]"
         ],
-        "targetedGems": 
+        "targetedGemSlots": 
         [
             {
                 "target":"Opponent",
                 "description":"attack",
+                "critChanceModifier": 
+                {
+                    "expression": "$ 10 50"
+                },
                 "gemID":"gm_damage_01_a"
             }
         ]

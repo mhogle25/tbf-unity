@@ -19,9 +19,13 @@
         [
             "The Vapor Helm shimmers magically on [I:0]'s head.[E]"
         ],
-        "untargetedGems":
+        "gemSlots":
         [
             {
+                "repeat":
+                {
+                    "value": 2
+                },
                 "gemID": "gm_basicheal_01"
             }
         ]

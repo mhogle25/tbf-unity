@@ -13,7 +13,7 @@
         [
             "[I:0] conjured bolts of fierce psychic energy.[E]"
         ],
-        "targetedGems": 
+        "targetedGemSlots": 
         [
             {
                 "target":"RandomOpponent",

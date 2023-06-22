@@ -21,7 +21,7 @@ namespace BF2D.Game
         {
             Item newItem = GameCtx.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
 
-            TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGems;
+            TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGemSlots;
 
             if (targetedGems is null || targetedGems.Length < 1)
             {

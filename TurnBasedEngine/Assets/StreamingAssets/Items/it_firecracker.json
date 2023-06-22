@@ -11,7 +11,7 @@
         [
             "[I:0] launched a firework.[E]"
         ],
-        "targetedGems": 
+        "targetedGemSlots": 
         [
             {
                 "target":"Any",

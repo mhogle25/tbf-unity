@@ -20,7 +20,7 @@
         [
             "The flames continue to sear [I:0]'s flesh.[E]"
         ],
-        "untargetedGems":
+        "gemSlots":
         [
             {
                 "gemID": "gm_basicdamage_01"

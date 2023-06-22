@@ -9,11 +9,11 @@ namespace BF2D.Game.Combat.Actions
         public ItemInfo Info { get => this.info; set => this.info = value; }
         private ItemInfo info = null;
 
-        public bool HasGems { get => this.Info.Get()?.OnUse.TargetedGems.Length > 0; }
+        public bool HasGems { get => this.Info.Get()?.OnUse.TargetedGemSlots.Length > 0; }
 
-        public IEnumerable<TargetedCharacterStatsAction> TargetedGems => this.Info.Get()?.OnUse.TargetedGems;
+        public IEnumerable<TargetedCharacterStatsAction> TargetedGems => this.Info.Get()?.OnUse.TargetedGemSlots;
 
-        public IEnumerable<TargetedCharacterStatsAction> UseTargetedGems() => Info.Use(CombatManager.Instance.CurrentCharacter.Stats.Items)?.OnUse.TargetedGems;
+        public IEnumerable<TargetedCharacterStatsAction> UseTargetedGems() => Info.Use(CombatManager.Instance.CurrentCharacter.Stats.Items)?.OnUse.TargetedGemSlots;
 
         public List<string> GetOpeningMessage()
         {

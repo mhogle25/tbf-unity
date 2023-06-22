@@ -10,18 +10,18 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class UntargetedGameAction : GameAction, ICombatAligned
     {
-        [JsonProperty] private readonly UntargetedCharacterStatsAction[] untargetedGems = { };
+        [JsonProperty] private readonly UntargetedCharacterStatsAction[] gemSlots = { };
 
-        [JsonIgnore] public UntargetedCharacterStatsAction[] Gems => this.untargetedGems;
+        [JsonIgnore] public UntargetedCharacterStatsAction[] GemSlots => this.gemSlots;
 
-        [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.Gems);
+        [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.GemSlots);
 
         [JsonConstructor]
         public UntargetedGameAction() { }
 
-        public UntargetedGameAction(UntargetedCharacterStatsAction[] gemIDs)
+        public UntargetedGameAction(UntargetedCharacterStatsAction[] gemSlots)
         {
-            this.untargetedGems = gemIDs;
+            this.gemSlots = gemSlots;
         }
 
         public UntargetedGameAction Append(UntargetedGameAction toAppend)
@@ -29,7 +29,7 @@ namespace BF2D.Game.Actions
             if (toAppend is null)
                 return this;
 
-            return new UntargetedGameAction(this.Gems.Concat(toAppend.Gems).ToArray())
+            return new UntargetedGameAction(this.GemSlots.Concat(toAppend.GemSlots).ToArray())
             {
                 Message = this.Message
             };

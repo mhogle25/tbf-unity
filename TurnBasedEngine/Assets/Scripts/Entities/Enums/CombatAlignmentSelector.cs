@@ -4,6 +4,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BF2D.Game.Enums
 {
@@ -61,6 +62,11 @@ namespace BF2D.Game.Enums
 
         public static CombatAlignment CalculateCombatAlignedCollection(IEnumerable<ICombatAligned> entities)
         {
+            return CalculateCombatAlignedCollection(entities, null);
+        }
+
+        public static CombatAlignment CalculateCombatAlignedCollection(IEnumerable<ICombatAligned> entities, CombatAlignment? single)
+        {
             int offense = 0;
             int defense = 0;
             int neutral = 0;
@@ -73,6 +79,13 @@ namespace BF2D.Game.Enums
                     case CombatAlignment.Defense: defense++; break;
                     case CombatAlignment.Neutral: neutral++; break;
                 }
+            }
+
+            switch (single)
+            {
+                case CombatAlignment.Offense: offense++; break;
+                case CombatAlignment.Defense: defense++; break;
+                case CombatAlignment.Neutral: neutral++; break;
             }
 
             return Calculate(offense, defense, neutral);

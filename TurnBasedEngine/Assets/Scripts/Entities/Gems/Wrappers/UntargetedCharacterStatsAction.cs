@@ -11,7 +11,17 @@ namespace BF2D.Game.Actions
     public class UntargetedCharacterStatsAction : ICombatAligned
     {
         [JsonProperty] private string gemID = string.Empty;
-        [JsonIgnore] private CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
+
+        [JsonProperty] private readonly NumRandInt repeat = new(1);
+        [JsonProperty] private readonly AuraType? hasAura = null;
+        [JsonProperty] private readonly NumRandInt successRateModifier = new(0);
+        [JsonProperty] private readonly NumRandInt critChanceModifier = new(0);
+
+        [JsonIgnore] protected CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
+
+        [JsonIgnore] public bool Armed => this.Gem is not null;
+
+        public bool ContainsAura(AuraType aura) => this.Gem.ContainsAura(aura);
 
         [JsonIgnore] public CombatAlignment Alignment => this.Gem?.Alignment ?? CombatAlignment.Neutral;
 
@@ -21,6 +31,16 @@ namespace BF2D.Game.Actions
 
         public string GetAnimationKey() => this.Gem.GetAnimationKey();
 
-        public CharacterStatsAction.Info Run(CharacterStats self) => this.Gem.Run(self, self);
+        protected virtual CharacterStatsAction.Specs Specs => new()
+        {
+            repeat = this.repeat,
+            hasAura = this.hasAura,
+            successRateModifier = this.successRateModifier,
+            critChanceModifier = this.critChanceModifier
+        };
+
+        public CharacterStatsAction.Info Run(CharacterStats self) => this.Gem.Run(self, self, this.Specs);
+
+        public string TextBreakdown(CharacterStats source) => this.Gem.TextBreakdown(source, this.Specs);
     }
 }

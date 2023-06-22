@@ -4,17 +4,20 @@ using UnityEngine;
 using System;
 using Newtonsoft.Json;
 using BF2D.Game.Actions;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
     [Serializable]
-    public class EquipModWrapper
+    public class EquipModSlot : ICombatAligned
     {
         [JsonProperty] private string runeID = string.Empty;
 
         [JsonIgnore] private EquipMod Rune => GameCtx.Instance.GetRune(this.runeID);
 
         [JsonIgnore] public bool Armed => this.Rune is not null;
+
+        [JsonIgnore] public CombatAlignment Alignment => this.Rune.Alignment;
 
         [JsonIgnore] public virtual int SpeedModifier => this.Rune.SpeedModifier;
         [JsonIgnore] public virtual int AttackModifier => this.Rune.AttackModifier;

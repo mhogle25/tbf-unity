@@ -185,7 +185,7 @@ namespace BF2D.Game.Combat
 
         private void PlayPersistentEffectEvent(UntargetedGameAction gameAction)
         {
-            PlayDialog(gameAction.Message, () => RunUntargetedGems(gameAction.Gems));
+            PlayDialog(gameAction.Message, () => RunUntargetedGems(gameAction.GemSlots));
         }
         #endregion
 
@@ -210,23 +210,23 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Stage and Run Gems
-        private void RunUntargetedGems(IEnumerable<UntargetedCharacterStatsAction> gems)
+        private void RunUntargetedGems(IEnumerable<UntargetedCharacterStatsAction> gemSlots)
         {
-            foreach (UntargetedCharacterStatsAction gem in gems)
-                StageUntargetedGems(gem);
+            foreach (UntargetedCharacterStatsAction slot in gemSlots)
+                StageUntargetedGems(slot);
 
             this.eventStack.Continue();
         }
 
-        private void StageUntargetedGems(UntargetedCharacterStatsAction gem)
+        private void StageUntargetedGems(UntargetedCharacterStatsAction slot)
         {
             this.eventStack.PushEvent(() =>
             {
                 this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
                 {
-                    PlayAnimation(gem.GetAnimationKey());
+                    PlayAnimation(slot.GetAnimationKey());
 
-                    CharacterStatsAction.Info info = gem.Run(this.Stats);
+                    CharacterStatsAction.Info info = slot.Run(this.Stats);
                     List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
                     dialog.Insert(0, info.GetMessage());
                     RefreshStatsDisplay();
@@ -319,20 +319,18 @@ namespace BF2D.Game.Combat
 
         private CharacterCombat RollCharacterAligned(CombatAlignment alignment)
         {
+
+            bool aligned = alignment == CombatAlignment.Offense ||
+                           alignment == CombatAlignment.Neutral;
+
             if (CombatManager.Instance.CharacterIsEnemy(this))
-            {
-                return alignment == CombatAlignment.Offense ||
-                alignment == CombatAlignment.Neutral ?
+                return aligned ?
                 CombatManager.Instance.RandomPlayer() :
                 CombatManager.Instance.RandomEnemy();
-            }
             else
-            {
-                return alignment == CombatAlignment.Offense ||
-                alignment == CombatAlignment.Neutral ?
+                return aligned ?
                 CombatManager.Instance.RandomEnemy() :
                 CombatManager.Instance.RandomPlayer();
-            }
         }
 
         private List<string> GemStatusCheck(IEnumerable<CharacterStatsAction.Info> infos)

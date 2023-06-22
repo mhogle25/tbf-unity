@@ -7,13 +7,10 @@ using BF2D.Game.Enums;
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class TargetedCharacterStatsAction : ICombatAligned
+    public class TargetedCharacterStatsAction : UntargetedCharacterStatsAction, ICombatAligned
     {
-
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";
-        [JsonProperty] private string gemID = string.Empty;
-        [JsonIgnore] private CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
 
         [JsonIgnore] public CharacterTarget Target => this.target;
         [JsonIgnore] public string Description => this.description.Wash();
@@ -42,16 +39,6 @@ namespace BF2D.Game.Actions
                 this.Target == CharacterTarget.RandomOpponent;
         }
 
-        [JsonIgnore] public CombatAlignment Alignment => this.Gem?.Alignment ?? CombatAlignment.Neutral;
-
-        public bool ContainsAura(AuraType aura) => this.Gem.ContainsAura(aura);
-
-        public string GetAnimationKey() => this.Gem.GetAnimationKey();
-
-        public CharacterStatsAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target);
-
-        public string TextBreakdown(CharacterStats source) => this.Gem.TextBreakdown(source);
-
-        public void SetGemID(string newId) => this.gemID = newId;
+        public CharacterStatsAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target, this.Specs);
     }
 }
