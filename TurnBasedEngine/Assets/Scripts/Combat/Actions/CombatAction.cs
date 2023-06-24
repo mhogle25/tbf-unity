@@ -158,23 +158,23 @@ namespace BF2D.Game.Combat.Actions
             }
         }
 
-        public IEnumerable<TargetedCharacterStatsAction> GetTargetedGems()
+        public IEnumerable<TargetedCharacterStatsActionSlot> GetTargetedGemSlots()
         {
             switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.TargetedGems;
+                case CombatActionType.Item: return this.Item.TargetedGemSlots;
                 default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }
         
 
-        public IEnumerable<TargetedCharacterStatsAction> UseTargetedGems()
+        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots()
         {
             switch (this.type)
             {
                 case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.UseTargetedGems();
+                case CombatActionType.Item: return this.Item.UseTargetedGemSlots();
                 default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
             }
         }

@@ -111,10 +111,7 @@ namespace BF2D.Game.Actions
                                   this.fortuneUp is not null;
 
         #region Public Methods
-        public bool ContainsAura(AuraType aura, Specs specs)
-        {
-            return ContainsAura(aura) || aura == specs.hasAura;
-        }
+        public bool ContainsAura(AuraType aura, Specs specs) => ContainsAura(aura) || aura == specs.hasAura;
 
         public Entity GetEntity() => this;
 
@@ -221,7 +218,6 @@ namespace BF2D.Game.Actions
                     info.message += $"{target.Name}'s {Strings.Character.Fortune} went up by {this.fortuneUp.Run(source, target.FortuneUp)}. {Strings.DialogTextbox.BriefPause}";
             }
 
-
             info.targetWasKilled = !targetDeadPrevious && target.Dead;
             info.targetWasRevived = targetDeadPrevious && !target.Dead;
 
@@ -254,10 +250,10 @@ namespace BF2D.Game.Actions
                 text += TbNumericPropertyHelper(this.exert, source, Strings.Character.Exert, Colors.Blue);
 
             if (this.resetHealth)
-                text += $"Fill {Strings.Character.Health} ({source.MaxHealth})\n";
+                text += $"Fill {Strings.Character.Health} ({source.MaxHealth - source.Health})\n";
 
             if (this.resetStamina)
-                text += $"Fill {Strings.Character.Stamina} ({source.MaxStamina})\n";
+                text += $"Fill {Strings.Character.Stamina} (+{source.MaxStamina - source.Stamina})\n";
 
             if (this.constitutionUp is not null)
                 text += TbNumericPropertyHelper(this.constitutionUp, source, $"{Strings.Character.Constitution} Up", Colors.Orange);
@@ -294,18 +290,18 @@ namespace BF2D.Game.Actions
             if (this.SuccessRate < 100)
                 text += TbSuccessRateHelper(source, specs);
 
-            List<string> additions = new();
+            List<string> specAdditions = new();
             if (specs.repeat.Value is not 1 || !string.IsNullOrEmpty(specs.repeat.Expression))
-                additions.Add($"x{specs.repeat.TextBreakdown(source)}");
+                specAdditions.Add($"x{specs.repeat.TextBreakdown(source)}");
 
             if (specs.hasAura is not null)
-                additions.Add($"Has {specs.hasAura}");
+                specAdditions.Add($"Has {specs.hasAura}");
 
             if (specs.critChanceModifier.Value is not 0 || !string.IsNullOrEmpty(specs.critChanceModifier.Expression))
-                additions.Add($"+{specs.critChanceModifier.TextBreakdown(source)} Crit Chance");
+                specAdditions.Add($"+{specs.critChanceModifier.TextBreakdown(source)}% Crit Chance");
 
-            if (additions.Count > 0)
-                text += $"{string.Join(", ", additions)}\n";
+            if (specAdditions.Count > 0)
+                text += $"{string.Join(", ", specAdditions)}\n";
 
             return text;
         }

@@ -199,7 +199,7 @@ namespace BF2D.Game.Combat
                     switch (this.CurrentCombatAction.Type)
                     {
                         case Enums.CombatActionType.Item:
-                            RunTargetedGems(this.CurrentCombatAction.UseTargetedGems());
+                            RunTargetedGems(this.CurrentCombatAction.UseTargetedGemSlots());
                             break;
                         default:
                             throw new NotImplementedException();
@@ -210,15 +210,15 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Stage and Run Gems
-        private void RunUntargetedGems(IEnumerable<UntargetedCharacterStatsAction> gemSlots)
+        private void RunUntargetedGems(IEnumerable<CharacterStatsActionSlot> gemSlots)
         {
-            foreach (UntargetedCharacterStatsAction slot in gemSlots)
+            foreach (CharacterStatsActionSlot slot in gemSlots)
                 StageUntargetedGems(slot);
 
             this.eventStack.Continue();
         }
 
-        private void StageUntargetedGems(UntargetedCharacterStatsAction slot)
+        private void StageUntargetedGems(CharacterStatsActionSlot slot)
         {
             this.eventStack.PushEvent(() =>
             {
@@ -235,15 +235,15 @@ namespace BF2D.Game.Combat
             });
         }
 
-        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsAction> targetedGems)
+        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsActionSlot> targetedGemSlots)
         {
-            foreach (TargetedCharacterStatsAction targetedGem in targetedGems)
-                StageTargetedGems(targetedGem);
+            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in targetedGemSlots)
+                StageTargetedGems(targetedGemSlot);
 
             this.eventStack.Continue();
         }
 
-        private void StageTargetedGems(TargetedCharacterStatsAction targetedGem)
+        private void StageTargetedGems(TargetedCharacterStatsActionSlot targetedGemSlot)
         {
             this.eventStack.PushEvent(() =>
             {
@@ -252,45 +252,45 @@ namespace BF2D.Game.Combat
                     List<CharacterStatsAction.Info> infos = new();
                     string message = string.Empty;
 
-                    foreach (CharacterCombat target in targetedGem.TargetInfo.CombatTargets)
+                    foreach (CharacterCombat target in targetedGemSlot.TargetInfo.CombatTargets)
                     {
                         //Verify that targets are still valid before executing
                         CharacterCombat verifiedTarget = target;
                         if (target.Stats.Dead)
                         {
-                            if (targetedGem.Target == CharacterTarget.Self)
+                            if (targetedGemSlot.Target == CharacterTarget.Self)
                             {
                                 Debug.LogError("[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed");
                                 continue;
                             }
-                            else if (targetedGem.Target == CharacterTarget.Ally ||
-                            targetedGem.Target == CharacterTarget.RandomAlly)
+                            else if (targetedGemSlot.Target == CharacterTarget.Ally ||
+                            targetedGemSlot.Target == CharacterTarget.RandomAlly)
                             {
                                 verifiedTarget = RollAlly();
                             }
-                            else if (targetedGem.Target == CharacterTarget.Opponent ||
-                            targetedGem.Target == CharacterTarget.RandomOpponent)
+                            else if (targetedGemSlot.Target == CharacterTarget.Opponent ||
+                            targetedGemSlot.Target == CharacterTarget.RandomOpponent)
                             {
                                 verifiedTarget = RollOpponent();
                             }
-                            else if (targetedGem.Target == CharacterTarget.Any ||
-                            targetedGem.Target == CharacterTarget.Random)
+                            else if (targetedGemSlot.Target == CharacterTarget.Any ||
+                            targetedGemSlot.Target == CharacterTarget.Random)
                             {
-                                verifiedTarget = RollCharacterAligned(targetedGem.Alignment);
+                                verifiedTarget = RollCharacterAligned(targetedGemSlot.Alignment);
                             }
-                            else if (targetedGem.Target == CharacterTarget.All ||
-                            targetedGem.Target == CharacterTarget.AllOfAny ||
-                            targetedGem.Target == CharacterTarget.AllAllies ||
-                            targetedGem.Target == CharacterTarget.AllOpponents)
+                            else if (targetedGemSlot.Target == CharacterTarget.All ||
+                            targetedGemSlot.Target == CharacterTarget.AllOfAny ||
+                            targetedGemSlot.Target == CharacterTarget.AllAllies ||
+                            targetedGemSlot.Target == CharacterTarget.AllOpponents)
                             {
                                 continue;
                             }
                         }
 
                         //Execute
-                        verifiedTarget.PlayAnimation(targetedGem.GetAnimationKey());
+                        verifiedTarget.PlayAnimation(targetedGemSlot.GetAnimationKey());
 
-                        CharacterStatsAction.Info info = targetedGem.Run(this.stats, verifiedTarget.Stats);
+                        CharacterStatsAction.Info info = targetedGemSlot.Run(this.stats, verifiedTarget.Stats);
                         message += info.GetMessage();
                         infos.Add(info);
                         verifiedTarget.RefreshStatsDisplay();

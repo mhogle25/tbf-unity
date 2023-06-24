@@ -34,8 +34,8 @@ namespace BF2D.Game.Combat
             get
             {
                 List<CharacterCombat> list = new();
-                FillCharacterList(this.playerPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list).ToArray();
-                FillCharacterList(this.enemyPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list).ToArray();
+                FillCharacterList(this.playerPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list);
+                FillCharacterList(this.enemyPlatforms, tile => !tile.AssignedCharacter.Stats.Dead, list);
                 return list.ToArray();
             }
         }

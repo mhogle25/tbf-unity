@@ -25,15 +25,15 @@ namespace BF2D.Game.Combat
         [SerializeField] private OptionsGrid anyPlatforms = null;
         [SerializeField] private List<CombatGridTile> initAnyOptions = new();
 
-        private readonly Queue<TargetedCharacterStatsAction> stagedTargetedGems = new();
-        private TargetedCharacterStatsAction stagedTargetedGem = null;
+        private readonly Queue<TargetedCharacterStatsActionSlot> stagedTargetedGemSlots = new();
+        private TargetedCharacterStatsActionSlot stagedTargetedGemSlot = null;
 
         public override void ControlInitialize()
         {
-            this.stagedTargetedGems.Clear();
-            this.stagedTargetedGem = null;
-            foreach (TargetedCharacterStatsAction targetedGem in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGems())
-                this.stagedTargetedGems.Enqueue(targetedGem);
+            this.stagedTargetedGemSlots.Clear();
+            this.stagedTargetedGemSlot = null;
+            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGemSlots())
+                this.stagedTargetedGemSlots.Enqueue(targetedGemSlot);
 
             Continue();
         }
@@ -81,7 +81,7 @@ namespace BF2D.Game.Combat
 
         public void SetSingleTarget(CharacterCombat target)
         {
-            this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { target };
+            this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { target };
             Continue();
         }
 
@@ -90,21 +90,21 @@ namespace BF2D.Game.Combat
             switch (target)
             {
                 case CharacterTarget.Self:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.CurrentCharacter };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.CurrentCharacter };
                     Continue();
                     return;
                 case CharacterTarget.Ally:
                     SetupDialog(this.playerPlatforms);
                     return;
                 case CharacterTarget.AllAllies:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Players;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatManager.Instance.Players;
                     Continue();
                     return;
                 case CharacterTarget.Opponent:
                     SetupDialog(this.enemyPlatforms);
                     return;
                 case CharacterTarget.AllOpponents:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
                     Continue();
                     return;
                 case CharacterTarget.Any:
@@ -114,19 +114,19 @@ namespace BF2D.Game.Combat
                     AllOfAnyEvent();
                     return;
                 case CharacterTarget.All:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
                     Continue();
                     return;
                 case CharacterTarget.Random:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomCharacter() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomCharacter() };
                     Continue();
                     return;
                 case CharacterTarget.RandomAlly:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomPlayer() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomPlayer() };
                     Continue();
                     return;
                 case CharacterTarget.RandomOpponent:
-                    this.stagedTargetedGem.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomEnemy() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatManager.Instance.RandomEnemy() };
                     Continue();
                     return;
                 default:
@@ -143,7 +143,7 @@ namespace BF2D.Game.Combat
                 this.controlled.UtilityFinalize();
             }
 
-            if (this.stagedTargetedGems.Count < 1) 
+            if (this.stagedTargetedGemSlots.Count < 1) 
             {
                 this.orphanedTextbox.UtilityFinalize();
                 this.orphanedTextbox.View.gameObject.SetActive(false);
@@ -152,8 +152,8 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            this.stagedTargetedGem = this.stagedTargetedGems.Dequeue();
-            TargeterSetup(this.stagedTargetedGem.Target);
+            this.stagedTargetedGemSlot = this.stagedTargetedGemSlots.Dequeue();
+            TargeterSetup(this.stagedTargetedGemSlot.Target);
         }
 
         private void SetupDialog(OptionsGrid followUp)
@@ -174,7 +174,7 @@ namespace BF2D.Game.Combat
             },
             new string[]
             {
-                this.stagedTargetedGem.Description
+                this.stagedTargetedGemSlot.Description
             });
             this.orphanedTextbox.UtilityInitialize();
         }
@@ -187,7 +187,7 @@ namespace BF2D.Game.Combat
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
                 AlignmentFlag flag = Utilities.JSON.DeserializeString<AlignmentFlag>(json);
-                this.stagedTargetedGem.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
+                this.stagedTargetedGemSlot.TargetInfo.CombatTargets = flag.players ? CombatManager.Instance.Players : CombatManager.Instance.Enemies;
             });
             this.orphanedTextbox.ResponseBackEvent.AddListener(() =>
             {
@@ -203,7 +203,7 @@ namespace BF2D.Game.Combat
             },
             new string[]
             {
-                this.stagedTargetedGem.Description
+                this.stagedTargetedGemSlot.Description
             });
             this.orphanedTextbox.UtilityInitialize();
         }

@@ -28,8 +28,8 @@ namespace BF2D.Game
         {
             string description = $"{base.Description}\n";
 
-            foreach (TargetedCharacterStatsAction targetedGem in this.OnUse.TargetedGemSlots)
-                description += $"-\n{targetedGem.TextBreakdown(source)}";
+            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in this.OnUse.TargetedGemSlots)
+                description += $"-\n{targetedGemSlot.TextBreakdown(source)}";
 
             description += "-\n";
             if (!this.Consumable)

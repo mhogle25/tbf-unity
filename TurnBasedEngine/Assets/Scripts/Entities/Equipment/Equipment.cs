@@ -2,7 +2,6 @@ using BF2D.Game.Enums;
 using Newtonsoft.Json;
 using System;
 using BF2D.Game.Actions;
-using System.Linq;
 
 namespace BF2D.Game
 {

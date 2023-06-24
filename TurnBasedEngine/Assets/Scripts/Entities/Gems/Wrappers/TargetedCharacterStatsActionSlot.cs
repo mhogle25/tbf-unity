@@ -1,13 +1,12 @@
-using BF2D.Enums;
+ using BF2D.Enums;
 using Newtonsoft.Json;
 using System;
 using BF2D.Utilities;
-using BF2D.Game.Enums;
 
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class TargetedCharacterStatsAction : UntargetedCharacterStatsAction, ICombatAligned
+    public class TargetedCharacterStatsActionSlot : CharacterStatsActionSlot, ICombatAligned
     {
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";

@@ -10,16 +10,16 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class UntargetedGameAction : GameAction, ICombatAligned
     {
-        [JsonProperty] private readonly UntargetedCharacterStatsAction[] gemSlots = { };
+        [JsonProperty] private readonly CharacterStatsActionSlot[] gemSlots = { };
 
-        [JsonIgnore] public UntargetedCharacterStatsAction[] GemSlots => this.gemSlots;
+        [JsonIgnore] public CharacterStatsActionSlot[] GemSlots => this.gemSlots;
 
         [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.GemSlots);
 
         [JsonConstructor]
         public UntargetedGameAction() { }
 
-        public UntargetedGameAction(UntargetedCharacterStatsAction[] gemSlots)
+        public UntargetedGameAction(CharacterStatsActionSlot[] gemSlots)
         {
             this.gemSlots = gemSlots;
         }

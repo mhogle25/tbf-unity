@@ -21,15 +21,15 @@ namespace BF2D.Game
         {
             Item newItem = GameCtx.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
 
-            TargetedCharacterStatsAction[] targetedGems = newItem.OnUse?.TargetedGemSlots;
+            TargetedCharacterStatsActionSlot[] targetedGemSlots = newItem.OnUse?.TargetedGemSlots;
 
-            if (targetedGems is null || targetedGems.Length < 1)
+            if (targetedGemSlots is null || targetedGemSlots.Length < 1)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item with no gem slots.");
                 return null;
             }
 
-            if (this.index < 0 || this.index >= targetedGems.Length)
+            if (this.index < 0 || this.index >= targetedGemSlots.Length)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item in an invalid slot.");
                 return null;
@@ -41,7 +41,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            targetedGems[this.index].SetGemID(gem.ID);
+            targetedGemSlots[this.index].SetGemID(gem.ID);
 
             return GameCtx.Instance.WriteItem(newItem, () =>
             {

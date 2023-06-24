@@ -8,7 +8,7 @@ using BF2D.Game.Enums;
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class UntargetedCharacterStatsAction : ICombatAligned
+    public class CharacterStatsActionSlot : ICombatAligned
     {
         [JsonProperty] private string gemID = string.Empty;
 

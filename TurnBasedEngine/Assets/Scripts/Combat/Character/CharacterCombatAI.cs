@@ -78,52 +78,52 @@ namespace BF2D.Game.Combat
 
         public void SetupTargetedGems()
         {
-            IEnumerable<TargetedCharacterStatsAction> targetedGems = CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGems();
+            IEnumerable<TargetedCharacterStatsActionSlot> slots = CombatManager.Instance.CurrentCharacter.CurrentCombatAction.GetTargetedGemSlots();
 
-            foreach (TargetedCharacterStatsAction targetedGem in targetedGems)
+            foreach (TargetedCharacterStatsActionSlot slot in slots)
             {
-                switch (targetedGem.Target)
+                switch (slot.Target)
                 {
                     case CharacterTarget.Self:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.CurrentCharacter };
                         break;
                     case CharacterTarget.Ally:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnEnemy(targetedGem) };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnEnemy(slot) };
                         break;
                     case CharacterTarget.AllAllies:
-                        targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Players;
+                        slot.TargetInfo.CombatTargets = CombatManager.Instance.Players;
                         break;
                     case CharacterTarget.Opponent:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAPlayer(targetedGem) };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAPlayer(slot) };
                         break;
                     case CharacterTarget.AllOpponents:
-                        targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
+                        slot.TargetInfo.CombatTargets = CombatManager.Instance.Enemies;
                         break;
                     case CharacterTarget.Any:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(targetedGem) };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(slot) };
                         break;
                     case CharacterTarget.AllOfAny:
-                        targetedGem.TargetInfo.CombatTargets = targetedGem.Alignment == CombatAlignment.Offense ||
-                        targetedGem.Alignment == CombatAlignment.Neutral ?
+                        slot.TargetInfo.CombatTargets = slot.Alignment == CombatAlignment.Offense ||
+                        slot.Alignment == CombatAlignment.Neutral ?
                         CombatManager.Instance.Players :
                         CombatManager.Instance.Enemies;
 
                         if (CurrentCharacterIsChaotic())
-                            targetedGem.TargetInfo.CombatTargets = UnityEngine.Random.Range(0, 2) == 0 ?
+                            slot.TargetInfo.CombatTargets = UnityEngine.Random.Range(0, 2) == 0 ?
                             CombatManager.Instance.Players :
                             CombatManager.Instance.Enemies;
                         break;
                     case CharacterTarget.All:
-                        targetedGem.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
+                        slot.TargetInfo.CombatTargets = CombatManager.Instance.Characters;
                         break;
                     case CharacterTarget.Random:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomCharacter() };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomCharacter() };
                         break;
                     case CharacterTarget.RandomAlly:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomEnemy() };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomEnemy() };
                         break;
                     case CharacterTarget.RandomOpponent:
-                        targetedGem.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatManager.Instance.RandomPlayer() };
                         break;
                     default:
                         Debug.LogError("[CharacterCombatAI:SetupTargetedGems] The provided value for a character target was invalid");
@@ -196,7 +196,7 @@ namespace BF2D.Game.Combat
             return list[random];
         }
 
-        private CharacterCombat PickAnEnemy(TargetedCharacterStatsAction gem)
+        private CharacterCombat PickAnEnemy(TargetedCharacterStatsActionSlot gem)
         { 
             List<CharacterCombat> enemies = new();
             foreach (CharacterCombat enemy in CombatManager.Instance.Enemies)
@@ -211,7 +211,7 @@ namespace BF2D.Game.Combat
             return enemies[UnityEngine.Random.Range(0, enemies.Count)];
         }
 
-        private CharacterCombat PickAPlayer(TargetedCharacterStatsAction gem)
+        private CharacterCombat PickAPlayer(TargetedCharacterStatsActionSlot gem)
         {
             List<CharacterCombat> players = new();
             foreach (CharacterCombat player in CombatManager.Instance.Players)
@@ -220,7 +220,7 @@ namespace BF2D.Game.Combat
             return players[UnityEngine.Random.Range(0, players.Count)];
         }
 
-        private CharacterCombat PickACharacter(TargetedCharacterStatsAction gem)
+        private CharacterCombat PickACharacter(TargetedCharacterStatsActionSlot gem)
         {
             List<CharacterCombat> characters = new();
             foreach (CharacterCombat character in CombatManager.Instance.Enemies)
@@ -259,7 +259,7 @@ namespace BF2D.Game.Combat
             return chosen;
         }
 
-        private bool HealLogicCheck(TargetedCharacterStatsAction gem)
+        private bool HealLogicCheck(TargetedCharacterStatsActionSlot gem)
         {
             return gem.ContainsAura(AuraType.Restoration) &&
                 (gem.Alignment == CombatAlignment.Defense || gem.Alignment == CombatAlignment.Neutral) &&
