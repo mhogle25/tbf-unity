@@ -217,6 +217,7 @@ namespace BF2D.Game
         [JsonIgnore] public Equipment Hands { get => string.IsNullOrEmpty(this.hands) ? null : GameCtx.Instance.GetEquipment(this.hands); }
         [JsonIgnore] public Equipment Feet { get => string.IsNullOrEmpty(this.feet) ? null : GameCtx.Instance.GetEquipment(this.feet); }
         [JsonIgnore] public Equipment Accessory { get => string.IsNullOrEmpty(this.accessory) ? null : GameCtx.Instance.GetEquipment(this.accessory); }
+
         [JsonProperty] private string head = null;
         [JsonProperty] private string torso = null;
         [JsonProperty] private string legs = null;

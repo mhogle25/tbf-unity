@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 56cffe0fcea5049b89a5c02614236128, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -321,7 +321,7 @@ RectTransform:
   - {fileID: 4598405331611031977}
   - {fileID: 445455120}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -360,8 +360,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1

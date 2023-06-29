@@ -40,7 +40,8 @@ namespace BF2D.Game
         public bool SaveActive => this.currentSave is not null;
 
         public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
-        public IEnumerable<CharacterStats> ActivePlayers => this.currentSave?.Party.ActiveCharacters;
+        public CharacterStats[] ActivePlayers => this.currentSave?.Party.ActiveCharacters;
+        public CharacterStats[] InactivePlayers => this.currentSave?.Party.InactiveCharacters;
 
         public IItemHolder PartyItems => this.currentSave?.Party.Items;
         public IEquipmentHolder PartyEquipments => this.currentSave?.Party.Equipments;
@@ -153,11 +154,11 @@ namespace BF2D.Game
             Terminal.IO.Log($"Saved at ID '{id}'");
         }
 
-        public bool LoadGame()
+        public bool ReloadGame()
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameCtx:LoadGame] Load failed, there was no game loaded.");
+                Debug.LogWarning("[GameCtx:ReloadGame] Reload failed, there was no game loaded.");
                 return false;
             }
 
@@ -269,9 +270,9 @@ namespace BF2D.Game
         #endregion
 
         #region Character Management
-        public CharacterStats GetActivePlayer(string id)
+        public CharacterStats GetActivePlayer(int index)
         {
-            return this.currentSave?.Party.GetCharacter(id);
+            return this.ActivePlayers[index];
         }
 
         public void NewPlayer(string id, string newName)
@@ -325,9 +326,7 @@ namespace BF2D.Game
         public Sprite GetIcon(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
                 return null;
-            }
 
             return this.iconCollection[id];
         }
@@ -335,9 +334,7 @@ namespace BF2D.Game
         public AudioClip GetSoundEffect(string id)
         {
             if (string.IsNullOrEmpty(id))
-            {
                 return null;
-            }
 
             return this.soundEffectCollection[id];
         }

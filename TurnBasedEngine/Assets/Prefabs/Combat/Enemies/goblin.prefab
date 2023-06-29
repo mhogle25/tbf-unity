@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1343732547579918860}
   - component: {fileID: 1343732547579918863}
+  - component: {fileID: 1894429588734712161}
   - component: {fileID: 1343732547579918862}
+  - component: {fileID: 3631359981584180365}
   - component: {fileID: 6548339578013975057}
   m_Layer: 0
   m_Name: goblin
@@ -87,9 +89,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1894429588734712161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343732547579918856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e0db93238c92432d8ab39a763af39ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shaderOffsetKey: GradientAdjustment
+  shaderTransitionSpeed: 1
+  transitionThreshold: 0.01
+  material: {fileID: 0}
 --- !u!95 &1343732547579918862
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -106,7 +124,21 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3631359981584180365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343732547579918856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4129555e21bc843478071a3b02000c11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1343732547579918862}
 --- !u!114 &6548339578013975057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43715c6c3533964458ab75b5feab495b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1343732547579918863}
+  animatorController: {fileID: 3631359981584180365}
 --- !u!1 &4722771038352025684
 GameObject:
   m_ObjectHideFlags: 0

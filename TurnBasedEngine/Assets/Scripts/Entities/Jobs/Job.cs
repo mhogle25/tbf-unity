@@ -82,14 +82,14 @@ namespace BF2D.Game
         private readonly Rate critMultiplierRate = new()
         {
             skip = 0,
-            amount = 1,
+            amount = 0,
         };
 
         [JsonProperty]
         private readonly Rate critChanceRate = new()
         {
             skip = 0,
-            amount = 1,
+            amount = 0,
         };
 
         public long ExperienceAward => this.experienceAward;
@@ -131,12 +131,12 @@ namespace BF2D.Game
 
         public int GetCritMultiplier(int level)
         {
-            return Numbers.BaseCritMultiplier + Calculate(level, this.critMultiplierRate, levelUpEvent => levelUpEvent.critMultiplier);
+            return Numbers.baseCritMultiplier + Calculate(level, this.critMultiplierRate, levelUpEvent => levelUpEvent.critMultiplier);
         }
 
         public int GetCritChance(int level)
         {
-            return Numbers.BaseCritChance + Calculate(level, this.critChanceRate, levelUpEvent => levelUpEvent.critChance);
+            return Numbers.baseCritChance + Calculate(level, this.critChanceRate, levelUpEvent => levelUpEvent.critChance);
         }
 
         public bool LevelUpdate(ref long experience, ref int level)

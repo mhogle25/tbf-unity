@@ -8,13 +8,12 @@ namespace BF2D.UI
 {
     public abstract class UIUtility : MonoBehaviour, IUIComponent
     {
+        [Header("UIUtility")]
+        [SerializeField] private Transform view = null;
+        [SerializeField] private bool interactable = false;
 
         public Transform View => this.view;
-        [Header("UIUtility")]
-        [SerializeField] protected Transform view = null;
-
         public bool Interactable { get => this.interactable; set => this.interactable = value; }
-        [SerializeField] protected bool interactable = false;
 
         public virtual void UtilityInitialize()
         {

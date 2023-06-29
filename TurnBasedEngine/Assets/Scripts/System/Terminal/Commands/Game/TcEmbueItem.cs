@@ -5,7 +5,7 @@ namespace BF2D.Game
 {
     public class TcEmbueItem
     {
-        const string useage = "Useage: embueitem [itemID] [characterID] [gemID] [gemIndex] [newName]";
+        const string useage = "Useage: embueitem [itemID] [activePlayerIndex] [gemID] [gemIndex] [newName]\nList active players using 'players active'";
 
         public static void Run(string[] arguments)
         {
@@ -22,10 +22,21 @@ namespace BF2D.Game
             }
 
             string itemID = arguments[1];
-            string characterID = arguments[2];
+            string activePlayerIndex = arguments[2];
             string gemID = arguments[3];
             string gemIndex = arguments[4];
             string newName = arguments[5];
+
+            int playerIndex;
+            try
+            {
+                playerIndex = int.Parse(activePlayerIndex);
+            }
+            catch
+            {
+                Terminal.IO.LogWarning(TcEmbueItem.useage);
+                return;
+            }
 
             GameCtx ctx = GameCtx.Instance;
 
@@ -35,7 +46,7 @@ namespace BF2D.Game
                 return;
             }
 
-            CharacterStats character = ctx.GetActivePlayer(characterID);
+            CharacterStats character = ctx.GetActivePlayer(playerIndex);
 
             ItemInfo itemInfo = character.Items.Get(itemID);
             if (itemInfo is null)

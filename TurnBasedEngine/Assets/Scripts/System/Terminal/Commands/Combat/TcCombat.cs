@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace BF2D.Game.Combat
 {
@@ -40,8 +41,9 @@ namespace BF2D.Game.Combat
             GameCtx.Instance.StageCombatInfo(new CombatManager.InitializeInfo
             {
                 players = GameCtx.Instance.ActivePlayers,
-                enemies = enemies
-            });
+                enemies = enemies,
+                themePaletteOffset = 0.55f
+            }); 
         }
     }
 }

@@ -14,7 +14,7 @@ namespace BF2D.Game
 
             if (arguments.Length == 1)
             {
-                if (GameCtx.Instance.LoadGame())
+                if (GameCtx.Instance.ReloadGame())
                     Terminal.IO.Log($"Reloaded save file.");
 
                 return;

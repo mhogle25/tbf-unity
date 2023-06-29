@@ -9,7 +9,7 @@ namespace BF2D
 
         private readonly Dictionary<string, AudioClip> audioClipsDict = new();
 
-        public AudioClip this[string id] { get => Get(id); }
+        public AudioClip this[string id] => Get(id);
 
         private void Awake()
         {

@@ -11,17 +11,7 @@ namespace BF2D
 
         private readonly Dictionary<string, Sprite> spritesDict = new();
 
-        public Sprite this[string id] { 
-            get 
-            { 
-                return Get(id); 
-            }
-
-            set
-            {
-                this.spritesDict[id] = value;
-            }
-        }
+        public Sprite this[string id] => Get(id);
 
         private void Awake()
         {

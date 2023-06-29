@@ -14,8 +14,10 @@ namespace BF2D.Game.Combat
             public IEnumerable<CharacterStats> players = null;
             public IEnumerable<CharacterStats> enemies = null;
             public string openingDialogKey = $"di_opening_{Strings.System.Default}";
+            public float themePaletteOffset = 0.26f;
         }
 
+        [Header("UI")]
         [SerializeField] private OptionsGridControlInit mainMenu = null;
 
         [SerializeField] private DialogTextboxControl standaloneTextboxControl = null;
@@ -23,6 +25,9 @@ namespace BF2D.Game.Combat
 
         [SerializeField] private CombatGrid combatGrid = null;
         [SerializeField] private CharacterTargeterControl characterTargeter = null;
+
+        [Header("VFX")]
+        [SerializeField] private Utilities.MaterialController themeController;
 
         private Action listener = null;
 
@@ -65,7 +70,7 @@ namespace BF2D.Game.Combat
         public void RunCombatEvents()
         {
             UIControlsManager.Instance.ResetControlChain(false);
-            this.CurrentCharacter.RunCombatEvents();
+            this.CurrentCharacter.Run();
         }
 
         public void PassTurn()
@@ -248,6 +253,7 @@ namespace BF2D.Game.Combat
         {
             this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
+            this.themeController.NewPaletteOffsetClocked(initInfo.themePaletteOffset);
             this.standaloneTextboxControl.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
             this.standaloneTextboxControl.TakeControl();
 

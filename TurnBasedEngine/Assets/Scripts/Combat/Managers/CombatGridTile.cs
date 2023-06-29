@@ -1,5 +1,5 @@
-using UnityEngine;
 using BF2D.UI;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace BF2D.Game.Combat
@@ -13,18 +13,21 @@ namespace BF2D.Game.Combat
         [SerializeField] private Canvas displayCanvas = null;
         [SerializeField] private Slider healthBar = null;
         [SerializeField] private Slider staminaBar = null;
-        public CharacterCombat AssignedCharacter { get => this.assignedCharacter; }
-        [Header("Display")]
-        [SerializeField] private CharacterCombat assignedCharacter = null;
+        public CharacterCombat AssignedCharacter => this.assignedCharacter;
+        [Header("VFX")]
+        [SerializeField] private Material assignedCharacterMaterial;
         [Header("Dependency References")]
         [SerializeField] private CharacterTargeterControl targeter = null;
+        [Space(30)]
+        [Header("Display")]
+        [SerializeField] private CharacterCombat assignedCharacter = null;
 
         public override bool Interactable
         {
             get => this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
         }
 
-        public override bool Setup(Data optionData)
+        public override sealed bool Setup(Data optionData)
         {
             Debug.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");
             throw new System.NotImplementedException();
@@ -56,6 +59,7 @@ namespace BF2D.Game.Combat
             characterCombat.transform.SetParent(this.transform);
             characterCombat.transform.localPosition = this.assignmentPosition;
             characterCombat.transform.localScale = Vector3.one;
+            characterCombat.SetMaterial(this.assignedCharacterMaterial);
 
             this.displayCanvas.enabled = true;
             SetHealthBar();

@@ -8,48 +8,8 @@ using BF2D.UI;
 
 namespace BF2D.Game.Combat
 {
-    [RequireComponent(typeof(Animator))]
     public class CharacterCombat : MonoBehaviour
     {
-        private class AnimatorController
-        {
-            public bool HasEvent { get => this.animEvent is not null;  }
-
-            private string animState = Strings.Animation.Idle;
-            public delegate List<string> RunEvent();
-            private RunEvent animEvent = null;
-
-            private readonly Animator animator = null;
-
-            public AnimatorController(Animator animator)
-            {
-                this.animator = animator;
-            }
-
-            public void ChangeAnimState(string newState)
-            {
-                ChangeAnimState(newState, null);
-            }
-
-            public void ChangeAnimState(string newState, RunEvent callback)
-            {
-                if (this.animState == newState) return;
-                this.animator.Play(newState);
-                this.animState = newState;
-                this.animEvent = callback;
-            }
-
-            public List<string> InvokeAnimEvent()
-            {
-                List<string> dialog = null;
-                dialog = this.animEvent?.Invoke();
-                this.animEvent = null;
-                return dialog;
-            }
-        }
-
-        private AnimatorController animatorController = null;
-
         private class EventStack
         {
             private readonly Stack<Action> eventStack = new();
@@ -57,7 +17,7 @@ namespace BF2D.Game.Combat
             public void Continue()
             {
                 if (this.eventStack.Count > 0)
-                    this.eventStack.Pop()?.Invoke();
+                    this.eventStack.Pop()();
                 else
                     Debug.LogWarning("[CharacterCombat:EventStack:Continue] Called while the stack was empty");
             }
@@ -73,6 +33,8 @@ namespace BF2D.Game.Combat
             }
         }
 
+        [SerializeField] private SpriteRenderer spriteRenderer = null;
+        [SerializeField] private AnimatorController animatorController = null;
         private readonly EventStack eventStack = new();
 
         public Actions.CombatAction CurrentCombatAction { get => this.currentCombatAction; set => this.currentCombatAction = value; }
@@ -84,11 +46,6 @@ namespace BF2D.Game.Combat
         public CharacterStats Stats { get => this.stats; set => this.stats = value; }
         private CharacterStats stats = null;
 
-        private void Awake()
-        {
-            this.animatorController = new AnimatorController(GetComponent<Animator>());
-        }
-
         #region Public Utilities
         public void SetupCombatAction(UIControl targeter, Actions.CombatAction combatAction)
         {
@@ -99,7 +56,7 @@ namespace BF2D.Game.Combat
                 this.currentCombatAction.SetupControlled(targeter);
         }
 
-        public void RunCombatEvents()
+        public void Run()
         {
             this.eventStack.PushEvent(EOTEvent);                            //Finally, end the turn
 
@@ -122,10 +79,9 @@ namespace BF2D.Game.Combat
             Destroy(this.gameObject);
         }
 
-        public void PlayAnimation(string key)
-        {
-            this.animatorController.ChangeAnimState(key);
-        }
+        public void PlayAnimation(string key) => this.animatorController.ChangeAnimState(key);
+
+        public void SetMaterial(Material material) => this.spriteRenderer.material = material;
 
         private void RefreshStatsDisplay()
         {

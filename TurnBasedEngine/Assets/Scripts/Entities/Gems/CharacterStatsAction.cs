@@ -13,12 +13,12 @@ namespace BF2D.Game.Actions
     [Serializable]
     public class CharacterStatsAction : Entity, IUtilityEntity
     {
-        public class Specs
+        public struct Specs
         {
-            public NumRandInt repeat = new(1);
-            public AuraType? hasAura = null;
-            public NumRandInt successRateModifier = new(0);
-            public NumRandInt critChanceModifier = new(0);
+            public NumRandInt repeat;
+            public AuraType? hasAura;
+            public NumRandInt successRateModifier;
+            public NumRandInt critChanceModifier;
         }
 
         public class Info

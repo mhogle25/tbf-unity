@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace BF2D.Game
 {
-    public class Numbers
+    public static class Numbers
     {
         public const float clockSpeed = 0.03125f;
-        public const int MaxPartySize = 4;
-        public const int MaxLevel = 99;
-        public const int BaseCritMultiplier = 2;
-        public const int BaseCritChance = 5;
+        public const int maxPartySize = 4;
+        public const int maxLevel = 99;
+        public const int baseCritMultiplier = 2;
+        public const int baseCritChance = 5;
     }
 }

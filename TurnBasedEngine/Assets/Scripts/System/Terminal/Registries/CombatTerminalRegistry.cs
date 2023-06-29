@@ -40,6 +40,7 @@ namespace BF2D.Game.Combat
                 { "saveconfig", TcSaveControlsConfig.Run },
                 { "loadconfig", TcLoadControlsConfig.Run },
                 { "numrand", TcNumRand.Run },
+                { "players", TcListPlayers.Run },
                 { "embueitem", TcEmbueItem.Run },
                 { "acquiregems", TcAcquireGems.Run }
             };
