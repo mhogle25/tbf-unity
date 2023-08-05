@@ -1,8 +1,6 @@
 using Newtonsoft.Json;
-using UnityEngine;
-using System;
 using System.Collections.Generic;
-using UnityEngine.TextCore.Text;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
@@ -22,7 +20,7 @@ namespace BF2D.Game
 
         [JsonIgnore] public string Description => Get().Description;
 
-        [JsonIgnore] public IEnumerable<Enums.AuraType> Auras => Get().Auras;
+        public bool ContainsAura(AuraType aura) => Get().ContainsAura(aura);
 
         [JsonIgnore] public long Experience => this.experience;
         [JsonProperty] private long experience = 0;
@@ -30,9 +28,9 @@ namespace BF2D.Game
         [JsonIgnore] public int Level => this.level;
         [JsonProperty] private int level = 1;
 
-        public Job Get() => GameCtx.Instance.GetJob(this.id);
+        [JsonIgnore] public IEnumerable<AuraType> Auras => Get().Auras;
 
-        public Entity GetEntity() => Get();
+        public Job Get() => GameCtx.One.GetJob(this.id);
 
         [JsonIgnore] public int MaxHealthModifier => Get().GetMaxHealthModifier(this.Level);
         [JsonIgnore] public int MaxStaminaModifier =>  Get().GetMaxStaminaModifier(this.Level);

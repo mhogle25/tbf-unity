@@ -59,7 +59,7 @@ namespace BF2D.Game.Combat
         #region Public Utilities
         public long GetTotalExperience()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
                 return 0;
@@ -74,7 +74,7 @@ namespace BF2D.Game.Combat
 
         public int GetTotalCurrencyLoot()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
                 return 0;
@@ -88,7 +88,7 @@ namespace BF2D.Game.Combat
 
         public int GetTotalEtherLoot()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.Ether} loot from the fight but combat wasn't over.");
                 return 0;
@@ -102,7 +102,7 @@ namespace BF2D.Game.Combat
 
         public IEnumerable<string> GetTotalItemLoot()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning($"[CombatGrid:GetTotalItemsLoot] Tried to get the total item loot from the fight but combat wasn't over.");
                 return new List<string>();
@@ -113,7 +113,7 @@ namespace BF2D.Game.Combat
 
         public IEnumerable<string> GetTotalEquipmentLoot()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning($"[CombatGrid:GetTotalEquipmentsLoot] Tried to get the total equipment loot from the fight but combat wasn't over.");
                 return new List<string>();
@@ -124,7 +124,7 @@ namespace BF2D.Game.Combat
 
         public IEnumerable<string> GetTotalGemLoot()
         {
-            if (!CombatManager.Instance.CombatIsOver())
+            if (!CombatCtx.One.CombatIsOver())
             {
                 Debug.LogWarning($"[CombatGrid:GetTotalGemsLoot] Tried to get the total gem loot from the fight but combat wasn't over.");
                 return new List<string>();

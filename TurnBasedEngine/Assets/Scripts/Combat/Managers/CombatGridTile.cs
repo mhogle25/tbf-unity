@@ -16,8 +16,6 @@ namespace BF2D.Game.Combat
         public CharacterCombat AssignedCharacter => this.assignedCharacter;
         [Header("VFX")]
         [SerializeField] private Material assignedCharacterMaterial;
-        [Header("Dependency References")]
-        [SerializeField] private CharacterTargeterControl targeter = null;
         [Space(30)]
         [Header("Display")]
         [SerializeField] private CharacterCombat assignedCharacter = null;
@@ -74,9 +72,10 @@ namespace BF2D.Game.Combat
             this.assignedCharacter = null;
         }
 
-        public void TargetAssignedCharacter()
+        public void ItemsEvent(ItemsCharacterTargeter targeter)
         {
-            this.targeter.SetSingleTarget(this.assignedCharacter);
+            if (UICtx.One.IsControlling(targeter))
+                targeter.SetSingleTarget(this.assignedCharacter);
         }
     }
 }

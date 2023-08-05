@@ -6,12 +6,12 @@ namespace BF2D.Game
     {
         public string ID { get; }
 
-        public Entity GetEntity();
-
         public string Name { get; }
 
         public string Description { get; }
 
         public IEnumerable<Enums.AuraType> Auras { get; }
+
+        public bool ContainsAura(Enums.AuraType aura);
     }
 }

@@ -175,6 +175,20 @@ namespace BF2D.UI
         }
 
         /// <summary>
+        /// Sets up a new grid if a grid is not already set up and loads a collection of options into it
+        /// </summary>
+        /// <param iconID="gridOptions">The grid options to add</param>
+        public void LoadOptions(IEnumerable<GridOption> gridOptions)
+        {
+            if (this.Width > 0 && this.Height > 0)
+                Setup(this.Width, this.Height);
+
+            if (gridOptions is not null)
+                foreach (GridOption option in gridOptions)
+                    Add(option);
+        }
+
+        /// <summary>
         /// Instantiates and adds an option to the grid
         /// </summary>
         /// <param iconID="optionData">The data for the option</param>
@@ -182,14 +196,13 @@ namespace BF2D.UI
         /// 
         public GridOption Add(GridOption.Data optionData)
         {
-            //Base case
             if (!this.optionPrefab)
             {
                 Debug.LogError("[OptionsGrid:Add] Tried to add an option to the grid from a GridOption.Data but the option prefabID was null");
                 return null;
             }
 
-            if (this.count + 1 > Size)
+            if (this.count + 1 > this.Size)
             {
                 Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return null;
@@ -210,11 +223,15 @@ namespace BF2D.UI
             return option;
         }
 
+        /// <summary>
+        /// Adds an existing option to the grid
+        /// </summary>
+        /// <param iconID="option">The existing option</param>
+        /// <returns>true if added successfully, otherwise false</returns>
+        /// 
         public bool Add(GridOption option)
         {
-
-            //Base case
-            if (this.count + 1 > Size)
+            if (this.count + 1 > this.Size)
             {
                 Debug.LogWarning("[OptionsGrid:Add] Tried to add but the grid was full");
                 return false;
@@ -238,7 +255,6 @@ namespace BF2D.UI
         /// <returns>True if the option was removed successfully, otherwise returns false</returns>
         public void Remove()
         {
-            //Base Case
             if (this.count < 1)
             {
                 Debug.LogWarning("[OptionsGrid:Remove] Tried to remove but the grid was empty");

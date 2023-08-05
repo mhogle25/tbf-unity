@@ -24,20 +24,18 @@ namespace BF2D.Game
             return info;
         }
 
-        public T Transfer(T info, IUtilityEntityHolder<T> receiver)
+        public T Transfer(T info, IUtilityEntityHolder<T> holder)
         {
-            string id = Extract(info);
-
-            if (receiver is null)
+            if (holder is null)
             {
                 Debug.LogError("[UtilityEntityHolder:Transfer] Tried to transfer an entity from a bag but the receiver given was null");
                 return null;
             }
 
-            return receiver.Acquire(id);
+            return Acquire(holder.Extract(info));
         }
 
-        public T Transfer(string id, IUtilityEntityHolder<T> receiver) => Transfer(Get(id), receiver);
+        public T Transfer(string id, IUtilityEntityHolder<T> holder) => Transfer(Get(id), holder);
 
         public string Extract(T info)
         {

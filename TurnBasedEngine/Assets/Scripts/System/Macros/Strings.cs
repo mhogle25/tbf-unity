@@ -10,6 +10,11 @@ namespace BF2D.Game
             public const string Default = "default";
             public const char GeneratedIDPrefix = '_';
 
+            public const char LeftArrowSymbol = '‹';
+            public const char RightArrowSymbol = '›';
+            public const char UpArrowSymbol = 'ˆ';
+            public const char DownArrowSymbol = 'ı';
+
             public static bool IsGeneratedID(string id)
             {
                 return id[0] == System.GeneratedIDPrefix;
@@ -17,7 +22,7 @@ namespace BF2D.Game
 
             public static string GenerateID()
             {
-                return $"{System.GeneratedIDPrefix}{Guid.NewGuid():N}";
+                return $"{System.GeneratedIDPrefix}{ Guid.NewGuid():N}";
             }
         }
 
@@ -106,7 +111,7 @@ namespace BF2D.Game
             public const string SystemThread = "system";
         }
 
-        public static string IntToStringSigned(int value)
+        public static string NonZeroToSignedString(int value)
         {
             if (value > 0)
                 return $"+{value}";

@@ -13,7 +13,7 @@ namespace BF2D.Game.Combat.Actions
 
         public IEnumerable<TargetedCharacterStatsActionSlot> TargetedGemSlots => this.Info.Get()?.OnUse.TargetedGemSlots;
 
-        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots() => Info.Use(CombatManager.Instance.CurrentCharacter.Stats.Items)?.OnUse.TargetedGemSlots;
+        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots() => Info.Use(CombatCtx.One.CurrentCharacter.Stats.Items)?.OnUse.TargetedGemSlots;
 
         public List<string> GetOpeningMessage()
         {

@@ -1,5 +1,7 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BF2D.Game
 {
@@ -27,10 +29,12 @@ namespace BF2D.Game
                 RemoveAndForget(info);
 
                 if (info.Generated)
-                    GameCtx.Instance.DeleteEquipmentIfCustom(info.ID);
+                    GameCtx.One.DeleteEquipmentIfCustom(info.ID);
             }
         }
 
         public void Destroy(string id) => Destroy(Get(id));
+
+        public IEnumerable<EquipmentInfo> FilterByType(Enums.EquipmentType type) => this.Where(equipment => equipment.Type == type);
     }
 }

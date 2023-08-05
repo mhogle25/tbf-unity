@@ -5,49 +5,49 @@ namespace BF2D.Game
 {
     public class ItemCustomizer
     {
-        public ItemCustomizer(ItemInfo itemInfo, IItemHolder owner)
+        public ItemCustomizer(ItemInfo itemInfo, IItemHolder itemOwner)
         {
             this.itemInfo = itemInfo;
-            this.owner = owner;
+            this.itemOwner = itemOwner;
         }
 
         private ItemInfo itemInfo = null;
-        private readonly IItemHolder owner = null;
+        private readonly IItemHolder itemOwner = null;
         private int index = 0;
 
         public void SetIndex(int index) => this.index = index;
 
-        public Utilities.FileWriter EmbueGem(CharacterStatsActionInfo gem, ICharacterStatsActionHolder gemOwner, string newName)
+        public Utilities.FileWriter EmbueGem(CharacterStatsActionInfo gemInfo, ICharacterStatsActionHolder gemOwner, string newName)
         {
-            Item newItem = GameCtx.Instance.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
+            Item newItem = GameCtx.One.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
 
-            TargetedCharacterStatsActionSlot[] targetedGemSlots = newItem.OnUse?.TargetedGemSlots;
+            TargetedCharacterStatsActionSlot[] slots = newItem.OnUse?.TargetedGemSlots;
 
-            if (targetedGemSlots is null || targetedGemSlots.Length < 1)
+            if (slots is null || slots.Length < 1)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item with no gem slots.");
                 return null;
             }
 
-            if (this.index < 0 || this.index >= targetedGemSlots.Length)
+            if (this.index < 0 || this.index >= slots.Length)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Tried to embue a gem to an item in an invalid slot.");
                 return null;
             }
 
-            if (gem.HasStatsUp && !newItem.Consumable)
+            if (gemInfo.HasStatsUp && !newItem.Consumable)
             {
                 Debug.LogError("[ItemCustomizer:EmbueGem] Cannot embue a stat modifier gem to a non-consumable item.");
                 return null;
             }
 
-            targetedGemSlots[this.index].SetGemID(gem.ID);
+            slots[this.index].SetGemID(gemInfo.ID);
 
-            return GameCtx.Instance.WriteItem(newItem, () =>
+            return GameCtx.One.WriteItem(newItem, () =>
             {
-                gemOwner.Extract(gem);
-                this.owner.Destroy(this.itemInfo);
-                this.itemInfo = this.owner.Acquire(newItem.ID);
+                gemOwner.Extract(gemInfo);
+                this.itemOwner.Destroy(this.itemInfo);
+                this.itemInfo = this.itemOwner.Acquire(newItem.ID);
             });
         }
     }

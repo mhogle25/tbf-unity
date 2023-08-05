@@ -33,7 +33,7 @@ namespace BF2D.Utilities
 
         private void StatePaletteOffset()
         {
-            if (this.approaching - this.ShaderOffset < this.transitionThreshold)
+            if (Math.Abs(this.approaching - this.ShaderOffset) < this.transitionThreshold)
             {
                 this.approaching = default;
                 this.state = null;

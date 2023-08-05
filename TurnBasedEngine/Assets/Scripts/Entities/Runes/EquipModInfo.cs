@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
+using BF2D.Game.Enums;
 using Newtonsoft.Json;
 using UnityEngine;
 
@@ -10,9 +11,11 @@ namespace BF2D.Game
     {
         [JsonIgnore] public override Sprite Icon { get; }
 
+        [JsonIgnore] public override string Name => Get().Name;
+
         [JsonIgnore] public override string Description => Get().Description;
 
-        [JsonIgnore] public override IEnumerable<Enums.AuraType> Auras => Get().Auras;
+        [JsonIgnore] public override IEnumerable<AuraType> Auras => Get().Auras;
 
         [JsonIgnore] public int SpeedModifier => Get().SpeedModifier;
         [JsonIgnore] public int AttackModifier => Get().AttackModifier;
@@ -27,13 +30,10 @@ namespace BF2D.Game
         public bool UpkeepEventExists() => Get().UpkeepEventExists();
         public bool EOTEventExists() => Get().EOTEventExists();
 
-        public EquipMod Get()
-        {
-            return GameCtx.Instance.GetRune(this.ID);
-        }
-
-        public override Entity GetEntity() => Get();
+        public EquipMod Get() => GameCtx.One.GetRune(this.ID);
 
         public override IUtilityEntity GetUtility() => Get();
+
+        public override bool ContainsAura(AuraType aura) => Get().ContainsAura(aura);
     }
 }

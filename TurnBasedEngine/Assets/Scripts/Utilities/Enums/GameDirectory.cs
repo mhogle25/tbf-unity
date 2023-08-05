@@ -14,7 +14,7 @@ namespace BF2D.Enums
         Persistent,
         [EnumMember]
         Streaming,
-        [EnumMember]
+          [EnumMember]
         All,
     }
 

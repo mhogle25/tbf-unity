@@ -113,8 +113,6 @@ namespace BF2D.Game.Actions
         #region Public Methods
         public bool ContainsAura(AuraType aura, Specs specs) => ContainsAura(aura) || aura == specs.hasAura;
 
-        public Entity GetEntity() => this;
-
         public string GetAnimationKey()
         {
             if (this.criticalDamage is not null || this.psychicDamage is not null || this.directDamage is not null || this.damage is not null)

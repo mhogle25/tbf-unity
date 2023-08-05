@@ -20,9 +20,7 @@ namespace BF2D.Game
         [JsonIgnore] public bool Consumable => this.consumable;
         [JsonIgnore] public TargetedGameAction OnUse => this.onUse;
         [JsonIgnore] public bool Useable => this.OnUse is not null; 
-        [JsonIgnore] public bool CombatExclusive => this.Useable && this.OnUse.CombatExclusive; 
-
-        public Entity GetEntity() => this;
+        [JsonIgnore] public bool CombatExclusive => this.Useable && this.OnUse.CombatExclusive;
 
         public string TextBreakdown(CharacterStats source)
         {

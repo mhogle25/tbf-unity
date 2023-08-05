@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace BF2D.Game
 {
     public interface IEquipmentHolder : IUtilityEntityHolder<EquipmentInfo>
@@ -13,5 +15,7 @@ namespace BF2D.Game
         /// </summary>
         /// <param name="id">The equipment info id to remove</param>
         public void Destroy(string id);
+
+        public IEnumerable<EquipmentInfo> FilterByType(Enums.EquipmentType type);
     }
 }

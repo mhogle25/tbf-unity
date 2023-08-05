@@ -5,7 +5,7 @@ using System;
 
 namespace BF2D.UI
 {
-    public abstract class OptionsGridControlPage : OptionsGridControl
+    public class OptionsGridControlPage : OptionsGridControl
     {
         public int CurrentPage { get { return this.currentPage; } }
         public int PageCount
@@ -24,7 +24,7 @@ namespace BF2D.UI
         [Header("Pages")]
         [SerializeField] private Enums.Axis pageOrientation = Enums.Axis.Horizontal;
 
-        public virtual void AddOption(GridOption.Data option)
+        protected virtual void AddOption(GridOption.Data option)
         {
             this.allOptions.Add(option);
         }
@@ -38,7 +38,7 @@ namespace BF2D.UI
             RefreshGrid(0);
         }
 
-        public virtual void ClearOptions()
+        public void ClearOptions()
         {
             this.allOptions.Clear();
             this.controlled.Clear();

@@ -15,7 +15,7 @@ namespace BF2D.Game.Actions
 
         public StatusEffect Get()
         {
-            return GameCtx.Instance.GetStatusEffect(this.ID);
+            return GameCtx.One.GetStatusEffect(this.ID);
         }
 
         public string Run(CharacterStats source, CharacterStats target)

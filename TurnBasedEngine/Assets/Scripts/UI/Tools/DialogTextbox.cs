@@ -684,7 +684,7 @@ namespace BF2D.UI
                 }
             }
 
-            UIControlsManager.StartControlGeneric(this.responseOptionsControl);
+            UICtx.StartControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.Controlled.SetCursorToFirst();
         }
 
@@ -700,7 +700,7 @@ namespace BF2D.UI
 
         private void FinalizeResponse()
         {
-            UIControlsManager.EndControlGeneric(this.responseOptionsControl);
+            UICtx.EndControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.gameObject.SetActive(false);
         }
         #endregion

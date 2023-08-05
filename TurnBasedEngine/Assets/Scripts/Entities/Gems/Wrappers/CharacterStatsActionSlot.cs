@@ -17,7 +17,7 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly NumRandInt successRateModifier = new(0);
         [JsonProperty] private readonly NumRandInt critChanceModifier = new(0);
 
-        [JsonIgnore] protected CharacterStatsAction Gem => GameCtx.Instance.GetGem(this.gemID);
+        [JsonIgnore] protected CharacterStatsAction Gem => GameCtx.One.GetGem(this.gemID);
 
         [JsonIgnore] public bool Armed => this.Gem is not null;
 

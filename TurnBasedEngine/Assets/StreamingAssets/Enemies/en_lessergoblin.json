@@ -15,11 +15,13 @@
     "toughness":1,
     "will":1,
     "fortune":1,
-    "head":"",
-    "torso":"",
-    "legs":"",
-    "hands":"",
-    "feet":"",
+    "equipment": {
+        "head":"",
+        "torso":"",
+        "legs":"",
+        "hands":"",
+        "feet":""
+    },
     "accessory":"",
     "gridPosition":0,
     "job": {

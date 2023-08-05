@@ -13,22 +13,22 @@ namespace BF2D.Game
         [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
         [JsonProperty] private string id = string.Empty;
 
-        [JsonIgnore] public string PrefabID { get => this.prefabID; }
+        [JsonIgnore] public string PrefabID => this.prefabID;
         [JsonProperty] private readonly string prefabID = string.Empty;
 
         //
         // Stats properties and peripheral data
         //
-        [JsonIgnore] public int Health { get => this.health; }
-        [JsonIgnore] public int Stamina { get => this.stamina; }
-        [JsonIgnore] public bool Dead { get => this.health < 1; }
+        [JsonIgnore] public int Health => this.health; 
+        [JsonIgnore] public int Stamina => this.stamina; 
+        [JsonIgnore] public bool Dead => this.health < 1; 
         [JsonProperty] private int health = 0;
         [JsonProperty] private int stamina = 0;
 
-        [JsonIgnore] public int Level { get => this.CurrentJob is null ? 0 : this.CurrentJob.Level; }
+        [JsonIgnore] public int Level => this.CurrentJob?.Level ?? 0; 
 
-        [JsonIgnore] public JobInfo CurrentJob { get => this.job; }
-        [JsonIgnore] public IEnumerable<JobInfo> InactiveJobs { get => this.inactiveJobs; }
+        [JsonIgnore] public JobInfo CurrentJob => this.job; 
+        [JsonIgnore] public IEnumerable<JobInfo> InactiveJobs => this.inactiveJobs; 
         [JsonProperty] private JobInfo job = null;
         [JsonProperty] private readonly List<JobInfo> inactiveJobs = new();
 
@@ -42,18 +42,8 @@ namespace BF2D.Game
                 return value;
             }
         }
-        [JsonIgnore] public int MaxHealthModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.MaxHealth) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.MaxHealth) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.MaxHealthModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Constitution { get => this.constitution; }
+        [JsonIgnore] public int MaxHealthModifier => TotalPersistentEffectModifier(CharacterStatsProperty.MaxHealth) + this.CurrentJob?.MaxHealthModifier ?? 0;
+        [JsonIgnore] public int Constitution => this.constitution; 
         [JsonProperty] private int constitution = 0;
 
         // Max stamina properties
@@ -66,18 +56,8 @@ namespace BF2D.Game
                 return value;
             }
         }
-        [JsonIgnore] public int MaxStaminaModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.MaxStamina) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.MaxStamina) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.MaxStaminaModifier)
-                ;
-            }
-        }
-        [JsonIgnore] private int Endurance { get => this.endurance; }
+        [JsonIgnore] public int MaxStaminaModifier => TotalPersistentEffectModifier(CharacterStatsProperty.MaxStamina) + this.CurrentJob?.MaxStaminaModifier ?? 0;
+        [JsonIgnore] private int Endurance => this.endurance; 
         [JsonProperty] private int endurance = 0;
 
         // Speed properties
@@ -90,18 +70,8 @@ namespace BF2D.Game
                 return value; 
             } 
         }
-        [JsonIgnore] public int SpeedModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.Speed) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.Speed) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.SpeedModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Swiftness { get => this.swiftness; }
+        [JsonIgnore] public int SpeedModifier => TotalPersistentEffectModifier(CharacterStatsProperty.Speed) + this.CurrentJob?.SpeedModifier ?? 0;
+        [JsonIgnore] public int Swiftness => this.swiftness; 
         [JsonProperty] private int swiftness = 0;
 
         // Attack properties
@@ -114,19 +84,8 @@ namespace BF2D.Game
                 return value; 
             } 
         }
-        [JsonIgnore]
-        public int AttackModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.Attack) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.Attack) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.AttackModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Strength { get => this.strength; }
+        [JsonIgnore] public int AttackModifier => TotalPersistentEffectModifier(CharacterStatsProperty.Attack) + this.CurrentJob?.AttackModifier ?? 0;
+        [JsonIgnore] public int Strength => this.strength; 
         [JsonProperty] private int strength = 0;
 
         // Defense properties
@@ -139,19 +98,8 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore]
-        public int DefenseModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.Defense) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.Defense) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.DefenseModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Toughness { get => this.toughness; }
+        [JsonIgnore] public int DefenseModifier => TotalPersistentEffectModifier(CharacterStatsProperty.Defense) + this.CurrentJob?.DefenseModifier ?? 0;
+        [JsonIgnore] public int Toughness => this.toughness; 
         [JsonProperty] private int toughness = 0;
 
         // Focus properties
@@ -164,19 +112,8 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore]
-        public int FocusModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.Focus) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.Focus) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.FocusModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Will { get => this.will; }
+        [JsonIgnore] public int FocusModifier => TotalPersistentEffectModifier(CharacterStatsProperty.Focus) + this.CurrentJob?.FocusModifier ?? 0;
+        [JsonIgnore] public int Will => this.will; 
         [JsonProperty] private int will = 0;
 
         // Luck properties
@@ -189,74 +126,58 @@ namespace BF2D.Game
                 return value;
             } 
         }
-        [JsonIgnore]
-        public int LuckModifier
-        {
-            get
-            {
-                return
-                    TotalEquipmentModifier(CharacterStatsProperty.Luck) +
-                    TotalStatusEffectModifier(CharacterStatsProperty.Luck) +
-                    (this.CurrentJob is null ? 0 : this.CurrentJob.LuckModifier)
-                ;
-            }
-        }
-        [JsonIgnore] public int Fortune { get => this.fortune; }
+        [JsonIgnore] public int LuckModifier => TotalPersistentEffectModifier(CharacterStatsProperty.Luck) + this.CurrentJob?.LuckModifier ?? 0;
+        [JsonIgnore] public int Fortune => this.fortune; 
         [JsonProperty] private int fortune = 0;
 
         // Misc
-        [JsonIgnore] public bool CritImmune { get => this.critImmune; }
+        [JsonIgnore] public bool CritImmune => this.critImmune; 
         [JsonProperty] private bool critImmune = false;
 
         //
         // Equipment Properties
         //
-        [JsonIgnore] public Equipment Head { get => string.IsNullOrEmpty(this.head) ? null : GameCtx.Instance.GetEquipment(this.head); }
-        [JsonIgnore] public Equipment Torso { get => string.IsNullOrEmpty(this.torso) ? null : GameCtx.Instance.GetEquipment(this.torso); }
-        [JsonIgnore] public Equipment Legs { get => string.IsNullOrEmpty(this.legs) ? null : GameCtx.Instance.GetEquipment(this.legs); }
-        [JsonIgnore] public Equipment Hands { get => string.IsNullOrEmpty(this.hands) ? null : GameCtx.Instance.GetEquipment(this.hands); }
-        [JsonIgnore] public Equipment Feet { get => string.IsNullOrEmpty(this.feet) ? null : GameCtx.Instance.GetEquipment(this.feet); }
-        [JsonIgnore] public Equipment Accessory { get => string.IsNullOrEmpty(this.accessory) ? null : GameCtx.Instance.GetEquipment(this.accessory); }
+        [JsonProperty] private readonly EquipmentStats equipped = new();
 
-        [JsonProperty] private string head = null;
-        [JsonProperty] private string torso = null;
-        [JsonProperty] private string legs = null;
-        [JsonProperty] private string hands = null;
-        [JsonProperty] private string feet = null;
-        [JsonProperty] private string accessory = null;
+        [JsonIgnore] public Equipment Head => this.equipped.Head;
+        [JsonIgnore] public Equipment Torso => this.equipped.Torso;
+        [JsonIgnore] public Equipment Legs => this.equipped.Legs;
+        [JsonIgnore] public Equipment Hands => this.equipped.Hands;
+        [JsonIgnore] public Equipment Feet => this.equipped.Feet;
+        [JsonIgnore] public Equipment Accessory => this.equipped.Accessory;
 
         //
         // Active status effects
         //
-        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects { get => this.statusEffects; }
+        [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects => this.statusEffects; 
         [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
 
         //
         // Carrying
         //
-        [JsonIgnore] public int ItemsCount { get => this.items.Count; }
-        [JsonIgnore] public IItemHolder Items { get => this.items; }
+        [JsonIgnore] public int ItemsCount => this.items.Count; 
+        [JsonIgnore] public IItemHolder Items => this.items; 
         [JsonProperty] private readonly ItemHolder items = new();
 
-        [JsonIgnore] public int EquipmentsCount { get => this.equipments.Count; }
-        [JsonIgnore] public IEquipmentHolder Equipments { get => this.equipments; }
+        [JsonIgnore] public int EquipmentsCount => this.equipments.Count;
+        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments; 
         [JsonProperty] private readonly EquipmentHolder equipments = new();
 
         //
         // Combat Properties
         // 
-        [JsonIgnore] public Combat.CharacterCombatAI CombatAI { get => this.combatAI; }
+        [JsonIgnore] public Combat.CharacterCombatAI CombatAI => this.combatAI; 
         [JsonProperty] private readonly Combat.CharacterCombatAI combatAI = new();
 
-        [JsonIgnore] public int GridPosition { get => this.gridPosition; }
+        [JsonIgnore] public int GridPosition => this.gridPosition; 
         [JsonProperty] private int gridPosition = 0;
 
         // Loot
-        [JsonIgnore] public IEnumerable<EntityLoot> ItemLoot { get => this.itemLoot; }
-        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentLoot { get => this.equipmentLoot; }
-        [JsonIgnore] public IEnumerable<EntityLoot> GemLoot { get => this.gemLoot; }
-        [JsonIgnore] public int CurrencyLoot { get => this.currencyLoot; }
-        [JsonIgnore] public int EtherLoot { get => this.etherLoot; }
+        [JsonIgnore] public IEnumerable<EntityLoot> ItemLoot => this.itemLoot; 
+        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentLoot => this.equipmentLoot; 
+        [JsonIgnore] public IEnumerable<EntityLoot> GemLoot => this.gemLoot; 
+        [JsonIgnore] public int CurrencyLoot => this.currencyLoot; 
+        [JsonIgnore] public int EtherLoot => this.etherLoot; 
         [JsonProperty] private readonly List<EntityLoot> itemLoot = new();
         [JsonProperty] private readonly List<EntityLoot> equipmentLoot = new();
         [JsonProperty] private readonly List<EntityLoot> gemLoot = new();
@@ -264,20 +185,17 @@ namespace BF2D.Game
         [JsonProperty] private readonly int etherLoot = 0;
 
         #region Stats Property Actions
-        public int GetStatsProperty(CharacterStatsProperty property)
+        public int GetStatsProperty(CharacterStatsProperty property) => property switch
         {
-            return property switch
-            {
-                CharacterStatsProperty.Speed => this.Speed,
-                CharacterStatsProperty.Attack => this.Attack,
-                CharacterStatsProperty.Defense => this.Defense,
-                CharacterStatsProperty.Focus => this.Focus,
-                CharacterStatsProperty.Luck => this.Luck,
-                CharacterStatsProperty.MaxHealth => this.MaxHealth,
-                CharacterStatsProperty.MaxStamina => this.MaxStamina,
-                _ => 0
-            };
-        }
+            CharacterStatsProperty.Speed => this.Speed,
+            CharacterStatsProperty.Attack => this.Attack,
+            CharacterStatsProperty.Defense => this.Defense,
+            CharacterStatsProperty.Focus => this.Focus,
+            CharacterStatsProperty.Luck => this.Luck,
+            CharacterStatsProperty.MaxHealth => this.MaxHealth,
+            CharacterStatsProperty.MaxStamina => this.MaxStamina,
+            _ => throw new ArgumentException("[CharacterStats:GetStatsProperty] The given CharacterStatsProperty was null or invalid")
+        };
 
         public int Damage(int damage)
         {
@@ -312,9 +230,7 @@ namespace BF2D.Game
             int value = healing > 0 ? healing : 1;
 
             if (this.health + value > this.MaxHealth)
-            {
                 return ResetHealth();
-            }
 
             this.health += value;
             return value;
@@ -325,9 +241,7 @@ namespace BF2D.Game
             int value = recovery > 0 ? recovery : 1;
 
             if (this.stamina + value > this.MaxStamina)
-            {
                 return ResetStamina();
-            }
 
             this.stamina += value;
             return value;
@@ -436,62 +350,19 @@ namespace BF2D.Game
             }
 
             string id = this.Equipments.Extract(info);
-            EquipByType(equipment.Type, id);
+            this.equipped.SetEquipped(equipment.Type, id);
         }
 
         public void Unequip(EquipmentType equipmentType)
         {
-            string id = GetEquippedID(equipmentType);
-            EquipByType(equipmentType, null);
+            string id = this.equipped.GetEquippedID(equipmentType);
+            this.equipped.SetEquipped(equipmentType, null);
             this.Equipments.Acquire(id);
         }
 
-        public bool IsEquipped(EquipmentType equipmentType)
-        {
-            return !string.IsNullOrEmpty(GetEquippedID(equipmentType));
-        }
+        public bool Equipped(EquipmentType equipmentType) => this.equipped.Equipped(equipmentType);
 
-        public Equipment GetEquipped(EquipmentType equipmentType)
-        {
-            return equipmentType switch
-            {
-                EquipmentType.Accessory => this.Accessory,
-                EquipmentType.Head => this.Head,
-                EquipmentType.Torso => this.Torso,
-                EquipmentType.Hands => this.Hands,
-                EquipmentType.Legs => this.Legs,
-                EquipmentType.Feet => this.Feet,
-                _ => null,
-            };
-        }
-
-        private string GetEquippedID(EquipmentType equipmentType)
-        {
-            return equipmentType switch
-            {
-                EquipmentType.Accessory => this.accessory,
-                EquipmentType.Head => this.head,
-                EquipmentType.Torso => this.torso,
-                EquipmentType.Hands => this.hands,
-                EquipmentType.Legs => this.legs,
-                EquipmentType.Feet => this.feet,
-                _ => null,
-            };
-        }
-
-        private void EquipByType(EquipmentType equipmentType, string equipmentID)
-        {
-            switch (equipmentType)
-            {
-                case EquipmentType.Accessory: this.accessory = equipmentID; break;
-                case EquipmentType.Head: this.head = equipmentID; break;
-                case EquipmentType.Torso: this.torso = equipmentID; break;
-                case EquipmentType.Hands: this.hands = equipmentID; break;
-                case EquipmentType.Legs: this.legs = equipmentID; break;
-                case EquipmentType.Feet: this.feet = equipmentID; break;
-                default: Debug.LogError($"[CharacterStats:EquipByType] Tried to equip an equipment that didn't have a type to {this.Name}"); return;
-            }
-        }
+        public Equipment GetEquipped(EquipmentType equipmentType) => this.equipped.GetEquipped(equipmentType);
 
         private int TotalEquipmentModifier(CharacterStatsProperty property)
         {
@@ -499,7 +370,7 @@ namespace BF2D.Game
             foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
             {
                 Equipment equipment = GetEquipped(equipmentType);
-                total += equipment is not null ? equipment.GetModifier(property) : 0;
+                total += equipment?.GetModifier(property) ?? 0;
             }
             return total;
         }
@@ -553,6 +424,10 @@ namespace BF2D.Game
             }
             return total;
         }
+        #endregion
+
+        #region Private Utilities
+        private int TotalPersistentEffectModifier(CharacterStatsProperty property) => TotalEquipmentModifier(property) + TotalStatusEffectModifier(property);
         #endregion
     }
 }
