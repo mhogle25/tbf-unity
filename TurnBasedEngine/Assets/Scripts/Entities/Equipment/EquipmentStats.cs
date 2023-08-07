@@ -8,19 +8,19 @@ namespace BF2D.Game
     [Serializable]
     public class EquipmentStats
     {
+        [JsonProperty] private string accessory = null;
         [JsonProperty] private string head = null;
         [JsonProperty] private string torso = null;
         [JsonProperty] private string legs = null;
         [JsonProperty] private string hands = null;
         [JsonProperty] private string feet = null;
-        [JsonProperty] private string accessory = null;
 
+        [JsonIgnore] public Equipment Accessory => Get(this.accessory);
         [JsonIgnore] public Equipment Head => Get(this.head);
         [JsonIgnore] public Equipment Torso => Get(this.torso);
         [JsonIgnore] public Equipment Legs => Get(this.legs);
         [JsonIgnore] public Equipment Hands => Get(this.hands);
         [JsonIgnore] public Equipment Feet => Get(this.feet);
-        [JsonIgnore] public Equipment Accessory => Get(this.accessory);
 
         private Equipment Get(string id) => string.IsNullOrEmpty(id) ? null : GameCtx.One.GetEquipment(id);
 
@@ -58,10 +58,8 @@ namespace BF2D.Game
             EquipmentType[] types = Enum.GetValues(typeof(EquipmentType)) as EquipmentType[];
             int total = 0;
             foreach (EquipmentType equipmentType in types)
-            {
                 if (!string.IsNullOrEmpty(seriesID) && GetEquipped(equipmentType)?.SeriesID == seriesID)
                     total++;
-            }
             return total * 100 / (types?.Length ?? 1);
         }
     }

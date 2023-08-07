@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using BF2D.Enums;
 using System.Collections.Generic;
 
 namespace BF2D.UI
@@ -13,7 +11,13 @@ namespace BF2D.UI
         protected override void Awake()
         {
             base.Awake();
-            this.controlled.LoadOptions(this.initGridOptions);
+            GridInitialize();
+        }
+
+        public void GridInitialize()
+        {
+            if (!this.Controlled.Initialized)
+                this.Controlled.LoadOptions(this.initGridOptions);
         }
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
 using TMPro;
 using BF2D.Enums;
-using BF2D.Attributes;
 
 namespace BF2D.UI {
 
@@ -19,24 +17,22 @@ namespace BF2D.UI {
         /// <summary>
         /// Sets up an instantiated option
         /// </summary>
-        /// <param iconID="optionData">The data in the option</param>
+        /// <param name="data">The data in the option</param>
         /// <returns>True if setup is successful, otherwise returns false</returns>
-        public override bool Setup(Data optionData)
+        public override bool Setup(Data data)
         {
-            this.gameObject.name = optionData.name;
-            Data data = optionData;
+            this.gameObject.name = data.name ?? this.gameObject.name;
 
             SetupText(data.text);
             SetupIcon(data.icon);
 
-            foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
-            {
-                if (data.actions[inputButton] != null)
+            if (data.actions is not null) {
+                foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
                 {
-                    GetInputEvent(inputButton).AddListener(() =>
-                    {
-                        data.actions[inputButton]();
-                    });
+                    if (data.actions[inputButton] is null)
+                        continue;
+
+                    GetInputEvent(inputButton).AddListener(data.actions[inputButton].Invoke);
                 }
             }
 

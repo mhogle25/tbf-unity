@@ -57,6 +57,11 @@ namespace BF2D.UI
         [SerializeField] private AudioSource selectAudioSource = null;
 
         /// <summary>
+        /// True if the grid has been set up, otherwise false
+        /// </summary>
+        public bool Initialized => this.grid is not null;
+
+        /// <summary>
         /// The area of the grid (width * height)
         /// </summary>
         public int Size => this.gridWidth * this.gridHeight;
@@ -116,10 +121,7 @@ namespace BF2D.UI
 
         public Vector2Int CursorPosition
         {
-            get
-            {
-                return this.cursorPosition;
-            }
+            get => this.cursorPosition;
             set
             {
                 if (!ValidPosition(value))
@@ -137,18 +139,12 @@ namespace BF2D.UI
             }
         }
 
-        public int CursorPosition1D
+        public int CursorPosition1D => this.instantiationAxis switch
         {
-            get
-            {
-                return this.instantiationAxis switch
-                {
-                    Axis.Horizontal => (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x,
-                    Axis.Vertical => (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y,
-                    _ => throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}"),
-                };
-            }
-        }
+            Axis.Horizontal => (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x,
+            Axis.Vertical => (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y,
+            _ => throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}"),
+        };
 
         protected GridOption[,] grid = null;
         protected int count = 0;
@@ -159,8 +155,8 @@ namespace BF2D.UI
         /// <summary>
         /// Sets up a new grid, clearing any previous data
         /// </summary>
-        /// <param iconID="width">The new grid width</param>
-        /// <param iconID="height">The new grid height</param>
+        /// <param mane="width">The new grid width</param>
+        /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
             //Clean up anything that could be left over
@@ -177,7 +173,7 @@ namespace BF2D.UI
         /// <summary>
         /// Sets up a new grid if a grid is not already set up and loads a collection of options into it
         /// </summary>
-        /// <param iconID="gridOptions">The grid options to add</param>
+        /// <param name="gridOptions">The grid options to add</param>
         public void LoadOptions(IEnumerable<GridOption> gridOptions)
         {
             if (this.Width > 0 && this.Height > 0)
@@ -191,7 +187,7 @@ namespace BF2D.UI
         /// <summary>
         /// Instantiates and adds an option to the grid
         /// </summary>
-        /// <param iconID="optionData">The data for the option</param>
+        /// <param name="optionData">The data for the option</param>
         /// <returns>The UI option object</returns>
         /// 
         public GridOption Add(GridOption.Data optionData)
@@ -226,7 +222,7 @@ namespace BF2D.UI
         /// <summary>
         /// Adds an existing option to the grid
         /// </summary>
-        /// <param iconID="option">The existing option</param>
+        /// <param name="option">The existing option</param>
         /// <returns>true if added successfully, otherwise false</returns>
         /// 
         public bool Add(GridOption option)
@@ -404,7 +400,7 @@ namespace BF2D.UI
         {
             if (this.grid is null)
             {
-                Debug.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
+                Debug.LogError($"[OptionsGrid:InvokeEvent] Tried to invoke the {inputButton} event of {this.name} at position ({this.cursorPosition.x}, {this.cursorPosition.y}) but the grid was null");
                 return;
             }
 
@@ -418,7 +414,7 @@ namespace BF2D.UI
         /// <summary>
         /// Navigate through the grid
         /// </summary>
-        /// <param iconID="direction">The direction of navigation</param>
+        /// <param name="direction">The direction of navigation</param>
         public void Navigate(InputDirection direction)
         {
             if (this.Interactable && this.gameObject.activeSelf && this.count > 0)
@@ -493,15 +489,9 @@ namespace BF2D.UI
             return this.grid[position.x, position.y];
         }
 
-        public bool Exists(Vector2Int position)
-        {
-            return At(position) != null;
-        }
+        public bool Exists(Vector2Int position) => At(position) != null;
 
-        public bool ValidPosition(Vector2Int position)
-        {
-            return position.x < this.gridWidth && position.x >= 0 && position.y < this.gridHeight && position.y >= 0;
-        }
+        public bool ValidPosition(Vector2Int position) => position.x < this.gridWidth && position.x >= 0 && position.y < this.gridHeight && position.y >= 0;
         #endregion
 
         #region Public Overrides
@@ -625,45 +615,36 @@ namespace BF2D.UI
             }
         }
 
-        private AudioSource GetAudioSource(InputButton inputButton)
+        private AudioSource GetAudioSource(InputButton inputButton) => inputButton switch
         {
-            return inputButton switch
-            {
-                InputButton.Confirm => this.confirmAudioSource,
-                InputButton.Back => this.backAudioSource,
-                InputButton.Menu => this.menuAudioSource,
-                InputButton.Special => this.specialAudioSource,
-                InputButton.Pause => this.pauseAudioSource,
-                InputButton.Select => this.selectAudioSource,
-                _ => throw new ArgumentException("[OptionsGrid:GetAudioSource] InputButton was null or invalid")
-            };
-        }
+            InputButton.Confirm => this.confirmAudioSource,
+            InputButton.Back => this.backAudioSource,
+            InputButton.Menu => this.menuAudioSource,
+            InputButton.Special => this.specialAudioSource,
+            InputButton.Pause => this.pauseAudioSource,
+            InputButton.Select => this.selectAudioSource,
+            _ => throw new ArgumentException("[OptionsGrid:GetAudioSource] InputButton was null or invalid")
+        };
 
-        private bool ButtonEnabled(InputButton inputButton)
+        private bool ButtonEnabled(InputButton inputButton) => inputButton switch
         {
-            return inputButton switch
-            {
-                InputButton.Confirm => this.confirmEnabled,
-                InputButton.Back => this.backEnabled,
-                InputButton.Menu => this.menuEnabled,
-                InputButton.Special => this.specialEnabled,
-                InputButton.Pause => this.pauseEnabled,
-                InputButton.Select => this.selectEnabled,
-                _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputButton was null or invalid")
-            };
-        }
+            InputButton.Confirm => this.confirmEnabled,
+            InputButton.Back => this.backEnabled,
+            InputButton.Menu => this.menuEnabled,
+            InputButton.Special => this.specialEnabled,
+            InputButton.Pause => this.pauseEnabled,
+            InputButton.Select => this.selectEnabled,
+            _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputButton was null or invalid")
+        };
 
-        private InputDirection InvertDirection(InputDirection direction)
+        private InputDirection InvertDirection(InputDirection direction) => direction switch
         {
-            return direction switch
-            {
-                InputDirection.Up => InputDirection.Down,
-                InputDirection.Left => InputDirection.Right,
-                InputDirection.Down => InputDirection.Up,
-                InputDirection.Right => InputDirection.Left,
-                _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputDirection was null or invalid")
-            };
-        }
+            InputDirection.Up => InputDirection.Down,
+            InputDirection.Left => InputDirection.Right,
+            InputDirection.Down => InputDirection.Up,
+            InputDirection.Right => InputDirection.Left,
+            _ => throw new ArgumentException("[OptionsGrid:ButtonEnabled] InputDirection was null or invalid")
+        };
 
         private Vector2Int DirectionalBFS(Vector2Int startingPosition, InputDirection direction)
         {

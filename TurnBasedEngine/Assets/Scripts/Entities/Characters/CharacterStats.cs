@@ -135,7 +135,7 @@ namespace BF2D.Game
         [JsonProperty] private bool critImmune = false;
 
         //
-        // Equipment Properties
+        // Equipped
         //
         [JsonProperty] private readonly EquipmentStats equipped = new();
 
@@ -147,7 +147,7 @@ namespace BF2D.Game
         [JsonIgnore] public Equipment Accessory => this.equipped.Accessory;
 
         //
-        // Active status effects
+        // Status effects
         //
         [JsonIgnore] public IEnumerable<StatusEffectInfo> StatusEffects => this.statusEffects; 
         [JsonProperty] private readonly List<StatusEffectInfo> statusEffects = new();
@@ -159,9 +159,9 @@ namespace BF2D.Game
         [JsonIgnore] public IItemHolder Items => this.items; 
         [JsonProperty] private readonly ItemHolder items = new();
 
-        [JsonIgnore] public int EquipmentsCount => this.equipments.Count;
-        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments; 
-        [JsonProperty] private readonly EquipmentHolder equipments = new();
+        [JsonIgnore] public int EquipmentCount => this.equipment.Count;
+        [JsonIgnore] public IEquipmentHolder Equipment => this.equipment; 
+        [JsonProperty] private readonly EquipmentHolder equipment = new();
 
         //
         // Combat Properties
@@ -254,6 +254,7 @@ namespace BF2D.Game
             return value;
         }
 
+        /// <returns>The amount of health restored</returns>
         public int ResetHealth()
         {
             int healthBefore = this.Health;
@@ -261,6 +262,7 @@ namespace BF2D.Game
             return this.Health - healthBefore;
         }
 
+        /// <returns>The amount of stamina restored</returns>
         public int ResetStamina()
         {
             int staminaBefore = this.Stamina;
@@ -349,7 +351,7 @@ namespace BF2D.Game
                 return;
             }
 
-            string id = this.Equipments.Extract(info);
+            string id = this.Equipment.Extract(info);
             this.equipped.SetEquipped(equipment.Type, id);
         }
 
@@ -357,12 +359,13 @@ namespace BF2D.Game
         {
             string id = this.equipped.GetEquippedID(equipmentType);
             this.equipped.SetEquipped(equipmentType, null);
-            this.Equipments.Acquire(id);
+            this.Equipment.Acquire(id);
         }
 
         public bool Equipped(EquipmentType equipmentType) => this.equipped.Equipped(equipmentType);
 
         public Equipment GetEquipped(EquipmentType equipmentType) => this.equipped.GetEquipped(equipmentType);
+        public string GetEquippedID(EquipmentType equipmentType) => this.equipped.GetEquippedID(equipmentType);
 
         private int TotalEquipmentModifier(CharacterStatsProperty property)
         {

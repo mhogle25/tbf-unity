@@ -12,8 +12,8 @@ namespace BF2D.UI
         {
             get
             {
-                return (this.allOptions.Count + this.controlled.Size - 1) /
-                    this.controlled.Size;
+                return (this.allOptions.Count + this.Controlled.Size - 1) /
+                    this.Controlled.Size;
             }
         }
         public Enums.Axis PageOrientation { get { return this.pageOrientation; } set { this.pageOrientation = value; } }
@@ -41,7 +41,7 @@ namespace BF2D.UI
         public void ClearOptions()
         {
             this.allOptions.Clear();
-            this.controlled.Clear();
+            this.Controlled.Clear();
         }
 
         public virtual void OnNavigate(OptionsGrid.NavigateInfo info)
@@ -51,13 +51,13 @@ namespace BF2D.UI
 
             int dimensionPrev = info.cursorPositionPrev.x;
             int dimension = info.cursorPosition.x;
-            int dimensionMax = this.controlled.Width - 1;
+            int dimensionMax = this.Controlled.Width - 1;
 
             if (this.PageOrientation == Enums.Axis.Vertical)
             {
                 dimensionPrev = info.cursorPositionPrev.y;
                 dimension = info.cursorPosition.y;
-                dimensionMax = this.controlled.Height - 1;
+                dimensionMax = this.Controlled.Height - 1;
             }
 
             if (dimensionPrev == dimensionMax && dimension == 0)
@@ -75,28 +75,28 @@ namespace BF2D.UI
 
         protected void RefreshGrid(int index)
         {
-            this.controlled.Clear();
+            this.Controlled.Clear();
 
             if (this.allOptions.Count < 1)
                 return;
 
-            int startingIndex = this.controlled.Size * index;
-            int count = this.controlled.Size;
+            int startingIndex = this.Controlled.Size * index;
+            int count = this.Controlled.Size;
             if (count > this.allOptions.Count - startingIndex)
                 count = this.allOptions.Count - startingIndex;
 
             foreach (GridOption.Data data in this.allOptions.GetRange(startingIndex, count))
             {
-                GridOption gridOption = this.controlled.Add(data);
+                GridOption gridOption = this.Controlled.Add(data);
                 gridOption.SetCursor(false);
             }
 
-            if (!this.controlled.Exists(this.controlled.CursorPosition))
+            if (!this.Controlled.Exists(this.Controlled.CursorPosition))
             {
-                this.controlled.CursorPosition = this.controlled.LastOptionPosition;
+                this.Controlled.CursorPosition = this.Controlled.LastOptionPosition;
             }
 
-            this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, true);
+            this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, true);
         }
     }
 }

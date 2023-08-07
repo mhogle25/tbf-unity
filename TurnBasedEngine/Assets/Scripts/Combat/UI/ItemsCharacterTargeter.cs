@@ -33,10 +33,10 @@ namespace BF2D.Game.Combat
         public override void ControlFinalize() 
         {
             this.orphanedTextbox.View.gameObject.SetActive(false);
-            if (this.controlled)
+            if (this.Controlled)
             {
-                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
-                this.controlled.UtilityFinalize();
+                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+                this.Controlled.UtilityFinalize();
             }
         }
 
@@ -106,10 +106,10 @@ namespace BF2D.Game.Combat
 
         private void Continue()
         {
-            if (this.controlled)
+            if (this.Controlled)
             {
-                this.controlled.SetCursorAtPosition(this.controlled.CursorPosition, false);
-                this.controlled.UtilityFinalize();
+                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+                this.Controlled.UtilityFinalize();
             }
 
             if (this.stagedTargetedGemSlots.Count < 1) 
@@ -132,12 +132,12 @@ namespace BF2D.Game.Combat
             this.orphanedTextbox.Dialog("di_targeter", 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
-                if (this.controlled && this.controlled.Interactable)
-                    this.controlled.UtilityFinalize();
+                if (this.Controlled && this.Controlled.Interactable)
+                    this.Controlled.UtilityFinalize();
 
-                this.controlled = followUp;
-                this.controlled.UtilityInitialize();
-                this.controlled.SetCursorToFirst();
+                this.Controlled = followUp;
+                this.Controlled.UtilityInitialize();
+                this.Controlled.SetCursorToFirst();
                 this.orphanedTextbox.messageInterrupt = default;
                 this.orphanedTextbox.autoPass = default;
             },

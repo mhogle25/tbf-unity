@@ -19,7 +19,7 @@ namespace BF2D.Game.Combat
         {
             this.items.Clear();
             this.ClearOptions();
-            this.controlled.Setup(this.controlled.Width, this.controlled.Height);
+            this.Controlled.Setup(this.Controlled.Width, this.Controlled.Height);
 
             foreach (ItemInfo item in CombatCtx.One.CurrentCharacter.Stats.Items.Useable)
             {
@@ -31,7 +31,7 @@ namespace BF2D.Game.Combat
 
             if (CombatCtx.One.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.controlled.Add(new GridOption.Data
+                this.Controlled.Add(new GridOption.Data
                 {
                     name = Strings.Game.Bag,
                     text = "NULL",
@@ -40,7 +40,7 @@ namespace BF2D.Game.Combat
                         [InputButton.Back] = () =>
                         {
                             UICtx.One.PassControlBack();
-                            this.controlled.View.gameObject.SetActive(false);
+                            this.Controlled.View.gameObject.SetActive(false);
                         }
                     }
                 });
@@ -48,7 +48,7 @@ namespace BF2D.Game.Combat
 
             OnNavigate(new OptionsGrid.NavigateInfo
             {
-                cursorPosition1D = this.controlled.CursorPosition1D
+                cursorPosition1D = this.Controlled.CursorPosition1D
             });
 
             base.ControlInitialize();
@@ -67,7 +67,7 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            Item item = this.items[info.cursorPosition1D + this.controlled.Size * this.CurrentPage];
+            Item item = this.items[info.cursorPosition1D + this.Controlled.Size * this.CurrentPage];
             this.nameText.text = item.Name;
             this.descriptionText.text = item.TextBreakdown(currentCharacter);
         }
@@ -84,12 +84,12 @@ namespace BF2D.Game.Combat
                     [InputButton.Confirm] = () =>
                     {
                         CombatCtx.One.SetupItemCombat(item);
-                        this.controlled.View.gameObject.SetActive(false);
+                        this.Controlled.View.gameObject.SetActive(false);
                     },
                     [InputButton.Back] = () =>
                     {
                         UICtx.One.PassControlBack();
-                        this.controlled.View.gameObject.SetActive(false);
+                        this.Controlled.View.gameObject.SetActive(false);
                     }
                 }
             };

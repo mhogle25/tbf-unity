@@ -41,8 +41,7 @@ namespace BF2D.Game.Combat
             GameCtx.One.StageCombatInfo(new CombatCtx.InitializeInfo
             {
                 players = GameCtx.One.ActivePlayers,
-                enemies = enemies,
-                themePaletteOffset = 0.55f
+                enemies = enemies
             }); 
         }
     }

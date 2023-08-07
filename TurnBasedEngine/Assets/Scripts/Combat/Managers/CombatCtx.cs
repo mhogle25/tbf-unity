@@ -14,7 +14,7 @@ namespace BF2D.Game.Combat
             public IEnumerable<CharacterStats> players = null;
             public IEnumerable<CharacterStats> enemies = null;
             public string openingDialogKey = $"di_opening_{Strings.System.Default}";
-            public float themePaletteOffset = 0.26f;
+            public float themePaletteOffset = 0.3f;
         }
 
         [Header("UI")]
@@ -110,7 +110,7 @@ namespace BF2D.Game.Combat
                 string equipmentLootMessage = string.Empty;
                 foreach (string id in this.combatGrid.GetTotalEquipmentLoot())
                 {
-                    EquipmentInfo equipmentInfo = GameCtx.One.PartyEquipments.Acquire(id);
+                    EquipmentInfo equipmentInfo = GameCtx.One.PartyEquipment.Acquire(id);
                     if (equipmentInfo is not null)
                         equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
                 }
@@ -227,7 +227,7 @@ namespace BF2D.Game.Combat
         #region Listeners
         private void CombatInfoListen()
         {
-            CombatCtx.InitializeInfo combatInfo = GameCtx.One.UnstageCombatInfo();
+            InitializeInfo combatInfo = GameCtx.One.UnstageCombatInfo();
             if (combatInfo is null)
                 return;
 
@@ -245,7 +245,7 @@ namespace BF2D.Game.Combat
             return true;
         }
 
-        private void Initialize(CombatCtx.InitializeInfo initInfo)
+        private void Initialize(InitializeInfo initInfo)
         {
             this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 

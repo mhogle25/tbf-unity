@@ -1,9 +1,5 @@
-using System.Collections.Generic;
 using UnityEngine;
 using BF2D.UI;
-using BF2D.Game.Enums;
-using System;
-using BF2D.Enums;
 using UnityEngine.Events;
 
 namespace BF2D.Game.Combat
@@ -13,12 +9,28 @@ namespace BF2D.Game.Combat
         [Header("Platforms")]
         [SerializeField] private UnityEvent platformsOnConfirm = new();
         [Header("Equipped")]
-        [SerializeField] private OptionsGridControl equipped = null;
-        [SerializeField] private InputEvents equippedEvents = null;
+        [SerializeField] private EquippedListControl equipped = null;
         [Header("Bag")]
         [SerializeField] private EquipmentBagControl equipmentBag = null;
 
-        private readonly List<EquipmentType> currentEquipped = new();
+        public override void ControlInitialize()
+        {
+            base.ControlInitialize();
+            this.equipped.GridInitialize();
+            PlatformsOnNavigate(new OptionsGrid.NavigateInfo
+            {
+                cursorPosition = this.Controlled.CursorPosition
+            });
+        }
+
+        public override void ControlFinalize()
+        {
+            if (this.Controlled)
+            {
+                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+                base.ControlFinalize();
+            }
+        }
 
         public void PlatformOnConfirm()
         {
@@ -31,55 +43,21 @@ namespace BF2D.Game.Combat
             if (!UICtx.One.IsControlling(this))
                 return;
 
-            GridOption option = this.controlled.At(info.cursorPosition);
-            CombatGridTile tile = option as CombatGridTile;
+            GridOption selectedPlatform = this.Controlled.At(info.cursorPosition);
+            CombatGridTile tile = selectedPlatform as CombatGridTile;
 
             if (!tile)
             {
-                Debug.LogError($"[EquipMenuControl:PlatformsOnNavigate] Grid option in player platforms was not a tile -> {option.name}");
+                Debug.LogError($"[EquipMenuControl:PlatformsOnNavigate] Grid option in player platforms was not a tile -> {selectedPlatform.name}");
                 return;
             }
 
-            SetupEquipped(tile.AssignedCharacter.Stats);
+            this.equipped.SetupEquippedList(tile.AssignedCharacter.Stats);
         }
 
         public void EquippedOnNavigate(OptionsGrid.NavigateInfo info)
         {
-            if (!UICtx.One.IsControlling(this.equipped))
-                return;
 
-            EquipmentType type = this.currentEquipped[info.cursorPosition1D];
-            IEnumerable<EquipmentInfo> equipments = CombatCtx.One.CurrentCharacter.Stats.Equipments.FilterByType(type);
-
-            this.equipmentBag.LoadOptionsFromInfos(equipments);
-        }
-
-        private void SetupEquipped(CharacterStats stats)
-        {
-            OptionsGrid grid = this.equipped.Controlled;
-            grid.Setup(grid.Width, grid.Height);
-
-            if (this.currentEquipped.Count < 1)
-                foreach (EquipmentType type in Enum.GetValues(typeof(EquipmentType)))
-                    this.currentEquipped.Add(type);
-
-            foreach (EquipmentType type in Enum.GetValues(typeof(EquipmentType)))
-            {
-                Equipment equipment = stats.GetEquipped(type);
-
-                GridOption.Data data = new()
-                {
-                    name = equipment?.Name,
-                    icon = equipment?.GetIcon(),
-                    actions = equipment is not null ? new InputButtonCollection<Action>
-                    {
-                        [InputButton.Confirm] = this.equippedEvents.ConfirmEvent.Invoke,
-                        [InputButton.Back] = this.equippedEvents.BackEvent.Invoke
-                    } : null
-                };
-
-                grid.Add(data);
-            }
         }
     }
 }

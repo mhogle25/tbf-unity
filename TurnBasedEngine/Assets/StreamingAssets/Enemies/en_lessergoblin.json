@@ -15,7 +15,7 @@
     "toughness":1,
     "will":1,
     "fortune":1,
-    "equipment": {
+    "equipped": {
         "head":"",
         "torso":"",
         "legs":"",
@@ -47,7 +47,7 @@
             "count":1
         }
     ],
-    "equipments": 
+    "equipment": 
     [
 
     ],

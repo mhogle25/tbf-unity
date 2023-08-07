@@ -34,7 +34,7 @@ namespace BF2D.Game
         public CharacterStats[] InactivePlayers => this.currentSave?.Party.InactiveCharacters;
 
         public IItemHolder PartyItems => this.currentSave?.Party.Items;
-        public IEquipmentHolder PartyEquipments => this.currentSave?.Party.Equipments;
+        public IEquipmentHolder PartyEquipment => this.currentSave?.Party.Equipment;
         public ICharacterStatsActionHolder PartyGems => this.currentSave?.Party.Gems;
 
         public int Currency { get => this.currentSave.Party.Currency; set => this.currentSave.Party.Currency = value; }

@@ -20,7 +20,7 @@ namespace BF2D.UI
 
         private Stack<UIControl> CurrentStack => this.controlHistory[this.currentThreadID];
 
-        public bool IsControlling(UIControl control) => this.currentControl.Equals(control) && this.currentControl.enabled;
+        public bool IsControlling(UIControl control) => this.currentControl != null && this.currentControl.Equals(control) && this.currentControl.enabled;
 
         public static void StartControlGeneric(UIControl uiControl)
         {

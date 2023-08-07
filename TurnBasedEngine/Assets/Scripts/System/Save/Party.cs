@@ -25,7 +25,7 @@ namespace BF2D.Game
         [JsonIgnore] public CharacterStats[] InactiveCharacters => this.inactiveCharacters.ToArray();
 
         [JsonIgnore] public IItemHolder Items => this.items;
-        [JsonIgnore] public IEquipmentHolder Equipments => this.equipments;
+        [JsonIgnore] public IEquipmentHolder Equipment => this.equipment;
         [JsonIgnore] public ICharacterStatsActionHolder Gems => this.gems;
         [JsonIgnore] public IEquipModHolder Runes => this.runes;
         [JsonIgnore] public int Currency { get => this.currency; set => this.currency = value; }
@@ -35,7 +35,7 @@ namespace BF2D.Game
         [JsonProperty] private readonly List<CharacterStats> inactiveCharacters = new();
 
         [JsonProperty] private readonly ItemHolder items = new();
-        [JsonProperty] private readonly EquipmentHolder equipments = new();
+        [JsonProperty] private readonly EquipmentHolder equipment = new();
         [JsonProperty] private readonly CharacterStatsActionHolder gems = new();
         [JsonProperty] private readonly EquipModHolder runes = new();
         [JsonProperty] private int currency = 0;
