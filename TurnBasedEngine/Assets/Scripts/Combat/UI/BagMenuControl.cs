@@ -28,6 +28,7 @@ namespace BF2D.Game.Combat
             }
 
             RefreshGrid(0);
+            this.Controlled.SetCursorToLastElseFirst();
 
             if (CombatCtx.One.CurrentCharacter.Stats.ItemsCount < 1)
             {
@@ -46,7 +47,7 @@ namespace BF2D.Game.Combat
                 });
             }
 
-            OnNavigate(new OptionsGrid.NavigateInfo
+            OnNavigate(new OptionsGrid.Snapshot
             {
                 cursorPosition1D = this.Controlled.CursorPosition1D
             });
@@ -54,7 +55,7 @@ namespace BF2D.Game.Combat
             base.ControlInitialize();
         }
 
-        public override void OnNavigate(OptionsGrid.NavigateInfo info)
+        public override void OnNavigate(OptionsGrid.Snapshot info)
         {
             base.OnNavigate(info);
 

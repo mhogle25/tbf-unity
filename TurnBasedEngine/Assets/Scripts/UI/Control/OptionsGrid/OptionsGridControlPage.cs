@@ -32,6 +32,8 @@ namespace BF2D.UI
         public virtual void LoadOptions(IEnumerable<GridOption.Data> options)
         {
             ClearOptions();
+            this.Controlled.Setup(this.Controlled.Width, this.Controlled.Height);
+
             foreach (GridOption.Data option in options)
                 this.allOptions.Add(option);
 
@@ -44,7 +46,7 @@ namespace BF2D.UI
             this.Controlled.Clear();
         }
 
-        public virtual void OnNavigate(OptionsGrid.NavigateInfo info)
+        public virtual void OnNavigate(OptionsGrid.Snapshot info)
         {
             if (this.allOptions.Count < 1)
                 return;
@@ -63,12 +65,14 @@ namespace BF2D.UI
             if (dimensionPrev == dimensionMax && dimension == 0)
             {
                 RefreshGrid(this.currentPage < this.PageCount - 1 ? ++this.currentPage : 0);
+                this.Controlled.SetCursorToLastElseFirst();
                 return;
             }
 
             if (dimensionPrev == 0 && dimension == dimensionMax)
             {
                 RefreshGrid(this.currentPage > 0 ? --this.currentPage : this.PageCount - 1);
+                this.Controlled.SetCursorToLastElseFirst();
                 return;
             }
         }
@@ -95,8 +99,6 @@ namespace BF2D.UI
             {
                 this.Controlled.CursorPosition = this.Controlled.LastOptionPosition;
             }
-
-            this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, true);
         }
     }
 }

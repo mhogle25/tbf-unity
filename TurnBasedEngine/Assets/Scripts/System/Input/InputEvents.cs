@@ -17,7 +17,7 @@ namespace BF2D
         [SerializeField] protected UnityEvent confirmEvent = new();
 
         public bool BackEnabled { get => this.backEnabled;  set => this.backEnabled = value; }
-        public UnityEvent BackEvent => this.BackEvent;
+        public UnityEvent BackEvent => this.backEvent;
         [SerializeField] protected bool backEnabled = true;
         [Tooltip("The actions that will be called on back")]
         [SerializeField] protected UnityEvent backEvent = new();

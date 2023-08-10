@@ -11,12 +11,12 @@ namespace BF2D.Game
     {
         [JsonProperty] private readonly string spriteID = string.Empty;
         [JsonProperty] private readonly string seriesID = string.Empty;
-        [JsonProperty] private readonly EquipmentType equipmentType = EquipmentType.Accessory;
+        [JsonProperty] private readonly EquipmentType type = EquipmentType.Accessory;
         [JsonProperty] private readonly EquipModSlot[] runeSlots = { };
 
         [JsonIgnore] public string SpriteID => this.spriteID;
         [JsonIgnore] public string SeriesID => this.seriesID;
-        [JsonIgnore] public EquipmentType Type => this.equipmentType;
+        [JsonIgnore] public EquipmentType Type => this.type;
 
         [JsonIgnore] public EquipModSlot[] RuneSlots => this.runeSlots;
 
@@ -55,6 +55,15 @@ namespace BF2D.Game
         public string TextBreakdown()
         {
             string text = $"{this.Name}\n-\n{this.Description}\n-\n";
+
+            return text;
+        }
+
+        public string TextBreakdown(Equipment other)
+        {
+            string text = $"{this.Name}\n-\n{this.Description}\n-\n";
+
+
 
             return text;
         }

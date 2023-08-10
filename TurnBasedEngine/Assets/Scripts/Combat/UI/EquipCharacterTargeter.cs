@@ -4,41 +4,36 @@ using UnityEngine.Events;
 
 namespace BF2D.Game.Combat
 {
-    public class EquipMenuManager : OptionsGridControl
+    public class EquipCharacterTargeter : OptionsGridControl
     {
         [Header("Platforms")]
         [SerializeField] private UnityEvent platformsOnConfirm = new();
         [Header("Equipped")]
         [SerializeField] private EquippedListControl equipped = null;
-        [Header("Bag")]
-        [SerializeField] private EquipmentBagControl equipmentBag = null;
+
+        public CharacterStats Selected => this.selectedCharacter;
+        private CharacterStats selectedCharacter = null;
 
         public override void ControlInitialize()
         {
             base.ControlInitialize();
             this.equipped.GridInitialize();
-            PlatformsOnNavigate(new OptionsGrid.NavigateInfo
-            {
-                cursorPosition = this.Controlled.CursorPosition
-            });
+            OnNavigate(this.Controlled.GetSnapshot());
         }
 
         public override void ControlFinalize()
         {
-            if (this.Controlled)
-            {
-                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
-                base.ControlFinalize();
-            }
+            this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+            base.ControlFinalize();
         }
 
-        public void PlatformOnConfirm()
+        public void OnConfirm()
         {
             if (UICtx.One.IsControlling(this))
                 this.platformsOnConfirm?.Invoke();
         }
 
-        public void PlatformsOnNavigate(OptionsGrid.NavigateInfo info)
+        public void OnNavigate(OptionsGrid.Snapshot info)
         {
             if (!UICtx.One.IsControlling(this))
                 return;
@@ -52,12 +47,8 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            this.equipped.SetupEquippedList(tile.AssignedCharacter.Stats);
-        }
-
-        public void EquippedOnNavigate(OptionsGrid.NavigateInfo info)
-        {
-
+            this.selectedCharacter = tile.AssignedCharacter.Stats;
+            this.equipped.SetupEquippedList(this.selectedCharacter);
         }
     }
 }
