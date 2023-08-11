@@ -5,6 +5,7 @@
     [
     ],
     "spriteID":"helm_01",
+    "seriesID":"vapor",
     "type":"Head",
     "speedModifier":0,
     "attackModifier":0,

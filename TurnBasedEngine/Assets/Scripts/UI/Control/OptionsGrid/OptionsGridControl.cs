@@ -6,9 +6,9 @@ namespace BF2D.UI
 { 
     public class OptionsGridControl : UIControl
     {
-        public OptionsGrid Controlled => this.controlled;
+        public OptionsGrid Controlled { get => this.controlled; protected set => this.controlled = value; }
         [Header("Options Grid")]
-        [SerializeField] protected OptionsGrid controlled = null;
+        [SerializeField] private OptionsGrid controlled = null;
 
         public float Delay { get => this.delay; set => this.delay = value; }
         [SerializeField] private float delay = 0.5f;
@@ -33,22 +33,22 @@ namespace BF2D.UI
 
             this.state?.Invoke();
 
-            if (InputManager.Instance.ConfirmPress)
+            if (InputCtx.One.ConfirmPress)
                 this.controlled.InvokeEvent(InputButton.Confirm);
 
-            if (InputManager.Instance.MenuPress)
+            if (InputCtx.One.MenuPress)
                 this.controlled.InvokeEvent(InputButton.Menu);
 
-            if (InputManager.Instance.SpecialPress)
+            if (InputCtx.One.SpecialPress)
                 this.controlled.InvokeEvent(InputButton.Special);
 
-            if (InputManager.Instance.BackPress)
+            if (InputCtx.One.BackPress)
                 this.controlled.InvokeEvent(InputButton.Back);
 
-            if (InputManager.Instance.PausePress)
+            if (InputCtx.One.PausePress)
                 this.controlled.InvokeEvent(InputButton.Pause);
 
-            if (InputManager.Instance.SelectPress)
+            if (InputCtx.One.SelectPress)
                 this.controlled.InvokeEvent(InputButton.Select);
         }
 
@@ -64,16 +64,16 @@ namespace BF2D.UI
 
         private void StateDirectionInputListener()
         {
-            if (InputManager.Instance.Left)
+            if (InputCtx.One.Left)
                 DirectionalCall(InputDirection.Left);
 
-            if (InputManager.Instance.Up)
+            if (InputCtx.One.Up)
                 DirectionalCall(InputDirection.Up);
 
-            if (InputManager.Instance.Right)
+            if (InputCtx.One.Right)
                 DirectionalCall(InputDirection.Right);
 
-            if (InputManager.Instance.Down)
+            if (InputCtx.One.Down)
                 DirectionalCall(InputDirection.Down);
         }
 
@@ -113,16 +113,13 @@ namespace BF2D.UI
             this.state = StateDelay;
         }
 
-        private bool InputReleaseFromDirection(InputDirection InputDirection)
+        private bool InputReleaseFromDirection(InputDirection InputDirection) => InputDirection switch
         {
-            return InputDirection switch
-            {
-                InputDirection.Left => !InputManager.Instance.Left,
-                InputDirection.Up => !InputManager.Instance.Up,
-                InputDirection.Right => !InputManager.Instance.Right,
-                InputDirection.Down => !InputManager.Instance.Down,
-                _ => false,
-            };
-        }
+            InputDirection.Left => !InputCtx.One.Left,
+            InputDirection.Up => !InputCtx.One.Up,
+            InputDirection.Right => !InputCtx.One.Right,
+            InputDirection.Down => !InputCtx.One.Down,
+            _ => throw new ArgumentException("[OptionsGridControl:InputReleaseFromDirection] The given InputDirection was null or invalid"),
+        };
     }
 }

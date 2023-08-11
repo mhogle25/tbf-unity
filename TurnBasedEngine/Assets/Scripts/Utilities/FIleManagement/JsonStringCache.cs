@@ -1,8 +1,4 @@
-using UnityEngine;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace BF2D.Utilities
 {
@@ -23,7 +19,7 @@ namespace BF2D.Utilities
                 Clear();
 
             if (this.jsons.ContainsKey(id))
-                return (T) BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
+                return JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
 
             string json = fileManager.LoadFile(id);
             if (string.IsNullOrEmpty(json))
@@ -32,7 +28,7 @@ namespace BF2D.Utilities
             this.jsons[id] = json;
 
             if (this.jsons.ContainsKey(id))
-                return (T) BF2D.Utilities.JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
+                return JSON.DeserializeString<T>(this.jsons[id]).Setup<T>(id);
 
             return null;
         }

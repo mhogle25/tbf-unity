@@ -663,7 +663,7 @@ namespace BF2D.UI
                     this.responseOptionsControl.Controlled.Add(new UIOption.Data
                     {
                         text = option.text,
-                        actions = new InputButtonCollection<Action>
+                        onInput = new InputButtonCollection<Action>
                         {
                             [InputButton.Confirm] = () =>
                             {
@@ -684,7 +684,7 @@ namespace BF2D.UI
                 }
             }
 
-            UIControlsManager.StartControlGeneric(this.responseOptionsControl);
+            UICtx.StartControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.Controlled.SetCursorToFirst();
         }
 
@@ -700,7 +700,7 @@ namespace BF2D.UI
 
         private void FinalizeResponse()
         {
-            UIControlsManager.EndControlGeneric(this.responseOptionsControl);
+            UICtx.EndControlGeneric(this.responseOptionsControl);
             this.responseOptionsControl.gameObject.SetActive(false);
         }
         #endregion

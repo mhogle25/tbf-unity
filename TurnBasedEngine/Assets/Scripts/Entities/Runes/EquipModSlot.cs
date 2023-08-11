@@ -10,7 +10,7 @@ namespace BF2D.Game
     {
         [JsonProperty] private string runeID = string.Empty;
 
-        [JsonIgnore] private EquipMod Rune => GameCtx.Instance.GetRune(this.runeID);
+        [JsonIgnore] private EquipMod Rune => GameCtx.One.GetRune(this.runeID);
 
         [JsonIgnore] public bool Armed => this.Rune is not null;
 

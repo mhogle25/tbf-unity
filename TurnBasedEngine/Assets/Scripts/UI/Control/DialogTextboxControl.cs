@@ -12,7 +12,7 @@ namespace BF2D.UI
 
         protected virtual void Update()
         {
-            if (InputManager.Instance.ConfirmPress)
+            if (InputCtx.One.ConfirmPress)
                 this.dialogTextbox.Continue();
         }
 
@@ -30,7 +30,7 @@ namespace BF2D.UI
 
         public void TakeControl()
         {
-            UIControlsManager.Instance.TakeControl(this, this.threadID);
+            UICtx.One.TakeControl(this, this.threadID);
         }
 
         /// <summary>

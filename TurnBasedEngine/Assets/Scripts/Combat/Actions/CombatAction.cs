@@ -94,10 +94,7 @@ namespace BF2D.Game.Combat.Actions
         /// </summary>
         public RosterCombatActionInfo Roster 
         { 
-            get 
-            { 
-                return this.Type == CombatActionType.Roster ? this.rosterCombatAction : null; 
-            } 
+            get => this.Type == CombatActionType.Roster ? this.rosterCombatAction : null; 
             set 
             {
 
@@ -107,22 +104,16 @@ namespace BF2D.Game.Combat.Actions
         }
         private RosterCombatActionInfo rosterCombatAction = null;
 
-        public ICombatActionInfo CurrentInfo
+        public ICombatActionInfo CurrentInfo => this.type switch
         {
-            get
-            {
-                return this.type switch
-                {
-                    CombatActionType.Flee => this.Flee,
-                    CombatActionType.Act => this.Act,
-                    CombatActionType.Item => this.Item,
-                    CombatActionType.Roster => this.Roster,
-                    CombatActionType.Equip => this.Equip,
-                    CombatActionType.Event => this.Event,
-                    _ => null,
-                };
-            }
-        }
+            CombatActionType.Flee => this.Flee,
+            CombatActionType.Act => this.Act,
+            CombatActionType.Item => this.Item,
+            CombatActionType.Roster => this.Roster,
+            CombatActionType.Equip => this.Equip,
+            CombatActionType.Event => this.Event,
+            _ => null,
+        };
 
         public void SetupControlled(UIControl targeter)
         {
@@ -134,7 +125,7 @@ namespace BF2D.Game.Combat.Actions
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
                     if (this.Item.HasGems)
-                        UIControlsManager.Instance.TakeControl(targeter);
+                        UICtx.One.TakeControl(targeter);
                     //TODO
                     break;
                 case CombatActionType.Roster: break;
@@ -158,25 +149,19 @@ namespace BF2D.Game.Combat.Actions
             }
         }
 
-        public IEnumerable<TargetedCharacterStatsActionSlot> GetTargetedGemSlots()
+        public IEnumerable<TargetedCharacterStatsActionSlot> GetTargetedGemSlots() => this.type switch
         {
-            switch (this.type)
-            {
-                case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.TargetedGemSlots;
-                default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
-            }
-        }
+            CombatActionType.Act => null,//TODO
+            CombatActionType.Item => this.Item.TargetedGemSlots,
+            _ => throw new System.Exception("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."),
+        };
         
 
-        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots()
+        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots() => this.type switch
         {
-            switch (this.type)
-            {
-                case CombatActionType.Act: return null; //TODO
-                case CombatActionType.Item: return this.Item.UseTargetedGemSlots();
-                default: Debug.LogError("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."); return null;
-            }
-        }
+            CombatActionType.Act => null,//TODO
+            CombatActionType.Item => this.Item.UseTargetedGemSlots(),
+            _ => throw new System.Exception("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."),
+        };
     }
 }

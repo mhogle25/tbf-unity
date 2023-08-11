@@ -25,7 +25,7 @@ namespace BF2D.Game.Actions
                 RemoveAndForget(info);
 
                 if (info.Generated)
-                    GameCtx.Instance.DeleteGemIfCustom(info.ID);
+                    GameCtx.One.DeleteGemIfCustom(info.ID);
             }
         }
 

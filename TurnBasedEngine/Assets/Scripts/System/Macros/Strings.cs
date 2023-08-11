@@ -1,5 +1,6 @@
 using BF2D.Enums;
 using System;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
@@ -10,6 +11,11 @@ namespace BF2D.Game
             public const string Default = "default";
             public const char GeneratedIDPrefix = '_';
 
+            public const char LeftArrowSymbol = '‹';
+            public const char RightArrowSymbol = '›';
+            public const char UpArrowSymbol = 'ˆ';
+            public const char DownArrowSymbol = 'ı';
+
             public static bool IsGeneratedID(string id)
             {
                 return id[0] == System.GeneratedIDPrefix;
@@ -17,7 +23,7 @@ namespace BF2D.Game
 
             public static string GenerateID()
             {
-                return $"{System.GeneratedIDPrefix}{Guid.NewGuid():N}";
+                return $"{System.GeneratedIDPrefix}{ Guid.NewGuid():N}";
             }
         }
 
@@ -68,20 +74,17 @@ namespace BF2D.Game
             public const char MaxHealthSymbol = '§';
             public const char MaxStaminaSymbol = '®';
 
-            public static char GetStatsPropertySymbol(CharacterStatsProperty property) 
+            public static char GetStatsPropertySymbol(CharacterStatsProperty property) => property switch
             {
-                return property switch
-                {
-                    CharacterStatsProperty.Speed => SpeedSymbol,
-                    CharacterStatsProperty.Attack => AttackSymbol,
-                    CharacterStatsProperty.Defense => DefenseSymbol,
-                    CharacterStatsProperty.Focus => FocusSymbol,
-                    CharacterStatsProperty.Luck => LuckSymbol,
-                    CharacterStatsProperty.MaxHealth => MaxHealthSymbol,
-                    CharacterStatsProperty.MaxStamina => MaxStaminaSymbol,
-                    _ => throw new ArgumentException("[Strings:GetStatsPropertySymbol] CharacterStatsProperty was invalid.")
-                };
-            }
+                CharacterStatsProperty.Speed => SpeedSymbol,
+                CharacterStatsProperty.Attack => AttackSymbol,
+                CharacterStatsProperty.Defense => DefenseSymbol,
+                CharacterStatsProperty.Focus => FocusSymbol,
+                CharacterStatsProperty.Luck => LuckSymbol,
+                CharacterStatsProperty.MaxHealth => MaxHealthSymbol,
+                CharacterStatsProperty.MaxStamina => MaxStaminaSymbol,
+                _ => throw new ArgumentException("[Strings:GetStatsPropertySymbol] CharacterStatsProperty was invalid.")
+            };
         }
 
         public static class Animation
@@ -106,7 +109,46 @@ namespace BF2D.Game
             public const string SystemThread = "system";
         }
 
-        public static string IntToStringSigned(int value)
+        public static class Equipment
+        {
+            public const string Accessory = "Accessory";
+            public const string Head = "Head";
+            public const string Torso = "Torso";
+            public const string Legs = "Legs";
+            public const string Hands = "Hands";
+            public const string Feet = "Feet";
+
+            public const string AccessoryID = "accessory";
+            public const string HeadID = "head";
+            public const string TorsoID = "torso";
+            public const string LegsID = "legs";
+            public const string HandsID = "hands";
+            public const string FeetID = "feet";
+
+            public static string GetType(EquipmentType type) => type switch
+            {
+                EquipmentType.Accessory => Equipment.Accessory,
+                EquipmentType.Head => Equipment.Head,
+                EquipmentType.Torso => Equipment.Torso,
+                EquipmentType.Legs => Equipment.Legs,
+                EquipmentType.Hands => Equipment.Hands,
+                EquipmentType.Feet => Equipment.Feet,
+                _ => throw new ArgumentException("[Strings:Equipment:GetType] The given EquipmentType was null or invalid")
+            };
+
+            public static string GetTypeID(EquipmentType type) => type switch
+            {
+                EquipmentType.Accessory => Equipment.AccessoryID,
+                EquipmentType.Head => Equipment.HeadID,
+                EquipmentType.Torso => Equipment.TorsoID,
+                EquipmentType.Legs => Equipment.LegsID,
+                EquipmentType.Hands => Equipment.HandsID,
+                EquipmentType.Feet => Equipment.FeetID,
+                _ => throw new ArgumentException("[Strings:Equipment:GetID] The given EquipmentType was null or invalid")
+            };
+        }
+
+        public static string NonZeroToSignedString(int value)
         {
             if (value > 0)
                 return $"+{value}";

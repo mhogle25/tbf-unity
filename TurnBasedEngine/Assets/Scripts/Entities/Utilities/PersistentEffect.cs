@@ -59,19 +59,16 @@ namespace BF2D.Game
 
         public bool EOTEventExists() => this.onEOT is not null;
 
-        public int GetModifier(CharacterStatsProperty property)
+        public int GetModifier(CharacterStatsProperty property) => property switch
         {
-            return property switch
-            {
-                CharacterStatsProperty.Speed => this.SpeedModifier,
-                CharacterStatsProperty.Attack => this.AttackModifier,
-                CharacterStatsProperty.Defense => this.DefenseModifier,
-                CharacterStatsProperty.Focus => this.FocusModifier,
-                CharacterStatsProperty.Luck => this.LuckModifier,
-                CharacterStatsProperty.MaxHealth => this.MaxHealthModifier,
-                CharacterStatsProperty.MaxStamina => this.MaxStaminaModifier,
-                _ => throw new ArgumentException($"[PeristentEffect:GetModifier] The given CharacterStatsProperty was null or invalid")
-            };
-        }
+            CharacterStatsProperty.Speed => this.SpeedModifier,
+            CharacterStatsProperty.Attack => this.AttackModifier,
+            CharacterStatsProperty.Defense => this.DefenseModifier,
+            CharacterStatsProperty.Focus => this.FocusModifier,
+            CharacterStatsProperty.Luck => this.LuckModifier,
+            CharacterStatsProperty.MaxHealth => this.MaxHealthModifier,
+            CharacterStatsProperty.MaxStamina => this.MaxStaminaModifier,
+            _ => throw new ArgumentException($"[PeristentEffect:GetModifier] The given CharacterStatsProperty was null or invalid")
+        };
     }
 }

@@ -6,9 +6,9 @@ namespace BF2D.Game
     {
         public T Acquire(string id);
 
-        public T Transfer(T info, IUtilityEntityHolder<T> receiver);
+        public T Transfer(T info, IUtilityEntityHolder<T> holder);
 
-        public T Transfer(string id, IUtilityEntityHolder<T> receiver);
+        public T Transfer(string id, IUtilityEntityHolder<T> holder);
 
         /// <summary>
         /// Extracts an entity from the holder and returns its ID

@@ -27,7 +27,7 @@ namespace BF2D.Game
                 RemoveAndForget(info);
 
                 if (info.Generated)
-                    GameCtx.Instance.DeleteRuneIfCustom(info.ID);
+                    GameCtx.One.DeleteRuneIfCustom(info.ID);
             }
         }
 

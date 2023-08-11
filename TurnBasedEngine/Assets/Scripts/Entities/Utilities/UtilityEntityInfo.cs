@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
@@ -12,9 +13,7 @@ namespace BF2D.Game
         [JsonIgnore] public string ID { get => this.id; set => this.id = value; }
         [JsonIgnore] public int Count => this.count;
 
-        public abstract Entity GetEntity();
-
-        [JsonIgnore] public string Name => GetEntity().Name;
+        [JsonIgnore] public abstract string Name { get; }
 
         [JsonIgnore] public abstract string Description { get; }
 
@@ -23,6 +22,8 @@ namespace BF2D.Game
         [JsonIgnore] public bool Generated => Strings.System.IsGeneratedID(this.ID);
 
         public abstract IUtilityEntity GetUtility();
+
+        public abstract bool ContainsAura(AuraType aura);
 
         [JsonIgnore] public abstract Sprite Icon { get; }
 

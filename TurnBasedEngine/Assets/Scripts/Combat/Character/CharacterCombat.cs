@@ -60,11 +60,11 @@ namespace BF2D.Game.Combat
         {
             this.eventStack.PushEvent(EOTEvent);                            //Finally, end the turn
 
-            StagePersistentEffectEvents(StagePersistentEffectEOTEvent);     //Stage EOT persistent effect events
+            PersistentEffectEventLoader(StagePersistentEffectEOTEvent);     //Stage EOT persistent effect events
 
             StageCombatEvents();
 
-            StagePersistentEffectEvents(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
+            PersistentEffectEventLoader(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
 
             this.eventStack.Continue();                                     //Run Combat
         }
@@ -100,16 +100,13 @@ namespace BF2D.Game.Combat
             PlayDialog(message, this.eventStack.Continue);
         }
 
-        public void AnimSwitchIdle()
-        {
-            this.animatorController.ChangeAnimState(Strings.Animation.Idle);
-        }
+        public void AnimSwitchIdle() => this.animatorController.ChangeAnimState(Strings.Animation.Idle);
         #endregion
 
         //Private Methods
 
         #region Stage and Run Persistent Effect Events
-        private void StagePersistentEffectEvents(Action<PersistentEffect> stagingAction)
+        private void PersistentEffectEventLoader(Action<PersistentEffect> stagingAction)
         {
             //Status Effect Event
             foreach (StatusEffectInfo info in this.Stats.StatusEffects)
@@ -146,23 +143,20 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Stage General Combat Events
-        private void StageCombatEvents()
+        private void StageCombatEvents() => this.eventStack.PushEvent(() =>
         {
-            this.eventStack.PushEvent(() =>
+            PlayDialog(this.CurrentCombatAction.CurrentInfo.GetOpeningMessage(), () =>
             {
-                PlayDialog(this.CurrentCombatAction.CurrentInfo.GetOpeningMessage(), () =>
+                switch (this.CurrentCombatAction.Type)
                 {
-                    switch (this.CurrentCombatAction.Type)
-                    {
-                        case Enums.CombatActionType.Item:
-                            RunTargetedGems(this.CurrentCombatAction.UseTargetedGemSlots());
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
-                });
+                    case Enums.CombatActionType.Item:
+                        RunTargetedGems(this.CurrentCombatAction.UseTargetedGemSlots());
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             });
-        }
+        });
         #endregion
 
         #region Stage and Run Gems
@@ -174,22 +168,19 @@ namespace BF2D.Game.Combat
             this.eventStack.Continue();
         }
 
-        private void StageUntargetedGems(CharacterStatsActionSlot slot)
+        private void StageUntargetedGems(CharacterStatsActionSlot slot) => this.eventStack.PushEvent(() =>
         {
-            this.eventStack.PushEvent(() =>
+            this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
             {
-                this.animatorController.ChangeAnimState(Strings.Animation.Flashing, () =>
-                {
-                    PlayAnimation(slot.GetAnimationKey());
+                PlayAnimation(slot.GetAnimationKey());
 
-                    CharacterStatsAction.Info info = slot.Run(this.Stats);
-                    List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
-                    dialog.Insert(0, info.GetMessage());
-                    RefreshStatsDisplay();
-                    return dialog;
-                });
+                CharacterStatsAction.Info info = slot.Run(this.Stats);
+                List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
+                dialog.Insert(0, info.GetMessage());
+                RefreshStatsDisplay();
+                return dialog;
             });
-        }
+        });
 
         private void RunTargetedGems(IEnumerable<TargetedCharacterStatsActionSlot> targetedGemSlots)
         {
@@ -199,78 +190,75 @@ namespace BF2D.Game.Combat
             this.eventStack.Continue();
         }
 
-        private void StageTargetedGems(TargetedCharacterStatsActionSlot targetedGemSlot)
+        private void StageTargetedGems(TargetedCharacterStatsActionSlot targetedGemSlot) => this.eventStack.PushEvent(() =>
         {
-            this.eventStack.PushEvent(() =>
+            this.animatorController.ChangeAnimState(Strings.Animation.Attack, () =>
             {
-                this.animatorController.ChangeAnimState(Strings.Animation.Attack, () =>
+                List<CharacterStatsAction.Info> infos = new();
+                string message = string.Empty;
+
+                foreach (CharacterCombat target in targetedGemSlot.TargetInfo.CombatTargets)
                 {
-                    List<CharacterStatsAction.Info> infos = new();
-                    string message = string.Empty;
-
-                    foreach (CharacterCombat target in targetedGemSlot.TargetInfo.CombatTargets)
+                    //Verify that targets are still valid before executing
+                    CharacterCombat verifiedTarget = target;
+                    if (target.Stats.Dead)
                     {
-                        //Verify that targets are still valid before executing
-                        CharacterCombat verifiedTarget = target;
-                        if (target.Stats.Dead)
+                        if (targetedGemSlot.Target == CharacterTarget.Self)
                         {
-                            if (targetedGemSlot.Target == CharacterTarget.Self)
-                            {
-                                Debug.LogError("[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed");
-                                continue;
-                            }
-                            else if (targetedGemSlot.Target == CharacterTarget.Ally ||
-                            targetedGemSlot.Target == CharacterTarget.RandomAlly)
-                            {
-                                verifiedTarget = RollAlly();
-                            }
-                            else if (targetedGemSlot.Target == CharacterTarget.Opponent ||
-                            targetedGemSlot.Target == CharacterTarget.RandomOpponent)
-                            {
-                                verifiedTarget = RollOpponent();
-                            }
-                            else if (targetedGemSlot.Target == CharacterTarget.Any ||
-                            targetedGemSlot.Target == CharacterTarget.Random)
-                            {
-                                verifiedTarget = RollCharacterAligned(targetedGemSlot.Alignment);
-                            }
-                            else if (targetedGemSlot.Target == CharacterTarget.All ||
-                            targetedGemSlot.Target == CharacterTarget.AllOfAny ||
-                            targetedGemSlot.Target == CharacterTarget.AllAllies ||
-                            targetedGemSlot.Target == CharacterTarget.AllOpponents)
-                            {
-                                continue;
-                            }
+                            Debug.LogError($"[CharacterCombat:StageTargetedGems] CRITICAL ERROR: Combat logic flawed. Somehow, ${target.Stats.Name} tried to target themself while they were dead.");
+                            continue;
                         }
-
-                        //Execute
-                        verifiedTarget.PlayAnimation(targetedGemSlot.GetAnimationKey());
-
-                        CharacterStatsAction.Info info = targetedGemSlot.Run(this.stats, verifiedTarget.Stats);
-                        message += info.GetMessage();
-                        infos.Add(info);
-                        verifiedTarget.RefreshStatsDisplay();
+                        else if (targetedGemSlot.Target == CharacterTarget.Ally ||
+                        targetedGemSlot.Target == CharacterTarget.RandomAlly)
+                        {
+                            verifiedTarget = RollAlly();
+                        }
+                        else if (targetedGemSlot.Target == CharacterTarget.Opponent ||
+                        targetedGemSlot.Target == CharacterTarget.RandomOpponent)
+                        {
+                            verifiedTarget = RollOpponent();
+                        }
+                        else if (targetedGemSlot.Target == CharacterTarget.Any ||
+                        targetedGemSlot.Target == CharacterTarget.Random)
+                        {
+                            verifiedTarget = RollCharacterAligned(targetedGemSlot.Alignment);
+                        }
+                        else if (targetedGemSlot.Target == CharacterTarget.All ||
+                        targetedGemSlot.Target == CharacterTarget.AllOfAny ||
+                        targetedGemSlot.Target == CharacterTarget.AllAllies ||
+                        targetedGemSlot.Target == CharacterTarget.AllOpponents)
+                        {
+                            continue;
+                        }
                     }
 
-                    List<string> dialog = GemStatusCheck(infos);
-                    dialog.Insert(0, message);
-                    return dialog;
-                });
+                    //Execute
+                    verifiedTarget.PlayAnimation(targetedGemSlot.GetAnimationKey());
+
+                    CharacterStatsAction.Info info = targetedGemSlot.Run(this.stats, verifiedTarget.Stats);
+                    message += info.GetMessage();
+                    infos.Add(info);
+                    verifiedTarget.RefreshStatsDisplay();
+                }
+
+                List<string> dialog = GemStatusCheck(infos);
+                dialog.Insert(0, message);
+                return dialog;
             });
-        }
+        });
 
         private CharacterCombat RollOpponent()
         {
-            return CombatManager.Instance.CharacterIsEnemy(this) ?
-            CombatManager.Instance.RandomPlayer() :
-            CombatManager.Instance.RandomEnemy();
+            return CombatCtx.One.CharacterIsEnemy(this) ?
+            CombatCtx.One.RandomPlayer() :
+            CombatCtx.One.RandomEnemy();
         }
 
         private CharacterCombat RollAlly()
         {
-            return CombatManager.Instance.CharacterIsEnemy(this) ?
-            CombatManager.Instance.RandomEnemy() :
-            CombatManager.Instance.RandomPlayer();
+            return CombatCtx.One.CharacterIsEnemy(this) ?
+            CombatCtx.One.RandomEnemy() :
+            CombatCtx.One.RandomPlayer();
         }
 
         private CharacterCombat RollCharacterAligned(CombatAlignment alignment)
@@ -279,14 +267,14 @@ namespace BF2D.Game.Combat
             bool aligned = alignment == CombatAlignment.Offense ||
                            alignment == CombatAlignment.Neutral;
 
-            if (CombatManager.Instance.CharacterIsEnemy(this))
+            if (CombatCtx.One.CharacterIsEnemy(this))
                 return aligned ?
-                CombatManager.Instance.RandomPlayer() :
-                CombatManager.Instance.RandomEnemy();
+                CombatCtx.One.RandomPlayer() :
+                CombatCtx.One.RandomEnemy();
             else
                 return aligned ?
-                CombatManager.Instance.RandomEnemy() :
-                CombatManager.Instance.RandomPlayer();
+                CombatCtx.One.RandomEnemy() :
+                CombatCtx.One.RandomPlayer();
         }
 
         private List<string> GemStatusCheck(IEnumerable<CharacterStatsAction.Info> infos)
@@ -308,13 +296,13 @@ namespace BF2D.Game.Combat
             if (dialog.Count < 1)
                 return new List<string>();
 
-            if (CombatManager.Instance.CombatIsOver() || iDied)
+            if (CombatCtx.One.CombatIsOver() || iDied)
                 FinalizeTurn();
 
-            if (CombatManager.Instance.CombatIsOver())
+            if (CombatCtx.One.CombatIsOver())
                 this.eventStack.PushEvent(EOCEvent);
 
-            if (iDied && !CombatManager.Instance.CombatIsOver())
+            if (iDied && !CombatCtx.One.CombatIsOver())
                 this.eventStack.PushEvent(EOTEvent);
 
             return dialog;
@@ -325,7 +313,7 @@ namespace BF2D.Game.Combat
         private void EOTEvent()
         {
             //Finally, pass the turn
-            this.eventStack.PushEvent(CombatManager.Instance.PassTurn);
+            this.eventStack.PushEvent(CombatCtx.One.PassTurn);
 
             //Cleanup status effects
             foreach (StatusEffectInfo info in this.Stats.StatusEffects)
@@ -344,10 +332,7 @@ namespace BF2D.Game.Combat
             this.eventStack.Continue();
         }
 
-        private void EOCEvent()
-        {
-            CombatManager.Instance.EndCombat();
-        }
+        private void EOCEvent() => CombatCtx.One.EndCombat();
         #endregion
 
         #region Private Utilities
@@ -359,7 +344,7 @@ namespace BF2D.Game.Combat
 
         private void PlayDialog(List<string> dialog, Action callback)
         {
-            DialogTextbox textbox = CombatManager.Instance.OrphanedTextbox;
+            DialogTextbox textbox = CombatCtx.One.OrphanedTextbox;
             dialog[^1] += Strings.DialogTextbox.End;
 
             textbox.Dialog(dialog, 0, () =>
@@ -377,7 +362,7 @@ namespace BF2D.Game.Combat
 
         private void PlayMessage(string message, Action callback)
         {
-            DialogTextbox textbox = CombatManager.Instance.OrphanedTextbox;
+            DialogTextbox textbox = CombatCtx.One.OrphanedTextbox;
 
             textbox.Message(message, () =>
             {

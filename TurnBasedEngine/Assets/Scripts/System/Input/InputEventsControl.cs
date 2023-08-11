@@ -8,22 +8,22 @@ namespace BF2D
     {
         protected virtual void Update()
         {
-            if (InputManager.Instance.ConfirmPress && this.confirmEnabled)
+            if (InputCtx.One.ConfirmPress && this.confirmEnabled)
                 this.confirmEvent.Invoke();
 
-            if (InputManager.Instance.MenuPress && this.menuEnabled)
+            if (InputCtx.One.MenuPress && this.menuEnabled)
                 this.menuEvent.Invoke();
 
-            if (InputManager.Instance.SpecialPress && this.specialEnabled)
+            if (InputCtx.One.SpecialPress && this.specialEnabled)
                 this.specialEvent.Invoke();
 
-            if (InputManager.Instance.BackPress && this.backEnabled)
+            if (InputCtx.One.BackPress && this.backEnabled)
                 this.backEvent.Invoke();
 
-            if (InputManager.Instance.PausePress && this.pauseEnabled)
+            if (InputCtx.One.PausePress && this.pauseEnabled)
                 this.pauseEvent.Invoke();
 
-            if (InputManager.Instance.SelectPress && this.selectEnabled)
+            if (InputCtx.One.SelectPress && this.selectEnabled)
                 this.selectEvent.Invoke();
         }
     }

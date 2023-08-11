@@ -2,6 +2,7 @@ using System;
 using Newtonsoft.Json;
 using UnityEngine;
 using System.Collections.Generic;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game
 {
@@ -11,7 +12,9 @@ namespace BF2D.Game
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public override Sprite Icon => GameCtx.Instance.GetIcon(GetUtility().SpriteID);
+        [JsonIgnore] public override Sprite Icon => GameCtx.One.GetIcon(GetUtility().SpriteID);
+
+        [JsonIgnore] public override string Name => Get().Name;
 
         [JsonIgnore] public override string Description => Get().Description;
 
@@ -23,14 +26,14 @@ namespace BF2D.Game
 
         public Item Get()
         {
-            Item item = GameCtx.Instance.InstantiateItem(this.ID);
+            Item item = GameCtx.One.InstantiateItem(this.ID);
             this.staged ??= item;
             return this.staged;
         }
 
-        public override Entity GetEntity() => Get();
-
         public override IUtilityEntity GetUtility() => Get();
+
+        public override bool ContainsAura(AuraType aura) => Get().ContainsAura(aura);
 
         public Item Use(IItemHolder owner)
         {

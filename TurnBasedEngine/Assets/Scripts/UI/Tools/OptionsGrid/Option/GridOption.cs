@@ -1,9 +1,7 @@
-using BF2D;
 using BF2D.Enums;
 using System;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 namespace BF2D.UI
 {
@@ -14,13 +12,34 @@ namespace BF2D.UI
             public string name;
             public string text;
             public Sprite icon;
-            public InputButtonCollection<Action> actions;
+            public InputButtonCollection<Action> onInput;
+            public Action onNavigate;
         };
 
-        public virtual bool Interactable { get { return this.interactable; } set { this.interactable = value; } }
+        [Header("Grid Option")]
+        [SerializeField] private UnityEvent onNavigate = new();
+
+        public virtual bool Interactable { get => this.interactable; set => this.interactable = value; }
         protected bool interactable = true;
 
-        public abstract bool Setup(Data optionData);
+        private Action onNavigateCallback = null;
+
+        public virtual void Setup(Data data)
+        {
+            this.gameObject.name = data.name ?? this.gameObject.name;
+            this.onNavigateCallback = data.onNavigate ?? this.onNavigateCallback;
+
+            if (data.onInput is not null)
+            {
+                foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
+                {
+                    if (data.onInput[inputButton] is null)
+                        continue;
+
+                    GetInputEvent(inputButton).AddListener(data.onInput[inputButton].Invoke);
+                }
+            }
+        }
 
         public abstract void SetCursor(bool status);
 
@@ -28,6 +47,12 @@ namespace BF2D.UI
         {
             if (InputEventEnabled(inputButton))
                 GetInputEvent(inputButton)?.Invoke();
+        }
+
+        public void OnNavigate()
+        {
+            this.onNavigate?.Invoke();
+            this.onNavigateCallback?.Invoke();
         }
     }
 }

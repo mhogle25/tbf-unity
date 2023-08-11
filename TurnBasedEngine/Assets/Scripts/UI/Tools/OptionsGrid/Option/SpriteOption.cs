@@ -7,7 +7,7 @@ namespace BF2D.UI
     {
         [SerializeField] private SpriteRenderer cursor = null;
 
-        public override bool Setup(Data optionData)
+        public override void Setup(Data data)
         {
             throw new System.NotImplementedException();
         }

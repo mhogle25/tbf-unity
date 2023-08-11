@@ -17,7 +17,7 @@ namespace BF2D.Game
 
         public void RollForLoot(List<string> collectionToAppend)
         {
-            GameCtx ctx = GameCtx.Instance;
+            GameCtx ctx = GameCtx.One;
 
             CharacterStats luckiestPlayer = ctx.PartyLeader;
             foreach (CharacterStats player in ctx.ActivePlayers)

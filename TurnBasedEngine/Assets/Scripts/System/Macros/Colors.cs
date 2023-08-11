@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace BF2D.Game
 {
-    public class Colors
+    public static class Colors
     {
         public static readonly Color32 Red = Color.red;
         public static readonly Color32 Green = Color.green;

@@ -1,21 +1,14 @@
-﻿using System.Collections.Generic;
-using BF2D.Game.Actions;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using BF2D.Game.Actions;
 using BF2D.Utilities;
 using BF2D.Enums;
-using System;
-using BF2D.UI;
 
 namespace BF2D.Game
 {
-    public class GameCtx : MonoBehaviour
+    class GameCtx : MonoBehaviourSingleton<GameCtx>
     {
-        //Singleton Reference
-        public static GameCtx Instance => GameCtx.instance;
-        private static GameCtx instance;
-
-        public DialogTextboxControl SystemTextbox => this.systemTextbox;
-
         [Header("Data File Managers")]
         [SerializeField] private ExternalFileManager saveFilesManager = null;
         [SerializeField] private ExternalFileManager keyboardControlsConfigFilesManager = null;
@@ -34,9 +27,6 @@ namespace BF2D.Game
         [SerializeField] private SpriteCollection iconCollection = null;
         [SerializeField] private AudioClipCollection soundEffectCollection = null;
 
-        [Header("Miscellaneous")]
-        [SerializeField] private DialogTextboxControl systemTextbox = null;
-
         public bool SaveActive => this.currentSave is not null;
 
         public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
@@ -44,7 +34,7 @@ namespace BF2D.Game
         public CharacterStats[] InactivePlayers => this.currentSave?.Party.InactiveCharacters;
 
         public IItemHolder PartyItems => this.currentSave?.Party.Items;
-        public IEquipmentHolder PartyEquipments => this.currentSave?.Party.Equipments;
+        public IEquipmentHolder PartyEquipment => this.currentSave?.Party.Equipment;
         public ICharacterStatsActionHolder PartyGems => this.currentSave?.Party.Gems;
 
         public int Currency { get => this.currentSave.Party.Currency; set => this.currentSave.Party.Currency = value; }
@@ -70,16 +60,7 @@ namespace BF2D.Game
 
         private readonly List<ICache> externalCaches = new();
 
-        private readonly Queue<Combat.CombatManager.InitializeInfo> queuedCombats = new();
-
-        private void Awake()
-        {
-            //Setup of Monobehaviour Singleton
-            if (GameCtx.instance && GameCtx.instance != this)
-                Destroy(GameCtx.instance.gameObject);
-
-            GameCtx.instance = this;
-        }
+        private readonly Queue<Combat.CombatCtx.InitializeInfo> queuedCombats = new();
 
         #region Cache Management
         public void ClearCaches()
@@ -99,7 +80,7 @@ namespace BF2D.Game
             this.runes.Clear();
             this.jobs.Clear();
 
-            Terminal.IO.Log("Caches cleared");
+            ShCtx.One.Log("Caches cleared");
         }
 
         public void RegisterCache(ICache cache)
@@ -125,7 +106,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameCtx:SaveGame] Save failed, there was no game loaded.");
+                Debug.LogWarning("[GameContext:SaveGame] Save failed, there was no game loaded.");
                 return;
             }
 
@@ -136,7 +117,7 @@ namespace BF2D.Game
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameCtx:SaveGameAs] Save failed, there was no game loaded.");
+                Debug.LogWarning("[GameContext:SaveGameAs] Save failed, there was no game loaded.");
                 return;
             }
 
@@ -151,14 +132,14 @@ namespace BF2D.Game
                 Debug.LogError(x.Message);
                 return;
             }
-            Terminal.IO.Log($"Saved at ID '{id}'");
+            ShCtx.One.Log($"Saved at ID '{id}'");
         }
 
         public bool ReloadGame()
         {
             if (this.currentSave is null)
             {
-                Debug.LogWarning("[GameCtx:ReloadGame] Reload failed, there was no game loaded.");
+                Debug.LogWarning("[GameContext:ReloadGame] Reload failed, there was no game loaded.");
                 return false;
             }
 
@@ -179,21 +160,21 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogWarning($"[GameCtx:InstantiateEnemy] ID '{id}' was invalid");
+                Debug.LogWarning($"[GameContext:InstantiateEnemy] ID '{id}' was invalid");
                 return null;
             }
 
             string content = this.saveFilesManager.LoadFile(id);
             if (string.IsNullOrEmpty(content))
             {
-                Debug.LogWarning($"[GameCtx:LoadSaveData] The contents of the save file at id '{id}' were empty");
+                Debug.LogWarning($"[GameContext:LoadSaveData] The contents of the save file at id '{id}' were empty");
                 return null;
             }
 
             SaveData saveData = JSON.DeserializeString<SaveData>(content);
             if (saveData is null)
             {
-                Debug.LogError($"[GameCtx:LoadSaveData] The JSON at id '{id}' was invalid");
+                Debug.LogError($"[GameContext:LoadSaveData] The JSON at id '{id}' was invalid");
                 return null;
             }
 
@@ -204,38 +185,38 @@ namespace BF2D.Game
         #region Controls Config Management
         public void NewControlsConfig(InputController controllerType)
         {
-            InputManager.Instance.ResetConfig(controllerType);
+            InputCtx.One.ResetConfig(controllerType);
         }
 
         public void SaveControlsConfig(InputController controllerType)
         {
             string id = controllerType switch
             {
-                InputController.Keyboard => InputManager.Instance.KeyboardID,
-                InputController.Gamepad => InputManager.Instance.GamepadID,
-                _ => throw new ArgumentException("[GameCtx:SaveControlsConfig] InputController enum value was invalid")
+                InputController.Keyboard => InputCtx.One.KeyboardID,
+                InputController.Gamepad => InputCtx.One.GamepadID,
+                _ => throw new ArgumentException("[GameContext:SaveControlsConfig] InputController enum value was invalid")
             };
             SaveControlsConfigAs(controllerType, id);
         }
 
         public void SaveControlsConfigAs(InputController controllerType, string id)
         {
-            string newJSON = InputManager.Instance.SerializeConfig(controllerType);
+            string newJSON = InputCtx.One.SerializeConfig(controllerType);
 
             try
             {
                 switch (controllerType)
                 {
                     case InputController.Keyboard:
-                        InputManager.Instance.KeyboardID = id;
+                        InputCtx.One.KeyboardID = id;
                         this.keyboardControlsConfigFilesManager.WriteToFile(id, newJSON);
                         break;
                     case InputController.Gamepad:
-                        InputManager.Instance.GamepadID = id;
+                        InputCtx.One.GamepadID = id;
                         this.gamepadControlsConfigFilesManager.WriteToFile(id, newJSON);
                         break;
                     default:
-                        Debug.LogError("[GameCtx:SaveControlsConfigAs] InputController enum value was invalid");
+                        Debug.LogError("[GameContext:SaveControlsConfigAs] InputController enum value was invalid");
                         break;
                 }
             }
@@ -245,7 +226,7 @@ namespace BF2D.Game
                 return;
             }
 
-            Terminal.IO.Log($"{controllerType} config saved at ID '{id}'");
+            ShCtx.One.Log($"{controllerType} config saved at ID '{id}'");
         }
 
         public void LoadControlsConfig(InputController controllerType, string id)
@@ -259,13 +240,13 @@ namespace BF2D.Game
 
             if (string.IsNullOrEmpty(newJSON))
             {
-                Debug.LogError("[GameCtx:LoadControlsConfig] Fetch failed");
+                Debug.LogError("[GameContext:LoadControlsConfig] Fetch failed");
                 return;
             }
 
-            InputManager.Instance.DeserializeConfig(controllerType, newJSON);
+            InputCtx.One.DeserializeConfig(controllerType, newJSON);
 
-            Terminal.IO.Log($"{controllerType} config with id '{id}' was loaded");
+            ShCtx.One.Log($"{controllerType} config with id '{id}' was loaded");
         }
         #endregion
 
@@ -308,12 +289,12 @@ namespace BF2D.Game
         #endregion
 
         #region Combat Management
-        public void StageCombatInfo(Combat.CombatManager.InitializeInfo info)
+        public void StageCombatInfo(Combat.CombatCtx.InitializeInfo info)
         {
             this.queuedCombats.Enqueue(info);
         }
 
-        public Combat.CombatManager.InitializeInfo UnstageCombatInfo()
+        public Combat.CombatCtx.InitializeInfo UnstageCombatInfo()
         {
             if (this.queuedCombats.Count < 1)
                 return null;
@@ -471,7 +452,7 @@ namespace BF2D.Game
         {
             if (!fileManager.FileExists(id))
             {
-                Debug.LogError($"[GameCtx:Delete{label}IfCustom] The file at ID {id} does not exist.");
+                Debug.LogError($"[GameContext:Delete{label}IfCustom] The file at ID {id} does not exist.");
                 return;
             }
 
@@ -483,5 +464,4 @@ namespace BF2D.Game
         }
         #endregion
     }
-
 }
