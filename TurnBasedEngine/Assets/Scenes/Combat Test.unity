@@ -3251,6 +3251,7 @@ MonoBehaviour:
   delay: 0.5
   speed: 0.1
   pageOrientation: 0
+  equipped: {fileID: 1395391781}
   events: {fileID: 1878389728}
   footer: {fileID: 2027945621}
   rightText: {fileID: 1104975011}
@@ -3522,6 +3523,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: 0.64, y: 1.56, z: 0}
@@ -5683,7 +5687,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 704968161}
-  - component: {fileID: 704968163}
   - component: {fileID: 704968162}
   m_Layer: 0
   m_Name: Targeter
@@ -5723,41 +5726,7 @@ MonoBehaviour:
   delay: 0.5
   speed: 0.1
   orphanedTextbox: {fileID: 3762075292545349522}
-  data: {fileID: 704968163}
---- !u!114 &704968163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704968160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c07dfd4eaaa94704aab9083a259c4a7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerPlatforms: {fileID: 1316870473}
-  initPlayerOptions:
-  - {fileID: 1121190681}
-  - {fileID: 1987051019}
-  - {fileID: 1755146900}
-  - {fileID: 1484935520}
-  enemyPlatforms: {fileID: 1567430470}
-  initEnemyOptions:
-  - {fileID: 404035414}
-  - {fileID: 2143075866}
-  - {fileID: 1613403330}
-  - {fileID: 1151682090}
-  anyPlatforms: {fileID: 1435185832}
-  initAnyOptions:
-  - {fileID: 1121190681}
-  - {fileID: 1987051019}
-  - {fileID: 1755146900}
-  - {fileID: 1484935520}
-  - {fileID: 404035414}
-  - {fileID: 2143075866}
-  - {fileID: 1613403330}
-  - {fileID: 1151682090}
+  data: {fileID: 1516352438}
 --- !u!1 &726882009
 GameObject:
   m_ObjectHideFlags: 0
@@ -6737,7 +6706,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hello
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
   m_sharedMaterial: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
@@ -7538,6 +7507,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   icon: {fileID: 849716136}
   cursor: {fileID: 1988964317}
   textMesh: {fileID: 0}
@@ -8012,6 +7984,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   icon: {fileID: 922935206}
   cursor: {fileID: 2042761165}
   textMesh: {fileID: 0}
@@ -8229,6 +8204,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 0
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   icon: {fileID: 963379637}
@@ -9164,7 +9142,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hello
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
   m_sharedMaterial: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
@@ -9448,6 +9426,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: -0.6, y: 1.94, z: 0}
@@ -9916,6 +9897,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: 2.32, y: 0.94, z: 0}
@@ -11513,10 +11497,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+    x: 0.055555556
+    y: 0.02631579
+    width: 0.8888889
+    height: 0.94736844
   near clip plane: 0
   far clip plane: 1000
   field of view: 43
@@ -13197,19 +13181,7 @@ MonoBehaviour:
   gridHeight: 6
   onNavigate:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1395391781}
-        m_TargetAssemblyTypeName: BF2D.Game.Combat.EquippedListControl, Assembly-CSharp
-        m_MethodName: OnNavigate
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   navigateAudioSource: {fileID: 1961517511546848493}
   confirmEnabled: 1
   confirmAudioSource: {fileID: 1961517511066814385}
@@ -13245,7 +13217,7 @@ MonoBehaviour:
   - {fileID: 922935205}
   - {fileID: 849716135}
   - {fileID: 2030498071}
-  equipCharacterTargeter: {fileID: 665148811}
+  playerTargeter: {fileID: 665148811}
   bag: {fileID: 359514072}
   leftText: {fileID: 801059149}
   typeOrder: 000000000100000002000000030000000400000005000000
@@ -14371,6 +14343,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   assignmentPosition: {x: -2.8, y: 0, z: 0}
   cursor: {fileID: 1238863219}
   displayCanvas: {fileID: 1986005789}
@@ -14763,6 +14738,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1516352436}
   - component: {fileID: 1516352435}
+  - component: {fileID: 1516352438}
   - component: {fileID: 1516352437}
   m_Layer: 0
   m_Name: Combat Grid
@@ -14866,6 +14842,40 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
+--- !u!114 &1516352438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1516352434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c07dfd4eaaa94704aab9083a259c4a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPlatforms: {fileID: 1316870473}
+  initPlayerOptions:
+  - {fileID: 1121190681}
+  - {fileID: 1987051019}
+  - {fileID: 1755146900}
+  - {fileID: 1484935520}
+  enemyPlatforms: {fileID: 1567430470}
+  initEnemyOptions:
+  - {fileID: 404035414}
+  - {fileID: 2143075866}
+  - {fileID: 1613403330}
+  - {fileID: 1151682090}
+  anyPlatforms: {fileID: 1435185832}
+  initAnyOptions:
+  - {fileID: 1121190681}
+  - {fileID: 1987051019}
+  - {fileID: 1755146900}
+  - {fileID: 1484935520}
+  - {fileID: 404035414}
+  - {fileID: 2143075866}
+  - {fileID: 1613403330}
+  - {fileID: 1151682090}
 --- !u!1 &1523494372
 GameObject:
   m_ObjectHideFlags: 0
@@ -15292,6 +15302,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: 1.8, y: 1.94, z: 0}
@@ -16442,6 +16455,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: -2, y: 1.56, z: 0}
@@ -18452,6 +18468,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   icon: {fileID: 1902638944}
   cursor: {fileID: 1345977604}
   textMesh: {fileID: 0}
@@ -19040,6 +19059,9 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   assignmentPosition: {x: -0.78, y: 0.94, z: 0}
   cursor: {fileID: 892674210}
   displayCanvas: {fileID: 2002383631}
@@ -19136,6 +19158,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 0
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   icon: {fileID: 1988398172}
@@ -19771,6 +19796,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 0
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   icon: {fileID: 2030498072}
@@ -20915,6 +20943,9 @@ MonoBehaviour:
       m_Calls: []
   selectEnabled: 1
   selectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onNavigate:
     m_PersistentCalls:
       m_Calls: []
   assignmentPosition: {x: 0.94, y: 0, z: 0}

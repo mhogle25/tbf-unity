@@ -25,7 +25,7 @@ namespace BF2D.Game.Combat
             get => this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
         }
 
-        public override sealed bool Setup(Data optionData)
+        public override sealed void Setup(Data data)
         {
             Debug.LogError($"[CombatGridTile:Setup] Setup should not be called on a static grid option");
             throw new System.NotImplementedException();

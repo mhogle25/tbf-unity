@@ -9,19 +9,12 @@ namespace BF2D.Game.Combat
     public class EquippedListControl : OptionsGridControlInit
     {
         [Header("Equipped")]
-        [SerializeField] private EquipCharacterTargeter equipCharacterTargeter = null;
+        [SerializeField] private EquipPlayerTargeter playerTargeter = null;
         [SerializeField] private EquipmentBagControl bag = null;
         [SerializeField] private TextMeshProUGUI leftText = null;
 
-        private readonly EquipmentTypeCollection<string> equipmentIconKeys = new()
-        {
-            [EquipmentType.Accessory] = "accessory",
-            [EquipmentType.Head] = "head",
-            [EquipmentType.Torso] = "torso",
-            [EquipmentType.Legs] = "legs",
-            [EquipmentType.Hands] = "hands",
-            [EquipmentType.Feet] = "feet"
-        };
+        public Equipment Selected => this.selected;
+        private Equipment selected = null;
 
         [SerializeField] private EquipmentType[] typeOrder =
         {
@@ -35,8 +28,8 @@ namespace BF2D.Game.Combat
 
         public override void ControlInitialize()
         {
-            OnNavigate(this.Controlled.GetSnapshot());
             base.ControlInitialize();
+            this.Controlled.OnNavigate();
         }
 
         public override void ControlFinalize()
@@ -47,36 +40,39 @@ namespace BF2D.Game.Combat
 
         public void SetupEquippedList(CharacterStats character)
         {
-            EquipmentType[] types = Enum.GetValues(typeof(EquipmentType)) as EquipmentType[];
-            for (int i = 0; i < types.Length; i++)
+            for (int i = 0; i < this.typeOrder.Length; i++)
             {
-                EquipmentType type = types[i];
+                EquipmentType type = this.typeOrder[i];
                 GridOption option = this.Controlled.At(new Vector2Int(0, i));
                 Equipment equipped = character.GetEquipped(type);
 
-                GridOption.Data data = equipped is null ?
-                new GridOption.Data
+                GridOption.Data data = new()
                 {
-                    icon = GameCtx.One.GetIcon(this.equipmentIconKeys[type]),
-                } :
-                new GridOption.Data
-                {
-                    icon = equipped.GetIcon()
+                    icon = equipped is null ? GameCtx.One.GetIcon(Strings.Equipment.GetTypeID(type)) : equipped.GetIcon(),
+                    onNavigate = () => OnNavigate(type)
                 };
 
                 option.Setup(data);
             }
         }
 
-        public void OnNavigate(OptionsGrid.Snapshot info)
+        private void OnNavigate(EquipmentType type)
         {
-            if (!UICtx.One.IsControlling(this))
-                return;
-
-            EquipmentType type = this.typeOrder[info.cursorPosition1D];
-            CharacterStats character = this.equipCharacterTargeter.Selected;
+            CharacterStats character = this.playerTargeter.Selected;
 
             this.bag.SetupEquipmentBag(character, type);
+
+            Equipment equipped = character.GetEquipped(type);
+            if (this.bag.Selected is not null)
+                this.leftText.text = equipped?.TextBreakdown(this.bag.Selected) ?? GetUnequippedLabel(type);
+            else
+                this.leftText.text = equipped?.TextBreakdown() ?? GetUnequippedLabel(type);
+
+            this.selected = equipped;
+
+            this.bag.Controlled.OnNavigate();
         }
+
+        private string GetUnequippedLabel(EquipmentType type) => $"{Strings.Equipment.GetType(type)} (unequipped)";
     }
 }

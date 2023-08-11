@@ -7,16 +7,9 @@ namespace BF2D.UI
 {
     public class OptionsGridControlPage : OptionsGridControl
     {
-        public int CurrentPage { get { return this.currentPage; } }
-        public int PageCount
-        {
-            get
-            {
-                return (this.allOptions.Count + this.Controlled.Size - 1) /
-                    this.Controlled.Size;
-            }
-        }
-        public Enums.Axis PageOrientation { get { return this.pageOrientation; } set { this.pageOrientation = value; } }
+        public int CurrentPage => this.currentPage;
+        public int PageCount => (this.allOptions.Count + this.Controlled.Area - 1) / this.Controlled.Area;
+        public Enums.Axis PageOrientation { get => this.pageOrientation; set => this.pageOrientation = value; }
 
         private readonly List<GridOption.Data> allOptions = new();
         private int currentPage = 0;
@@ -29,7 +22,7 @@ namespace BF2D.UI
             this.allOptions.Add(option);
         }
 
-        public virtual void LoadOptions(IEnumerable<GridOption.Data> options)
+        public void LoadOptions(IEnumerable<GridOption.Data> options)
         {
             ClearOptions();
             this.Controlled.Setup(this.Controlled.Width, this.Controlled.Height);
@@ -46,7 +39,7 @@ namespace BF2D.UI
             this.Controlled.Clear();
         }
 
-        public virtual void OnNavigate(OptionsGrid.Snapshot info)
+        public void OnNavigate(OptionsGrid.NavInfo info)
         {
             if (this.allOptions.Count < 1)
                 return;
@@ -65,14 +58,14 @@ namespace BF2D.UI
             if (dimensionPrev == dimensionMax && dimension == 0)
             {
                 RefreshGrid(this.currentPage < this.PageCount - 1 ? ++this.currentPage : 0);
-                this.Controlled.SetCursorToLastElseFirst();
+                this.Controlled.UtilityInitialize();
                 return;
             }
 
             if (dimensionPrev == 0 && dimension == dimensionMax)
             {
                 RefreshGrid(this.currentPage > 0 ? --this.currentPage : this.PageCount - 1);
-                this.Controlled.SetCursorToLastElseFirst();
+                this.Controlled.UtilityInitialize();
                 return;
             }
         }
@@ -84,8 +77,8 @@ namespace BF2D.UI
             if (this.allOptions.Count < 1)
                 return;
 
-            int startingIndex = this.Controlled.Size * index;
-            int count = this.Controlled.Size;
+            int startingIndex = this.Controlled.Area * index;
+            int count = this.Controlled.Area;
             if (count > this.allOptions.Count - startingIndex)
                 count = this.allOptions.Count - startingIndex;
 
@@ -96,9 +89,7 @@ namespace BF2D.UI
             }
 
             if (!this.Controlled.Exists(this.Controlled.CursorPosition))
-            {
-                this.Controlled.CursorPosition = this.Controlled.LastOptionPosition;
-            }
+                this.Controlled.SetCursorToLast();
         }
     }
 }

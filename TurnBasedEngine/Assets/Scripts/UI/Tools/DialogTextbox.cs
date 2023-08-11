@@ -663,7 +663,7 @@ namespace BF2D.UI
                     this.responseOptionsControl.Controlled.Add(new UIOption.Data
                     {
                         text = option.text,
-                        actions = new InputButtonCollection<Action>
+                        onInput = new InputButtonCollection<Action>
                         {
                             [InputButton.Confirm] = () =>
                             {

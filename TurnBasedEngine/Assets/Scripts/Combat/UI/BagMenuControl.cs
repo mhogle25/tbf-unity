@@ -22,13 +22,9 @@ namespace BF2D.Game.Combat
             this.Controlled.Setup(this.Controlled.Width, this.Controlled.Height);
 
             foreach (ItemInfo item in CombatCtx.One.CurrentCharacter.Stats.Items.Useable)
-            {
-                this.items.Add(item.Get());
                 AddOption(ToGridOption(item));
-            }
 
             RefreshGrid(0);
-            this.Controlled.SetCursorToLastElseFirst();
 
             if (CombatCtx.One.CurrentCharacter.Stats.ItemsCount < 1)
             {
@@ -36,7 +32,7 @@ namespace BF2D.Game.Combat
                 {
                     name = Strings.Game.Bag,
                     text = "NULL",
-                    actions = new InputButtonCollection<Action>
+                    onInput = new InputButtonCollection<Action>
                     {
                         [InputButton.Back] = () =>
                         {
@@ -47,18 +43,13 @@ namespace BF2D.Game.Combat
                 });
             }
 
-            OnNavigate(new OptionsGrid.Snapshot
-            {
-                cursorPosition1D = this.Controlled.CursorPosition1D
-            });
+            this.Controlled.OnNavigate();
 
             base.ControlInitialize();
         }
 
-        public override void OnNavigate(OptionsGrid.Snapshot info)
+        private void OnNavigate(Item item)
         {
-            base.OnNavigate(info);
-
             CharacterStats currentCharacter = CombatCtx.One.CurrentCharacter.Stats;
 
             if (currentCharacter.ItemsCount < 1)
@@ -68,7 +59,6 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            Item item = this.items[info.cursorPosition1D + this.Controlled.Size * this.CurrentPage];
             this.nameText.text = item.Name;
             this.descriptionText.text = item.TextBreakdown(currentCharacter);
         }
@@ -80,7 +70,7 @@ namespace BF2D.Game.Combat
                 name = item.Name,
                 icon = item.Icon,
                 text = item.Count.ToString(),
-                actions = new InputButtonCollection<Action>
+                onInput = new InputButtonCollection<Action>
                 {
                     [InputButton.Confirm] = () =>
                     {
@@ -92,7 +82,8 @@ namespace BF2D.Game.Combat
                         UICtx.One.PassControlBack();
                         this.Controlled.View.gameObject.SetActive(false);
                     }
-                }
+                },
+                onNavigate = () => OnNavigate(item.Get())
             };
         }
     }

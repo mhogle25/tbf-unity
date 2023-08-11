@@ -12,6 +12,7 @@ namespace BF2D
     {
         public bool ConfirmEnabled { get => this.confirmEnabled; set => this.confirmEnabled = value; }
         public UnityEvent ConfirmEvent => this.confirmEvent;
+        [Header("Input Events")]
         [SerializeField] protected bool confirmEnabled = true;
         [Tooltip("The actions that will be called on confirm")]
         [SerializeField] protected UnityEvent confirmEvent = new();
@@ -46,33 +47,27 @@ namespace BF2D
         [Tooltip("The actions that will be performed on select")]
         [SerializeField] protected UnityEvent selectEvent = new();
 
-        public UnityEvent GetInputEvent(InputButton inputButton)
+        public UnityEvent GetInputEvent(InputButton inputButton) => inputButton switch
         {
-            return inputButton switch
-            {
-                InputButton.Confirm => this.confirmEvent,
-                InputButton.Back => this.backEvent,
-                InputButton.Menu => this.menuEvent,
-                InputButton.Special => this.specialEvent,
-                InputButton.Pause => this.pauseEvent,
-                InputButton.Select => this.selectEvent,
-                _ => throw new ArgumentException("[InputEvents:GetInputEvent] InputButton was null or invalid")
-            };
-        }
+            InputButton.Confirm => this.confirmEvent,
+            InputButton.Back => this.backEvent,
+            InputButton.Menu => this.menuEvent,
+            InputButton.Special => this.specialEvent,
+            InputButton.Pause => this.pauseEvent,
+            InputButton.Select => this.selectEvent,
+            _ => throw new ArgumentException("[InputEvents:GetInputEvent] InputButton was null or invalid")
+        };
 
-        public bool InputEventEnabled(InputButton inputButton)
+        public bool InputEventEnabled(InputButton inputButton) => inputButton switch
         {
-            return inputButton switch
-            {
-                InputButton.Confirm => this.confirmEnabled,
-                InputButton.Back => this.backEnabled,
-                InputButton.Menu => this.menuEnabled,
-                InputButton.Special => this.specialEnabled,
-                InputButton.Pause => this.pauseEnabled,
-                InputButton.Select => this.selectEnabled,
-                _ => throw new ArgumentException("[InputEvents:InputEventEnabled] InputButton was null or invalid")
-            };
-        }
+            InputButton.Confirm => this.confirmEnabled,
+            InputButton.Back => this.backEnabled,
+            InputButton.Menu => this.menuEnabled,
+            InputButton.Special => this.specialEnabled,
+            InputButton.Pause => this.pauseEnabled,
+            InputButton.Select => this.selectEnabled,
+            _ => throw new ArgumentException("[InputEvents:InputEventEnabled] InputButton was null or invalid")
+        };
     }
 
 }
