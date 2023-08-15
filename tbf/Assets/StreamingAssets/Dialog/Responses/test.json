@@ -1,0 +1,18 @@
+[
+    {
+        "text": "Yes",
+        "dialogIndex": -1,
+        "action": {
+        },
+        "prereq": {
+        }
+    },
+    {
+        "text": "I wasn't listening",
+        "dialogIndex": 2,
+        "action": {
+        },
+        "prereq": {
+        }
+    }
+]

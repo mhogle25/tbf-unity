@@ -1,0 +1,17 @@
+{
+    "name": "Lesser Gem of Attack",
+    "auras": 
+    [
+    ],
+    "damage":
+    {
+        "number":
+        {
+            "value":3
+        },
+        "modifiers":
+        [
+            "Attack"
+        ]
+    }
+}

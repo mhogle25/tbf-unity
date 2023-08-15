@@ -1,0 +1,16 @@
+[
+    {
+        "text": "All Players",
+        "action": 
+        {
+            "players":true
+        }
+    },
+    {
+        "text": "All Enemies",
+        "action": 
+        {
+            "players":false
+        }
+    }
+]

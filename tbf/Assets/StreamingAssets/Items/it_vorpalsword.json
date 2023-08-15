@@ -1,0 +1,28 @@
+{
+    "name":"Vorpal Sword",
+    "spriteID":"sword_01",                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    "description":"An ancient sword of great power. Damages a single opponent.",
+    "auras": 
+    [
+    ],
+    "consumable":false,
+    "onUse":
+    {
+        "message":
+        [
+            "[I:0] performed a calculated strike.[E]"
+        ],
+        "targetedGemSlots": 
+        [
+            {
+                "target":"Opponent",
+                "description":"attack",
+                "critChanceModifier": 
+                {
+                    "expression": "$ 10 50"
+                },
+                "gemID":"gm_damage_01_a"
+            }
+        ]
+    }
+}

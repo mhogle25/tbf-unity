@@ -1,0 +1,32 @@
+{
+    "name":"Magic Missile",
+    "spriteID":"magicmissile_01",
+    "description":"A spell that fires three missiles of psychic energy at random opponents",
+    "auras": 
+    [
+        "Psychic"
+    ],
+    "consumable":false,
+    "onUse":
+    {
+        "message":
+        [
+            "[I:0] conjured bolts of fierce psychic energy.[E]"
+        ],
+        "targetedGemSlots": 
+        [
+            {
+                "target":"RandomOpponent",
+                "gemID":"gm_damage_03_f"
+            },
+            {
+                "target":"RandomOpponent",
+                "gemID":"gm_damage_03_f"
+            },
+            {
+                "target":"RandomOpponent",
+                "gemID":"gm_damage_03_f"
+            }
+        ]
+    }
+}

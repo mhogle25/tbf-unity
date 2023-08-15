@@ -1,0 +1,13 @@
+{
+    "name": "Gem of Weak Damage",
+    "auras": 
+    [
+    ],
+    "directDamage":
+    {
+        "number":
+        {
+            "value":1
+        }
+    }
+}

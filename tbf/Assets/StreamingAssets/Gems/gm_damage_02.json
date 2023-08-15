@@ -1,0 +1,14 @@
+{
+    "name": "Gem of Reckless Agression",
+    "auras": 
+    [
+    ],
+    "damage": 
+    {
+        "number":
+        {
+            "expression":"$ 2 5"
+        }
+    },
+    "successRate":60
+}

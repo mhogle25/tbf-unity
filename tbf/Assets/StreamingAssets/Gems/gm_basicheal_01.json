@@ -1,0 +1,14 @@
+{
+    "name": "Gem of Weak Health",
+    "auras": 
+    [
+        "Restoration"
+    ],
+    "heal":
+    {        
+        "number":
+        {
+            "value":1
+        }
+    }
+}

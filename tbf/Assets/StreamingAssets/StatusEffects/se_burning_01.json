@@ -1,0 +1,30 @@
+{
+    "name":"Burning",
+    "description":"ignited",
+    "auras": 
+    [
+        "Fire"
+    ],
+    "duration":3,
+    "singleton":true,
+    "speedModifier":0,
+    "attackModifier":0,
+    "defenseModifier":0,
+    "focusModifier":0,
+    "luckModifier":0,
+    "maxHealthModifier":0,
+    "maxStaminaModifier":0,
+    "onEOT": 
+    {
+        "message":
+        [
+            "The flames continue to sear [I:0]'s flesh.[E]"
+        ],
+        "gemSlots":
+        [
+            {
+                "gemID": "gm_basicdamage_01"
+            }
+        ]
+    }
+}

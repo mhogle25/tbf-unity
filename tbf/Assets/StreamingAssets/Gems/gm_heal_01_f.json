@@ -1,0 +1,18 @@
+{
+    "name": "Gem of Desperate Care",
+    "auras": 
+    [
+        "Restoration"
+    ],
+    "heal": 
+    {
+        "number":
+        {
+            "expression":"$ 1 10"
+        },
+        "modifiers":
+        [
+            "Focus"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "name":"Medicinal Herb",
+    "spriteID":"herb_01",
+    "description":"An herb with restorative properties. Heals a single target.",
+    "auras": 
+    [
+        "Restoration"
+    ],
+    "onUse":
+    {
+        "message":
+        [
+            "[I:0] used the medicinal herb's healing properties.[E]"
+        ],
+        "targetedGemSlots": 
+        [
+            {
+                "target":"Any",
+                "description":"heal",
+                "gemID":"gm_heal_01_f"
+            }
+        ]
+    }
+}
