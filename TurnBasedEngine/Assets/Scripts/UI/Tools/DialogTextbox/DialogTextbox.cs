@@ -12,7 +12,7 @@ namespace BF2D.UI
 {
     public class DialogTextbox : UIUtility
     {
-        private struct DialogData
+        private struct Data
         {
             public List<string> dialog;
             public int index;
@@ -55,6 +55,8 @@ namespace BF2D.UI
         public ResponseOptionEvent ResponseConfirmEvent => this.responseOptionConfirmEvent;
         [SerializeField] private ResponseOptionEvent responseOptionConfirmEvent = new();
 
+        private readonly List<IResponseController> responseControllers = new();
+
         public UnityEvent ResponseBackEvent => this.responseOptionBackEvent;
         [SerializeField] private UnityEvent responseOptionBackEvent = new();
 
@@ -79,12 +81,12 @@ namespace BF2D.UI
         //The state delegate
         private Action state = null;
 
-        public bool Armed { get => this.dialogQueue.Count > 0; }
+        public bool Armed => this.dialogQueue.Count > 0;
         //The dialog queue
-        private readonly Queue<DialogData> dialogQueue = new();
+        private readonly Queue<Data> dialogQueue = new();
 
         //The current dialog data
-        private DialogData currentDialog = default;
+        private Data currentDialog = default;
 
         //Control Variables
         private float timeAccumulator = 0f;
@@ -96,15 +98,15 @@ namespace BF2D.UI
         private bool continueFlag = false;
 
         //Misc
-        private const int defaultValue = -1;
-        private const char pauseTag = 'P';
-        private const char speedTag = 'S';
-        private const char voiceTag = 'V';
-        private const char jumpTag = 'J';
-        private const char nameTag = 'N';
-        private const char endTag = 'E';
-        private const char responseTag = 'R';
-        private const char insertTag = 'I';
+        private const int DEFAULT_VALUE = -1;
+        private const char PAUSE_TAG = 'P';
+        private const char SPEED_TAG = 'S';
+        private const char VOICE_TAG = 'V';
+        private const char JUMP_TAG = 'J';
+        private const char NAME_TAG = 'N';
+        private const char END_TAG = 'E';
+        private const char RESPONSE_TAG = 'R';
+        private const char INSERT_TAG = 'I';
 
         private void Awake() 
         {
@@ -121,15 +123,15 @@ namespace BF2D.UI
         #region Public Overrides
         public override void UtilityInitialize()
         {
-            base.UtilityInitialize();
             this.state = StateDialogQueue;
+            base.UtilityInitialize();
         }
 
         public override void UtilityFinalize()
         {
-            base.UtilityFinalize();
             NametagDisable();
             Cancel();
+            base.UtilityFinalize();
         }
         #endregion
 
@@ -158,7 +160,7 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, Action callback, string[] inserts)
+        public void Message(string message, Action callback, params string[] inserts)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -168,12 +170,12 @@ namespace BF2D.UI
 
             List<string> lines = new()
             {
-                $"{message}[{DialogTextbox.endTag}]'"
+                $"{message}[{DialogTextbox.END_TAG}]'"
             };
 
             lines = ReplaceInsertTags(lines, inserts);
 
-            DialogData dialogData = new()
+            Data dialogData = new()
             {
                 dialog = lines,
                 index = 0,
@@ -210,7 +212,7 @@ namespace BF2D.UI
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLine, Action callback, string[] inserts)
+        public void Dialog(string key, int startingLine, Action callback, params string[] inserts)
         {
             if (!this.dialogs.ContainsKey(key))
             {
@@ -228,7 +230,7 @@ namespace BF2D.UI
 
             lines = ReplaceInsertTags(lines, inserts);
 
-            DialogData dialogData = new()
+            Data dialogData = new()
             {
                 dialog = lines,
                 index = startingLine,
@@ -265,7 +267,7 @@ namespace BF2D.UI
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLine, Action callback, string[] inserts)
+        public void Dialog(List<string> lines, int startingLine, Action callback, params string[] inserts)
         {
             if (lines is null || lines.Count < 1)
             {
@@ -280,7 +282,7 @@ namespace BF2D.UI
             }
 
             List<string> newLines = ReplaceInsertTags(lines, inserts);
-            DialogData dialogData = new()
+            Data dialogData = new()
             {
                 dialog = newLines,
                 index = startingLine,
@@ -311,23 +313,34 @@ namespace BF2D.UI
         public void Cancel()
         {
             this.dialogQueue.Clear();
+            this.textField.text = string.Empty;
             this.state = StateDialogQueue;
         }
+
+        public void AddResponseController(IResponseController controller)
+        {
+            if (controller is null)
+            {
+                Debug.Log("[DialogTextbox.AddResponseController] The controller was null");
+                return;
+            }
+
+            this.responseControllers.Add(controller);
+        }
+
+        public void ClearResponseControllers() => this.responseControllers.Clear();
         #endregion
 
         #region Public Static Utilities
         public static List<string> ReplaceInsertTags(List<string> dialog, string[] inserts)
         {
-            if (inserts is null)
-                return dialog;
-            if (inserts.Length < 1)
+            if (inserts is null || inserts.Length < 1)
                 return dialog;
 
             List<string> newDialog = new();
             for (int i = 0; i < dialog.Count; i++)
-            {
                 newDialog.Add(ReplaceInsertTags(dialog[i], inserts));
-            }
+
             return newDialog;
         }
         #endregion
@@ -338,7 +351,7 @@ namespace BF2D.UI
             if (this.dialogQueue.Count < 1)
                 return;
 
-            DialogData dialogData = this.dialogQueue.Dequeue();
+            Data dialogData = this.dialogQueue.Dequeue();
 
             ResetControlVariables(dialogData.index);
             this.voiceAudioSource.clip = this.defaultVoice;
@@ -353,8 +366,8 @@ namespace BF2D.UI
         private void StateMessageParseAndDisplay() {
             //Message Parse Statement
             if (Time.time > this.timeAccumulator) {
-                this.timeAccumulator = Time.time + this.messageSpeed;       //Implement time increment
-                MessageParseAndDisplay();                                   //Call the message parse and display of the next character or implementation of the next flag
+                this.timeAccumulator = Time.time + this.messageSpeed;       //Time increment
+                MessageParseAndDisplay();                                   //Call the message parser and display the next character or execute the next flag
             }
         }
 
@@ -368,25 +381,25 @@ namespace BF2D.UI
             if (this.continueFlag || this.pass) {
                 this.continueFlag = false;
                 this.pass = false;
-                BF2D.Utilities.Audio.PlayAudioSource(this.confirmAudioSource);       //Play the confirm sound
+                Utilities.Audio.PlayAudioSource(this.confirmAudioSource);       //Play the confirm sound
                 this.continueIcon.enabled = false;
                 this.textField.text = "";
-                if (this.nextDialogIndex != DialogTextbox.defaultValue)
+                if (this.nextDialogIndex != DialogTextbox.DEFAULT_VALUE)
                 {
                     this.dialogIndex = this.nextDialogIndex;
-                    this.nextDialogIndex = DialogTextbox.defaultValue;
+                    this.nextDialogIndex = DialogTextbox.DEFAULT_VALUE;
                 } 
                 else
                 {
                     this.dialogIndex++;                     //Increment dialog index to the next line of dialog
                 }
                 this.messageIndex = 0;                      //Reset the message index to be on the first character of the line
-                this.state = StateMessageParseAndDisplay; //Change the state to MessageParseAndDisplay
+                this.state = StateMessageParseAndDisplay;   //Change the state to MessageParseAndDisplay
             }
         }
 
         private void StateEndOfDialog() {
-            if (this.nextDialogIndex != DialogTextbox.defaultValue)
+            if (this.nextDialogIndex != DialogTextbox.DEFAULT_VALUE)
                 this.state = StateEndOfLine;
 
             if (!this.continueIcon.enabled)
@@ -397,7 +410,7 @@ namespace BF2D.UI
 
             if (this.continueFlag || this.pass) {
                 this.pass = false;
-                BF2D.Utilities.Audio.PlayAudioSource(this.confirmAudioSource);   //Play the confirm sound
+                Utilities.Audio.PlayAudioSource(this.confirmAudioSource);   //Play the confirm sound
                 this.continueIcon.enabled = false;
                 NametagDisable();
                 //Call the callback function if it exists
@@ -455,18 +468,18 @@ namespace BF2D.UI
                 int newMessageIndex = this.messageIndex;
                 switch (tag)
                 {
-                    case DialogTextbox.pauseTag: PauseAction(message, ref newMessageIndex); break;   //Case: Pause for seconds
-                    case DialogTextbox.speedTag: SpeedAction(message, ref newMessageIndex); break;   //Case: New text speed
-                    case DialogTextbox.nameTag: NametagAction(message, ref newMessageIndex); break;  //Case: Orator name
-                    case DialogTextbox.jumpTag: JumpAction(message, ref newMessageIndex); break;     //Case: Jump
-                    case DialogTextbox.voiceTag: VoiceAction(message, ref newMessageIndex); break;   //Case: Voice
-                    case DialogTextbox.responseTag: ResponseAction(message, ref newMessageIndex); return false;
-                    case DialogTextbox.endTag: this.state = StateEndOfDialog; return false;
+                    case DialogTextbox.PAUSE_TAG: PauseAction(message, ref newMessageIndex); break;   //Case: Pause for seconds
+                    case DialogTextbox.SPEED_TAG: SpeedAction(message, ref newMessageIndex); break;   //Case: New text speed
+                    case DialogTextbox.NAME_TAG: NametagAction(message, ref newMessageIndex); break;  //Case: Orator name
+                    case DialogTextbox.JUMP_TAG: JumpAction(message, ref newMessageIndex); break;     //Case: Jump
+                    case DialogTextbox.VOICE_TAG: VoiceAction(message, ref newMessageIndex); break;   //Case: Voice
+                    case DialogTextbox.RESPONSE_TAG: ResponseAction(message, ref newMessageIndex); return false;
+                    case DialogTextbox.END_TAG: this.state = StateEndOfDialog; return false;
                     default:
-                        if (tag == DialogTextbox.insertTag)
+                        if (tag == DialogTextbox.INSERT_TAG)
                             Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
                         else
-                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not a valid character");
+                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not valid");
                         Cancel();
                         return true;
                 }
@@ -504,7 +517,7 @@ namespace BF2D.UI
         private void NametagAction(string message, ref int newMessageIndex)
         {
             string name = ParseTag(message, ref newMessageIndex);
-            if (name == DialogTextbox.defaultValue.ToString())
+            if (name == DialogTextbox.DEFAULT_VALUE.ToString())
                 NametagDisable();
             else
                 NametagEnable(name);
@@ -526,7 +539,7 @@ namespace BF2D.UI
             {
                 this.voiceAudioSource.clip = this.voiceCollection.Get(key);
             }
-            else if (key == DialogTextbox.defaultValue.ToString())
+            else if (key == DialogTextbox.DEFAULT_VALUE.ToString())
             {
                 this.voiceAudioSource.clip = this.defaultVoice;
             }
@@ -544,6 +557,7 @@ namespace BF2D.UI
             if (string.IsNullOrEmpty(data))
             {
                 Debug.LogError("[DialogTextbox:MessageParseAndDisplay] The value for the response data cannot be null");
+                Cancel();
                 return;
             }
 
@@ -566,6 +580,7 @@ namespace BF2D.UI
                 else
                 {
                     Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] The dialog response file for the specified key '{data}' was not found");
+                    Cancel();
                     return;
                 }
             }
@@ -588,7 +603,7 @@ namespace BF2D.UI
             char character = message[index];                //Initialize character index
             string valueString = string.Empty;              //Float before conversion
 
-            Stack<char> stack = new Stack<char>();
+            Stack<char> stack = new();
             while (character != ']' || stack.Count > 0)
             {
                 valueString += character;
@@ -660,19 +675,29 @@ namespace BF2D.UI
                     if (this.prereqConditionChecker && this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
                         continue;
 
-                    this.responseOptionsControl.Controlled.Add(new UIOption.Data
+                    string action = option.action.ToString();
+
+                    this.responseOptionsControl.Controlled.Add(new GridOption.Data
                     {
                         text = option.text,
                         onInput = new InputButtonCollection<Action>
                         {
                             [InputButton.Confirm] = () =>
                             {
-                                this.responseOptionConfirmEvent?.Invoke(option.action.ToString());
+                                foreach (IResponseController controller in this.responseControllers)
+                                    controller.OnConfirm(action);
+
+                                this.responseOptionConfirmEvent?.Invoke(action);
+
                                 ResponseConfirm(option.dialogIndex);
                             },
                             [InputButton.Back] = () =>
                             {
                                 FinalizeResponse();
+
+                                foreach (IResponseController controller in this.responseControllers)
+                                    controller.OnBack();
+
                                 this.responseOptionBackEvent?.Invoke();
                             }
                         }
@@ -690,7 +715,7 @@ namespace BF2D.UI
 
         private void ResponseConfirm(int dialogIndex)
         {
-            if (dialogIndex != DialogTextbox.defaultValue)
+            if (dialogIndex != DialogTextbox.DEFAULT_VALUE)
                 this.nextDialogIndex = dialogIndex;
 
             FinalizeResponse();
@@ -722,10 +747,10 @@ namespace BF2D.UI
 
         private static string ReplaceInsertTags(string message, string insert, int index)
         {
-            if (insert is null || !message.Contains($"[{DialogTextbox.insertTag}:{index}]"))
+            if (insert is null || !message.Contains($"[{DialogTextbox.INSERT_TAG}:{index}]"))
                 return message;
 
-            string newMessage = message.Replace($"[{DialogTextbox.insertTag}:{index}]", insert);
+            string newMessage = message.Replace($"[{DialogTextbox.INSERT_TAG}:{index}]", insert);
             return newMessage;
         }
         #endregion

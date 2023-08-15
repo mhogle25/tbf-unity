@@ -12,7 +12,8 @@ namespace BF2D.Utilities
         private const char OP_SUB = '-';
         private const char OP_MULT = '*';
 
-        private readonly HashSet<char> operatorsSet = new() {
+        private readonly HashSet<char> operatorsSet = new()
+        {
             NumRand.OP_RANGE,
             NumRand.OP_ADD,
             NumRand.OP_SUB,
@@ -49,9 +50,9 @@ namespace BF2D.Utilities
 
             private readonly string raw = string.Empty;
 
-            public bool AnyArgumentsSet { get { return this.arg0 is not null || this.arg1 is not null; } }
+            public bool AnyArgsInitialized => this.arg0 is not null || this.arg1 is not null;
 
-            public bool FirstArgumentSet { get { return this.arg0 is not null && this.arg1 is null; } }
+            public bool FirstArgInitialized => this.arg0 is not null && this.arg1 is null;
 
             public int Calculate(CalcSpecs specs)
             {
@@ -244,14 +245,14 @@ namespace BF2D.Utilities
 
                 arg = specs.termRegistry.ContainsKey(operations[i]) ? specs.termRegistry[operations[i]] : arg;
 
-                if (!this.CurrentOpF.AnyArgumentsSet)
+                if (!this.CurrentOpF.AnyArgsInitialized)
                 {
                     this.CurrentOpF.Arg0 = arg;
                     i++;
                     continue;
                 }
 
-                if (this.CurrentOpF.FirstArgumentSet)
+                if (this.CurrentOpF.FirstArgInitialized)
                 {
                     this.CurrentOpF.Arg1 = arg;
                     FloatOp op = this.opStackF.Pop();

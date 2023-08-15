@@ -53,7 +53,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939872126}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -110,7 +110,7 @@ RectTransform:
   - {fileID: 636745793418726094}
   - {fileID: 939872127}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -179,8 +179,8 @@ MonoBehaviour:
   menuEvent:
     m_PersistentCalls:
       m_Calls: []
-  attackEnabled: 1
-  attackEvent:
+  specialEnabled: 1
+  specialEvent:
     m_PersistentCalls:
       m_Calls: []
   pauseEnabled: 1
@@ -191,9 +191,12 @@ MonoBehaviour:
   selectEvent:
     m_PersistentCalls:
       m_Calls: []
-  textMesh: {fileID: 9047699793556775555}
+  onNavigate:
+    m_PersistentCalls:
+      m_Calls: []
   icon: {fileID: 0}
   cursor: {fileID: 939872128}
+  textMesh: {fileID: 9047699793556775555}
 --- !u!1 &4021248496372531499
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +267,7 @@ MonoBehaviour:
   m_text: Option 1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: 5494906580358676605, guid: a9414c80bf05cb749a60714c9ba9a63f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -2978,7 +2978,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1878389727}
   - {fileID: 497042025}
   - {fileID: 2027945620}
   m_Father: {fileID: 359514070}
@@ -3251,8 +3250,10 @@ MonoBehaviour:
   delay: 0.5
   speed: 0.1
   pageOrientation: 0
+  platforms: {fileID: 665148811}
   equipped: {fileID: 1395391781}
-  events: {fileID: 1878389728}
+  textbox: {fileID: 831339457}
+  textboxKey: di_equip_bag
   footer: {fileID: 2027945621}
   rightText: {fileID: 1104975011}
 --- !u!1 &373233398
@@ -5689,7 +5690,7 @@ GameObject:
   - component: {fileID: 704968161}
   - component: {fileID: 704968162}
   m_Layer: 0
-  m_Name: Targeter
+  m_Name: Items Character Targeter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5727,6 +5728,7 @@ MonoBehaviour:
   speed: 0.1
   orphanedTextbox: {fileID: 3762075292545349522}
   data: {fileID: 1516352438}
+  dialogKey: di_items_character_targeter
 --- !u!1 &726882009
 GameObject:
   m_ObjectHideFlags: 0
@@ -6952,7 +6954,7 @@ MonoBehaviour:
   continueIcon: {fileID: 550871904}
   dialogFileManager: {fileID: 1748236651}
   defaultMessageSpeed: 0.02
-  messageInterrupt: 0
+  messageInterrupt: 1
   autoPass: 0
   onEndOfQueuedDialogs:
     m_PersistentCalls:
@@ -6974,10 +6976,34 @@ MonoBehaviour:
   prereqConditionChecker: {fileID: 0}
   responseOptionConfirmEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 831339452}
+        m_TargetAssemblyTypeName: BF2D.UI.DialogTextbox, Assembly-CSharp
+        m_MethodName: ClearResponseControllers
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   responseOptionBackEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 831339452}
+        m_TargetAssemblyTypeName: BF2D.UI.DialogTextbox, Assembly-CSharp
+        m_MethodName: ClearResponseControllers
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   voiceCollection: {fileID: 1354700394}
   confirmAudioSource: {fileID: 704422851}
   voiceAudioSource: {fileID: 275293719}
@@ -11498,7 +11524,7 @@ Camera:
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0.055555556
-    y: 0.02631579
+    y: 0.12664473
     width: 0.8888889
     height: 0.94736844
   near clip plane: 0
@@ -18140,91 +18166,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dbd4c198530429459bcf9522d6c0fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1878389726
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1878389727}
-  - component: {fileID: 1878389728}
-  m_Layer: 5
-  m_Name: Input Events
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1878389727
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1878389726}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 315427015}
-  m_RootOrder: -1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1878389728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1878389726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebd11134a236bf54c8840313ab2cbb0a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  confirmEnabled: 1
-  confirmEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  backEnabled: 1
-  backEvent:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1650085041}
-        m_TargetAssemblyTypeName: BF2D.UI.UICtx, Assembly-CSharp
-        m_MethodName: PassControlBack
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  menuEnabled: 1
-  menuEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  specialEnabled: 1
-  specialEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  pauseEnabled: 1
-  pauseEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  selectEnabled: 1
-  selectEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1878873437
 GameObject:
   m_ObjectHideFlags: 0
@@ -21119,6 +21060,30 @@ PrefabInstance:
     - target: {fileID: 7845635373157265225, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
       propertyPath: m_Name
       value: UI Context
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: backEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: menuEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: pauseEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: selectEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: confirmEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683017498653616066, guid: c2e03363c18f242bc90c1126e9813a72, type: 3}
+      propertyPath: specialEnabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

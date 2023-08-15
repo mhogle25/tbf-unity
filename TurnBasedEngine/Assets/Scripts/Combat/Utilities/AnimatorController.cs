@@ -9,7 +9,7 @@ namespace BF2D.Game.Combat
 
         public bool HasEvent => this.animEvent is not null;
 
-        private string animState = Strings.Animation.Idle;
+        private string animState = Strings.Animation.IDLE_ID;
         public delegate List<string> RunEvent();
         private RunEvent animEvent = null;
 

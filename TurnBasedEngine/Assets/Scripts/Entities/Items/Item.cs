@@ -26,8 +26,7 @@ namespace BF2D.Game
         {
             string description = $"{base.Description}\n";
 
-            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in this.OnUse.TargetedGemSlots)
-                description += $"-\n{targetedGemSlot.TextBreakdown(source)}";
+            description += onUse.TextBreakdown(source);
 
             description += "-\n";
             if (!this.Consumable)

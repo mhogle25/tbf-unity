@@ -5,20 +5,23 @@ using BF2D.Enums;
 using System;
 using TMPro;
 using BF2D.Game.Enums;
-using UnityEngine.Events;
 
 namespace BF2D.Game.Combat
 {
     public class EquipmentBagControl : OptionsGridControlPage
     {
         [Header("Equipment Bag")]
+        [SerializeField] private EquipPlayerTargeter platforms = null;
         [SerializeField] private EquippedListControl equipped = null;
-        [SerializeField] private InputEvents events = null;
+        [Header("EB - Textbox")]
+        [SerializeField] private DialogTextboxControl textbox = null;
+        [SerializeField] private string textboxKey = "di_equip_bag";
+        [Header("EB - Text Fields")]
         [SerializeField] private TextMeshProUGUI footer = null;
         [SerializeField] private TextMeshProUGUI rightText = null;
 
-        public Equipment Selected => this.selected;
-        private Equipment selected = null;
+        public Equipment Selected => this.selected?.Get();
+        private EquipmentInfo selected = null;
 
         public override void ControlInitialize()
         {
@@ -32,48 +35,48 @@ namespace BF2D.Game.Combat
             base.ControlFinalize();
         }
 
-        public void SetupEquipmentBag(CharacterStats character, EquipmentType type)
+        public void Setup(CharacterStats character, EquipmentType type)
         {
             IEnumerable<EquipmentInfo> equipment = character.Equipment.FilterByType(type);
 
-            UnityEvent backEvent = this.events.BackEvent;
+            ClearOptions();
+            this.Controlled.Setup();
 
-            List<GridOption.Data> datas = new();
             foreach (EquipmentInfo info in equipment)
             {
-                datas.Add(new GridOption.Data
+                AddOption(new GridOption.Data
                 {
                     name = info.Name,
                     icon = info.GetIcon(),
                     text = info.Count.ToString(),
                     onInput = new InputButtonCollection<Action>
                     {
-                        [InputButton.Confirm] = this.events.ConfirmEvent.Invoke,
-                        [InputButton.Back] = backEvent.Invoke
+                        [InputButton.Confirm] = EquipmentsOnConfirm,
+                        [InputButton.Back] = OnBack
                     },
-                    onNavigate = () => OnNavigate(info.Get())
+                    onNavigate = () => OnNavigate(info)
                 });
             }
 
-            if (datas.Count < 1) { 
-                datas.Add(new GridOption.Data
+            if (!this.Armed) { 
+                AddOption(new GridOption.Data
                 {
                     name = "Empty Bag",
                     onInput = new InputButtonCollection<Action>
                     {
-                        [InputButton.Back] = backEvent.Invoke
+                        [InputButton.Back] = OnBack
                     },
                     onNavigate = () => OnNavigate(null)
                 });
             }
-                    
-            LoadOptions(datas);
+
+            RefreshGrid(0);
         }
 
-        private void OnNavigate(Equipment equipment)
+        private void OnNavigate(EquipmentInfo equipment)
         {
-            char primary = this.PageOrientation == Axis.Horizontal ? Strings.System.RightArrowSymbol : Strings.System.DownArrowSymbol;
-            char secondary = this.PageOrientation == Axis.Vertical ? Strings.System.LeftArrowSymbol : Strings.System.UpArrowSymbol;
+            char primary = this.PageOrientation == Axis.Horizontal ? Strings.System.RIGHT_ARROW_SYMBOL : Strings.System.DOWN_ARROW_SYMBOL;
+            char secondary = this.PageOrientation == Axis.Vertical ? Strings.System.LEFT_ARROW_SYMBOL : Strings.System.UP_ARROW_SYMBOL;
 
             if (this.CurrentPage == 0)
                 if (this.PageCount == 1)
@@ -88,11 +91,37 @@ namespace BF2D.Game.Combat
             if (equipment is not null)
             {
                 this.selected = equipment;
-                this.rightText.text = equipment.TextBreakdown(this.equipped.Selected);
+                this.rightText.text = this.Selected.TextBreakdown(this.equipped.Selected, this.platforms.Selected);
             }
             else
             {
                 this.rightText.text = $"(none)";
+            }
+        }
+
+        private void OnBack()
+        {
+            UICtx.One.PassControlBack();
+            this.textbox.SetViewActive(false);
+        }
+
+        private void EquipmentsOnConfirm()
+        {
+            this.textbox.AddResponseController(new ResponseYesNo(ResponseOnConfirm, OnBack));
+            this.textbox.Dialog(this.textboxKey, 0, null, this.Selected.Name, CombatCtx.One.CurrentCharacter.Stats.Name);
+            this.textbox.TakeControl();
+        }
+
+        private void ResponseOnConfirm(bool yes)
+        {
+            if (yes)
+            {
+                UICtx.One.ResetControlChain(false);
+                CombatCtx.One.SetupEquipCombat(this.selected);
+            }
+            else
+            {
+                OnBack();
             }
         }
     }

@@ -76,7 +76,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatCtx.One.CombatIsOver())
             {
-                Debug.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.Currency} loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.CURRENCY} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -90,7 +90,7 @@ namespace BF2D.Game.Combat
         {
             if (!CombatCtx.One.CombatIsOver())
             {
-                Debug.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.Ether} loot from the fight but combat wasn't over.");
+                Debug.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.ETHER} loot from the fight but combat wasn't over.");
                 return 0;
             }
 
@@ -241,10 +241,7 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Private Methods
-        private void SpeedSort()
-        {
-            this.characterQueue.Sort((x, y) => y.Stats.Speed.CompareTo(x.Stats.Speed));
-        }
+        private void SpeedSort() => this.characterQueue.Sort((x, y) => y.Stats.Speed.CompareTo(x.Stats.Speed));
 
         private void LoadCharacterPrefabs()
         {

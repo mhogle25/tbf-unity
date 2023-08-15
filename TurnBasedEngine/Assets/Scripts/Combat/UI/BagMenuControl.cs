@@ -13,24 +13,40 @@ namespace BF2D.Game.Combat
         [SerializeField] private Utilities.TextField nameText = null;
         [SerializeField] private Utilities.TextField descriptionText = null;
 
-        private readonly List<Item> items = new();
-
         public override void ControlInitialize()
         {
-            this.items.Clear();
-            this.ClearOptions();
-            this.Controlled.Setup(this.Controlled.Width, this.Controlled.Height);
+            ClearOptions();
+            this.Controlled.Setup();
 
             foreach (ItemInfo item in CombatCtx.One.CurrentCharacter.Stats.Items.Useable)
-                AddOption(ToGridOption(item));
-
-            RefreshGrid(0);
-
-            if (CombatCtx.One.CurrentCharacter.Stats.ItemsCount < 1)
             {
-                this.Controlled.Add(new GridOption.Data
+                AddOption(new GridOption.Data
                 {
-                    name = Strings.Game.Bag,
+                    name = item.Name,
+                    icon = item.Icon,
+                    text = item.Count.ToString(),
+                    onInput = new InputButtonCollection<Action>
+                    {
+                        [InputButton.Confirm] = () =>
+                        {
+                            CombatCtx.One.SetupItemCombat(item);
+                            this.Controlled.View.gameObject.SetActive(false);
+                        },
+                        [InputButton.Back] = () =>
+                        {
+                            UICtx.One.PassControlBack();
+                            this.Controlled.View.gameObject.SetActive(false);
+                        }
+                    },
+                    onNavigate = () => OnNavigate(item.Get())
+                });
+            }
+
+            if (!this.Armed)
+            {
+                AddOption(new GridOption.Data
+                {
+                    name = Strings.Game.BAG,
                     text = "NULL",
                     onInput = new InputButtonCollection<Action>
                     {
@@ -43,6 +59,8 @@ namespace BF2D.Game.Combat
                 });
             }
 
+            RefreshGrid(0);
+
             this.Controlled.OnNavigate();
 
             base.ControlInitialize();
@@ -54,37 +72,13 @@ namespace BF2D.Game.Combat
 
             if (currentCharacter.ItemsCount < 1)
             {
-                this.nameText.text = Strings.Game.Bag;
-                this.descriptionText.text = $"The {Strings.Game.Bag.ToLower()} is empty.";
+                this.nameText.text = Strings.Game.BAG;
+                this.descriptionText.text = $"The {Strings.Game.BAG.ToLower()} is empty.";
                 return;
             }
 
             this.nameText.text = item.Name;
             this.descriptionText.text = item.TextBreakdown(currentCharacter);
-        }
-
-        private GridOption.Data ToGridOption(ItemInfo item)
-        {
-            return new GridOption.Data
-            {
-                name = item.Name,
-                icon = item.Icon,
-                text = item.Count.ToString(),
-                onInput = new InputButtonCollection<Action>
-                {
-                    [InputButton.Confirm] = () =>
-                    {
-                        CombatCtx.One.SetupItemCombat(item);
-                        this.Controlled.View.gameObject.SetActive(false);
-                    },
-                    [InputButton.Back] = () =>
-                    {
-                        UICtx.One.PassControlBack();
-                        this.Controlled.View.gameObject.SetActive(false);
-                    }
-                },
-                onNavigate = () => OnNavigate(item.Get())
-            };
         }
     }
 }

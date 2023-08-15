@@ -11,8 +11,8 @@ namespace BF2D.Game
 
             if (arguments.Length == 1)
             {
-                GameCtx.One.LoadControlsConfig(InputController.Keyboard, Strings.System.Default);
-                GameCtx.One.LoadControlsConfig(InputController.Gamepad, Strings.System.Default);
+                GameCtx.One.LoadControlsConfig(InputController.Keyboard, Strings.System.DEFAULT_ID);
+                GameCtx.One.LoadControlsConfig(InputController.Gamepad, Strings.System.DEFAULT_ID);
                 return;
             }
 

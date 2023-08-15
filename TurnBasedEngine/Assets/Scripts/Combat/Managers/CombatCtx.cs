@@ -13,7 +13,7 @@ namespace BF2D.Game.Combat
         {
             public IEnumerable<CharacterStats> players = null;
             public IEnumerable<CharacterStats> enemies = null;
-            public string openingDialogKey = $"di_opening_{Strings.System.Default}";
+            public string openingDialogKey = $"di_opening_{Strings.System.DEFAULT_ID}";
             public float themePaletteOffset = 0.3f;
         }
 
@@ -52,15 +52,21 @@ namespace BF2D.Game.Combat
         }
 
         #region Public Utilities
-        public void SetupItemCombat(ItemInfo itemInfo)
+        public void SetupItemCombat(ItemInfo info)
         {
             this.CurrentCharacter.SetupCombatAction(this.characterTargeter, new CombatAction
             {
                 Item = new ItemCombatActionInfo
                 {
-                    Info = itemInfo
+                    Info = info
                 }
             });
+        }
+
+        public void SetupEquipCombat(EquipmentInfo info)
+        {
+            Debug.LogWarning("TODO: Setup Equip Combat");
+            //this.CurrentCharacter.SetupCombatAction(this.)
         }
 
         public void RunCombatEvents()
@@ -88,10 +94,7 @@ namespace BF2D.Game.Combat
                 List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
                 foreach (JobInfo.LevelUpInfo info in infos)
                 {
-                    this.standaloneTextboxControl.Dialog(info.levelUpDialog, 0, null, new string[]
-                    {
-                        info.parent.Name
-                    });
+                    this.standaloneTextboxControl.Dialog(info.levelUpDialog, 0, null, info.parent.Name);
                 }
 
                 // Item Loot
@@ -100,7 +103,7 @@ namespace BF2D.Game.Combat
                 {
                     ItemInfo itemInfo = GameCtx.One.PartyItems.Acquire(id);
                     if (itemInfo is not null)
-                        itemLootMessage += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                        itemLootMessage += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
                 }
 
                 if (!string.IsNullOrEmpty(itemLootMessage))
@@ -112,7 +115,7 @@ namespace BF2D.Game.Combat
                 {
                     EquipmentInfo equipmentInfo = GameCtx.One.PartyEquipment.Acquire(id);
                     if (equipmentInfo is not null)
-                        equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                        equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
                 }
 
                 if (!string.IsNullOrEmpty(equipmentLootMessage))
@@ -124,7 +127,7 @@ namespace BF2D.Game.Combat
                 {
                     CharacterStatsActionInfo gemInfo = GameCtx.One.PartyGems.Acquire(id);
                     if (gemInfo is not null)
-                        gemLootMessage += $"Acquired a {gemInfo.Get().Name}. {Strings.DialogTextbox.BriefPause}";
+                        gemLootMessage += $"Acquired a {gemInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
                 }
 
                 if (!string.IsNullOrEmpty(gemLootMessage))
@@ -136,9 +139,9 @@ namespace BF2D.Game.Combat
                 int etherUp = this.combatGrid.GetTotalEtherLoot();
                 GameCtx.One.Ether += etherUp;
 
-                string pointLootMessage = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.Currency}";
+                string pointLootMessage = $"The party obtained {this.combatGrid.GetTotalCurrencyLoot()} {Strings.Game.CURRENCY}";
                 if (etherUp > 0)
-                    pointLootMessage += $" and {etherUp} {Strings.Game.Ether}.";
+                    pointLootMessage += $" and {etherUp} {Strings.Game.ETHER}.";
                 else
                     pointLootMessage += '.';
                 this.standaloneTextboxControl.Message(pointLootMessage, () =>
@@ -260,7 +263,7 @@ namespace BF2D.Game.Combat
         {
             if (this.combatGrid.CharacterIsPlayer(this.CurrentCharacter))
             {
-                this.standaloneTextboxControl.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.BriefPause}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", () =>
+                this.standaloneTextboxControl.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.PAUSE_BREIF}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", () =>
                 {
                     UICtx.One.TakeControl(this.mainMenu);
                 });

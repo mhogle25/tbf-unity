@@ -21,5 +21,15 @@ namespace BF2D.Game.Actions
         }
 
         [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.TargetedGemSlots);
+
+        public string TextBreakdown(CharacterStats source)
+        {
+            string description = string.Empty;
+
+            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in this.TargetedGemSlots)
+                description += $"-\n{targetedGemSlot.TextBreakdown(source)}";
+
+            return description;
+        }
     }
 }

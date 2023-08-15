@@ -12,15 +12,16 @@ namespace BF2D.UI
         [SerializeField] private InputEventsControl inputEventsControl = null;
         [SerializeField] private DialogTextboxControl systemTextbox = null;
         [Header("Info")]
-        [SerializeField] private string currentThreadID = Game.Strings.UI.MainThread;
+        [SerializeField] private string currentThreadID = Game.Strings.UI.THREAD_MAIN;
         [SerializeField] private UIControl currentControl = null;
 
-        private readonly Dictionary<string, Stack<UIControl>> controlHistory = new() { { Game.Strings.UI.MainThread, new() } };
+        private readonly Dictionary<string, Stack<UIControl>> controlHistory = new() { { Game.Strings.UI.THREAD_MAIN, new() } };
         private readonly Stack<string> threadHistory = new();
 
         private Stack<UIControl> CurrentStack => this.controlHistory[this.currentThreadID];
 
         public bool IsControlling(UIControl control) => this.currentControl != null && this.currentControl.Equals(control) && this.currentControl.enabled;
+        public UIControl Current => this.currentControl;
 
         public static void StartControlGeneric(UIControl uiControl)
         {

@@ -53,8 +53,8 @@ namespace BF2D.Game
             if (info.leveledUp)
                 info.levelUpDialog = new()
                 {
-                    $"{parent.Name} went from level {previousLevel} to level {this.Level}. {Strings.DialogTextbox.BriefPause}",
-                    $"{Get().GetLevelUpMessage(previousLevel, this.Level)}{Strings.DialogTextbox.End}"
+                    $"{parent.Name} went from level {previousLevel} to level {this.Level}. {Strings.DialogTextbox.PAUSE_BREIF}",
+                    $"{Get().GetLevelUpMessage(previousLevel, this.Level)}{Strings.DialogTextbox.END}"
                 };
             return info;
         }

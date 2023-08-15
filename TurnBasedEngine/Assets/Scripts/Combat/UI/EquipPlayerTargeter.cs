@@ -48,7 +48,7 @@ namespace BF2D.Game.Combat
             }
 
             this.selectedCharacter = tile.AssignedCharacter.Stats;
-            this.equipped.SetupEquippedList(this.selectedCharacter);
+            this.equipped.Setup(this.selectedCharacter);
         }
     }
 }

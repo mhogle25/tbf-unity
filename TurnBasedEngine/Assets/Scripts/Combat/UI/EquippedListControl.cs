@@ -38,7 +38,7 @@ namespace BF2D.Game.Combat
             base.ControlFinalize();
         }
 
-        public void SetupEquippedList(CharacterStats character)
+        public void Setup(CharacterStats character)
         {
             for (int i = 0; i < this.typeOrder.Length; i++)
             {
@@ -60,13 +60,13 @@ namespace BF2D.Game.Combat
         {
             CharacterStats character = this.playerTargeter.Selected;
 
-            this.bag.SetupEquipmentBag(character, type);
+            this.bag.Setup(character, type);
 
             Equipment equipped = character.GetEquipped(type);
             if (this.bag.Selected is not null)
-                this.leftText.text = equipped?.TextBreakdown(this.bag.Selected) ?? GetUnequippedLabel(type);
+                this.leftText.text = equipped?.TextBreakdown(this.bag.Selected, character) ?? GetUnequippedLabel(type);
             else
-                this.leftText.text = equipped?.TextBreakdown() ?? GetUnequippedLabel(type);
+                this.leftText.text = equipped?.TextBreakdown(character) ?? GetUnequippedLabel(type);
 
             this.selected = equipped;
 

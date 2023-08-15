@@ -11,7 +11,9 @@ namespace BF2D.UI
         public int PageCount => (this.allOptions.Count + this.Controlled.Area - 1) / this.Controlled.Area;
         public Enums.Axis PageOrientation { get => this.pageOrientation; set => this.pageOrientation = value; }
 
-        private readonly List<GridOption.Data> allOptions = new();
+        public bool Armed => this.allOptions.Count > 0;
+
+        protected readonly List<GridOption.Data> allOptions = new();
         private int currentPage = 0;
 
         [Header("Pages")]

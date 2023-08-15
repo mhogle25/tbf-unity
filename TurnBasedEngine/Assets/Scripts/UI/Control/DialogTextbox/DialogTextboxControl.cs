@@ -2,13 +2,14 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using BF2D.Game;
+using UnityEngine.Events;
 
 namespace BF2D.UI 
 { 
     public class DialogTextboxControl : UIControl
     {
         [SerializeField] private DialogTextbox dialogTextbox = null;
-        [SerializeField] private string threadID = Strings.UI.MainThread;
+        [SerializeField] private string threadID = Strings.UI.THREAD_MAIN;
 
         protected virtual void Update()
         {
@@ -57,7 +58,7 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, Action callback, string[] inserts)
+        public void Message(string message, Action callback, params string[] inserts)
         {
             this.dialogTextbox.Message(message, callback, inserts);
         }
@@ -89,7 +90,7 @@ namespace BF2D.UI
         /// <param name="key">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLine, Action callback, string[] inserts)
+        public void Dialog(string key, int startingLine, Action callback, params string[] inserts)
         {
             this.dialogTextbox.Dialog(key, startingLine, callback, inserts);
         }
@@ -121,9 +122,15 @@ namespace BF2D.UI
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLine, Action callback, string[] inserts)
+        public void Dialog(List<string> lines, int startingLine, Action callback, params string[] inserts)
         {
             this.dialogTextbox.Dialog(lines, startingLine, callback, inserts);
         }
+
+        public void AddResponseController(IResponseController controller) => this.dialogTextbox.AddResponseController(controller);
+
+        public void ClearResponseControllers() => this.dialogTextbox.ClearResponseControllers();
+
+        public void SetViewActive(bool active) => this.dialogTextbox.View.gameObject.SetActive(active);
     }
 }

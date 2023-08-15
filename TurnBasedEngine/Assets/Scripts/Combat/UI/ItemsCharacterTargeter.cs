@@ -16,6 +16,7 @@ namespace BF2D.Game.Combat
         [Header("Items Character Targeter")]
         [SerializeField] private DialogTextbox orphanedTextbox = null;
         [SerializeField] private CharacterTargeterData data = null;
+        [SerializeField] private string dialogKey = "di_items_character_targeter";
 
         private readonly Queue<TargetedCharacterStatsActionSlot> stagedTargetedGemSlots = new();
         private TargetedCharacterStatsActionSlot stagedTargetedGemSlot = null;
@@ -129,7 +130,8 @@ namespace BF2D.Game.Combat
         {
             this.orphanedTextbox.messageInterrupt = true;
             this.orphanedTextbox.autoPass = true;
-            this.orphanedTextbox.Dialog("di_targeter", 0, () =>
+
+            this.orphanedTextbox.Dialog(this.dialogKey, 0, () =>
             {
                 this.orphanedTextbox.UtilityFinalize();
                 if (this.Controlled && this.Controlled.Interactable)
@@ -137,14 +139,12 @@ namespace BF2D.Game.Combat
 
                 this.Controlled = followUp;
                 this.Controlled.UtilityInitialize();
-                this.Controlled.SetCursorToFirst();
+                this.Controlled.SetCursorToNearest();
                 this.orphanedTextbox.messageInterrupt = default;
                 this.orphanedTextbox.autoPass = default;
             },
-            new string[]
-            {
-                this.stagedTargetedGemSlot.Description
-            });
+            this.stagedTargetedGemSlot.Description);
+
             this.orphanedTextbox.UtilityInitialize();
         }
 
@@ -152,12 +152,14 @@ namespace BF2D.Game.Combat
         {
             this.orphanedTextbox.messageInterrupt = true;
             this.orphanedTextbox.autoPass = false;
-            this.orphanedTextbox.ResponseBackEventEnabled = true; 
+            this.orphanedTextbox.ResponseBackEventEnabled = true;
+
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
                 AlignmentFlag flag = Utilities.JSON.DeserializeString<AlignmentFlag>(json);
                 this.stagedTargetedGemSlot.TargetInfo.CombatTargets = flag.players ? CombatCtx.One.Players : CombatCtx.One.Enemies;
             });
+
             this.orphanedTextbox.ResponseBackEvent.AddListener(() =>
             {
                 EndAllOfAnyEvent();
@@ -165,15 +167,14 @@ namespace BF2D.Game.Combat
                 UICtx.One.PassControlBack();
                 this.orphanedTextbox.Cancel();
             });
-            this.orphanedTextbox.Dialog("di_targeter", 1, () =>
+
+            this.orphanedTextbox.Dialog(this.dialogKey, 1, () =>
             {
                 EndAllOfAnyEvent();
                 Continue();
             },
-            new string[]
-            {
-                this.stagedTargetedGemSlot.Description
-            });
+            this.stagedTargetedGemSlot.Description);
+
             this.orphanedTextbox.UtilityInitialize();
         }
 

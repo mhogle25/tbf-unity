@@ -163,9 +163,9 @@ namespace BF2D.Utilities
 
         private static void LoadFile(Dictionary<string, List<string>> collection, string path)
         {
-            string id = null;
             List<string> dialog = new();
 
+            string id;
             try
             {
                 id = Path.GetFileNameWithoutExtension(path);

@@ -29,15 +29,15 @@ namespace BF2D.UI
             this.gameObject.name = data.name ?? this.gameObject.name;
             this.onNavigateCallback = data.onNavigate ?? this.onNavigateCallback;
 
-            if (data.onInput is not null)
+            InputButton[] buttons = Enum.GetValues(typeof(InputButton)) as InputButton[];
+            foreach (InputButton button in buttons)
             {
-                foreach (InputButton inputButton in Enum.GetValues(typeof(InputButton)))
-                {
-                    if (data.onInput[inputButton] is null)
-                        continue;
+                if (data.onInput is null || data.onInput[button] is null)
+                    continue;
 
-                    GetInputEvent(inputButton).AddListener(data.onInput[inputButton].Invoke);
-                }
+                UnityEvent inputEvent = GetInputEvent(button);
+                inputEvent.RemoveAllListeners();
+                inputEvent.AddListener(data.onInput[button].Invoke);
             }
         }
 

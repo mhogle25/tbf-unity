@@ -1,7 +1,7 @@
-using BF2D.Game.Enums;
-using Newtonsoft.Json;
 using System;
 using BF2D.Game.Actions;
+using BF2D.Game.Enums;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace BF2D.Game
@@ -51,22 +51,6 @@ namespace BF2D.Game
         }
 
         public Sprite GetIcon() => GameCtx.One.GetIcon(this.SpriteID);
-
-        public string TextBreakdown()
-        {
-            string text = $"{this.Name}\n-\n{this.Description}\n-\n";
-
-            return text;
-        }
-
-        public string TextBreakdown(Equipment other)
-        {
-            string text = $"{this.Name}\n-\n{this.Description}\n-\n";
-
-
-
-            return text;
-        }
 
         private int CalculateProperty(int baseProperty, Func<EquipModSlot, int> runePropertyPredicate)
         {

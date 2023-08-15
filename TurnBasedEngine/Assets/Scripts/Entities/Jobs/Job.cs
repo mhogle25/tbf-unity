@@ -159,15 +159,15 @@ namespace BF2D.Game
         public string GetLevelUpMessage(int previousLevel, int currentLevel)
         {
             string statsMessage = string.Empty;
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.MaxHealth}{Strings.Character.MaxHealthSymbol}", GetMaxHealthModifier(previousLevel), GetMaxHealthModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.MaxStamina}{Strings.Character.MaxStaminaSymbol}", GetMaxStaminaModifier(previousLevel), GetMaxStaminaModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.Speed}{Strings.Character.SpeedSymbol}", GetSpeedModifier(previousLevel), GetSpeedModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.Attack}{Strings.Character.AttackSymbol}", GetAttackModifier(previousLevel), GetAttackModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.Defense}{Strings.Character.DefenseSymbol}", GetDefenseModifier(previousLevel), GetDefenseModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.Focus}{Strings.Character.FocusSymbol}", GetFocusModifier(previousLevel), GetFocusModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper($"{Strings.Character.Luck}{Strings.Character.LuckSymbol}", GetLuckModifier(previousLevel), GetLuckModifier(currentLevel));
-            statsMessage += LevelUpMessageHelper(Strings.Character.CritMultiplier.ToLower(), GetCritMultiplier(previousLevel), GetCritMultiplier(currentLevel));
-            statsMessage += LevelUpMessageHelper(Strings.Character.CritChance.ToLower(), GetCritChance(previousLevel), GetCritChance(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.MAX_HEALTH}{Strings.Character.MAX_HEALTH_SYMBOL}", GetMaxHealthModifier(previousLevel), GetMaxHealthModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.MAX_STAMINA}{Strings.Character.MAX_STAMINA_SYMBOL}", GetMaxStaminaModifier(previousLevel), GetMaxStaminaModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.SPEED}{Strings.Character.SPEED_SYMBOL}", GetSpeedModifier(previousLevel), GetSpeedModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.ATTACK}{Strings.Character.ATTACK_SYMBOL}", GetAttackModifier(previousLevel), GetAttackModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.DEFENSE}{Strings.Character.DEFENSE_SYMBOL}", GetDefenseModifier(previousLevel), GetDefenseModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.FOCUS}{Strings.Character.FOCUS_SYMBOL}", GetFocusModifier(previousLevel), GetFocusModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper($"{Strings.Character.LUCK}{Strings.Character.LUCK_SYMBOL}", GetLuckModifier(previousLevel), GetLuckModifier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.Character.CRIT_MULTIPLIER.ToLower(), GetCritMultiplier(previousLevel), GetCritMultiplier(currentLevel));
+            statsMessage += LevelUpMessageHelper(Strings.Character.CRIT_CHANCE.ToLower(), GetCritChance(previousLevel), GetCritChance(currentLevel));
 
             return statsMessage;
         }
@@ -181,7 +181,7 @@ namespace BF2D.Game
                 modified = "increased";
             if (previousValue > currentValue)
                 modified = "decreased";
-            return $"[I:0]'s {label} {modified} by {Math.Abs(currentValue - previousValue)}. {Strings.DialogTextbox.BriefPause}";
+            return $"[I:0]'s {label} {modified} by {Math.Abs(currentValue - previousValue)}. {Strings.DialogTextbox.PAUSE_BREIF}";
         }
         #endregion
 

@@ -1,0 +1,16 @@
+[
+    {
+        "text": "Yes",
+        "action": 
+        {
+            "yes": true
+        }
+    },
+    {
+        "text": "No",
+        "action": 
+        {
+            "yes": false
+        }
+    }
+]

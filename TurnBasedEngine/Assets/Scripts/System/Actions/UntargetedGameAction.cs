@@ -34,5 +34,15 @@ namespace BF2D.Game.Actions
                 Message = this.Message
             };
         }
+
+        public string TextBreakdown(CharacterStats source)
+        {
+            string description = string.Empty;
+
+            foreach (CharacterStatsActionSlot targetedGemSlot in this.GemSlots)
+                description += $"-\n{targetedGemSlot.TextBreakdown(source)}";
+
+            return description;
+        }
     }
 }

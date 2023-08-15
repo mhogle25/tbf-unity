@@ -53,8 +53,13 @@ namespace BF2D.Game
             return this.calculator.Calculate(this.expression, specs) + this.value;
         }
 
+        public string TextBreakdown() => TextBreakdown(new NumRand.TextSpecs { randModifierColor = Colors.Cyan });
+
         public string TextBreakdown(CharacterStats source)
         {
+            if (source is null)
+                return TextBreakdown();
+
             try
             {
                 return TextBreakdown(new NumRand.TextSpecs

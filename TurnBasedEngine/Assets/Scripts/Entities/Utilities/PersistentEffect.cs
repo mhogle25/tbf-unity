@@ -3,6 +3,7 @@ using BF2D.Enums;
 using BF2D.Game.Actions;
 using BF2D.Game.Enums;
 using System;
+using UnityEngine;
 
 namespace BF2D.Game
 {
@@ -70,5 +71,68 @@ namespace BF2D.Game
             CharacterStatsProperty.MaxStamina => this.MaxStaminaModifier,
             _ => throw new ArgumentException($"[PeristentEffect:GetModifier] The given CharacterStatsProperty was null or invalid")
         };
+
+        public string TextBreakdown() => TextBreakdown(null);
+
+        public string TextBreakdown(CharacterStats source) => TextBreakdown(null, source);
+
+        public virtual string TextBreakdown(Equipment other, CharacterStats source)
+        {
+            string text = $"{this.Name}\n-\n{this.Description}\n-\n";
+
+            text += TbModifier(this.SpeedModifier, Strings.Character.SPEED, Strings.Character.SPEED_SYMBOL, other?.SpeedModifier);
+            text += TbModifier(this.AttackModifier, Strings.Character.ATTACK, Strings.Character.ATTACK_SYMBOL, other?.AttackModifier);
+            text += TbModifier(this.DefenseModifier, Strings.Character.DEFENSE, Strings.Character.DEFENSE_SYMBOL, other?.DefenseModifier);
+            text += TbModifier(this.FocusModifier, Strings.Character.FOCUS, Strings.Character.FOCUS_SYMBOL, other?.FocusModifier);
+            text += TbModifier(this.LuckModifier, Strings.Character.LUCK, Strings.Character.LUCK_SYMBOL, other?.LuckModifier);
+            text += TbModifier(this.MaxHealthModifier, Strings.Character.MAX_HEALTH, Strings.Character.MAX_HEALTH_SYMBOL, other?.MaxHealthModifier);
+            text += TbModifier(this.MaxStaminaModifier, Strings.Character.MAX_STAMINA, Strings.Character.MAX_STAMINA_SYMBOL, other?.MaxStaminaModifier);
+
+            text += TbGameAction(this.OnUpkeep, "On Begin", source);
+            text += TbGameAction(this.OnEOT, "On End", source);
+
+            return text;
+        }
+
+        private string TbModifier(int modifier, string label, char icon, int? other)
+        {
+            if (modifier == 0)
+                return string.Empty;
+
+            int resolvedOther = other is null ? modifier : other.GetValueOrDefault();
+
+            string sign = modifier > 0 ? "+" : modifier < 0 ? "-" : null;
+
+            string relativeSign;
+            Color32? color;
+            if (modifier > resolvedOther)
+            {
+                relativeSign = $"{Strings.System.UP_ARROW_SYMBOL}";
+                color = Colors.Green;
+            }
+            else if (modifier < resolvedOther)
+            {
+                relativeSign = $"{Strings.System.DOWN_ARROW_SYMBOL}";
+                color = Colors.Red;
+            }
+            else
+            {
+                relativeSign = null;
+                color = null;
+            }
+
+            string colorOpeningTag = color is not null ? $"<color=#{ColorUtility.ToHtmlStringRGBA(color.GetValueOrDefault())}>" : null;
+            string colorClosingTag = color is not null ? "</color>" : null;
+
+            return $"{icon} {colorOpeningTag}{sign}{modifier}{relativeSign} {label}{colorClosingTag}\n";
+        }
+
+        private string TbGameAction(UntargetedGameAction gameAction, string label, CharacterStats source)
+        {
+            if (gameAction is null)
+                return string.Empty;
+
+            return $"{gameAction.TextBreakdown(source)}{label}\n";
+        }
     }
 }

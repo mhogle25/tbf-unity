@@ -138,7 +138,8 @@ namespace BF2D.UI
                 int previousPosition1D = this.CursorPosition1D;
 
                 this.cursorPosition = value;
-                this.CurrentOption.SetCursor(true);
+                if (this.Interactable)
+                    this.CurrentOption.SetCursor(true);
 
                 NavInfo info = new()
                 {
@@ -155,8 +156,8 @@ namespace BF2D.UI
                     info.cursorPosition1DPrev = previousPosition1D;
                 }
 
-                this.CurrentOption.OnNavigate();
                 this.onNavigate.Invoke(info);
+                this.CurrentOption.OnNavigate();
             }
         }
 
@@ -164,13 +165,13 @@ namespace BF2D.UI
         {
             Axis.Horizontal => (this.gridWidth * this.cursorPosition.y) + this.cursorPosition.x,
             Axis.Vertical => (this.gridHeight * this.cursorPosition.x) + this.cursorPosition.y,
-            _ => throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value: {this.instantiationAxis}"),
+            _ => throw new Exception($"[OptionsGrid:CursorPosition1D] The instantiation axis is set to an invalid value"),
         };
 
-        protected GridOption[,] grid = null;
-        protected int count = 0;
+        private GridOption[,] grid = null;
+        private int count = 0;
         private Vector2Int cursorPosition = new(0, 0);
-        protected Vector2Int head = new(0, 0);
+        private Vector2Int head = new(0, 0);
 
         #region Public Methods
         public GridOption At(Vector2Int position)
@@ -189,34 +190,43 @@ namespace BF2D.UI
         {
             if (!this.Initialized)
             {
-                Debug.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null");
+                Debug.LogWarning($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x}, {cursorPosition.y}) but the grid was null.");
                 return;
             }
 
             if (!ValidPosition(cursorPosition))
             {
-                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was outside the bounds of the grid.");
+                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x},{cursorPosition.y}) but the position was outside the bounds of the grid.");
                 return;
             }
 
             if (!Exists(cursorPosition))
             {
-                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor at position ({cursorPosition.x},{cursorPosition.y}) but the position was null.");
+                Debug.LogError($"[OptionsGrid:SetCursorAtPosition] Tried to set the cursor to {value} at position ({cursorPosition.x},{cursorPosition.y}) but no option exists at that position.");
                 return;
             }
 
             At(cursorPosition).SetCursor(value);
         }
 
-        public void OnNavigate()
+        public void OnNavigate() => this.CursorPosition = this.CursorPosition;
+
+        /// <summary>
+        /// Sets up a new grid, clearing any previous data
+        /// </summary>
+        public void Setup()
         {
-            this.CursorPosition = this.CursorPosition;
+            //Clean up anything that could be left over
+            Clear();
+
+            //Create the element data structure
+            this.grid = new GridOption[this.gridWidth, this.gridHeight];
         }
 
         /// <summary>
         /// Sets up a new grid, clearing any previous data
         /// </summary>
-        /// <param mane="width">The new grid width</param>
+        /// <param name="width">The new grid width</param>
         /// <param name="height">The new grid height</param>
         public void Setup(int width, int height)
         {
@@ -264,7 +274,6 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="optionData">The data for the option</param>
         /// <returns>The UI option object</returns>
-        /// 
         public GridOption Add(GridOption.Data optionData)
         {
             if (!this.optionPrefab)
@@ -299,7 +308,6 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="option">The existing option</param>
         /// <returns>true if added successfully, otherwise false</returns>
-        /// 
         public bool Add(GridOption option)
         {
             if (this.count + 1 > this.Area)
@@ -319,11 +327,9 @@ namespace BF2D.UI
             return true;
         }
 
-
         /// <summary>
         /// Removes the option selected by the cursor from the grid
         /// </summary>
-        /// <returns>True if the option was removed successfully, otherwise returns false</returns>
         public void Remove()
         {
             if (this.count < 1)
@@ -415,55 +421,25 @@ namespace BF2D.UI
         }
 
         /// <summary>
-        /// Reset the cursor to be at the start of the grid
+        /// Resets the cursor at the start of the grid
         /// </summary>
-        public void SetCursorToFirst()
-        {
-            if (!this.Initialized)
-            {
-                Debug.LogError("[OptionsGrid:SetCursorToFirst] Tried to set the cursor to first but the grid was null");
-                return;
-            }
-
-            if (this.Count < 1)
-                return;
-
-            Vector2Int newPosition = this.CursorPosition;
-            GridOption option = this.CurrentOption;
-            while (option ? !option.Interactable : false)
-            {
-                newPosition = Increment(newPosition);
-                option = At(newPosition);
-            }
-
-            this.CursorPosition = newPosition;
-        }
+        public void SetCursorToFirst() => SetCursorTo(new Vector2Int(0, 0), "First", Increment);
 
         /// <summary>
-        /// Reset the cursor to be at the head of the grid
+        /// Resets the cursor at the nearest valid position to the curent cursor position
         /// </summary>
-        public void SetCursorToLast()
-        {
-            if (!this.Initialized)
-            {
-                Debug.LogError("[OptionsGrid:SetCursorToLast] Tried to set the cursor to last but the grid was null");
-                return;
-            }
+        public void SetCursorToNearest() => SetCursorTo(this.CursorPosition, "Nearest",
+            this.CursorPosition1D > this.Count / 2 ? Decrement : Increment);
 
-            if (this.Count < 1)
-                return;
+        /// <summary>
+        /// Resets the cursor at the head of the grid
+        /// </summary>
+        public void SetCursorToLast() => SetCursorTo(Decrement(this.head), "Last", Decrement);
 
-            Vector2Int newPosition = Decrement(this.head);
-            GridOption option = this.CurrentOption;
-            while (option ? !option.Interactable : false)
-            {
-                newPosition = Decrement(newPosition);
-                option = At(newPosition);
-            }
-
-            this.CursorPosition = newPosition;
-        }
-
+        /// <summary>
+        /// Invokes the input button event of the current option
+        /// </summary>
+        /// <param name="inputButton">The input button event to trigger</param>
         public void InvokeEvent(InputButton inputButton)
         {
             if (!this.Initialized)
@@ -546,12 +522,11 @@ namespace BF2D.UI
             if (Exists(this.CursorPosition))
                 this.CurrentOption.SetCursor(true);
             else
-                SetCursorToFirst();
+                SetCursorToNearest();
         }
         #endregion
 
         #region Private Methods
-
         private int Increment(int value, int size)
         {
             int field = value;
@@ -647,6 +622,28 @@ namespace BF2D.UI
             }
 
             return v;
+        }
+
+        private void SetCursorTo(Vector2Int start, string debug, Func<Vector2Int, Vector2Int> modifier)
+        {
+            if (!this.Initialized)
+            {
+                Debug.LogError($"[OptionsGrid:SetCursorTo{debug}] Tried to set the cursor to {debug.ToLower()} but the grid was null");
+                return;
+            }
+
+            if (this.Count < 1)
+                return;
+
+            Vector2Int newPosition = start;
+            GridOption option = At(newPosition);
+            while (option ? !option.Interactable : false)
+            {
+                newPosition = modifier(newPosition);
+                option = At(newPosition);
+            }
+
+            this.CursorPosition = newPosition;
         }
 
         private AudioSource GetAudioSource(InputButton inputButton) => inputButton switch
