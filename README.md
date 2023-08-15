@@ -1,2 +1,2 @@
-# TurnBasedEngine
-A turn-based combat engine designed in Unity.
+# tbf
+A turn-based combat framework designed in Unity.
