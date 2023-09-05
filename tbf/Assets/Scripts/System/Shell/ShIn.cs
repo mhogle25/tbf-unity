@@ -9,6 +9,8 @@ namespace BF2D
     [RequireComponent(typeof(TMP_InputField))]
     public class ShIn : MonoBehaviour
     {
+        private readonly Regex commandRegex = new("(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+
         private TMP_InputField inputField;
 
         [SerializeField] private ShRegistry registry = null;
@@ -20,7 +22,7 @@ namespace BF2D
         private void Awake()
         {
             this.historyBackward.Push("embueitem it_vorpalsword 0 gm_burning_01 0 Brisingr");
-            this.historyBackward.Push("combat save1 en_lessergoblin en_lessergoblin en_lessergoblin en_lessergoblin");
+            this.historyBackward.Push("combat save1 ef_hardencounter");
             this.inputField = GetComponent<TMP_InputField>();
         }
 
@@ -82,7 +84,7 @@ namespace BF2D
             string processed = command.Trim();
 
             //This regex splits the string by spaces, while ignoring spaces inside of double quotes
-            string[] regexed = Regex.Split(processed, "(?<=^[^\"]*(?:\"[^\"]*\"[^\"]*)*) (?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+            string[] regexed = this.commandRegex.Split(processed);
 
             List<string> args = new();
             for (int i = 0; i < regexed.Length; i++)

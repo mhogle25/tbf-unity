@@ -9,8 +9,6 @@ namespace BF2D.Game
 {
     public class EquipModInfo : UtilityEntityInfo
     {
-        [JsonIgnore] public override Sprite Icon { get; }
-
         [JsonIgnore] public override string Name => Get().Name;
 
         [JsonIgnore] public override string Description => Get().Description;
@@ -26,13 +24,12 @@ namespace BF2D.Game
         [JsonIgnore] public int MaxStaminaModifier => Get().MaxStaminaModifier;
         [JsonIgnore] public virtual UntargetedGameAction OnUpkeep => Get().OnUpkeep;
         [JsonIgnore] public virtual UntargetedGameAction OnEOT => Get().OnEOT;
-
-        public bool UpkeepEventExists() => Get().UpkeepEventExists();
-        public bool EOTEventExists() => Get().EOTEventExists();
+        [JsonIgnore] public virtual bool UpkeepEventExists => Get().UpkeepEventExists;
+        [JsonIgnore] public virtual bool EOTEventExists => Get().EOTEventExists;
 
         public EquipMod Get() => GameCtx.One.GetRune(this.ID);
 
-        public override IUtilityEntity GetUtility() => Get();
+        protected override IUtilityEntity GetUtility() => Get();
 
         public override bool ContainsAura(AuraType aura) => Get().ContainsAura(aura);
     }

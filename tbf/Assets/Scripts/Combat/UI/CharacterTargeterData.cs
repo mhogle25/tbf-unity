@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using BF2D.Game.Actions;
-using BF2D.Enums;
 using BF2D.UI;
 
 namespace BF2D.Game.Combat

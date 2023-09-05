@@ -4,6 +4,7 @@ using UnityEngine;
 using BF2D.Game.Actions;
 using BF2D.Utilities;
 using BF2D.Enums;
+using System.Linq;
 
 namespace BF2D.Game
 {
@@ -21,6 +22,7 @@ namespace BF2D.Game
         [SerializeField] private ExternalFileManager gemsFileManager = null;
         [SerializeField] private ExternalFileManager runesFileManager = null;
         [SerializeField] private FileManager jobsFileManager = null;
+        [SerializeField] private FileManager encounterFactoriesFileManager = null;
 
         //AssetCollections
         [Header("Asset Collections")]
@@ -29,34 +31,36 @@ namespace BF2D.Game
 
         public bool SaveActive => this.currentSave is not null;
 
-        public CharacterStats PartyLeader => this.currentSave?.Party.PartyLeader;
-        public CharacterStats[] ActivePlayers => this.currentSave?.Party.ActiveCharacters;
-        public CharacterStats[] InactivePlayers => this.currentSave?.Party.InactiveCharacters;
+        public CharacterStats[] ActivePlayers => this.currentSave?.Party.ActiveCharacters.Select(character => character.Stats).ToArray();
 
-        public IItemHolder PartyItems => this.currentSave?.Party.Items;
-        public IEquipmentHolder PartyEquipment => this.currentSave?.Party.Equipment;
-        public ICharacterStatsActionHolder PartyGems => this.currentSave?.Party.Gems;
+        public IItemHolder Items => this.currentSave?.Party.Items;
+        public IEquipmentHolder Equipment => this.currentSave?.Party.Equipment;
+        public ICharacterActionHolder Gems => this.currentSave?.Party.Gems;
+        public IEquipModHolder Runes => this.currentSave?.Party.Runes;
 
-        public int Currency { get => this.currentSave.Party.Currency; set => this.currentSave.Party.Currency = value; }
-        public int Ether { get => this.currentSave.Party.Ether; set => this.currentSave.Party.Ether = value; }
+        public int Currency { get => this.currentSave?.Party?.Currency ?? 0; set => this.currentSave.Party.Currency = value; }
+        public int Ether { get => this.currentSave?.Party?.Ether ?? 0; set => this.currentSave.Party.Ether = value; }
+
+        public CharacterStats PartyLeader => this.currentSave?.Party.Leader.Stats;
 
         private SaveData currentSave = null;
 
-        //String Caches (instantiate on get, modifiable discardable data classes)
+        //String Caches (instantiate on get, mutable discardable data classes)
         private readonly JsonStringCache<CharacterStats> playerTemplates = new(5);
         private readonly JsonStringCache<CharacterStats> enemyTemplates = new(5);
         private readonly JsonStringCache<Item> itemTemplates = new(20);
 
-        //Moddeable entity cloning cache
+        //Mutable entity cloning cache
         private readonly JsonStringCache<Equipment> equipmentTemplates = new(10);
-        private readonly JsonStringCache<CharacterStatsAction> gemTemplates = new(10);
+        private readonly JsonStringCache<CharacterAction> gemTemplates = new(10);
 
-        //Object caches (no instantiation on get, single instance data classes)
+        //Immutable object caches (no instantiation on get, single instance data classes)
         private readonly JsonEntityCache<Equipment> equipments = new(10);
         private readonly JsonEntityCache<StatusEffect> statusEffects = new(10);
-        private readonly JsonEntityCache<CharacterStatsAction> gems = new(10);
+        private readonly JsonEntityCache<CharacterAction> gems = new(10);
         private readonly JsonEntityCache<EquipMod> runes = new(10);
         private readonly JsonEntityCache<Job> jobs = new(10);
+        private readonly JsonEntityCache<EncounterFactory> encounterFactories = new(10);
 
         private readonly List<ICache> externalCaches = new();
 
@@ -171,7 +175,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            SaveData saveData = JSON.DeserializeString<SaveData>(content);
+            SaveData saveData = JSON.DeserializeJson<SaveData>(content);
             if (saveData is null)
             {
                 Debug.LogError($"[GameContext:LoadSaveData] The JSON at id '{id}' was invalid");
@@ -251,20 +255,22 @@ namespace BF2D.Game
         #endregion
 
         #region Character Management
-        public CharacterStats GetActivePlayer(int index)
-        {
-            return this.ActivePlayers[index];
-        }
-
-        public void NewPlayer(string id, string newName)
+        public ICharacterInfo NewPlayer(string id, string newName)
         {
             CharacterStats newPlayer = InstantiatePlayer(id);
             if (newPlayer is null)
-                return;
+                return null;
 
             newPlayer.Name = newName;
-            this.currentSave.Party.AddCharacter(newPlayer);
+            return this.currentSave.Party.AddPlayer(newPlayer);
         }
+
+        /// <summary>
+        /// Makes a character reference from the current party that party's leader
+        /// </summary>
+        /// <param name="newLeader">The new leader</param>
+        /// <returns>The old leader</returns>
+        public ICharacterInfo MakePlayerLeader(ICharacterInfo newLeader) => this.currentSave?.Party.ChangeLeader(newLeader);
 
         public CharacterStats InstantiateEnemy(string id)
         {
@@ -289,12 +295,16 @@ namespace BF2D.Game
         #endregion
 
         #region Combat Management
-        public void StageCombatInfo(Combat.CombatCtx.InitializeInfo info)
+        public void StageEncounter(Encounter encounter)
         {
-            this.queuedCombats.Enqueue(info);
+            this.queuedCombats.Enqueue(new Combat.CombatCtx.InitializeInfo
+            {
+                players = this.currentSave.Party,
+                enemies = encounter
+            });
         }
 
-        public Combat.CombatCtx.InitializeInfo UnstageCombatInfo()
+        public Combat.CombatCtx.InitializeInfo UnstageEncounter()
         {
             if (this.queuedCombats.Count < 1)
                 return null;
@@ -338,7 +348,7 @@ namespace BF2D.Game
             return this.statusEffects.Get(id, this.statusEffectsFileManager);
         }
 
-        public CharacterStatsAction GetGem(string id)
+        public CharacterAction GetGem(string id)
         {
             if (string.IsNullOrEmpty(id))
                 return null;
@@ -361,6 +371,14 @@ namespace BF2D.Game
 
             return this.jobs.Get(id, this.jobsFileManager);
         }
+
+        public EncounterFactory GetEncounterFactory(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return null;
+
+            return this.encounterFactories.Get(id, this.encounterFactoriesFileManager);
+        }
         #endregion
 
         #region Entity Instantiators
@@ -380,7 +398,7 @@ namespace BF2D.Game
             return this.equipmentTemplates.Get(id, this.equipmentsFileManager);
         }
 
-        public CharacterStatsAction InstantiateGem(string id)
+        public CharacterAction InstantiateGem(string id)
         {
             if (string.IsNullOrEmpty(id))
                 return null;
@@ -395,7 +413,7 @@ namespace BF2D.Game
         /// </summary>
         /// <param name="item">Item to write</param>
         /// <returns>Item file writer</returns>
-        public FileWriter WriteItem(Item item, Action callback) => new FileWriter(
+        public FileWriter WriteItem(Item item, Action callback) => new(
             this.itemsFileManager,
             item.ID,
             JSON.SerializeObject(item),
@@ -407,7 +425,7 @@ namespace BF2D.Game
         /// </summary>
         /// <param name="equipment">Equipment to write</param>
         /// <returns>Equipment file writer</returns>
-        public FileWriter WriteEquipment(Equipment equipment, Action callback) => new FileWriter(
+        public FileWriter WriteEquipment(Equipment equipment, Action callback) => new(
             this.equipmentsFileManager,
             equipment.ID,
             JSON.SerializeObject(equipment),
@@ -419,7 +437,7 @@ namespace BF2D.Game
         /// </summary>
         /// <param name="gem">Gem to write</param>
         /// <returns>Gem file writer</returns>
-        public FileWriter WriteGem(CharacterStatsAction gem, Action callback) => new FileWriter(
+        public FileWriter WriteGem(CharacterAction gem, Action callback) => new(
             this.gemsFileManager,
             gem.ID,
             JSON.SerializeObject(gem),

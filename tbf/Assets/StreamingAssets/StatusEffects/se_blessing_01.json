@@ -3,7 +3,6 @@
     "description":"blessed",
     "auras": 
     [
-        "Restoration"
     ],
     "duration":5,
     "speedModifier":0,

@@ -8,13 +8,23 @@ namespace BF2D.Game.Combat
 {
     public class EquippedListControl : OptionsGridControlInit
     {
+        public struct Data
+        {
+            public Equipment equipment;
+            public EquipmentType type;
+        }
+
         [Header("Equipped")]
         [SerializeField] private EquipPlayerTargeter playerTargeter = null;
         [SerializeField] private EquipmentBagControl bag = null;
         [SerializeField] private TextMeshProUGUI leftText = null;
 
-        public Equipment Selected => this.selected;
-        private Equipment selected = null;
+        public Data Selected => this.selected;
+        private Data selected = new()
+        {
+            equipment = null,
+            type = EquipmentType.Accessory
+        };
 
         [SerializeField] private EquipmentType[] typeOrder =
         {
@@ -60,17 +70,20 @@ namespace BF2D.Game.Combat
         {
             CharacterStats character = this.playerTargeter.Selected;
 
-            this.bag.Setup(character, type);
-
             Equipment equipped = character.GetEquipped(type);
+            this.selected = new Data()
+            {
+                equipment = equipped,
+                type = type
+            };
+
+            this.bag.Setup(character, type);
+            this.bag.Controlled.OnNavigate();
+
             if (this.bag.Selected is not null)
                 this.leftText.text = equipped?.TextBreakdown(this.bag.Selected, character) ?? GetUnequippedLabel(type);
             else
                 this.leftText.text = equipped?.TextBreakdown(character) ?? GetUnequippedLabel(type);
-
-            this.selected = equipped;
-
-            this.bag.Controlled.OnNavigate();
         }
 
         private string GetUnequippedLabel(EquipmentType type) => $"{Strings.Equipment.GetType(type)} (unequipped)";

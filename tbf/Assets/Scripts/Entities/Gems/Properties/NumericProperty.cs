@@ -1,6 +1,8 @@
-using BF2D.Enums;
 using Newtonsoft.Json;
 using System;
+using BF2D.Game.Enums;
+using UnityEngine;
+using BF2D.Utilities;
 
 namespace BF2D.Game.Actions
 {
@@ -22,7 +24,7 @@ namespace BF2D.Game.Actions
             return result;
         }
 
-        private int Calculate(CharacterStats character)
+        public int Calculate(CharacterStats character)
         {
             int total = this.Number.Calculate(character);
 
@@ -33,6 +35,16 @@ namespace BF2D.Game.Actions
                 total += character.GetStatsProperty(property);
 
             return total;
+        }
+
+        public string TextBreakdown(CharacterStats source, Color32 color)
+        {
+            string text = this.Number.TextBreakdown(source);
+
+            if (source is not null)
+                foreach (CharacterStatsProperty modifier in this.Modifiers)
+                    text += $"{source.GetModifierText(modifier)}";
+            return text.Colorize(color);
         }
     }
 }

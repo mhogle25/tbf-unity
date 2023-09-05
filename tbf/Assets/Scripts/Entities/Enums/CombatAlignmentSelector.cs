@@ -65,7 +65,7 @@ namespace BF2D.Game.Enums
             return CalculateCombatAlignedCollection(entities, null);
         }
 
-        public static CombatAlignment CalculateCombatAlignedCollection(IEnumerable<ICombatAligned> entities, CombatAlignment? single)
+        public static CombatAlignment CalculateCombatAlignedCollection(IEnumerable<ICombatAligned> entities, params CombatAlignment[] other)
         {
             int offense = 0;
             int defense = 0;
@@ -81,11 +81,17 @@ namespace BF2D.Game.Enums
                 }
             }
 
-            switch (single)
+            if (other is not null)
             {
-                case CombatAlignment.Offense: offense++; break;
-                case CombatAlignment.Defense: defense++; break;
-                case CombatAlignment.Neutral: neutral++; break;
+                for (int i = 0; i < other.Length; i++)
+                {
+                    switch (other[i])
+                    {
+                        case CombatAlignment.Offense: offense++; break;
+                        case CombatAlignment.Defense: defense++; break;
+                        case CombatAlignment.Neutral: neutral++; break;
+                    }
+                }
             }
 
             return Calculate(offense, defense, neutral);

@@ -26,6 +26,8 @@ namespace BF2D.Game
         [JsonIgnore] public virtual UntargetedGameAction OnUpkeep => this.Rune.OnUpkeep;
         [JsonIgnore] public virtual UntargetedGameAction OnEOT => this.Rune.OnEOT;
 
+        [JsonIgnore] public virtual UntargetedGameAction OnEquip => this.Rune.OnEquip;
+
         public void SetRuneID(string id) => this.runeID = id;
     }
 }

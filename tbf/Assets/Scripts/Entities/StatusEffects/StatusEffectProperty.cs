@@ -1,7 +1,8 @@
-using BF2D.Enums;
+using BF2D.Game.Enums;
 using Newtonsoft.Json;
 using System;
 using UnityEngine;
+using BF2D.Utilities;
 
 namespace BF2D.Game.Actions
 {
@@ -30,7 +31,7 @@ namespace BF2D.Game.Actions
             }
             else
             {
-                if (Utilities.Probability.Roll(source, this.successRate))
+                if (Probability.Roll(this.successRate, source.Luck))
                 {
                     if (target.ApplyStatusEffect(this.ID))
                     {
@@ -57,7 +58,7 @@ namespace BF2D.Game.Actions
             StatusEffect effect = Get();
             string text = effect.TextBreakdown(source);
             if (this.SuccessRate < 100)
-                text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%{source?.GetModifierText(CharacterStatsProperty.Luck)} chance</color>";
+                text += $" {this.SuccessRate}%{source?.GetModifierText(CharacterStatsProperty.Luck)} chance".Colorize(Colors.Cyan);
             text += '\n';
             return text;
         }
@@ -67,7 +68,7 @@ namespace BF2D.Game.Actions
             StatusEffect effect = Get();
             string text = $"{effect.Name}";
             if (this.SuccessRate < 100)
-                text += $" <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}%{source?.GetModifierText(CharacterStatsProperty.Luck)} chance</color>";
+                text += $" {this.SuccessRate}%{source?.GetModifierText(CharacterStatsProperty.Luck)} chance".Colorize(Colors.Cyan);
             if (!effect.Singleton)
                 text += ", stackable";
             text += '\n';

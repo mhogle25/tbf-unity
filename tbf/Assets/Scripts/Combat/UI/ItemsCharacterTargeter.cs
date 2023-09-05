@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.Game.Actions;
-using BF2D.Enums;
+using BF2D.Game.Enums;
 using BF2D.UI;
 
 namespace BF2D.Game.Combat
@@ -18,14 +18,14 @@ namespace BF2D.Game.Combat
         [SerializeField] private CharacterTargeterData data = null;
         [SerializeField] private string dialogKey = "di_items_character_targeter";
 
-        private readonly Queue<TargetedCharacterStatsActionSlot> stagedTargetedGemSlots = new();
-        private TargetedCharacterStatsActionSlot stagedTargetedGemSlot = null;
+        private readonly Queue<TargetedCharacterActionSlot> stagedTargetedGemSlots = new();
+        private TargetedCharacterActionSlot stagedTargetedGemSlot = null;
 
         public override void ControlInitialize()
         {
             this.stagedTargetedGemSlots.Clear();
             this.stagedTargetedGemSlot = null;
-            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGemSlots())
+            foreach (TargetedCharacterActionSlot targetedGemSlot in CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGems())
                 this.stagedTargetedGemSlots.Enqueue(targetedGemSlot);
 
             Continue();
@@ -36,7 +36,7 @@ namespace BF2D.Game.Combat
             this.orphanedTextbox.View.gameObject.SetActive(false);
             if (this.Controlled)
             {
-                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+                this.Controlled.CurrentOption.SetCursor(false);
                 this.Controlled.UtilityFinalize();
             }
         }
@@ -67,14 +67,14 @@ namespace BF2D.Game.Combat
                     SetupDialog(this.data.PlayerPlatforms);
                     return;
                 case CharacterTarget.AllAllies:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Players;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Allies;
                     Continue();
                     return;
                 case CharacterTarget.Opponent:
                     SetupDialog(this.data.EnemyPlatforms);
                     return;
                 case CharacterTarget.AllOpponents:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Enemies;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Opponents;
                     Continue();
                     return;
                 case CharacterTarget.Any:
@@ -92,11 +92,11 @@ namespace BF2D.Game.Combat
                     Continue();
                     return;
                 case CharacterTarget.RandomAlly:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomPlayer() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomAlly() };
                     Continue();
                     return;
                 case CharacterTarget.RandomOpponent:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomEnemy() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomOpponent() };
                     Continue();
                     return;
                 default:
@@ -109,7 +109,7 @@ namespace BF2D.Game.Combat
         {
             if (this.Controlled)
             {
-                this.Controlled.SetCursorAtPosition(this.Controlled.CursorPosition, false);
+                this.Controlled.CurrentOption.SetCursor(false);
                 this.Controlled.UtilityFinalize();
             }
 
@@ -139,7 +139,6 @@ namespace BF2D.Game.Combat
 
                 this.Controlled = followUp;
                 this.Controlled.UtilityInitialize();
-                this.Controlled.SetCursorToNearest();
                 this.orphanedTextbox.messageInterrupt = default;
                 this.orphanedTextbox.autoPass = default;
             },
@@ -156,7 +155,7 @@ namespace BF2D.Game.Combat
 
             this.orphanedTextbox.ResponseConfirmEvent.AddListener((json) =>
             {
-                AlignmentFlag flag = Utilities.JSON.DeserializeString<AlignmentFlag>(json);
+                AlignmentFlag flag = Utilities.JSON.DeserializeJson<AlignmentFlag>(json);
                 this.stagedTargetedGemSlot.TargetInfo.CombatTargets = flag.players ? CombatCtx.One.Players : CombatCtx.One.Enemies;
             });
 

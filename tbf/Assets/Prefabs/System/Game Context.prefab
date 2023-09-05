@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &156129010862490114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8412412359425246085}
+  - component: {fileID: 336690035535396040}
+  m_Layer: 0
+  m_Name: Encounter Factories
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8412412359425246085
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156129010862490114}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7122699044182645680}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &336690035535396040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 156129010862490114}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d54be0cd4dd74d19b74fa6b891a5f67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: EncounterFactories
+  fileExtension: json
+  directory: 1
 --- !u!1 &224509908981771406
 GameObject:
   m_ObjectHideFlags: 0
@@ -78,14 +125,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3d6e190a9e985478114f395f29e527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
-  - {fileID: 21300000, guid: b40a59b454228b6479b732d84c7134e9, type: 3}
-  - {fileID: 21300000, guid: 2e619958b29d52c49afa012127da7664, type: 3}
-  - {fileID: 21300000, guid: 69872507412995c4d806b342c3789660, type: 3}
-  - {fileID: 21300000, guid: e1eb60130c203454189be6bc858cbc6c, type: 3}
-  - {fileID: 21300000, guid: cc7c6c7db9d634565a5c8c1c593bc18a, type: 3}
+  assets:
+  - {fileID: 21300000, guid: 4d09b331f5f4647109881a0c68d726f1, type: 3}
+  - {fileID: 21300000, guid: d05f6734335f04760a93f60a1205105b, type: 3}
   - {fileID: 21300000, guid: ea61913330f0d47f193d9e4569b156f7, type: 3}
+  - {fileID: 21300000, guid: e1eb60130c203454189be6bc858cbc6c, type: 3}
+  - {fileID: 21300000, guid: dc531def1d8cf4de6886a2751c9fb95b, type: 3}
+  - {fileID: 21300000, guid: 660de47a5936c4dd289f285e3eaed548, type: 3}
   - {fileID: 21300000, guid: 501699af2e1ea4a518951a73005b1681, type: 3}
+  - {fileID: 21300000, guid: b40a59b454228b6479b732d84c7134e9, type: 3}
+  - {fileID: 21300000, guid: 69872507412995c4d806b342c3789660, type: 3}
+  - {fileID: 21300000, guid: f9ae59da567734dc5b5db29b821e0ea9, type: 3}
+  - {fileID: 21300000, guid: cc7c6c7db9d634565a5c8c1c593bc18a, type: 3}
+  - {fileID: 21300000, guid: 2e619958b29d52c49afa012127da7664, type: 3}
+  - {fileID: 21300000, guid: f24c8ed42d47e4ad1ab5e5209665a01a, type: 3}
+  - {fileID: 21300000, guid: 08ce05f57136d4846910b8b256b2f471, type: 3}
+  - {fileID: 21300000, guid: 4f5f98ae33225443c97a285016cbb239, type: 3}
 --- !u!1 &788910382996583916
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,7 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f3d6e190a9e985478114f395f29e527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprites:
+  assets:
+  - {fileID: 21300000, guid: 411215dd04f74427a9b9eb8b66600238, type: 3}
   - {fileID: 21300000, guid: ad9d000f6bb6c42539adec61a66e4c22, type: 3}
 --- !u!1 &1327404662637594589
 GameObject:
@@ -270,7 +326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b1b57319b00a2c459bb271d4c50c06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioClips: []
+  assets: []
 --- !u!1 &2381401861982867771
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,6 +413,7 @@ Transform:
   - {fileID: 5354453397757791340}
   - {fileID: 3706151433346870817}
   - {fileID: 8420562254114299983}
+  - {fileID: 8412412359425246085}
   m_Father: {fileID: 2322944964630052481}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -619,7 +676,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7106035819327144895}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -627,7 +684,7 @@ Transform:
   - {fileID: 7122699044182645680}
   - {fileID: 4572059917681171470}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6852569541284457817
 MonoBehaviour:
@@ -654,6 +711,7 @@ MonoBehaviour:
   gemsFileManager: {fileID: 1372067127545288222}
   runesFileManager: {fileID: 8482351117807122434}
   jobsFileManager: {fileID: 3010713564908592665}
+  encounterFactoriesFileManager: {fileID: 336690035535396040}
   iconCollection: {fileID: 103152234495522395}
   soundEffectCollection: {fileID: 809117088483880737}
 --- !u!1 &7406316981449582279

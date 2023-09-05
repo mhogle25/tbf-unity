@@ -1,1 +1,2 @@
 Do you want to equip [I:0] to [I:1]?[R:ro_yesno][E]
+Do you want to unequip [I:0] from [I:1]?[R:ro_yesno][E]

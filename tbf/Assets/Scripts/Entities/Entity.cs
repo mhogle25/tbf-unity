@@ -13,12 +13,11 @@ namespace BF2D
         [JsonIgnore] public string Name { get => this.name.Wash(); set => this.name = value; }
         [JsonIgnore] public string Description { get => this.description.Wash(); set => this.description = value; }
         [JsonIgnore] public IEnumerable<AuraType> Auras => this.auras;
+        [JsonIgnore] public bool Chaotic => ContainsAura(AuraType.Chaos);
 
         [JsonProperty] private string name = string.Empty;
         [JsonProperty] private string description = string.Empty;
-        [JsonProperty] private readonly List<AuraType> auras = new();
-
-        [JsonIgnore] private readonly HashSet<AuraType> auraSet = new();
+        [JsonProperty] private readonly HashSet<AuraType> auras = new();
 
         public T Setup<T>(string id) where T : Entity
         {
@@ -41,13 +40,7 @@ namespace BF2D
             return this as T;
         }
 
-        public bool ContainsAura(AuraType aura)
-        {
-            if (this.auraSet.Count < 1)
-                LoadAuras();
-
-            return this.auraSet.Contains(aura);
-        }
+        public bool ContainsAura(AuraType aura) => this.auras.Contains(aura);
 
         public void EmbueAura(AuraType aura)
         {
@@ -58,7 +51,6 @@ namespace BF2D
             }
 
             this.auras.Add(aura);
-            this.auraSet.Add(aura);
         }
 
         public void RemoveAura(AuraType aura)
@@ -70,15 +62,6 @@ namespace BF2D
             }
 
             this.auras.Remove(aura);
-            this.auraSet.Remove(aura);
-        }
-
-        private void LoadAuras()
-        {
-            this.auraSet.Clear();
-
-            foreach (AuraType aura in this.auras)
-                this.auraSet.Add(aura);
         }
     }
 }

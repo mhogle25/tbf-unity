@@ -1,0 +1,23 @@
+{
+    "name": "Vapor Plate Armor",
+    "description": "The body armor of Vapor Knight",
+    "auras": [],
+    "spriteID":"torso_01",
+    "seriesID":"vapor",
+    "type":"Torso",
+    "speedModifier": 5,
+    "defenseModifier": 1,
+    "onEOT": 
+    {
+        "message": 
+        [
+            "[I:0] felt a surge of energy from Vapor Plate Armor.[E]"
+        ],
+        "gemSlots": 
+        [
+            {
+                "gemID": "gm_basicrecover_01"
+            }
+        ]
+    }
+}

@@ -5,7 +5,7 @@ namespace BF2D.Game
 {
     public class SCEmbueItem
     {
-        const string useage = "Useage: embueitem [itemID] [activePlayerIndex] [gemID] [gemIndex] [newName]\nList active players using 'players active'";
+        const string useage = "Useage: embueitem [itemID] [activePlayerIndex] [gemID] [gemIndex] [newName]\nList active players using 'players'";
 
         public static void Run(params string[] arguments)
         {
@@ -46,7 +46,7 @@ namespace BF2D.Game
                 return;
             }
 
-            CharacterStats character = ctx.GetActivePlayer(playerIndex);
+            CharacterStats character = ctx.ActivePlayers[playerIndex];
 
             ItemInfo itemInfo = character.Items.Get(itemID);
             if (itemInfo is null)
@@ -55,7 +55,7 @@ namespace BF2D.Game
                 return;
             }
 
-            CharacterStatsActionInfo gemInfo = ctx.PartyGems.Get(gemID);
+            CharacterActionInfo gemInfo = ctx.Gems.Get(gemID);
             if (gemInfo is null)
             {
                 ShCtx.One.LogError($"Tried to embue an item with a gem that wasn't in the party's inventory.");
@@ -74,17 +74,17 @@ namespace BF2D.Game
                 return;
             }
 
-            Utilities.FileWriter writer = itemCustomizer.EmbueGem(gemInfo, ctx.PartyGems, newName);
+            Utilities.FileWriter writer = itemCustomizer.EmbueGem(gemInfo, ctx.Gems, newName);
             if (writer is null)
                 return;
 
-            if ((bool) writer.FileExistsStreaming)
+            if (writer.FileExistsStreaming)
             {
                 ShCtx.One.LogError($"Can't embue {itemInfo.Name} with new ID '{writer.ID}'. A static item with that ID already exists.");
                 return;
             }
 
-            if ((bool) writer.FileExists)
+            if (writer.FileExists)
             {
                 ShCtx.One.LogError($"Can't embue {itemInfo.Name} with new ID '{writer.ID}'. A custom item with that ID already exists.");
                 return;

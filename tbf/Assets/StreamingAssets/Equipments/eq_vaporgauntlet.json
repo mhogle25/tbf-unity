@@ -1,0 +1,8 @@
+{
+    "name": "Vapor Gauntlet",
+    "description": "The gauntlets of Vapor Knight",
+    "auras": [],
+    "spriteID": "hands_01",
+    "seriesID": "vapor",
+    "type": "Hands"
+}

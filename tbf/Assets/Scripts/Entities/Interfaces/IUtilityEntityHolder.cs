@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace BF2D.Game
 {
-    public interface IUtilityEntityHolder<T> : IEnumerable<T>
+    public interface IUtilityEntityHolder<T> : IEnumerable<T> where T : UtilityEntityInfo
     {
         public T Acquire(string id);
 

@@ -123,7 +123,7 @@ namespace BF2D.UI
             {
                 if (!ValidPosition(value))
                 {
-                    Debug.LogError($"[OptionsGrid:CursorPosition:Get] Tried to set the cursor position but the new position was outside the bounds of the grid -> ({value.x},{value.y})");
+                    Debug.LogError($"[OptionsGrid:CursorPosition:Set] Tried to set the cursor position but the new position was outside the bounds of the grid -> ({value.x},{value.y})");
                     return;
                 }
 
@@ -184,7 +184,11 @@ namespace BF2D.UI
 
         public bool Exists(Vector2Int position) => At(position) != null;
 
-        public bool ValidPosition(Vector2Int position) => position.x < this.gridWidth && position.x >= 0 && position.y < this.gridHeight && position.y >= 0;
+        public bool ValidPosition(Vector2Int position) =>
+            position.x < this.gridWidth &&
+            position.x >= 0 &&
+            position.y < this.gridHeight &&
+            position.y >= 0;
 
         public void SetCursorAtPosition(Vector2Int cursorPosition, bool value)
         {
@@ -519,7 +523,7 @@ namespace BF2D.UI
         {
             base.UtilityInitialize();
 
-            if (Exists(this.CursorPosition))
+            if (Exists(this.CursorPosition) && At(this.cursorPosition).Interactable)
                 this.CurrentOption.SetCursor(true);
             else
                 SetCursorToNearest();
@@ -529,18 +533,18 @@ namespace BF2D.UI
         #region Private Methods
         private int Increment(int value, int size)
         {
-            int field = value;
+            int newValue = value;
 
-            if (field == size - 1)
+            if (newValue == size - 1)
             {
-                field = 0;
+                newValue = 0;
             }
             else
             {
-                field += 1;
+                newValue += 1;
             }
 
-            return field;
+            return newValue;
         }
 
         private Vector2Int Increment(Vector2Int vector)
@@ -577,18 +581,18 @@ namespace BF2D.UI
 
         private int Decrement(int value, int size)
         {
-            int field = value;
+            int newValue = value;
 
-            if (field == 0)
+            if (newValue == 0)
             {
-                field = size - 1;
+                newValue = size - 1;
             }
             else
             {
-                field -= 1;
+                newValue -= 1;
             }
 
-            return field;
+            return newValue;
 
         }
 
@@ -637,12 +641,11 @@ namespace BF2D.UI
 
             Vector2Int newPosition = start;
             GridOption option = At(newPosition);
-            while (option ? !option.Interactable : false)
-            {
+            while (!option || !option.Interactable)
+            { 
                 newPosition = modifier(newPosition);
                 option = At(newPosition);
             }
-
             this.CursorPosition = newPosition;
         }
 

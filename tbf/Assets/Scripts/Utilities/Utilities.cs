@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Newtonsoft.Json;
-using BF2D.Game;
+using System.Text.RegularExpressions;
 
 namespace BF2D.Utilities
 {
@@ -18,7 +18,7 @@ namespace BF2D.Utilities
             foreach (string p in paths)
             {
                 string filename = Path.GetFileNameWithoutExtension(p);
-                AudioClip audioClip = await BF2D.Utilities.Audio.LoadClip(p);
+                AudioClip audioClip = await Audio.LoadClip(p);
                 collection[filename] = audioClip;
             }
         }
@@ -62,10 +62,14 @@ namespace BF2D.Utilities
 
     public static class Probability
     {
-
-        public static bool Roll(CharacterStats parent, int percentage)
+        public static bool Roll(int percentage)
         {
-            return UnityEngine.Random.Range(0 + parent.Luck, 100) < percentage;
+            return Roll(percentage, 0);
+        }
+
+        public static bool Roll(int percentage, int modifier)
+        {
+            return UnityEngine.Random.Range(0 + modifier, 100) < percentage;
         }
     }
 
@@ -170,13 +174,11 @@ namespace BF2D.Utilities
             {
                 id = Path.GetFileNameWithoutExtension(path);
 
-                using (StreamReader stream = new(path))
+                using StreamReader stream = new(path);
+                string line;
+                while ((line = stream.ReadLine()) != null)
                 {
-                    string line;
-                    while ((line = stream.ReadLine()) != null)
-                    {
-                        dialog.Add(line);
-                    }
+                    dialog.Add(line);
                 }
             }
             catch
@@ -197,12 +199,12 @@ namespace BF2D.Utilities
 
     public static class JSON
     {
-        public static T DeserializeString<T>(string content)
+        public static T DeserializeJson<T>(string json)
         {
             T t;
             try
             {
-                t = JsonConvert.DeserializeObject<T>(content, new Newtonsoft.Json.Converters.StringEnumConverter());
+                t = JsonConvert.DeserializeObject<T>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
             }
             catch (Exception x)
             {
@@ -227,6 +229,31 @@ namespace BF2D.Utilities
                 return default;
             }
             return t;
+        }
+    }
+
+    public static class Text
+    {
+        private static readonly Regex replaceBrackets = new(@"\[[^)]*\]");
+        private static readonly Regex replaceExtraSpace = new(@"\s{2,}");
+
+        public static string Wash(this string value) => Text.replaceBrackets.Replace(Text.replaceExtraSpace.Replace(value, " "), "");
+
+        public static string Colorize(this string original, Color32 color)
+        {
+            return $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{original}</color>";
+        }
+
+        public static string NonZeroToSignedString(this int value)
+        {
+            if (value > 0)
+                return $"+{value}";
+
+
+            if (value < 0)
+                return $"-{Math.Abs(value)}";
+
+            return null;
         }
     }
 }

@@ -1555,11 +1555,59 @@ Font:
     advance: 6
     flipped: 0
   - serializedVersion: 2
-    index: 8216
+    index: 185
     uv:
       serializedVersion: 2
       x: 0.546875
-      y: 0.53125
+      y: 0.5546875
+      width: 0.109375
+      height: -0.0546875
+    vert:
+      serializedVersion: 2
+      x: -1
+      y: 6
+      width: 7
+      height: -7
+    advance: 6
+    flipped: 0
+  - serializedVersion: 2
+    index: 186
+    uv:
+      serializedVersion: 2
+      x: 0.109375
+      y: 0.78125
+      width: 0.109375
+      height: -0.0546875
+    vert:
+      serializedVersion: 2
+      x: -1
+      y: 6
+      width: 7
+      height: -7
+    advance: 6
+    flipped: 0
+  - serializedVersion: 2
+    index: 710
+    uv:
+      serializedVersion: 2
+      x: 0.328125
+      y: 0.6328125
+      width: 0.046875
+      height: -0.0234375
+    vert:
+      serializedVersion: 2
+      x: -1
+      y: 2
+      width: 3
+      height: -3
+    advance: 1
+    flipped: 0
+  - serializedVersion: 2
+    index: 8216
+    uv:
+      serializedVersion: 2
+      x: 0.375
+      y: 0.5859375
       width: 0.046875
       height: -0.03125
     vert:
@@ -1574,8 +1622,8 @@ Font:
     index: 8217
     uv:
       serializedVersion: 2
-      x: 0.109375
-      y: 0.7578125
+      x: 0.21875
+      y: 0.7109375
       width: 0.046875
       height: -0.03125
     vert:
@@ -1591,7 +1639,7 @@ Font:
     uv:
       serializedVersion: 2
       x: 0.328125
-      y: 0.6484375
+      y: 0.671875
       width: 0.0625
       height: -0.0390625
     vert:
@@ -1606,8 +1654,8 @@ Font:
     index: 8221
     uv:
       serializedVersion: 2
-      x: 0.375
-      y: 0.59375
+      x: 0.265625
+      y: 0.71875
       width: 0.0625
       height: -0.0390625
     vert:
@@ -1622,8 +1670,8 @@ Font:
     index: 8249
     uv:
       serializedVersion: 2
-      x: 0.21875
-      y: 0.734375
+      x: 0
+      y: 0.875
       width: 0.109375
       height: -0.0546875
     vert:
@@ -1638,8 +1686,8 @@ Font:
     index: 8250
     uv:
       serializedVersion: 2
-      x: 0.59375
-      y: 0.5546875
+      x: 0.390625
+      y: 0.640625
       width: 0.109375
       height: -0.0546875
     vert:

@@ -6,17 +6,15 @@ namespace BF2D.Game
 {
     class SCListPlayers
     {
-        private const string useage = "Useage: players [active OR inactive]";
+        private const string useage = "Useage: players";
 
         public static void Run(params string[] arguments)
         {
-            if (arguments.Length > 2 || arguments.Length < 2)
+            if (arguments.Length > 1 || arguments.Length < 1)
             {
                 ShCtx.One.LogWarning(SCListPlayers.useage);
                 return;
             }
-
-            string status = arguments[1];
 
             GameCtx ctx = GameCtx.One;
 
@@ -26,18 +24,7 @@ namespace BF2D.Game
                 return;
             }
 
-            switch (status)
-            {
-                case "active":
-                    ListPlayers(ctx.ActivePlayers);
-                    break;
-                case "inactive":
-                    ListPlayers(ctx.InactivePlayers);
-                    break;
-                default:
-                    ShCtx.One.LogWarning(SCListPlayers.useage);
-                    return;
-            }
+            ListPlayers(ctx.ActivePlayers);
         }
 
         private static void ListPlayers(CharacterStats[] collection)

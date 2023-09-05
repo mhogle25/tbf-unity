@@ -12,8 +12,6 @@ namespace BF2D.Game
 
         [JsonIgnore] private Item staged = null;
 
-        [JsonIgnore] public override Sprite Icon => GameCtx.One.GetIcon(GetUtility().SpriteID);
-
         [JsonIgnore] public override string Name => Get().Name;
 
         [JsonIgnore] public override string Description => Get().Description;
@@ -31,7 +29,7 @@ namespace BF2D.Game
             return this.staged;
         }
 
-        public override IUtilityEntity GetUtility() => Get();
+        protected override IUtilityEntity GetUtility() => Get();
 
         public override bool ContainsAura(AuraType aura) => Get().ContainsAura(aura);
 

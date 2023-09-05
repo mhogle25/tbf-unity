@@ -23,7 +23,7 @@ namespace BF2D.Game.Combat
                 AddOption(new GridOption.Data
                 {
                     name = item.Name,
-                    icon = item.Icon,
+                    icon = item.GetIcon(),
                     text = item.Count.ToString(),
                     onInput = new InputButtonCollection<Action>
                     {

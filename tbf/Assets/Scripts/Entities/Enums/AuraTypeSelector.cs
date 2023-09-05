@@ -25,8 +25,6 @@ namespace BF2D.Game.Enums
         [EnumMember]
         Chaos,
         [EnumMember]
-        Restoration,
-        [EnumMember]
         Nature,
         [EnumMember]
         Death

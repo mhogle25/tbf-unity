@@ -1,7 +1,6 @@
 using UnityEngine;
 using System;
 using Newtonsoft.Json;
-using BF2D.Enums;
 using BF2D.Game.Enums;
 using System.Collections.Generic;
 using BF2D.Utilities;
@@ -12,14 +11,15 @@ namespace BF2D.Game.Actions
     /// Gem
     /// </summary>
     [Serializable]
-    public class CharacterStatsAction : Entity, IUtilityEntity
+    public class CharacterAction : Entity, IUtilityEntity
     {
         public struct Specs
         {
             public NumRandInt repeat;
-            public AuraType? hasAura;
+            public HashSet<AuraType> hasAura;
             public NumRandInt successRateModifier;
             public NumRandInt critChanceModifier;
+            public NumRandInt exertionCostModifier;
         }
 
         public class Info
@@ -27,11 +27,15 @@ namespace BF2D.Game.Actions
             public string message = string.Empty;
             public bool targetWasKilled = false;
             public bool targetWasRevived = false;
+            public CharacterStats source = null;
             public CharacterStats target = null;
             public bool failed = false;
+            public bool insufficientStamina = false;
 
             public string GetMessage()
             {
+                if (this.insufficientStamina)
+                    return $"But {this.source.Name} didn't have enough {Strings.Character.STAMINA}. {Strings.DialogTextbox.PAUSE_BREIF}";
                 if (this.failed)
                     return $"But {this.target.Name} was not affected. {Strings.DialogTextbox.PAUSE_BREIF}";
                 return message;
@@ -41,6 +45,9 @@ namespace BF2D.Game.Actions
         [JsonProperty] private readonly string spriteID = string.Empty;
         [JsonProperty] private readonly int successRate = 100;
         [JsonProperty] private readonly CombatAlignment? alignment = null;
+        [JsonProperty] private readonly bool? isRestoration = null;
+
+        [JsonProperty] private readonly NumericProperty exertionCost = null;
 
         [JsonProperty] private readonly NumericProperty damage = null;
         [JsonProperty] private readonly NumericProperty directDamage = null;
@@ -106,13 +113,19 @@ namespace BF2D.Game.Actions
             }
         }
 
+        [JsonIgnore] public bool IsRestoration => this.isRestoration ?? this.heal is not null || this.resetHealth;
+
         [JsonIgnore]
         public bool HasStatsUp => this.constitutionUp is not null || this.enduranceUp is not null || this.swiftnessUp is not null ||
                                   this.strengthUp is not null || this.toughnessUp is not null || this.willUp is not null ||
                                   this.fortuneUp is not null;
 
+        [JsonIgnore] protected bool HasExertionCost => this.exertionCost is not null;
+
         #region Public Methods
-        public bool ContainsAura(AuraType aura, Specs specs) => ContainsAura(aura) || aura == specs.hasAura;
+        public Sprite GetIcon() => GameCtx.One.GetIcon(this.SpriteID);
+
+        public bool ContainsAura(AuraType aura, Specs specs) => ContainsAura(aura) || (specs.hasAura?.Contains(aura) ?? false);
 
         public string GetAnimationKey()
         {
@@ -122,18 +135,31 @@ namespace BF2D.Game.Actions
             return Strings.Animation.FLASHING_ID;
         }
 
+
         public Info Run(CharacterStats source, CharacterStats target, Specs specs)
         {
             Info info = new()
             {
+                source = source,
                 target = target
             };
 
-            if (!Probability.Roll(source, this.successRate + specs.successRateModifier.Calculate(source)))
+            if (!Probability.Roll(this.successRate + specs.successRateModifier.Calculate(source), source.Luck))
             {
                 info.failed = true;
                 return info;
             }
+
+            int exertionCost = ExertionCost(source, specs);
+            if (exertionCost > source.Stamina)
+            {
+                info.failed = true;
+                info.insufficientStamina = true;
+                return info;
+            }
+
+            if (exertionCost > 0)
+                source.Exert(exertionCost);
 
             bool targetDeadPrevious = target.Dead;
 
@@ -282,7 +308,7 @@ namespace BF2D.Game.Actions
                 text += TbSuccessRateHelper(source, specs);
 
             List<string> specAdditions = new();
-            if (specs.repeat.Value is not 1 || !string.IsNullOrEmpty(specs.repeat.Expression))
+            if (specs.repeat.Value is not 0 || !string.IsNullOrEmpty(specs.repeat.Expression))
                 specAdditions.Add($"x{specs.repeat.TextBreakdown(source)}");
 
             if (specs.hasAura is not null)
@@ -294,15 +320,44 @@ namespace BF2D.Game.Actions
             if (specAdditions.Count > 0)
                 text += $"{string.Join(", ", specAdditions)}\n";
 
+            if (this.exertionCost is not null || specs.exertionCostModifier.Value is not 0 || !string.IsNullOrEmpty(specs.exertionCostModifier.Expression))
+                text += $"Cost: {ExertionCostText(source, specs)}{Strings.Character.MAX_STAMINA_SYMBOL}".Colorize(Colors.Yellow) +
+                    $" ({source.Stamina}{Strings.Character.MAX_STAMINA_SYMBOL})\n";
+
             return text;
         }
         #endregion
 
         #region Private Methods
+        protected int ExertionCost(CharacterStats source, Specs specs)
+        {
+            if (this.exertionCost is null)
+                return 0;
+
+            int value = this.exertionCost.Calculate(source) + (specs.exertionCostModifier?.Calculate(source) ?? 0);
+            return value > 0 ? value : 0;
+        }
+
+        protected string ExertionCostText(CharacterStats source, Specs specs)
+        {
+            if (this.exertionCost is null)
+                return string.Empty;
+
+            string text = this.exertionCost.TextBreakdown(source, Colors.Orange);
+            if (specs.exertionCostModifier is not null)
+            {
+                if (string.IsNullOrEmpty(text))
+                    text += "+";
+                text += specs.exertionCostModifier.TextBreakdown(source);
+            }
+
+            return text;
+        }
+
         private string RnDamageHelper(NumericProperty numericProperty, CalculatedAction action, CharacterStats source, CharacterStats target, bool critEnabled, Specs specs)
         {
             string message = string.Empty;
-            if (Probability.Roll(source, source.CurrentJob.CritChance + specs.critChanceModifier.Calculate(source)) && !target.CritImmune && critEnabled)
+            if (Probability.Roll(source.CurrentJob.CritChance + specs.critChanceModifier.Calculate(source), source.Luck) && !target.CritImmune && critEnabled)
                 message += RnCriticalDamageHelper(numericProperty, source, target);
             else
                 message += $"{target.Name} took {numericProperty.Run(source, action)} {Strings.Character.DAMAGE.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
@@ -311,7 +366,7 @@ namespace BF2D.Game.Actions
 
         private string RnCriticalDamageHelper(NumericProperty numericProperty, CharacterStats source, CharacterStats target)
         {
-            return $"{Strings.Character.CRITICAL_DAMAGE}.{Strings.DialogTextbox.PAUSE_BREIF} {target.Name} took {numericProperty.Run(source, target.CriticalDamage)} {Strings.Character.DAMAGE.ToLower()}.{Strings.DialogTextbox.PAUSE_BREIF}";
+            return $"{Strings.Character.CRITICAL_DAMAGE}.{Strings.DialogTextbox.PAUSE_BREIF} {target.Name} took {numericProperty.Run(source, target.CriticalDamage)} {Strings.Character.DAMAGE.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
         }
 
         private string RnHealHelper(NumericProperty numericProperty, CharacterStats source, CharacterStats target)
@@ -321,15 +376,7 @@ namespace BF2D.Game.Actions
 
         private string TbNumericPropertyHelper(NumericProperty numericProperty, CharacterStats source, string statsActionName, Color32 color)
         {
-            string numericPropertyText = numericProperty.Number.TextBreakdown(source);
-            string text = $"{statsActionName} {numericPropertyText}";
-
-            if (source is not null)
-                foreach (CharacterStatsProperty modifier in numericProperty.Modifiers)
-                    text += $"<color=#{ColorUtility.ToHtmlStringRGBA(color)}>{source.GetModifierText(modifier)}</color>";
-
-            text += '\n';
-            return text;
+            return $"{statsActionName} {numericProperty.TextBreakdown(source, color)}\n";
         }
 
         private string TbSuccessRateHelper(CharacterStats source, Specs specs)
@@ -338,7 +385,7 @@ namespace BF2D.Game.Actions
                 return $"Always Fails";
 
             string successRateModifier = source is null ? null : $"+{specs.successRateModifier.TextBreakdown(source)}%{source.GetModifierText(CharacterStatsProperty.Luck)}";
-            return $"Success Rate <color=#{ColorUtility.ToHtmlStringRGBA(Colors.Cyan)}>{this.SuccessRate}{successRateModifier}</color>\n";
+            return "Success Rate " + $"{this.SuccessRate}{successRateModifier} \n".Colorize(Colors.Cyan);
         }
         #endregion
     }

@@ -1,19 +1,19 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace BF2D.Game
 {
     [Serializable]
-    public class EntityLoot
+    public class UtilityEntityLoot
     {
+        [JsonProperty] private readonly string id = string.Empty;
+        [JsonProperty] private readonly int probability = 100;
+        [JsonProperty] private readonly int count = 1;
+
         [JsonIgnore] public string ID => this.id;
-        [JsonProperty] private string id = string.Empty;
         [JsonIgnore] public int Probability => this.probability;
-        [JsonProperty] private int probability = 100;
         [JsonIgnore] public int Count => this.count;
-        [JsonProperty] private int count = 1;
 
         public void RollForLoot(List<string> collectionToAppend)
         {
@@ -25,7 +25,7 @@ namespace BF2D.Game
                     luckiestPlayer = player;
 
             for (int i = 0; i < this.Count; i++)
-                if (Utilities.Probability.Roll(luckiestPlayer, this.Probability))
+                if (Utilities.Probability.Roll(this.Probability, luckiestPlayer.Luck))
                     collectionToAppend.Add(this.ID);
         }
     }

@@ -1,6 +1,7 @@
 using BF2D.UI;
 using UnityEngine;
 using UnityEngine.UI;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game.Combat
 {
@@ -8,6 +9,7 @@ namespace BF2D.Game.Combat
     {
         [Header("Settings")]
         [SerializeField] private Vector3 assignmentPosition = Vector3.zero;
+        [SerializeField] private CharacterAlignment alignment = CharacterAlignment.Player;
         [Header("UI/Grid Elements")]
         [SerializeField] private SpriteRenderer cursor = null;
         [SerializeField] private Canvas displayCanvas = null;
@@ -24,6 +26,8 @@ namespace BF2D.Game.Combat
         {
             get => this.interactable && this.assignedCharacter != null && !this.assignedCharacter.Stats.Dead;
         }
+
+        public CharacterAlignment Alignment => this.alignment;
 
         public override sealed void Setup(Data data)
         {

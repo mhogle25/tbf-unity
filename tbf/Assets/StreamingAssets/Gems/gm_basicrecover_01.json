@@ -1,0 +1,11 @@
+{
+    "name": "Gem of Simple Recovery",
+    "auras": [],
+    "recover": 
+    {
+        "number": 
+        {
+            "value": 1
+        }
+    }
+}

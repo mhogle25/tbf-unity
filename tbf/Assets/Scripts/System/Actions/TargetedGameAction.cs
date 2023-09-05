@@ -5,14 +5,14 @@ namespace BF2D.Game.Actions
 {
     public class TargetedGameAction : GameAction, ICombatAligned
     {
-        [JsonIgnore] public TargetedCharacterStatsActionSlot[] TargetedGemSlots => this.targetedGemSlots;
-        [JsonProperty] private readonly TargetedCharacterStatsActionSlot[] targetedGemSlots = { };
+        [JsonIgnore] public TargetedCharacterActionSlot[] TargetedGemSlots => this.targetedGemSlots;
+        [JsonProperty] private readonly TargetedCharacterActionSlot[] targetedGemSlots = { };
 
         [JsonIgnore] public bool CombatExclusive
         {
             get
             {
-                foreach (TargetedCharacterStatsActionSlot slot in this.TargetedGemSlots)
+                foreach (TargetedCharacterActionSlot slot in this.TargetedGemSlots)
                     if (slot.CombatExclusive)
                         return true;
 
@@ -21,12 +21,30 @@ namespace BF2D.Game.Actions
         }
 
         [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.TargetedGemSlots);
+        [JsonIgnore] public bool IsRestoration
+        {
+            get
+            {
+                foreach (TargetedCharacterActionSlot gem in this.TargetedGemSlots)
+                {
+                    if (gem.IsRestoration &&
+                        !gem.Chaotic &&
+                        (gem.Target == CharacterTarget.Ally ||
+                        gem.Target == CharacterTarget.AllAllies ||
+                        gem.Target == CharacterTarget.Self ||
+                        gem.Target == CharacterTarget.RandomAlly))
+                        return true;
+                }
 
-        public string TextBreakdown(CharacterStats source)
+                return false;
+            }
+        }
+
+        public override string TextBreakdown(CharacterStats source)
         {
             string description = string.Empty;
 
-            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in this.TargetedGemSlots)
+            foreach (TargetedCharacterActionSlot targetedGemSlot in this.TargetedGemSlots)
                 description += $"-\n{targetedGemSlot.TextBreakdown(source)}";
 
             return description;

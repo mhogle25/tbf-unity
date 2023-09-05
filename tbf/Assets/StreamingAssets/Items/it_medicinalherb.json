@@ -4,7 +4,6 @@
     "description":"An herb with restorative properties. Heals a single target.",
     "auras": 
     [
-        "Restoration"
     ],
     "onUse":
     {

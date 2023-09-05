@@ -1,14 +1,17 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace BF2D
 {
     public static class YesNo
     {
-        private static readonly string[] yesBank =
+        private static readonly HashSet<string> yesBank = new()
         {
             "yes",
             "y",
         };
 
-        private static readonly string[] noBank =
+        private static readonly HashSet<string> noBank = new()
         {
             "no",
             "n",
@@ -18,27 +21,17 @@ namespace BF2D
         {
             if (!Yes(input) && !No(input))
             {
-                ShCtx.One.LogError($"Error: Unknown argument passed, expected (Y|N)");
+                Debug.LogError($"[YesNo:Either] Unknown argument passed, expected (Y|N)");
                 return false;
             }
 
             return true;
         }
 
-        public static bool Yes(string input)
-        {
-            if (System.Linq.Enumerable.Contains(YesNo.yesBank, input.ToLower().Trim()))
-                return true;
+        public static bool Yes(string input) => YesNo.yesBank.Contains(input.Wash());
 
-            return false;
-        }
+        public static bool No(string input) => YesNo.noBank.Contains(input.Wash());
 
-        public static bool No(string input)
-        {
-            if (System.Linq.Enumerable.Contains(YesNo.noBank, input.ToLower().Trim()))
-                return true;
-
-            return false;
-        }
+        private static string Wash(this string value) => value.ToLower().Trim();
     }
 }

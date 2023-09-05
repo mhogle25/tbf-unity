@@ -46,9 +46,9 @@ namespace BF2D.Game
             }
 
             int i = 0;
-            CharacterStatsActionInfo gemInfo = null;
+            CharacterActionInfo gemInfo = null;
             for (; i < count; i++)
-                gemInfo = GameCtx.One.PartyGems.Acquire(gemID);
+                gemInfo = GameCtx.One.Gems.Acquire(gemID);
 
             ShCtx.One.Log($"The party acquired {i} {gemInfo.Name}s.");
         }

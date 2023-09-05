@@ -14,6 +14,21 @@
     "luckModifier":0,
     "maxHealthModifier":1,
     "maxStaminaModifier":0,
+    "onEquip": 
+    {
+        "messageRandom": true,
+        "message": 
+        [
+            "[N:Vapor Helm]We'll make a great team,[P:0.2] I just know it.[P:0.5][E]",
+            "[N:Vapor Helm]Should have equipped me sooner![P:0.5][E]"
+        ],
+        "gemSlots": 
+        [
+            {
+                "gemID": "gm_heal_01_f"
+            }
+        ]
+    },
     "onUpkeep":
     {
         "message":
@@ -23,9 +38,9 @@
         "gemSlots":
         [
             {
-                "repeat":
+                "repeat": 
                 {
-                    "value": 2
+                    "expression": "$ 1 2"
                 },
                 "gemID": "gm_basicheal_01"
             }

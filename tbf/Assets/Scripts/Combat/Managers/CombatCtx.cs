@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using BF2D.UI;
 using BF2D.Game.Combat.Actions;
-using BF2D.Game.Actions;
+using BF2D.Game.Enums;
 
 namespace BF2D.Game.Combat
 {
@@ -11,8 +11,8 @@ namespace BF2D.Game.Combat
     {
         public class InitializeInfo
         {
-            public IEnumerable<CharacterStats> players = null;
-            public IEnumerable<CharacterStats> enemies = null;
+            public Party players = null;
+            public Encounter enemies = null;
             public string openingDialogKey = $"di_opening_{Strings.System.DEFAULT_ID}";
             public float themePaletteOffset = 0.3f;
         }
@@ -32,12 +32,36 @@ namespace BF2D.Game.Combat
         private Action listener = null;
 
         public CharacterCombat CurrentCharacter => this.combatGrid.CurrentCharacter;
+
         public IEnumerable<CharacterCombat> Players => this.combatGrid.ActivePlayers;
         public int PlayerCount => this.combatGrid.ActivePlayers.Length;
+
         public IEnumerable<CharacterCombat> Enemies => this.combatGrid.ActiveEnemies;
         public int EnemyCount => this.combatGrid.ActiveEnemies.Length;
+
         public IEnumerable<CharacterCombat> Characters => this.combatGrid.ActiveCharacters;
         public int CharacterCount => this.combatGrid.ActivePlayers.Length + this.combatGrid.ActiveEnemies.Length;
+
+        public IEnumerable<CharacterCombat> Allies => GetAllies(this.CurrentCharacter.Alignment);
+        public int AllyCount => GetAllies(this.CurrentCharacter.Alignment).Length;
+
+        public IEnumerable<CharacterCombat> Opponents => GetOpponents(this.CurrentCharacter.Alignment);
+        public int OpponentCount => GetOpponents(this.CurrentCharacter.Alignment).Length;
+
+        public IEnumerable<CharacterCombat> AllPlayers => this.combatGrid.AllPlayers;
+        public int AllPlayersCount => this.combatGrid.AllPlayers.Length;
+
+        public IEnumerable<CharacterCombat> AllEnemies => this.combatGrid.AllEnemies;
+        public int AllEnemiesCount => this.combatGrid.AllEnemies.Length;
+
+        public IEnumerable<CharacterCombat> AllCharacters => this.combatGrid.AllCharacters;
+        public int AllCharactersCount => this.combatGrid.AllPlayers.Length + this.combatGrid.AllEnemies.Length;
+
+        public IEnumerable<CharacterCombat> AllAllies => GetAllAllies(this.CurrentCharacter.Alignment);
+        public int AllAlliesCount => GetAllAllies(this.CurrentCharacter.Alignment).Length;
+
+        public IEnumerable<CharacterCombat> AllOpponents => GetAllOpponents(this.CurrentCharacter.Alignment);
+        public int AllOpponentsCount => GetAllOpponents(this.CurrentCharacter.Alignment).Length;
 
         public DialogTextbox OrphanedTextbox => this.orphanedTextbox;
 
@@ -63,10 +87,16 @@ namespace BF2D.Game.Combat
             });
         }
 
-        public void SetupEquipCombat(EquipmentInfo info)
+        public void SetupEquipCombat(EquipmentInfo info, EquipmentType type)
         {
-            Debug.LogWarning("TODO: Setup Equip Combat");
-            //this.CurrentCharacter.SetupCombatAction(this.)
+            this.CurrentCharacter.SetupCombatAction(new CombatAction
+            {
+                Equip = new EquipCombatActionInfo
+                {
+                    Info = info,
+                    Type = type
+                }
+            });
         }
 
         public void RunCombatEvents()
@@ -93,46 +123,19 @@ namespace BF2D.Game.Combat
                 this.standaloneTextboxControl.Dialog("di_victory", 0);
                 List<JobInfo.LevelUpInfo> infos = AllocateExperience(this.Players, this.combatGrid.GetTotalExperience());
                 foreach (JobInfo.LevelUpInfo info in infos)
-                {
                     this.standaloneTextboxControl.Dialog(info.levelUpDialog, 0, null, info.parent.Name);
-                }
 
                 // Item Loot
-                string itemLootMessage = string.Empty;
-                foreach (string id in this.combatGrid.GetTotalItemLoot())
-                {
-                    ItemInfo itemInfo = GameCtx.One.PartyItems.Acquire(id);
-                    if (itemInfo is not null)
-                        itemLootMessage += $"Acquired a {itemInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
-                }
-
-                if (!string.IsNullOrEmpty(itemLootMessage))
-                    this.standaloneTextboxControl.Message(itemLootMessage);
+                HandleUtilityEntityLoot(GameCtx.One.Items, this.combatGrid.GetTotalItemLoot());
 
                 // Equipment Loot
-                string equipmentLootMessage = string.Empty;
-                foreach (string id in this.combatGrid.GetTotalEquipmentLoot())
-                {
-                    EquipmentInfo equipmentInfo = GameCtx.One.PartyEquipment.Acquire(id);
-                    if (equipmentInfo is not null)
-                        equipmentLootMessage += $"Acquired a {equipmentInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
-                }
-
-                if (!string.IsNullOrEmpty(equipmentLootMessage))
-                    this.standaloneTextboxControl.Message(equipmentLootMessage);
+                HandleUtilityEntityLoot(GameCtx.One.Equipment, this.combatGrid.GetTotalEquipmentLoot());
 
                 // Gem Loot
-                string gemLootMessage = string.Empty;
-                foreach (string id in this.combatGrid.GetTotalGemLoot())
-                {
-                    CharacterStatsActionInfo gemInfo = GameCtx.One.PartyGems.Acquire(id);
-                    if (gemInfo is not null)
-                        gemLootMessage += $"Acquired a {gemInfo.Get().Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
-                }
+                HandleUtilityEntityLoot(GameCtx.One.Gems, this.combatGrid.GetTotalGemLoot());
 
-                if (!string.IsNullOrEmpty(gemLootMessage))
-                    this.standaloneTextboxControl.Message(gemLootMessage);
-
+                // Rune Loot
+                HandleUtilityEntityLoot(GameCtx.One.Runes, this.combatGrid.GetTotalRuneLoot());
 
                 // Point Loot
                 GameCtx.One.Currency += this.combatGrid.GetTotalCurrencyLoot();
@@ -197,40 +200,36 @@ namespace BF2D.Game.Combat
             return playersDefeated;
         }
 
-        public bool PlayersAreAtFullHealth() => CharactersAreAtFullHealth(this.Players);
+        public bool OpponentsAreAtFullHealth() => CharactersAreAtFullHealth(this.Opponents);
 
-        public bool EnemiesAreAtFullHealth() => CharactersAreAtFullHealth(this.Enemies);
+        public bool AlliesAreAtFullHealth() => CharactersAreAtFullHealth(this.Allies);
 
         public CharacterCombat RandomCharacter()
         {
             return this.combatGrid.ActiveCharacters[UnityEngine.Random.Range(0, this.combatGrid.ActiveCharacters.Length)];
         }
 
-        public CharacterCombat RandomEnemy()
+        public CharacterCombat RandomAlly()
         {
-            return this.combatGrid.ActiveEnemies[UnityEngine.Random.Range(0, this.combatGrid.ActiveEnemies.Length)];
+            if (this.AllyCount < 1)
+                return null;
+
+            return GetAllies(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, this.AllyCount)];
         }
 
-        public CharacterCombat RandomPlayer()
+        public CharacterCombat RandomOpponent()
         {
-            return this.combatGrid.ActivePlayers[UnityEngine.Random.Range(0, this.combatGrid.ActivePlayers.Length)];
-        }
+            if (this.OpponentCount < 1)
+                return null;
 
-        public bool CharacterIsPlayer(CharacterCombat character)
-        {
-            return this.combatGrid.CharacterIsPlayer(character);
-        }
-
-        public bool CharacterIsEnemy(CharacterCombat character)
-        {
-            return this.combatGrid.CharacterIsEnemy(character);
+            return GetOpponents(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, this.OpponentCount)];
         }
         #endregion
 
         #region Listeners
         private void CombatInfoListen()
         {
-            InitializeInfo combatInfo = GameCtx.One.UnstageCombatInfo();
+            InitializeInfo combatInfo = GameCtx.One.UnstageEncounter();
             if (combatInfo is null)
                 return;
 
@@ -240,6 +239,50 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Private Methods
+        private void HandleUtilityEntityLoot<T>(IUtilityEntityHolder<T> receiver, IEnumerable<string> ids) where T : UtilityEntityInfo
+        {
+            string lootMessage = string.Empty;
+            foreach (string id in ids)
+            {
+                T info = receiver.Acquire(id);
+                if (info is not null)
+                    lootMessage += $"Acquired a {info.Name}. {Strings.DialogTextbox.PAUSE_BREIF}";
+            }
+
+            if (!string.IsNullOrEmpty(lootMessage))
+                this.standaloneTextboxControl.Message(lootMessage);
+        }
+
+        private string NPC_ERROR(string name) => $"[CombatCtx:{name}] Allignment cannot be NPC";
+
+        private CharacterCombat[] GetAllies(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.ActivePlayers,
+            CharacterAlignment.Enemy => this.combatGrid.ActiveEnemies,
+            _ => throw new Exception(NPC_ERROR("GetAllies"))
+        };
+
+        private CharacterCombat[] GetOpponents(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.ActiveEnemies,
+            CharacterAlignment.Enemy => this.combatGrid.ActivePlayers,
+            _ => throw new Exception(NPC_ERROR("GetOpponents"))
+        };
+
+        private CharacterCombat[] GetAllAllies(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.AllPlayers,
+            CharacterAlignment.Enemy => this.combatGrid.AllEnemies,
+            _ => throw new Exception(NPC_ERROR("GetAllAllies"))
+        };
+
+        private CharacterCombat[] GetAllOpponents(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.AllEnemies,
+            CharacterAlignment.Enemy => this.combatGrid.AllPlayers,
+            _ => throw new Exception(NPC_ERROR("GetAllOpponents"))
+        };
+
         private bool CharactersAreAtFullHealth(IEnumerable<CharacterCombat> characters)
         {
             foreach (CharacterCombat character in characters)
@@ -252,7 +295,6 @@ namespace BF2D.Game.Combat
         {
             this.combatGrid.Setup(initInfo.players, initInfo.enemies);
 
-            this.themeController.NewPaletteOffsetClocked(initInfo.themePaletteOffset);
             this.standaloneTextboxControl.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
             this.standaloneTextboxControl.TakeControl();
 
@@ -261,7 +303,7 @@ namespace BF2D.Game.Combat
 
         private void BeginTurn()
         {
-            if (this.combatGrid.CharacterIsPlayer(this.CurrentCharacter))
+            if (this.CurrentCharacter.IsPlayer)
             {
                 this.standaloneTextboxControl.Message($"{this.CurrentCharacter.Stats.Name}'s turn. {Strings.DialogTextbox.PAUSE_BREIF}(Level {this.CurrentCharacter.Stats.Level} {this.CurrentCharacter.Stats.CurrentJob.Name})", () =>
                 {

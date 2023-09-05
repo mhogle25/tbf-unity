@@ -1,15 +1,15 @@
 using Newtonsoft.Json;
-using BF2D.Enums;
 using BF2D.Game.Actions;
 using BF2D.Game.Enums;
 using System;
 using UnityEngine;
+using BF2D.Utilities;
 
 namespace BF2D.Game
 {
     public abstract class PersistentEffect : Entity, ICombatAligned
     {
-        [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
+        [JsonIgnore] public override sealed string ID { get => this.id; set => this.id = value; }
         [JsonIgnore] private string id = string.Empty;
 
         [JsonIgnore] public virtual int SpeedModifier => this.speedModifier;
@@ -21,6 +21,8 @@ namespace BF2D.Game
         [JsonIgnore] public virtual int MaxStaminaModifier => this.maxStaminaModifier; 
         [JsonIgnore] public virtual UntargetedGameAction OnUpkeep => this.onUpkeep; 
         [JsonIgnore] public virtual UntargetedGameAction OnEOT => this.onEOT;
+        [JsonIgnore] public virtual bool UpkeepEventExists => this.onUpkeep is not null;
+        [JsonIgnore] public virtual bool EOTEventExists => this.onEOT is not null;
 
         [JsonIgnore] public virtual CombatAlignment Alignment
         {
@@ -45,6 +47,10 @@ namespace BF2D.Game
             }
         }
 
+        [JsonIgnore] public virtual bool IsRestoration =>
+            (this.OnUpkeep?.IsRestoration ?? false) ||
+            (this.OnEOT?.IsRestoration ?? false);
+
         [JsonProperty] private readonly CombatAlignment? alignment = null;
         [JsonProperty] private readonly int speedModifier = 0;
         [JsonProperty] private readonly int attackModifier = 0;
@@ -55,10 +61,6 @@ namespace BF2D.Game
         [JsonProperty] private readonly int maxStaminaModifier = 0;
         [JsonProperty] private readonly UntargetedGameAction onUpkeep = null;
         [JsonProperty] private readonly UntargetedGameAction onEOT = null;
-
-        public bool UpkeepEventExists() => this.onUpkeep is not null;
-
-        public bool EOTEventExists() => this.onEOT is not null;
 
         public int GetModifier(CharacterStatsProperty property) => property switch
         {
@@ -94,14 +96,12 @@ namespace BF2D.Game
             return text;
         }
 
-        private string TbModifier(int modifier, string label, char icon, int? other)
+        protected string TbModifier(int modifier, string label, char icon, int? other)
         {
             if (modifier == 0)
                 return string.Empty;
 
             int resolvedOther = other is null ? modifier : other.GetValueOrDefault();
-
-            string sign = modifier > 0 ? "+" : modifier < 0 ? "-" : null;
 
             string relativeSign;
             Color32? color;
@@ -118,16 +118,17 @@ namespace BF2D.Game
             else
             {
                 relativeSign = null;
-                color = null;
+                color = modifier < 0 ? Colors.Red : null;
             }
 
-            string colorOpeningTag = color is not null ? $"<color=#{ColorUtility.ToHtmlStringRGBA(color.GetValueOrDefault())}>" : null;
-            string colorClosingTag = color is not null ? "</color>" : null;
+            string suffix = $" {modifier.NonZeroToSignedString()}{relativeSign} {label}\n";
+            if (color is not null)
+                suffix = suffix.Colorize(color.GetValueOrDefault());
 
-            return $"{icon} {colorOpeningTag}{sign}{modifier}{relativeSign} {label}{colorClosingTag}\n";
+            return $"{icon}" + suffix;
         }
 
-        private string TbGameAction(UntargetedGameAction gameAction, string label, CharacterStats source)
+        protected string TbGameAction(UntargetedGameAction gameAction, string label, CharacterStats source)
         {
             if (gameAction is null)
                 return string.Empty;

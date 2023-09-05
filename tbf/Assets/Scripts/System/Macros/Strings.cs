@@ -1,4 +1,3 @@
-using BF2D.Enums;
 using System;
 using BF2D.Game.Enums;
 
@@ -13,8 +12,8 @@ namespace BF2D.Game
 
             public const char LEFT_ARROW_SYMBOL = '‹';
             public const char RIGHT_ARROW_SYMBOL = '›';
-            public const char UP_ARROW_SYMBOL = 'ˆ';
-            public const char DOWN_ARROW_SYMBOL = 'ı';
+            public const char UP_ARROW_SYMBOL = 'º';
+            public const char DOWN_ARROW_SYMBOL = '¹';
 
             public static bool IsGeneratedID(string id)
             {
@@ -39,7 +38,7 @@ namespace BF2D.Game
         {
             public const string DAMAGE = "Damage";
             public const string CRITICAL_DAMAGE = "Critical";
-            public const string PSYCHIC_DAMAGE = "Psychic Damage";
+            public const string PSYCHIC_DAMAGE = "Psychic";
             public const string HEAL = "Heal";
             public const string RECOVER = "Recover";
             public const string EXERT = "Exert";
@@ -146,18 +145,6 @@ namespace BF2D.Game
                 EquipmentType.Feet => Equipment.FEET_ID,
                 _ => throw new ArgumentException("[Strings:Equipment:GetID] The given EquipmentType was null or invalid")
             };
-        }
-
-        public static string NonZeroToSignedString(int value)
-        {
-            if (value > 0)
-                return $"+{value}";
-
-
-            if (value < 0)
-                return $"-{Math.Abs(value)}";
-
-            return null;
         }
     }
 }

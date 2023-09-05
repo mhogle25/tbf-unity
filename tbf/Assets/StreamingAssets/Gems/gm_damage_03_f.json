@@ -14,5 +14,12 @@
         [
             "Focus"
         ]
+    },
+    "exertionCost": 
+    {
+        "number": 
+        {
+            "value": 1
+        }
     }
 }

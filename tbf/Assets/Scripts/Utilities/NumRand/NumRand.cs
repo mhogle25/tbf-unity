@@ -59,7 +59,7 @@ namespace BF2D.Utilities
                 if (this.arg0 is null || this.arg1 is null)
                     throw new Exception("[NumRand:FloatOp:Calculate] Tried to calculate but one or both of the arguments were null");
 
-                return Calculate((float) this.arg0, (float) this.arg1, specs);
+                return Calculate(this.arg0.GetValueOrDefault(), this.arg1.GetValueOrDefault(), specs);
             }
 
             private int Calculate(float x, float y, CalcSpecs specs)
@@ -84,18 +84,24 @@ namespace BF2D.Utilities
                     float max = x > y ? x : y;
                     float min = x < y ? x : y;
 
-                    int value = UnityEngine.Random.Range((int) min, (int) max);
+                    int minI = (int)min;
+                    int maxI = (int)max;
+
+                    if (minI == maxI)
+                        return minI;
+
+                    int value = UnityEngine.Random.Range(minI, maxI + 1);
 
                     if (specs.showLogs)
                         Debug.Log($"Random Value: {value}");
 
-                    value += specs.modifyEveryRandOp is null ? 0 : (int) specs.modifyEveryRandOp;
+                    value += specs.modifyEveryRandOp is null ? 0 : specs.modifyEveryRandOp.GetValueOrDefault();
 
-                    if (!specs.canExceedMax && value > max)
-                        value = (int) max;
+                    if (!specs.canExceedMax && value > maxI)
+                        value = maxI;
 
-                    if (!specs.canExceedMin && value < min)
-                        value = (int) min;
+                    if (!specs.canExceedMin && value < minI)
+                        value = minI;
 
                     if (specs.showLogs)
                         Debug.Log($"After Specs: {value}");
@@ -155,9 +161,9 @@ namespace BF2D.Utilities
                 else if (this.op == $"{NumRand.OP_RANGE}")
                 {
                     if (string.IsNullOrEmpty(specs.modifyEveryRandOp))
-                        return $"<color=#{ColorUtility.ToHtmlStringRGBA(specs.randModifierColor)}>{x} to {y}</color>";
+                        return $"{x} to {y}".Colorize(specs.randModifierColor);
 
-                    return $"<color=#{ColorUtility.ToHtmlStringRGBA(specs.randModifierColor)}>{x} to {y} {specs.modifyEveryRandOp}</color>";
+                    return $"{x} to {y} {specs.modifyEveryRandOp}".Colorize(specs.randModifierColor);
                 }
                 else
                 {
@@ -203,15 +209,23 @@ namespace BF2D.Utilities
             string[] operations = expression.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (operations.Length < 3)
-                throw new Exception($"[NumRand:CalculateParser] Syntax Error: The expression supplied was smaller than a single operation -> {expression}");
+            {
+                if (operations.Length == 2)
+                    throw new Exception($"[NumRand:CalculateParser] Syntax Error: The expression supplied was smaller than a single operation -> {expression}");
 
-            int i = 1;
+                string value = operations[0];
+                if (specs.termRegistry.ContainsKey(value))
+                    return specs.termRegistry[value];
+
+                return (int)TryParse(value);
+            }
 
             if (!IsAnOperator(operations[0]))
                 throw new Exception($"[NumRand:CalculateParser] Syntax Error: The first term of the expression must be an operator");
 
             this.opStackF.Push(new FloatOp(operations[0]));
 
+            int i = 1;
             float? stagedValue = null;
             while (this.opStackF.Count > 0)
             {
@@ -264,6 +278,7 @@ namespace BF2D.Utilities
 
             if (specs.showLogs)
                 Debug.Log($"Final Value: {stagedValue}");
+
             return (int) stagedValue;
         }
 
@@ -272,17 +287,23 @@ namespace BF2D.Utilities
             string[] operations = expression.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (operations.Length < 3)
-                throw new Exception($"[NumRand:TextBreakdownParser] Syntax Error: The expression supplied was smaller than a single operation -> {expression}");
+            {
+                if (operations.Length == 2)
+                    throw new Exception($"[NumRand:TextBreakdownParser] Syntax Error: The expression supplied was smaller than a single operation -> {expression}");
 
+                string value = operations[0];
+                if (specs.termRegistry.ContainsKey(value))
+                    return specs.termRegistry[value];
+
+                return value;
+            }
 
             if (!IsAnOperator(operations[0]))
                 throw new Exception($"[NumRand:TextBreakdownParser] Syntax Error: The first term of the expression must be an operator");
 
-
-            int i = 1;
-
             this.opStackS.Push(new StringOp(operations[0]));
 
+            int i = 1;
             string stagedValue = null;
             while (this.opStackS.Count > 0)
             {
@@ -338,6 +359,18 @@ namespace BF2D.Utilities
                     return false;
             }
             return true;
+        }
+
+        private float TryParse(string value)
+        {
+            try
+            {
+                return float.Parse(value);
+            }
+            catch
+            {
+                throw new Exception($"[NumRand:TryParse] Syntax Error: The provided term could not be converted into a float -> {value}");
+            }
         }
     }
 }

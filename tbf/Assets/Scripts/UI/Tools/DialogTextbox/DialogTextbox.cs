@@ -124,6 +124,7 @@ namespace BF2D.UI
         public override void UtilityInitialize()
         {
             this.state = StateDialogQueue;
+            this.textField.text = string.Empty;
             base.UtilityInitialize();
         }
 
@@ -313,7 +314,6 @@ namespace BF2D.UI
         public void Cancel()
         {
             this.dialogQueue.Clear();
-            this.textField.text = string.Empty;
             this.state = StateDialogQueue;
         }
 

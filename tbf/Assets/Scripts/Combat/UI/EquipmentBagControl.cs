@@ -5,6 +5,7 @@ using BF2D.Enums;
 using System;
 using TMPro;
 using BF2D.Game.Enums;
+using System.Linq;
 
 namespace BF2D.Game.Combat
 {
@@ -42,6 +43,25 @@ namespace BF2D.Game.Combat
             ClearOptions();
             this.Controlled.Setup();
 
+            bool emptyBag = !equipment.Any();
+            bool equipped = this.equipped.Selected.equipment is not null;
+
+            if (equipped || emptyBag)
+            {
+                AddOption(new GridOption.Data
+                {
+                    name = emptyBag && !equipped ? $"No {Strings.Equipment.GetType(type)}" : $"Unequip {Strings.Equipment.GetType(type)}",
+                    icon = emptyBag && !equipped ? null : GameCtx.One.GetIcon(Strings.Equipment.GetTypeID(type)),
+                    text = string.Empty,
+                    onInput = new InputButtonCollection<Action>
+                    {
+                        [InputButton.Confirm] = EquipmentsOnConfirm,
+                        [InputButton.Back] = OnBack
+                    },
+                    onNavigate = () => OnNavigate(null)
+                });
+            }
+
             foreach (EquipmentInfo info in equipment)
             {
                 AddOption(new GridOption.Data
@@ -58,23 +78,13 @@ namespace BF2D.Game.Combat
                 });
             }
 
-            if (!this.Armed) { 
-                AddOption(new GridOption.Data
-                {
-                    name = "Empty Bag",
-                    onInput = new InputButtonCollection<Action>
-                    {
-                        [InputButton.Back] = OnBack
-                    },
-                    onNavigate = () => OnNavigate(null)
-                });
-            }
-
             RefreshGrid(0);
         }
 
         private void OnNavigate(EquipmentInfo equipment)
         {
+            this.selected = equipment;
+
             char primary = this.PageOrientation == Axis.Horizontal ? Strings.System.RIGHT_ARROW_SYMBOL : Strings.System.DOWN_ARROW_SYMBOL;
             char secondary = this.PageOrientation == Axis.Vertical ? Strings.System.LEFT_ARROW_SYMBOL : Strings.System.UP_ARROW_SYMBOL;
 
@@ -88,14 +98,17 @@ namespace BF2D.Game.Combat
             else
                 this.footer.text = $"{secondary}{primary}";
 
-            if (equipment is not null)
+            if (this.equipped.Selected.equipment is null && equipment is null)
             {
-                this.selected = equipment;
-                this.rightText.text = this.Selected.TextBreakdown(this.equipped.Selected, this.platforms.Selected);
+                this.rightText.text = "(none)";
+            }
+            else if (equipment is null)
+            {
+                this.rightText.text = $"Unequip {this.equipped.Selected.equipment.Name}";
             }
             else
             {
-                this.rightText.text = $"(none)";
+                this.rightText.text = this.Selected.TextBreakdown(this.equipped.Selected.equipment, this.platforms.Selected);
             }
         }
 
@@ -107,17 +120,36 @@ namespace BF2D.Game.Combat
 
         private void EquipmentsOnConfirm()
         {
-            this.textbox.AddResponseController(new ResponseYesNo(ResponseOnConfirm, OnBack));
-            this.textbox.Dialog(this.textboxKey, 0, null, this.Selected.Name, CombatCtx.One.CurrentCharacter.Stats.Name);
+
+            int dialogIndex = 0;
+            if (this.Selected is null)
+            {
+                if (this.equipped.Selected.equipment is null)
+                    return;
+
+                dialogIndex = 1;
+            }
+
+            this.textbox.AddResponseController(new ResponseControllerIndexed(ResponseOnConfirm, OnBack));
+            this.textbox.Dialog(
+                this.textboxKey,
+                dialogIndex,
+                null,
+                this.Selected is null ? this.equipped.Selected.equipment.Name : this.Selected.Name,
+                CombatCtx.One.CurrentCharacter.Stats.Name
+                );
             this.textbox.TakeControl();
         }
 
-        private void ResponseOnConfirm(bool yes)
+        private void ResponseOnConfirm(string yesOrNo)
         {
-            if (yes)
+            if (!YesNo.Either(yesOrNo))
+                return;
+
+            if (YesNo.Yes(yesOrNo))
             {
                 UICtx.One.ResetControlChain(false);
-                CombatCtx.One.SetupEquipCombat(this.selected);
+                CombatCtx.One.SetupEquipCombat(this.selected, this.equipped.Selected.type);
             }
             else
             {

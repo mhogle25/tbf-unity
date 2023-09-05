@@ -17,11 +17,11 @@ namespace BF2D.Game
 
         public void SetIndex(int index) => this.index = index;
 
-        public Utilities.FileWriter EmbueGem(CharacterStatsActionInfo gemInfo, ICharacterStatsActionHolder gemOwner, string newName)
+        public Utilities.FileWriter EmbueGem(CharacterActionInfo gemInfo, ICharacterActionHolder gemOwner, string newName)
         {
             Item newItem = GameCtx.One.InstantiateItem(this.itemInfo.ID).Setup<Item>(Strings.System.GenerateID(), newName);
 
-            TargetedCharacterStatsActionSlot[] slots = newItem.OnUse?.TargetedGemSlots;
+            TargetedCharacterActionSlot[] slots = newItem.OnUse?.TargetedGemSlots;
 
             if (slots is null || slots.Length < 1)
             {
@@ -41,7 +41,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            slots[this.index].SetGemID(gemInfo.ID);
+            slots[this.index].ID = gemInfo.ID;
 
             return GameCtx.One.WriteItem(newItem, () =>
             {

@@ -1,0 +1,25 @@
+{
+    "encounter": 
+    {
+        "leader": 
+        {
+            "position": 0,
+            "id": "en_lessergoblin"
+        },
+        "activeEnemies": 
+        [
+            {
+                "position": 1,
+                "id": "en_lessergoblin"
+            },
+            {
+                "position": 2,
+                "id": "en_lessergoblin"
+            },
+            {
+                "position": 3,
+                "id": "en_lessergoblin"
+            }
+        ]
+    }
+}

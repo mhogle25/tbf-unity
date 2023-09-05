@@ -4,7 +4,6 @@ using BF2D.Game.Combat.Enums;
 using BF2D.Game.Enums;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
-using BF2D.Enums;
 using UnityEngine;
 
 namespace BF2D.Game.Combat
@@ -12,6 +11,8 @@ namespace BF2D.Game.Combat
     [Serializable]
     public class CharacterCombatAI
     {
+        private const int REROLL_LIMIT = 20;
+
         [JsonIgnore] public bool Enabled { get => this.enabled; }
         [JsonIgnore] private bool enabled = false;
 
@@ -56,31 +57,44 @@ namespace BF2D.Game.Combat
         [JsonProperty] private readonly Ranking<AuraType> auraRanking = new();
         [JsonProperty] private readonly Ranking<CombatAlignment> alignmentRanking = new();
 
-        public void Run() 
+        private bool ChaoticCurrentCharacter => CombatCtx.One.CurrentCharacter.Stats.Chaotic;
+
+        public void Run()
         {
-            this.enabled = true;
-
-            CombatActionType chosenAction = RollActionType();
-
-            //Roll Action Info
-            switch (chosenAction)
+            bool RunAction(CombatActionType action) => action switch
             {
-                case CombatActionType.Act: break;   //TODO
-                case CombatActionType.Equip: break; //TODO
-                case CombatActionType.Event: break; //TODO
-                case CombatActionType.Flee: break;  //TODO
-                case CombatActionType.Item:
-                    RollItemAction();
+                CombatActionType.Act => throw new NotImplementedException(),
+                CombatActionType.Equip => TryRollEquipAction(),
+                CombatActionType.Item => TryRollItemAction(),
+                CombatActionType.Event => throw new NotImplementedException(),
+                CombatActionType.Flee => throw new NotImplementedException(),
+                CombatActionType.Roster => throw new NotImplementedException(),
+                _ => false
+            };
+
+            this.enabled = true;
+            int i = 0;
+
+            while (i < CharacterCombatAI.REROLL_LIMIT)
+            {
+                CombatActionType chosenAction = RollActionType();
+
+                if (RunAction(chosenAction))
                     break;
-                case CombatActionType.Roster: break;
+                else
+                    i++;
             }
+
+            if (i >= CharacterCombatAI.REROLL_LIMIT)
+                TryRollItemAction(); // TODO: Change this to a default CombatActionType (once one is created, like a DEFEND or a basic ATTACK)
+
         }
 
         public void SetupTargetedGems()
         {
-            IEnumerable<TargetedCharacterStatsActionSlot> slots = CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGemSlots();
+            IEnumerable<TargetedCharacterActionSlot> slots = CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGems();
 
-            foreach (TargetedCharacterStatsActionSlot slot in slots)
+            foreach (TargetedCharacterActionSlot slot in slots)
             {
                 switch (slot.Target)
                 {
@@ -88,16 +102,16 @@ namespace BF2D.Game.Combat
                         slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.CurrentCharacter };
                         break;
                     case CharacterTarget.Ally:
-                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnEnemy(slot) };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnAlly(slot) };
                         break;
                     case CharacterTarget.AllAllies:
-                        slot.TargetInfo.CombatTargets = CombatCtx.One.Players;
+                        slot.TargetInfo.CombatTargets = CombatCtx.One.Allies;
                         break;
                     case CharacterTarget.Opponent:
-                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAPlayer(slot) };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickAnOpponent(slot) };
                         break;
                     case CharacterTarget.AllOpponents:
-                        slot.TargetInfo.CombatTargets = CombatCtx.One.Enemies;
+                        slot.TargetInfo.CombatTargets = CombatCtx.One.Opponents;
                         break;
                     case CharacterTarget.Any:
                         slot.TargetInfo.CombatTargets = new List<CharacterCombat> { PickACharacter(slot) };
@@ -105,13 +119,13 @@ namespace BF2D.Game.Combat
                     case CharacterTarget.AllOfAny:
                         slot.TargetInfo.CombatTargets = slot.Alignment == CombatAlignment.Offense ||
                         slot.Alignment == CombatAlignment.Neutral ?
-                        CombatCtx.One.Players :
-                        CombatCtx.One.Enemies;
+                        CombatCtx.One.Opponents :
+                        CombatCtx.One.Allies;
 
-                        if (CurrentCharacterIsChaotic())
+                        if (this.ChaoticCurrentCharacter)
                             slot.TargetInfo.CombatTargets = UnityEngine.Random.Range(0, 2) == 0 ?
-                            CombatCtx.One.Players :
-                            CombatCtx.One.Enemies;
+                            CombatCtx.One.Opponents :
+                            CombatCtx.One.Allies;
                         break;
                     case CharacterTarget.All:
                         slot.TargetInfo.CombatTargets = CombatCtx.One.Characters;
@@ -120,10 +134,10 @@ namespace BF2D.Game.Combat
                         slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.RandomCharacter() };
                         break;
                     case CharacterTarget.RandomAlly:
-                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.RandomEnemy() };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.RandomAlly() };
                         break;
                     case CharacterTarget.RandomOpponent:
-                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.RandomPlayer() };
+                        slot.TargetInfo.CombatTargets = new List<CharacterCombat> { CombatCtx.One.RandomOpponent() };
                         break;
                     default:
                         Debug.LogError("[CharacterCombatAI:SetupTargetedGems] The provided value for a character target was invalid");
@@ -135,15 +149,50 @@ namespace BF2D.Game.Combat
             this.enabled = false;
         }
 
-        private void RollItemAction()
+        /// <returns>False if caller should roll for another action, otherwise true</returns>
+        private bool TryRollItemAction()
         {
-            ItemInfo item = RollForUtility(CombatCtx.One.CurrentCharacter.Stats.Items.Useable) as ItemInfo;
+            CharacterStats character = CombatCtx.One.CurrentCharacter.Stats;
+
+            if (character.ItemsCount < 1)
+                return false;
+
+            IEntityInfo info = RollForUtility(character.Items.Useable);
+
+            if (info is null)
+                return false;
+
+            ItemInfo item = info as ItemInfo;
             CombatCtx.One.SetupItemCombat(item);
+            return true;
+        }
+
+        /// <returns>False if caller should roll for another action, otherwise true</returns>
+        private bool TryRollEquipAction()
+        {
+            CharacterStats character = CombatCtx.One.CurrentCharacter.Stats;
+
+            if (character.EquipmentCount < 1)
+                return false;
+
+            IEntityInfo info = RollForUtility(character.Equipment);
+
+            if (info is null)
+                return false;
+
+            EquipmentInfo equipment = info as EquipmentInfo;
+            CombatCtx.One.SetupEquipCombat(equipment, equipment.Type);
+            return true;
         }
 
         private CombatActionType RollActionType()
         {
-            return this.actionRanking.Roll();
+            CombatActionType result;
+
+            do result = this.actionRanking.Roll();
+            while (result == CombatActionType.Equip && CombatCtx.One.CurrentCharacter.Stats.EquipmentCount < 1);
+
+            return result;
         }
 
         private IEntityInfo RollForUtility(IEnumerable<UtilityEntityInfo> entities)
@@ -151,97 +200,88 @@ namespace BF2D.Game.Combat
             AuraType aura = this.auraRanking.Roll();
             CombatAlignment alignment = this.alignmentRanking.Roll();
 
-            List<IEntityInfo> list = new();
+            List<UtilityEntityInfo> list = new();
 
             bool allRestoration = true;
             foreach (UtilityEntityInfo entity in entities)
             {
-                if (!entity.ContainsAura(AuraType.Restoration))
+                if (!entity.IsRestoration)
                     allRestoration = false;
-                if (entity.GetUtility().Alignment == alignment)
+                if (entity.Alignment == alignment)
                     list.Add(entity);
             }
 
-            foreach(IEntityInfo entity in entities)
+            foreach(UtilityEntityInfo entity in entities)
                 if (entity.ContainsAura(aura))
                     list.Add(entity);
 
             if (list.Count < 1)
                 foreach (UtilityEntityInfo entity in entities)
-                    if (entity.GetUtility().Alignment == this.alignmentRanking.Max)
+                    if (entity.Alignment == this.alignmentRanking.Max)
                         list.Add(entity);
 
             if (list.Count < 1)
-                foreach (IEntityInfo entity in entities)
+                foreach (UtilityEntityInfo entity in entities)
                     if (entity.ContainsAura(this.auraRanking.Max))
                         list.Add(entity);
 
-            if (CombatCtx.One.EnemiesAreAtFullHealth() && !allRestoration)
+            if (CombatCtx.One.AlliesAreAtFullHealth() && !allRestoration)
             {
-                list.RemoveAll((entity) => entity.ContainsAura(AuraType.Restoration));
+                list.RemoveAll((entity) => entity.IsRestoration);
 
                 if (list.Count < 1)
-                    foreach (IEntityInfo entity in entities)
-                        if (!entity.ContainsAura(AuraType.Restoration))
+                    foreach (UtilityEntityInfo entity in entities)
+                        if (!entity.IsRestoration)
                             list.Add(entity);
             }
-            else
-            {
-                if (list.Count < 1)
-                    foreach (IEntityInfo entity in entities)
-                        list.Add(entity);
-            }
+
+            if (list.Count < 1)
+                return null;
 
             int random = UnityEngine.Random.Range(0, list.Count);
             return list[random];
         }
 
-        private CharacterCombat PickAnEnemy(TargetedCharacterStatsActionSlot gem)
-        { 
-            List<CharacterCombat> enemies = new();
-            foreach (CharacterCombat enemy in CombatCtx.One.Enemies)
-                enemies.Add(enemy);
-
-            if (HealLogicCheck(gem))
+        private CharacterCombat PickAnAlly(TargetedCharacterActionSlot gem)
+        {
+            if (HealCheck(gem))
             {
-                enemies.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
-                return PickACharacter(enemies);
+                List<CharacterCombat> allies = new();
+                foreach (CharacterCombat character in CombatCtx.One.Allies)
+                    allies.Add(character);
+
+                allies.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
+                return PickACharacter(allies);
             }
 
-            return enemies[UnityEngine.Random.Range(0, enemies.Count)];
+            return CombatCtx.One.RandomAlly();
         }
 
-        private CharacterCombat PickAPlayer(TargetedCharacterStatsActionSlot gem)
+        private CharacterCombat PickAnOpponent(TargetedCharacterActionSlot gem)
         {
-            List<CharacterCombat> players = new();
-            foreach (CharacterCombat player in CombatCtx.One.Players)
-                players.Add(player);
-
-            return players[UnityEngine.Random.Range(0, players.Count)];
+            // TODO: more complex opponent selecting?
+            return CombatCtx.One.RandomOpponent();
         }
 
-        private CharacterCombat PickACharacter(TargetedCharacterStatsActionSlot gem)
+        private CharacterCombat PickACharacter(TargetedCharacterActionSlot gem)
         {
-            List<CharacterCombat> characters = new();
-            foreach (CharacterCombat character in CombatCtx.One.Enemies)
-                characters.Add(character);
-
-            if (HealLogicCheck(gem))
+            if (HealCheck(gem))
             {
+                List<CharacterCombat> characters = new();
+                foreach (CharacterCombat character in CombatCtx.One.Allies)
+                    characters.Add(character);
+
                 characters.Sort((x, y) => x.Stats.Health.CompareTo(y.Stats.Health));
                 return PickACharacter(characters);
             }
 
-            foreach (CharacterCombat character in CombatCtx.One.Players)
-                characters.Add(character);
+            if (gem.Alignment == CombatAlignment.Defense && !this.ChaoticCurrentCharacter)
+                return PickAnAlly(gem);
 
-            if (gem.Alignment == CombatAlignment.Defense && !CurrentCharacterIsChaotic())
-                return PickAnEnemy(gem);
+            if (gem.Alignment == CombatAlignment.Offense && !this.ChaoticCurrentCharacter)
+                return PickAnOpponent(gem);
 
-            if (gem.Alignment == CombatAlignment.Offense && !CurrentCharacterIsChaotic())
-                return PickAPlayer(gem);
-
-            return characters[UnityEngine.Random.Range(0, characters.Count)];
+            return CombatCtx.One.RandomCharacter();
         }
 
 
@@ -259,16 +299,12 @@ namespace BF2D.Game.Combat
             return chosen;
         }
 
-        private bool HealLogicCheck(TargetedCharacterStatsActionSlot gem)
+        private bool HealCheck(TargetedCharacterActionSlot gem)
         {
-            return gem.ContainsAura(AuraType.Restoration) &&
+            return gem.IsRestoration &&
                 (gem.Alignment == CombatAlignment.Defense || gem.Alignment == CombatAlignment.Neutral) &&
-                !CurrentCharacterIsChaotic();
+                !this.ChaoticCurrentCharacter;
         }
 
-        private bool CurrentCharacterIsChaotic()
-        {
-            return CombatCtx.One.CurrentCharacter.Stats.ContainsAura(AuraType.Chaos);
-        }
     }
 }

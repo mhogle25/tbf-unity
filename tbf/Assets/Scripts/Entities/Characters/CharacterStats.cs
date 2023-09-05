@@ -6,7 +6,7 @@ using BF2D.Game.Enums;
 using UnityEngine;
 
 namespace BF2D.Game
-{
+{ 
     [Serializable]
     public class CharacterStats : Entity
     {
@@ -160,7 +160,7 @@ namespace BF2D.Game
         [JsonProperty] private readonly ItemHolder items = new();
 
         [JsonIgnore] public int EquipmentCount => this.equipment.Count;
-        [JsonIgnore] public IEquipmentHolder Equipment => this.equipment; 
+        [JsonIgnore] public IEquipmentHolder Equipment => this.equipment;
         [JsonProperty] private readonly EquipmentHolder equipment = new();
 
         //
@@ -169,20 +169,9 @@ namespace BF2D.Game
         [JsonIgnore] public Combat.CharacterCombatAI CombatAI => this.combatAI; 
         [JsonProperty] private readonly Combat.CharacterCombatAI combatAI = new();
 
-        [JsonIgnore] public int GridPosition => this.gridPosition; 
-        [JsonProperty] private int gridPosition = 0;
-
         // Loot
-        [JsonIgnore] public IEnumerable<EntityLoot> ItemLoot => this.itemLoot; 
-        [JsonIgnore] public IEnumerable<EntityLoot> EquipmentLoot => this.equipmentLoot; 
-        [JsonIgnore] public IEnumerable<EntityLoot> GemLoot => this.gemLoot; 
-        [JsonIgnore] public int CurrencyLoot => this.currencyLoot; 
-        [JsonIgnore] public int EtherLoot => this.etherLoot; 
-        [JsonProperty] private readonly List<EntityLoot> itemLoot = new();
-        [JsonProperty] private readonly List<EntityLoot> equipmentLoot = new();
-        [JsonProperty] private readonly List<EntityLoot> gemLoot = new();
-        [JsonProperty] private readonly int currencyLoot = 1;
-        [JsonProperty] private readonly int etherLoot = 0;
+        [JsonIgnore] public LootProperty Loot => this.loot;
+        [JsonProperty] private readonly LootProperty loot = new();
 
         #region Stats Property Actions
         public int GetStatsProperty(CharacterStatsProperty property) => property switch
@@ -250,6 +239,10 @@ namespace BF2D.Game
         public int Exert(int exertion)
         {
             int value = exertion > 0 ? exertion : 1;
+
+            if (this.stamina < value)
+                value = this.stamina;   //Stamina shouldn't drop below 0
+
             this.stamina -= value;
             return value;
         }
@@ -338,28 +331,77 @@ namespace BF2D.Game
         {
             return this.CurrentJob.GrantExperience(this, experience);
         }
+
+        public void ForEachPersistentEffect(Action<PersistentEffect> callback)
+        {
+            foreach (StatusEffectInfo statusEffect in this.StatusEffects)
+                callback(statusEffect.Get());
+            foreach (EquipmentType type in Enum.GetValues(typeof(EquipmentType)))
+            {
+                Equipment equipment = GetEquipped(type);
+                if (equipment is not null)
+                    callback(equipment);
+            }
+        }
         #endregion
 
         #region Equipment Actions
-        public void Equip(EquipmentInfo info)
+        /// <summary>
+        /// Equips the character with a single equipment, handling reaquisition of previously equipped gear and
+        /// removal of referenced gear from the players bag
+        /// </summary>
+        /// <param name="info">The referenced equipment from the player's bag</param>
+        /// <returns>The removed equipment's reference</returns>
+        public EquipmentInfo Equip(EquipmentInfo info) => Equip(info, this.Equipment);
+
+        /// <summary>
+        /// Equips the character with a single equipment, handling reaquisition of previously equipped gear and
+        /// removal of referenced gear from its parent holder
+        /// </summary>
+        /// <param name="info">The referenced equipment from the holder</param>
+        /// <param name="holder">The holder of the equipment</param>
+        /// <returns>The removed equipment's reference</returns>
+        public EquipmentInfo Equip(EquipmentInfo info, IEquipmentHolder holder) => Equip(info, holder, holder);
+
+        /// <summary>
+        /// Equips the character with a single equipment, handling reaquisition of previously equipped gear and
+        /// removal of referenced gear from its parent holder
+        /// </summary>
+        /// <param name="info">The referenced equipment from the holder</param>
+        /// <param name="holder">The holder of the equipment</param>
+        /// <param name="reciever">The reciever of the removed equipment</param>
+        /// <returns>The removed equipment's reference</returns>
+        public EquipmentInfo Equip(EquipmentInfo info, IEquipmentHolder holder, IEquipmentHolder reciever)
         {
+
             Equipment equipment = info.Get();
 
             if (equipment is null)
             {
                 Debug.LogWarning($"[CharacterStats:Equip] Tried to equip to {this.Name} but the equipment given was null");
-                return;
+                return null;
             }
 
-            string id = this.Equipment.Extract(info);
+            string id = holder.Extract(info);
+            Equipment removed = GetEquipped(equipment.Type);
             this.equipped.SetEquipped(equipment.Type, id);
+
+            if (removed is null)
+                return null;
+
+            return reciever.Acquire(removed.ID);
         }
 
-        public void Unequip(EquipmentType equipmentType)
+        public EquipmentInfo Unequip(EquipmentType equipmentType) => Unequip(equipmentType, this.Equipment);
+
+        public EquipmentInfo Unequip(EquipmentType equipmentType, IEquipmentHolder reciever)
         {
             string id = this.equipped.GetEquippedID(equipmentType);
+            if (string.IsNullOrEmpty(id))
+                return null;
+
             this.equipped.SetEquipped(equipmentType, null);
-            this.Equipment.Acquire(id);
+            return reciever.Acquire(id);
         }
 
         public bool Equipped(EquipmentType equipmentType) => this.equipped.Equipped(equipmentType);

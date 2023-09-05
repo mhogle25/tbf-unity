@@ -3,6 +3,7 @@ using BF2D.Game.Actions;
 using System.Collections.Generic;
 using BF2D.Game.Combat.Enums;
 using UnityEngine;
+using System;
 
 namespace BF2D.Game.Combat.Actions
 {
@@ -115,20 +116,18 @@ namespace BF2D.Game.Combat.Actions
             _ => null,
         };
 
-        public void SetupControlled(UIControl targeter)
+        public void SetupControlled()
         {
             switch (this.type)
             {
                 case CombatActionType.Act: break;   //TODO
-                case CombatActionType.Equip: break; //TODO
+                case CombatActionType.Equip:
+                    CombatCtx.One.RunCombatEvents();
+                    break;
                 case CombatActionType.Event: break; //TODO
                 case CombatActionType.Flee: break;  //TODO
-                case CombatActionType.Item:
-                    if (this.Item.HasGems)
-                        UICtx.One.TakeControl(targeter);
-                    //TODO
-                    break;
                 case CombatActionType.Roster: break;
+                default: throw new Exception($"[CombatAction:GetStatsAction] {this.type} should be set up with a targeter");
             }
         }
 
@@ -137,31 +136,43 @@ namespace BF2D.Game.Combat.Actions
             switch (this.type)
             {
                 case CombatActionType.Act: break;   //TODO
-                case CombatActionType.Equip: break; //TODO
+                case CombatActionType.Equip:
+                    CombatCtx.One.RunCombatEvents();
+                    break;
                 case CombatActionType.Event: break; //TODO
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
-                    if (this.Item.HasGems)
-                        ai.SetupTargetedGems();
-                    //TODO
+                    ai.SetupTargetedGems();
                     break;
                 case CombatActionType.Roster: break;
             }
         }
 
-        public IEnumerable<TargetedCharacterStatsActionSlot> GetTargetedGemSlots() => this.type switch
+        public IEnumerable<TargetedCharacterActionSlot> GetTargetedGems() => this.type switch
         {
             CombatActionType.Act => null,//TODO
             CombatActionType.Item => this.Item.TargetedGemSlots,
-            _ => throw new System.Exception("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."),
+            _ => throw new Exception("[CombatAction:GetTargetedGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
         };
         
 
-        public IEnumerable<TargetedCharacterStatsActionSlot> UseTargetedGemSlots() => this.type switch
+        public IEnumerable<TargetedCharacterActionSlot> UseTargetedGems() => this.type switch
         {
             CombatActionType.Act => null,//TODO
-            CombatActionType.Item => this.Item.UseTargetedGemSlots(),
-            _ => throw new System.Exception("[CombatAction:GetStatsAction] Tried to get the list of CharacterStatsActions but the CombatAction was a type other than Act or Item."),
+            CombatActionType.Item => this.Item.UseTargetedGems(),
+            _ => throw new Exception("[CombatAction:GetTargetedGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
+        };
+
+        public IEnumerable<CharacterActionSlot> GetGems() => this.type switch
+        {
+            CombatActionType.Equip => this.Equip.OnEquip,
+            _ => throw new Exception("[CombatAction:GetGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
+        };
+
+        public List<string> Run() => this.type switch
+        {
+            CombatActionType.Equip => this.Equip.Run(),
+            _ => throw new Exception("[CombatAction:GetGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
         };
     }
 }

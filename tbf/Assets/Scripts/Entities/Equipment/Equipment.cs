@@ -9,6 +9,8 @@ namespace BF2D.Game
     [Serializable]
     public class Equipment : PersistentEffect, IUtilityEntity
     {
+        [JsonProperty] private readonly UntargetedGameAction onEquip = null;
+
         [JsonProperty] private readonly string spriteID = string.Empty;
         [JsonProperty] private readonly string seriesID = string.Empty;
         [JsonProperty] private readonly EquipmentType type = EquipmentType.Accessory;
@@ -40,14 +42,27 @@ namespace BF2D.Game
         [JsonIgnore] public override UntargetedGameAction OnUpkeep => CalculateProperty(base.OnUpkeep, rune => rune.OnUpkeep);
         [JsonIgnore] public override UntargetedGameAction OnEOT => CalculateProperty(base.OnEOT, rune => rune.OnEOT);
 
+        [JsonIgnore] public UntargetedGameAction OnEquip => CalculateProperty(this.onEquip, rune => rune.OnEquip);
+
         [JsonIgnore]
         public override CombatAlignment Alignment
         {
             get
             {
                 CombatAlignment alignment = base.Alignment;
-                return CombatAlignmentSelector.CalculateCombatAlignedCollection(this.RuneSlots, alignment);
+                return CombatAlignmentSelector.CalculateCombatAlignedCollection(this.RuneSlots, alignment, onEquip.Alignment);
             }
+        }
+
+        [JsonIgnore] public override bool IsRestoration => base.IsRestoration || (this.OnEquip?.IsRestoration ?? false);
+
+        public override string TextBreakdown(Equipment other, CharacterStats source)
+        {
+            string description = base.TextBreakdown(other, source);
+
+            description += TbGameAction(this.OnEquip, "On Equip", source);
+
+            return description;
         }
 
         public Sprite GetIcon() => GameCtx.One.GetIcon(this.SpriteID);
@@ -69,5 +84,6 @@ namespace BF2D.Game
                     runeTotal = runeTotal.Append(runePropertyPredicate(slot));
             return runeTotal;
         }
+
     }
 }

@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using BF2D.Game.Actions;
 using System;
 using BF2D.Game.Enums;
-using BF2D.Enums;
 using BF2D.UI;
+using BF2D.Game.Combat.Actions;
+using BF2D.Game.Combat.Enums;
 
 namespace BF2D.Game.Combat
 {
     public class CharacterCombat : MonoBehaviour
     {
-        private class EventCtx
+        private class EventStack
         {
             private readonly Stack<Action> eventStack = new();
 
             public void Continue()
             {
                 if (this.eventStack.Count > 0)
-                    this.eventStack.Pop()();
+                    this.eventStack.Pop()?.Invoke();
                 else
                     Debug.LogWarning("[CharacterCombat:EventStack:Continue] Called while the stack was empty");
             }
@@ -25,6 +26,15 @@ namespace BF2D.Game.Combat
             public void PushEvent(Action action)
             {
                 this.eventStack.Push(action);
+            }
+
+            public void SuspendEvent(Action action)
+            {
+                this.eventStack.Push(() =>
+                {
+                    action?.Invoke();
+                    Continue();
+                });
             }
 
             public void FlushEvents()
@@ -35,46 +45,74 @@ namespace BF2D.Game.Combat
 
         [SerializeField] private SpriteRenderer spriteRenderer = null;
         [SerializeField] private AnimatorController animatorController = null;
-        private readonly EventCtx ctx = new();
+        private readonly EventStack stack = new();
 
-        public Actions.CombatAction CurrentCombatAction { get => this.currentCombatAction; set => this.currentCombatAction = value; }
-        private Actions.CombatAction currentCombatAction = null;
+        public CombatAction CurrentCombatAction { get => this.currentCombatAction; set => this.currentCombatAction = value; }
+        private CombatAction currentCombatAction = null;
 
-        public CombatGridTile Tile { set => this.assignedTile = value; }
+        public CombatGridTile Tile { private get => this.assignedTile; set => this.assignedTile = value; }
         private CombatGridTile assignedTile = null;
 
-        public CharacterStats Stats { get => this.stats; set => this.stats = value; }
-        private CharacterStats stats = null;
+        public CharacterStats Stats => this.characterInfo.Stats;
+        public ICharacterInfo CharacterInfo { private get => this.characterInfo; set => this.characterInfo = value; }
+        private ICharacterInfo characterInfo = null;
 
         #region Public Utilities
-        public void SetupCombatAction(UIControl targeter, Actions.CombatAction combatAction)
+        public CharacterAlignment Alignment
+        {
+            get
+            {
+                if (this.Tile)
+                    return this.Tile.Alignment;
+
+                return CharacterAlignment.NPC;
+            }
+        }
+
+        public bool IsPlayer => this.Alignment == CharacterAlignment.Player;
+        public bool IsEnemy => this.Alignment == CharacterAlignment.Enemy;
+        public bool IsNPC => this.Alignment == CharacterAlignment.NPC;
+
+        public void SetupCombatAction(UIControl targeter, CombatAction combatAction)
         {
             this.currentCombatAction = combatAction;
             if (this.Stats.CombatAI.Enabled)
-                this.currentCombatAction.SetupAI(this.stats.CombatAI);
+                this.currentCombatAction.SetupAI(this.Stats.CombatAI);
             else
-                this.currentCombatAction.SetupControlled(targeter);
+                UICtx.One.TakeControl(targeter);
+        }
+
+        public void SetupCombatAction(CombatAction combatAction)
+        {
+            this.currentCombatAction = combatAction;
+
+            if (this.Stats.CombatAI.Enabled)
+                this.currentCombatAction.SetupAI(this.Stats.CombatAI);
+            else
+                this.currentCombatAction.SetupControlled();
         }
 
         public void Run()
         {
-            this.ctx.PushEvent(EOTEvent);                            //Finally, end the turn
+            this.stack.PushEvent(EOTEvent);                            //Finally, end the turn
 
-            PersistentEffectEventLoader(StagePersistentEffectEOTEvent);     //Stage EOT persistent effect events
+            this.stack.SuspendEvent(() => this.Stats.ForEachPersistentEffect(StagePersistentEffectEOTEvent)); //Suspend the staging of EOT persistent effect events
 
             StageCombatEvents();
 
-            PersistentEffectEventLoader(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
+            this.Stats.ForEachPersistentEffect(StagePersistentEffectUpkeepEvent);  //Stage Upkeep persistent effect events
 
-            this.ctx.Continue();                                     //Run Combat
+            CharacterStatusCheck();
+
+            this.stack.Continue();
         }
 
         public void Destroy()
         {
             FinalizeTurn();
 
-            if (this.assignedTile)
-                this.assignedTile.ResetTile();
+            if (this.Tile)
+                this.Tile.ResetTile();
 
             Destroy(this.gameObject);
         }
@@ -85,9 +123,64 @@ namespace BF2D.Game.Combat
 
         private void RefreshStatsDisplay()
         {
-            this.assignedTile.SetHealthBar();
-            this.assignedTile.SetStaminaBar();
+            this.Tile.SetHealthBar();
+            this.Tile.SetStaminaBar();
         }
+
+        public void SetPosition(CombatGridTile destination, int sourceIndex, int destinationIndex)
+        {
+            if (!Numbers.ValidGridIndex(sourceIndex) || !Numbers.ValidGridIndex(destinationIndex))
+            {
+                Debug.LogError($"[CharacterCombat:SetPosition] One or both of the given indexes were outside of the range of the grid -> Source: {sourceIndex}, Destination: {destinationIndex}");
+                return;
+            }
+
+            if (destination.Equals(this.Tile))
+                return;
+
+            if (!destination.AssignedCharacter || !this.Tile)
+                SetPosition(destination, destinationIndex);
+            else
+                SwapPosition(destination, sourceIndex, destinationIndex);
+        }
+
+        public void SwapPosition(CombatGridTile destination, int sourceIndex, int destinationIndex)
+        {
+            if (!Numbers.ValidGridIndex(sourceIndex) || !Numbers.ValidGridIndex(destinationIndex))
+            {
+                Debug.LogError($"[CharacterCombat:SwapPosition] One or both of the given indexes were outside of the range of the grid -> Source: {sourceIndex}, Destination: {destinationIndex}");
+                return;
+            }
+
+            if (destination.Equals(this.Tile))
+                return;
+
+            destination.AssignedCharacter.CharacterInfo.Position = sourceIndex;
+            this.Tile.AssignCharacter(destination.AssignedCharacter);
+            destination.ResetTile();
+
+            SetPosition(destination, destinationIndex);
+        }
+
+        public void SetPosition(CombatGridTile destination, int destinationIndex)
+        {
+            if (!Numbers.ValidGridIndex(destinationIndex))
+            {
+                Debug.LogError($"[CharacterCombat:SwapPosition] The index was outside of the range of the grid -> {destinationIndex}");
+                return;
+            }
+
+            if (destination.Equals(this.Tile))
+                return;
+
+            if (destination.AssignedCharacter)
+                destination.AssignedCharacter.Destroy();
+
+            destination.AssignCharacter(this);
+            this.CharacterInfo.Position = destinationIndex;
+        }
+
+        public void MakeLeader(CharacterGroup group) => group?.ChangeLeader(this.CharacterInfo);
         #endregion
 
         #region Animation Events
@@ -97,7 +190,7 @@ namespace BF2D.Game.Combat
                 return;
 
             List<string> message = this.animatorController.InvokeAnimEvent();
-            PlayDialog(message, this.ctx.Continue);
+            PlayDialog(message, this.stack.Continue);
         }
 
         public void AnimSwitchIdle() => this.animatorController.ChangeAnimState(Strings.Animation.IDLE_ID);
@@ -106,93 +199,88 @@ namespace BF2D.Game.Combat
         //Private Methods
 
         #region Stage and Run Persistent Effect Events
-        private void PersistentEffectEventLoader(Action<PersistentEffect> stagingAction)
-        {
-            //Status Effect Event
-            foreach (StatusEffectInfo info in this.Stats.StatusEffects)
-                stagingAction(info.Get());
-
-            //Equipment Event
-            foreach (EquipmentType equipmentType in Enum.GetValues(typeof(EquipmentType)))
-            {
-                Equipment equipment = this.Stats.GetEquipped(equipmentType);
-
-                if (equipment is null)
-                    continue;
-
-                stagingAction(equipment);
-            }
-        }
-
         private void StagePersistentEffectUpkeepEvent(PersistentEffect persistentEffect)
         {
-            if (persistentEffect.UpkeepEventExists())
-                this.ctx.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnUpkeep));
+            if (persistentEffect.UpkeepEventExists)
+                this.stack.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnUpkeep));
         }
 
         private void StagePersistentEffectEOTEvent(PersistentEffect persistentEffect)
         {
-            if (persistentEffect.EOTEventExists())
-                this.ctx.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnEOT));
+            if (persistentEffect.EOTEventExists)
+                this.stack.PushEvent(() => PlayPersistentEffectEvent(persistentEffect.OnEOT));
         }
 
         private void PlayPersistentEffectEvent(UntargetedGameAction gameAction)
         {
-            PlayDialog(gameAction.Message, () => RunUntargetedGems(gameAction.GemSlots));
+            PlayDialog(gameAction.Message, () =>
+            {
+                StageUntargetedGems(gameAction.GemSlots);
+                this.stack.Continue();
+            });
         }
         #endregion
 
         #region Stage General Combat Events
         private void StageCombatEvents() =>
-            this.ctx.PushEvent(() =>
-            PlayDialog(this.CurrentCombatAction.CurrentInfo.GetOpeningMessage(), () =>
+            this.stack.PushEvent(() =>
+        {
+            List<string> openingMessage = this.CurrentCombatAction.CurrentInfo.GetOpeningMessage();
+            if (openingMessage is not null && openingMessage.Count > 0)
+                PlayDialog(openingMessage, StageCombatEventsDispatch);
+            else
+                StageCombatEventsDispatch();
+        });
+
+        private void StageCombatEventsDispatch()
         {
             switch (this.CurrentCombatAction.Type)
             {
-                case Enums.CombatActionType.Item:
-                    RunTargetedGems(this.CurrentCombatAction.UseTargetedGemSlots());
-                    break;
+                case CombatActionType.Item:
+                    StageTargetedGems(this.CurrentCombatAction.UseTargetedGems());
+                    this.stack.Continue();
+                    return;
+                case CombatActionType.Equip:
+                    StageUntargetedGems(this.CurrentCombatAction.GetGems());
+                    PlayDialog(this.CurrentCombatAction.Run(), this.stack.Continue);
+                    return;
                 default:
                     throw new NotImplementedException();
             }
-        }));
+        }
         #endregion
 
         #region Stage and Run Gems
-        private void RunUntargetedGems(IEnumerable<CharacterStatsActionSlot> gemSlots)
+        private void StageUntargetedGems(IEnumerable<CharacterActionSlot> gemSlots)
         {
-            foreach (CharacterStatsActionSlot slot in gemSlots)
-                StageUntargetedGems(slot);
-
-            this.ctx.Continue();
+            foreach (CharacterActionSlot slot in gemSlots)
+                StageUntargetedGem(slot);
         }
 
-        private void StageUntargetedGems(CharacterStatsActionSlot slot) =>
-            this.ctx.PushEvent(() =>
+        private void StageUntargetedGem(CharacterActionSlot slot) =>
+            this.stack.PushEvent(() =>
             this.animatorController.ChangeAnimState(Strings.Animation.FLASHING_ID, () =>
         {
             PlayAnimation(slot.GetAnimationKey());
 
-            CharacterStatsAction.Info info = slot.Run(this.Stats);
-            List<string> dialog = GemStatusCheck(new List<CharacterStatsAction.Info> { info });
+            CharacterAction.Info info = slot.Run(this.Stats);
+            List<string> dialog = GemStatusCheck(new List<CharacterAction.Info> { info });
             dialog.Insert(0, info.GetMessage());
             RefreshStatsDisplay();
             return dialog;
         }));
 
-        private void RunTargetedGems(IEnumerable<TargetedCharacterStatsActionSlot> targetedGemSlots)
+        private void StageTargetedGems(IEnumerable<TargetedCharacterActionSlot> targetedGemSlots)
         {
-            foreach (TargetedCharacterStatsActionSlot targetedGemSlot in targetedGemSlots)
-                StageTargetedGems(targetedGemSlot);
-
-            this.ctx.Continue();
+            foreach (TargetedCharacterActionSlot targetedGemSlot in targetedGemSlots)
+                StageTargetedGem(targetedGemSlot);
         }
 
-        private void StageTargetedGems(TargetedCharacterStatsActionSlot targetedGemSlot) =>
-            this.ctx.PushEvent(() =>
+        private void StageTargetedGem(TargetedCharacterActionSlot targetedGemSlot) =>
+            this.stack.PushEvent(() =>
             this.animatorController.ChangeAnimState(Strings.Animation.ATTACK_ID, () =>
         {
-            List<CharacterStatsAction.Info> infos = new();
+            List<CharacterAction.Info> infos = new();
             string message = string.Empty;
 
             foreach (CharacterCombat target in targetedGemSlot.TargetInfo.CombatTargets)
@@ -230,10 +318,14 @@ namespace BF2D.Game.Combat
                     }
                 }
 
-                //Execute
-                verifiedTarget.PlayAnimation(targetedGemSlot.GetAnimationKey());
+                CharacterAction.Info info = targetedGemSlot.Run(this.Stats, verifiedTarget.Stats);
 
-                CharacterStatsAction.Info info = targetedGemSlot.Run(this.stats, verifiedTarget.Stats);
+                if (!info.failed && !info.insufficientStamina)
+                {
+                    //Execute   
+                    verifiedTarget.PlayAnimation(targetedGemSlot.GetAnimationKey());
+                }
+
                 message += info.GetMessage();
                 infos.Add(info);
                 verifiedTarget.RefreshStatsDisplay();
@@ -244,41 +336,20 @@ namespace BF2D.Game.Combat
             return dialog;
         }));
 
-        private CharacterCombat RollOpponent()
-        {
-            return CombatCtx.One.CharacterIsEnemy(this) ?
-            CombatCtx.One.RandomPlayer() :
-            CombatCtx.One.RandomEnemy();
-        }
+        private CharacterCombat RollOpponent() => CombatCtx.One.RandomOpponent();
 
-        private CharacterCombat RollAlly()
-        {
-            return CombatCtx.One.CharacterIsEnemy(this) ?
-            CombatCtx.One.RandomEnemy() :
-            CombatCtx.One.RandomPlayer();
-        }
+        private CharacterCombat RollAlly() => CombatCtx.One.RandomAlly();
 
-        private CharacterCombat RollCharacterAligned(CombatAlignment alignment)
-        {
+        private CharacterCombat RollCharacterAligned(CombatAlignment alignment) =>
+            alignment == CombatAlignment.Offense || alignment == CombatAlignment.Neutral ?
+            RollOpponent() :
+            RollAlly();
 
-            bool aligned = alignment == CombatAlignment.Offense ||
-                           alignment == CombatAlignment.Neutral;
-
-            if (CombatCtx.One.CharacterIsEnemy(this))
-                return aligned ?
-                CombatCtx.One.RandomPlayer() :
-                CombatCtx.One.RandomEnemy();
-            else
-                return aligned ?
-                CombatCtx.One.RandomEnemy() :
-                CombatCtx.One.RandomPlayer();
-        }
-
-        private List<string> GemStatusCheck(IEnumerable<CharacterStatsAction.Info> infos)
+        private List<string> GemStatusCheck(IEnumerable<CharacterAction.Info> infos)
         {
             bool iDied = false;
             List<string> dialog = new();
-            foreach (CharacterStatsAction.Info info in infos)
+            foreach (CharacterAction.Info info in infos)
             {
                 if (info.targetWasKilled)
                 {
@@ -289,6 +360,31 @@ namespace BF2D.Game.Combat
                 }
             }
 
+            return StatusCheckDispatch(dialog, iDied);
+        }
+
+        private void CharacterStatusCheck()
+        {
+            bool iDied = false;
+            List<string> dialog = new();
+            foreach (CharacterCombat character in CombatCtx.One.AllCharacters)
+            {
+                if (character.Stats.Dead)
+                {
+                    if (character.Stats == this.Stats)
+                        iDied = true;
+
+                    dialog.Add($"{character.Stats.Name} died. {Strings.DialogTextbox.PAUSE_STANDARD}");
+                }
+            }
+
+            dialog = StatusCheckDispatch(dialog, iDied);
+            if (dialog.Count > 0)
+                this.stack.PushEvent(() => PlayDialog(dialog, this.stack.Continue));
+        }
+
+        private List<string> StatusCheckDispatch(List<string> dialog, bool iDied)
+        {
             //No one died
             if (dialog.Count < 1)
                 return new List<string>();
@@ -297,10 +393,10 @@ namespace BF2D.Game.Combat
                 FinalizeTurn();
 
             if (CombatCtx.One.CombatIsOver())
-                this.ctx.PushEvent(EOCEvent);
+                this.stack.PushEvent(EOCEvent);
 
             if (iDied && !CombatCtx.One.CombatIsOver())
-                this.ctx.PushEvent(EOTEvent);
+                this.stack.PushEvent(EOTEvent);
 
             return dialog;
         }
@@ -310,7 +406,7 @@ namespace BF2D.Game.Combat
         private void EOTEvent()
         {
             //Finally, pass the turn
-            this.ctx.PushEvent(CombatCtx.One.PassTurn);
+            this.stack.PushEvent(CombatCtx.One.PassTurn);
 
             //Cleanup status effects
             foreach (StatusEffectInfo info in this.Stats.StatusEffects)
@@ -318,15 +414,15 @@ namespace BF2D.Game.Combat
                 StatusEffect statusEffect = info.Use();
                 if (info.RemainingDuration == 0)
                 {
-                    this.ctx.PushEvent(() =>
+                    this.stack.PushEvent(() =>
                     {
                         this.Stats.RemoveStatusEffect(info);
-                        PlayMessage($"The {statusEffect.Name} on {this.Stats.Name} wore off. {Strings.DialogTextbox.PAUSE_BREIF}", this.ctx.Continue);
+                        PlayMessage($"The {statusEffect.Name} on {this.Stats.Name} wore off. {Strings.DialogTextbox.PAUSE_BREIF}", this.stack.Continue);
                     });
                 }
             }
 
-            this.ctx.Continue();
+            this.stack.Continue();
         }
 
         private void EOCEvent() => CombatCtx.One.EndCombat();
@@ -335,7 +431,7 @@ namespace BF2D.Game.Combat
         #region Private Utilities
         private void FinalizeTurn()
         {
-            this.ctx.FlushEvents();
+            this.stack.FlushEvents();
             this.currentCombatAction = null;
         }
 
@@ -349,10 +445,7 @@ namespace BF2D.Game.Combat
                 FinalizeTextbox(textbox);
                 callback?.Invoke();
             },
-            new string[]
-            {
-                this.Stats.Name
-            });
+            this.Stats.Name);
 
             InitializeTextbox(textbox);
         }
@@ -366,10 +459,7 @@ namespace BF2D.Game.Combat
                 FinalizeTextbox(textbox);
                 callback?.Invoke();
             },
-            new string[]
-            {
-                this.Stats.Name
-            });
+            this.Stats.Name);
 
             InitializeTextbox(textbox);
         }

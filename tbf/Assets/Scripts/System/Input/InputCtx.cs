@@ -442,10 +442,10 @@ namespace BF2D
             switch (controllerType)
             {
                 case InputController.Keyboard:
-                    this.keyboardConfig = Utilities.JSON.DeserializeString<ControlsConfigKeyboard>(json);
+                    this.keyboardConfig = Utilities.JSON.DeserializeJson<ControlsConfigKeyboard>(json);
                     break;
                 case InputController.Gamepad:
-                    this.gamepadConfig = Utilities.JSON.DeserializeString<ControlsConfigGamepad>(json);
+                    this.gamepadConfig = Utilities.JSON.DeserializeJson<ControlsConfigGamepad>(json);
                     break;
                 default:
                     Debug.LogError("[InputManager:DeserializeConfig] InputController was null or invalid");

@@ -1,4 +1,4 @@
- using BF2D.Enums;
+using BF2D.Game.Enums;
 using Newtonsoft.Json;
 using System;
 using BF2D.Utilities;
@@ -6,7 +6,7 @@ using BF2D.Utilities;
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class TargetedCharacterStatsActionSlot : CharacterStatsActionSlot, ICombatAligned
+    public class TargetedCharacterActionSlot : CharacterActionSlot, ICombatAligned
     {
         [JsonProperty] private readonly CharacterTarget target = CharacterTarget.Self;
         [JsonProperty] private readonly string description = "target";
@@ -38,6 +38,6 @@ namespace BF2D.Game.Actions
                 this.Target == CharacterTarget.RandomOpponent;
         }
 
-        public CharacterStatsAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target, this.Specs);
+        public CharacterAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target, this.Specs);
     }
 }

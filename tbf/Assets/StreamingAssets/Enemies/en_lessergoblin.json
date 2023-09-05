@@ -23,7 +23,6 @@
         "feet":""
     },
     "accessory":"",
-    "gridPosition":0,
     "job": {
         "id": "jb_fiend",
         "experience": 3
@@ -51,15 +50,17 @@
     [
 
     ],
-    "itemsLoot": 
-    [
-        {
-            "id": "it_firecracker",
-            "probability": 40
-        }
-    ],
-    "currencyLoot":5,
-    "etherLoot":1,
+    "loot": {
+        "itemsLoot": 
+        [
+            {
+                "id": "it_firecracker",
+                "probability": 40
+            }
+        ],
+        "currencyLoot":5,
+        "etherLoot":1
+    },
     "combatAI": 
     {
         "actionRanking":
@@ -79,8 +80,7 @@
             "Poison":5,
             "Psychic":1,
             "Generic":1,
-            "Chaos":5,
-            "Restoration":1
+            "Chaos":5
         },
         "alignmentRanking":
         {

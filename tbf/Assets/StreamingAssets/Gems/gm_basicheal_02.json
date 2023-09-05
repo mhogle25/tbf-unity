@@ -2,7 +2,6 @@
     "name": "Gem of Simple Health",
     "auras": 
     [
-        "Restoration"
     ],
     "heal":
     {
@@ -10,6 +9,5 @@
         {
             "value":2
         }
-    },
-    "resetStamina":true
+    }
 }

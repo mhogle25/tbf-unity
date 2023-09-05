@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using System;
 using BF2D.Utilities;
-using BF2D.Enums;
+using BF2D.Game.Enums;
 using UnityEngine;
 
 namespace BF2D.Game
@@ -91,7 +91,7 @@ namespace BF2D.Game
                 return $"{this.value}";
 
             if (this.value != 0)
-                return $"({this.calculator.TextBreakdown(this.expression, specs)}){Strings.NonZeroToSignedString(this.value)}";
+                return $"({this.calculator.TextBreakdown(this.expression, specs)}){this.value.NonZeroToSignedString()}";
 
             return this.calculator.TextBreakdown(this.expression, specs);
         }

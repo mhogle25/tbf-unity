@@ -4,9 +4,9 @@ using UnityEngine;
 namespace BF2D.Game.Actions
 {
     [Serializable]
-    public class CharacterStatsActionHolder : UtilityEntityHolder<CharacterStatsActionInfo>, ICharacterStatsActionHolder
+    public class CharacterActionHolder : UtilityEntityHolder<CharacterActionInfo>, ICharacterActionHolder
     {
-        public void Destroy(CharacterStatsActionInfo info)
+        public void Destroy(CharacterActionInfo info)
         {
             if (info is null)
             {
