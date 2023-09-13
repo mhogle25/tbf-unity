@@ -3,8 +3,24 @@
     {
         "leader": 
         {
-            "position": 0,
-            "id": "en_lessergoblin"
+            "rankings": 
+            [
+                {
+                    "rank": 3,
+                    "property":
+                    {
+                        "position": 0,
+                        "id": "en_lessergoblin"
+                    }
+                },
+                {
+                    "rank": 1,
+                    "property": 
+                    {
+                        "pos"
+                    }
+                }
+            ]
         },
         "activeEnemies": 
         [
@@ -20,6 +36,32 @@
                 "position": 3,
                 "id": "en_lessergoblin"
             }
-        ]
+        ],
+        "inactiveEnemies": 
+        {
+
+        },
+        "loot": 
+        {        
+            "itemsLoot": 
+            [
+                {
+                    "id": "it_firecracker",
+                    "probability": 40
+                }
+            ],
+            "currencyLoot": 
+            {
+                "expression": "$ 3 7"
+            },
+            "etherLoot": 
+            {
+                "expression": "$ 1 2"
+            }
+        },
+        "onInit": 
+        {
+            // A game action just like any other
+        }
     }
 }

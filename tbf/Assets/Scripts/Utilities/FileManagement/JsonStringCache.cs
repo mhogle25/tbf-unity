@@ -19,7 +19,7 @@ namespace BF2D.Utilities
                 Clear();
 
             if (this.jsons.ContainsKey(id))
-                return JSON.DeserializeJson<T>(this.jsons[id]).Setup<T>(id);
+                return JSON.DeserializeJson<T>(this.jsons[id]).Setup(id);
 
             string json = fileManager.LoadFile(id);
             if (string.IsNullOrEmpty(json))
@@ -28,7 +28,7 @@ namespace BF2D.Utilities
             this.jsons[id] = json;
 
             if (this.jsons.ContainsKey(id))
-                return JSON.DeserializeJson<T>(this.jsons[id]).Setup<T>(id);
+                return JSON.DeserializeJson<T>(this.jsons[id]).Setup(id);
 
             return null;
         }

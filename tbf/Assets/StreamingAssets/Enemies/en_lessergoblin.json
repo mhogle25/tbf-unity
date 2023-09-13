@@ -15,7 +15,8 @@
     "toughness":1,
     "will":1,
     "fortune":1,
-    "equipped": {
+    "equipped": 
+    {
         "head":"",
         "torso":"",
         "legs":"",
@@ -23,7 +24,8 @@
         "feet":""
     },
     "accessory":"",
-    "job": {
+    "job": 
+    {
         "id": "jb_fiend",
         "experience": 3
     },
@@ -50,7 +52,8 @@
     [
 
     ],
-    "loot": {
+    "loot": 
+    {
         "itemsLoot": 
         [
             {
@@ -58,8 +61,14 @@
                 "probability": 40
             }
         ],
-        "currencyLoot":5,
-        "etherLoot":1
+        "currencyLoot": 
+        {
+            "expression": "$ 3 7"
+        },
+        "etherLoot": 
+        {
+            "expression": "$ 1 2"
+        }
     },
     "combatAI": 
     {

@@ -25,7 +25,7 @@ namespace BF2D.Utilities
             if (string.IsNullOrEmpty(content))
                 return null;
 
-            this.entities[id] = JSON.DeserializeJson<T>(content).Setup<T>(id);
+            this.entities[id] = JSON.DeserializeJson<T>(content).Setup(id);
 
             if (this.entities.ContainsKey(id))
                 return this.entities[id];

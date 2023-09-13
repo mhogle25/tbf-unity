@@ -77,12 +77,14 @@ namespace BF2D.Game
             this.itemTemplates.Clear();
 
             this.equipmentTemplates.Clear();
+            this.gemTemplates.Clear();
 
             this.statusEffects.Clear();
             this.equipments.Clear();
             this.gems.Clear();
             this.runes.Clear();
             this.jobs.Clear();
+            this.encounterFactories.Clear();
 
             ShCtx.One.Log("Caches cleared");
         }

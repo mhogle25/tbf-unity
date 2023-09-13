@@ -26,11 +26,9 @@ namespace BF2D.Game.Combat
             }
 
             string encounterFactoryID = arguments[2];
-            Encounter encounter = GameCtx.One.GetEncounterFactory(encounterFactoryID).InstantiateEncounter();
 
             CombatCtx.One.CancelCombat();
-
-            GameCtx.One.StageEncounter(encounter); 
+            GameCtx.One.GetEncounterFactory(encounterFactoryID).StageEncounter();
         }
     }
 }

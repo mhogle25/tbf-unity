@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using BF2D.Game.Enums;
 using BF2D.Utilities;
 using UnityEngine;
+using BF2D.Game;
 
 namespace BF2D
 {
@@ -19,34 +20,13 @@ namespace BF2D
         [JsonProperty] private string description = string.Empty;
         [JsonProperty] private readonly HashSet<AuraType> auras = new();
 
-        public T Setup<T>(string id) where T : Entity
-        {
-            this.ID = id;
-            return this as T;
-        }
-
-        public T Setup<T>(string id, string name) where T : Entity
-        {
-            this.ID = id;
-            this.name = name;
-            return this as T;
-        }
-
-        public T Setup<T>(string id, string name, string description) where T : Entity
-        {
-            this.ID = id;
-            this.name = name;
-            this.description = description;
-            return this as T;
-        }
-
         public bool ContainsAura(AuraType aura) => this.auras.Contains(aura);
 
         public void EmbueAura(AuraType aura)
         {
             if (ContainsAura(aura))
             {
-                Debug.LogWarning($"[Entity:EmbueAura] Tried to embue the aura '{aura}' onto {this.Name} but {this.Name} already has that aura.");
+                Debug.LogWarning($"[Entity:EmbueAura] Tried to embue the aura '{aura}' onto {this.Name} but they already have that aura.");
                 return;
             }
 
@@ -57,11 +37,35 @@ namespace BF2D
         {
             if (!ContainsAura(aura))
             {
-                Debug.LogWarning($"[Entity:RemoveAura] Tried to remove the aura '{aura}' from {this.Name} but {this.Name} doesn't have that aura.");
+                Debug.LogWarning($"[Entity:RemoveAura] Tried to remove the aura '{aura}' from {this.Name} but they don't have that aura.");
                 return;
             }
 
             this.auras.Remove(aura);
+        }
+    }
+
+    public static class EntityExtensions
+    {
+        public static T Setup<T>(this T entity, string id) where T : Entity
+        { 
+            entity.ID = id;
+            return entity;
+        }
+
+        public static T Setup<T>(this T entity, string id, string name) where T : Entity
+        {
+            entity.ID = id;
+            entity.Name = name;
+            return entity;
+        }
+
+        public static T Setup<T>(this T entity, string id, string name, string description) where T : Entity
+        {
+            entity.ID = id;
+            entity.Name = name;
+            entity.Description = description;
+            return entity;
         }
     }
 }

@@ -2,7 +2,6 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 using BF2D.Game;
-using UnityEngine.Events;
 
 namespace BF2D.UI 
 { 
@@ -128,6 +127,8 @@ namespace BF2D.UI
         }
 
         public void AddResponseController(IResponseController controller) => this.dialogTextbox.AddResponseController(controller);
+
+        public void RemoveResponseController(IResponseController controller) => this.dialogTextbox.RemoveResponseController(controller);
 
         public void ClearResponseControllers() => this.dialogTextbox.ClearResponseControllers();
 

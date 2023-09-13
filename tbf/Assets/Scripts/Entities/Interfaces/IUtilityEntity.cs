@@ -18,12 +18,6 @@ namespace BF2D.Game
 
         public bool IsRestoration { get; }
 
-        public T Setup<T>(string id) where T : Entity;
-
-        public T Setup<T>(string id, string name) where T : Entity;
-
-        public T Setup<T>(string id, string name, string description) where T : Entity;
-
         public bool ContainsAura(AuraType aura);
 
         public void EmbueAura(AuraType aura);

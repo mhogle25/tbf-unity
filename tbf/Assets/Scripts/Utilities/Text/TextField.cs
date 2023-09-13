@@ -17,8 +17,7 @@ namespace BF2D.Utilities
             }
             set
             {
-                List<char> invalidCharacters;
-                if (ValidText(value, out invalidCharacters))
+                if (ValidText(value, out List<char> invalidCharacters))
                 {
                     base.text = value;
                     return;

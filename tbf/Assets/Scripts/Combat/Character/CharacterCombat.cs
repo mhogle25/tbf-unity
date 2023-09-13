@@ -329,6 +329,7 @@ namespace BF2D.Game.Combat
                 message += info.GetMessage();
                 infos.Add(info);
                 verifiedTarget.RefreshStatsDisplay();
+                RefreshStatsDisplay();  //for exertion cost
             }
 
             List<string> dialog = GemStatusCheck(infos);

@@ -84,9 +84,9 @@ namespace BF2D.Game.Combat
 
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
-                value += character.Loot.CurrencyLoot;
+                value += character.Loot.CurrencyLoot.Calculate(this.activeParty.Leader.Stats);
 
-            value += this.activeEncounter.Loot.CurrencyLoot;
+            value += this.activeEncounter.Loot.CurrencyLoot.Calculate(this.activeParty.Leader.Stats);
             return value;
         }
 
@@ -100,9 +100,9 @@ namespace BF2D.Game.Combat
 
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
-                value += character.Loot.EtherLoot;
+                value += character.Loot.EtherLoot.Calculate(this.activeParty.Leader.Stats);
 
-            value += this.activeEncounter.Loot.EtherLoot;
+            value += this.activeEncounter.Loot.EtherLoot.Calculate(this.activeParty.Leader.Stats);
             return value;
         }
 

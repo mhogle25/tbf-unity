@@ -154,22 +154,19 @@ namespace BF2D
             /// Creates a copy of a Keyboard Config
             /// </summary>
             /// <returns>The copy of the Keyboard Config</returns>
-            public ControlsConfigKeyboard Clone()
+            public ControlsConfigKeyboard Clone() => new()
             {
-                return new ControlsConfigKeyboard
-                {
-                    Up = this.Up,
-                    Left = this.Left,
-                    Down = this.Down,
-                    Right = this.Right,
-                    Confirm = this.Confirm,
-                    Back = this.Back,
-                    Menu = this.Menu,
-                    Special = this.Special,
-                    Pause = this.Pause,
-                    Select = this.Select
-                };
-            }
+                Up = this.Up,
+                Left = this.Left,
+                Down = this.Down,
+                Right = this.Right,
+                Confirm = this.Confirm,
+                Back = this.Back,
+                Menu = this.Menu,
+                Special = this.Special,
+                Pause = this.Pause,
+                Select = this.Select
+            };
         }
 
         [Serializable]
@@ -457,19 +454,13 @@ namespace BF2D
 
         public void SetCurrentConfigButton(InputButton inputButton)
         {
-            this.buttonEvent = () =>
-            {
-                StateSetCurrentConfigButton(inputButton);
-            };
+            this.buttonEvent = () => StateSetCurrentConfigButton(inputButton);
             this.states += this.buttonEvent;
         }
 
         public void SetKeyboardDirection(InputDirection inputDirection)
         {
-            this.directionEvent = () =>
-            {
-                StateSetKeyboardDirection(inputDirection);
-            };
+            this.directionEvent = () => StateSetKeyboardDirection(inputDirection);
             this.states += this.directionEvent;
         }
 
@@ -497,35 +488,21 @@ namespace BF2D
             bool gamepadConnected = false;
             //Check if gamepad is connected
             foreach (string s in gamepadNames)
-            {
                 if (s != string.Empty)
-                {
                     gamepadConnected = true;
-                }
-            }
 
             if (gamepadConnected)
-            {
                 if (GetCurrentControlType() != InputController.Gamepad)
-                {
                     this.currentConfig = this.gamepadConfig;
-                }
-            }
             else
-            {
                 if (GetCurrentControlType() == InputController.Gamepad)
-                {
                     this.currentConfig = this.keyboardConfig;
-                }
-            }
         }
 
         private void StateSetCurrentConfigButton(InputButton inputButton)
         {
             if (!Input.anyKeyDown)
-            {
                 return;
-            }
 
             if (IsKeyCodeBlacklisted(this.lastHitKey))
             {
@@ -564,9 +541,7 @@ namespace BF2D
         private void StateSetKeyboardDirection(InputDirection inputDirection)
         {
             if (!Input.anyKeyDown)
-            {
                 return;
-            }
 
             if (IsKeyCodeBlacklisted(this.lastHitKey))
             {

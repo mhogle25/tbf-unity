@@ -328,6 +328,23 @@ namespace BF2D.UI
             this.responseControllers.Add(controller);
         }
 
+        public void RemoveResponseController(IResponseController controller)
+        {
+            if (controller is null)
+            {
+                Debug.Log("[DialogTextbox.RemoveResponseController] The controller was null");
+                return;
+            }
+
+            if (!this.responseControllers.Contains(controller))
+            {
+                Debug.Log($"[DialogTextbox.RemoveResponseController] The controller is not one of {this.name}'s response controllers");
+                return;
+            }
+
+            this.responseControllers.Remove(controller);
+        }
+
         public void ClearResponseControllers() => this.responseControllers.Clear();
         #endregion
 

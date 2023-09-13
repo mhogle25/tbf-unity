@@ -14,6 +14,8 @@ namespace BF2D.UI
         [Header("Info")]
         [SerializeField] private string currentThreadID = Game.Strings.UI.THREAD_MAIN;
         [SerializeField] private UIControl currentControl = null;
+        [Header("Debug")]
+        [SerializeField] private bool log = false;
 
         private readonly Dictionary<string, Stack<UIControl>> controlHistory = new() { { Game.Strings.UI.THREAD_MAIN, new() } };
         private readonly Stack<string> threadHistory = new();
@@ -45,7 +47,8 @@ namespace BF2D.UI
             {
                 this.currentThreadID = this.threadHistory.Pop();
 
-                // Debug.Log($"Popped thread from history: {this.currentThreadID}");
+                if (this.log)
+                    Debug.Log($"Popped thread from history: {this.currentThreadID}");
             }
 
             Stack<UIControl> stack = this.CurrentStack;
@@ -54,13 +57,15 @@ namespace BF2D.UI
             {
                 UIControl uiControl = stack.Pop();
 
-                //Debug.Log($"Pass Control back to: {uiControl.name} from: {this.currentControl.name}");
+                if (this.log)
+                    Debug.Log($"Pass Control back to: {uiControl.name} from: {this.currentControl.name}");
 
                 StartControl(uiControl);
             }
             else
             {
-                // Debug.Log($"Pass Control back from: {this.currentControl.name}");
+                if (this.log)
+                    Debug.Log($"Pass Control back from: {this.currentControl.name}");
 
                 this.currentControl = null;
             }
@@ -81,13 +86,15 @@ namespace BF2D.UI
                 {
                     EndControl(uiControl);
 
-                    // Debug.Log($"Pass control back from: {uiControl.name}");
+                    if (this.log)
+                        Debug.Log($"Pass control back from: {uiControl.name}");
 
                     uiControl.gameObject.SetActive(setActive);
                 }
                 else
                 {
-                    // Debug.Log($"Pass Control back to: {uiControl.name}");
+                    if (this.log)
+                        Debug.Log($"Pass Control back to: {uiControl.name}");
 
                     StartControl(uiControl);
                 }
@@ -114,7 +121,8 @@ namespace BF2D.UI
             {
                 UIControl uiControl = stack.Pop();
 
-                // Debug.Log($"Pass control back from: {uiControl.name}");
+                if (this.log)
+                    Debug.Log($"Pass control back from: {uiControl.name}");
 
                 EndControl(uiControl);
                 uiControl.gameObject.SetActive(setActive);
@@ -140,10 +148,11 @@ namespace BF2D.UI
 
         public void TakeControl(UIControl uiControl)
         {
-            // Debug.Log($"Take Control: {uiControl.name}");
+            if (this.log)
+                Debug.Log($"Take Control: {uiControl.name}");
 
             //Dont give control to the component that is already in control
-            if (Object.ReferenceEquals(this.currentControl, uiControl))
+            if (ReferenceEquals(this.currentControl, uiControl))
                 return;
 
             if (this.currentControl)
@@ -179,17 +188,21 @@ namespace BF2D.UI
 
             string topOfThreadHistory = this.currentThreadID;
 
-            // Debug.Log($"New Thread: {threadID} Top Of Thread History: {topOfThreadHistory}");
+            if (this.log)
+                Debug.Log($"New Thread: {threadID} Top Of Thread History: {topOfThreadHistory}");
 
             if (threadID != topOfThreadHistory)
             {
                 this.threadHistory.Push(topOfThreadHistory);
-                //Debug.Log($"Pushed thread: {topOfThreadHistory}");
+
+                if (this.log)
+                    Debug.Log($"Pushed thread: {topOfThreadHistory}");
             }
 
             this.currentThreadID = threadID;
 
-            // Debug.Log($"Changed thread to: {threadID}");
+            if (this.log)
+                Debug.Log($"Changed thread to: {threadID}");
         }
     }
 }

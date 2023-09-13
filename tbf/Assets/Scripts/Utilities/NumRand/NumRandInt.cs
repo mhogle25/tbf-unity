@@ -22,6 +22,8 @@ namespace BF2D.Game
             this.value = value;
         }
 
+        public int Calculate() => Calculate(new NumRand.CalcSpecs());
+
         public int Calculate(CharacterStats source)
         {
             try

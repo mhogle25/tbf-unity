@@ -3,47 +3,39 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
     [Serializable]
     public class Encounter : CharacterGroup, ICache
     {
-        [Serializable]
-        private class CharacterProperty : ICharacterInfo, ICache
+        [JsonConstructor]
+        public Encounter() { }
+
+        public Encounter(EncounterFactory factory)
         {
-            [JsonIgnore] public CharacterStats Stats
-            {
-                get
-                {
-                    if (string.IsNullOrEmpty(this.id))
-                        return null;
+            loot = factory.ResolveLoot();
+            leader = factory.ResolveLeader();
+            activeEnemies = factory.ResolveActiveEnemies();
+            inactiveEnemies = factory.ResolveInactiveEnemies();
+            onInit = factory.ResolveOnInit();
 
-                    this.cached ??= GameCtx.One.InstantiateEnemy(this.id);
-
-                    return this.cached;
-                }
-            }
-
-            [JsonIgnore] public string ID { set => this.id = value; }
-            [JsonIgnore] public int Position { get => this.position; set => this.position = value; }
-
-            [JsonIgnore] private CharacterStats cached;
-
-            [JsonProperty] private string id = string.Empty;
-            [JsonProperty] private int position = 0;
-
-            public void Clear() => this.cached = null;
+            factory.Reset();
         }
 
         [JsonProperty] private readonly LootProperty loot = new();
 
-        [JsonProperty] private CharacterProperty leader = null;
-        [JsonProperty] private readonly List<CharacterProperty> activeEnemies = new();
+        [JsonProperty] private EncounterCharacterProperty leader = null;
+        [JsonProperty] private readonly List<EncounterCharacterProperty> activeEnemies = new();
         [JsonProperty] private readonly List<string> inactiveEnemies = new();
+
+        [JsonProperty] private readonly TargetedGameAction onInit = null;
 
         // Loot
         [JsonIgnore] public LootProperty Loot => this.loot;
+
+        [JsonIgnore] public TargetedGameAction OnInit => this.onInit;
 
         [JsonIgnore] public override int ActiveCharacterCount => this.leader is null ? 0 : this.activeEnemies.Count + 1;
         [JsonIgnore] public override IEnumerable<ICharacterInfo> ActiveCharacters => this.leader is null ? null : new List<ICharacterInfo>() { this.leader }.Concat(this.activeEnemies);
@@ -51,7 +43,7 @@ namespace BF2D.Game
 
         public void Clear()
         {
-            foreach (CharacterProperty enemy in this.activeEnemies)
+            foreach (EncounterCharacterProperty enemy in this.activeEnemies)
                 enemy.Clear();
         }
 
@@ -71,7 +63,7 @@ namespace BF2D.Game
 
             int position = GetNextAvailablePosition();
 
-            CharacterProperty enemy = new()
+            EncounterCharacterProperty enemy = new()
             {
                 ID = id,
                 Position = position
@@ -92,7 +84,7 @@ namespace BF2D.Game
             if (this.leader.Equals(newLeader))
                 return newLeader;
 
-            if (newLeader is not CharacterProperty leader)
+            if (newLeader is not EncounterCharacterProperty leader)
             {
                 Debug.LogError($"[Encounter:ChangeLeader] Tried to change leaders but the given character was not valid for an encounter -> {newLeader.Stats.Name}");
                 return null;
@@ -104,7 +96,7 @@ namespace BF2D.Game
                 return null;
             }
 
-            CharacterProperty oldLeader = this.leader;
+            EncounterCharacterProperty oldLeader = this.leader;
             this.activeEnemies.Remove(leader);
             this.activeEnemies.Add(oldLeader);
             this.leader = leader;
