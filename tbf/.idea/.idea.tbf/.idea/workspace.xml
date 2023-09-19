@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dc03ceba-d5cd-4c8e-ae7b-83d0d008d3e3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Combat Test.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Combat Test.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ActCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ActCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/EquipCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/EquipCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/EventCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/EventCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/FleeCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/FleeCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ICombatActionInfo.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ICombatActionInfo.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ItemCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/ItemCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/RosterCombatActionInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Actions/CombatActionInfo/RosterCombatActionInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Character/CharacterCombat.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Character/CharacterCombat.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Character/CharacterCombatAI.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Character/CharacterCombatAI.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Managers/CombatCtx.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Managers/CombatCtx.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Managers/CombatGrid.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Managers/CombatGrid.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/UI/EquipmentBagControl.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/UI/EquipmentBagControl.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/UI/ItemsCharacterTargeter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/UI/ItemsCharacterTargeter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Combat/Utilities/AnimatorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Combat/Utilities/AnimatorController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Characters/CharacterStats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Characters/CharacterStats.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/EncounterFactories/EncounterFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/EncounterFactories/EncounterFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/CharacterAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/CharacterAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/Wrappers/CharacterActionSlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/Wrappers/CharacterActionSlot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/Wrappers/TargetedCharacterActionSlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Gems/Wrappers/TargetedCharacterActionSlot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Interfaces/ICharacterInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Interfaces/ICharacterInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Interfaces/IUtilityEntityHolder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Interfaces/IUtilityEntityHolder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Runes/Holder/EquipModHolder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Runes/Holder/EquipModHolder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Utilities/UtilityEntityHolder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Utilities/UtilityEntityHolder.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/Utilities/UtilityEntityLoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/Utilities/UtilityEntityLoot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Actions/GameAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Actions/GameAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Actions/TargetedGameAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Actions/TargetedGameAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Actions/UntargetedGameAction.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Actions/UntargetedGameAction.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Managers/GameCtx.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Managers/GameCtx.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Misc/Encounter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Misc/Encounter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Misc/EncounterCharacterProperty.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Misc/EncounterCharacterProperty.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Misc/Party.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Misc/Party.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/System/Shell/Registries/ShCombatRegistry.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/System/Shell/Registries/ShCombatRegistry.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/DialogTextbox.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/DialogTextbox/DialogTextboxControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/DialogTextbox/DialogTextboxControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/IUIControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/IUIControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControl.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControl.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControlInit.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControlInit.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControlPage.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Control/OptionsGrid/OptionsGridControlPage.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/IUIComponent.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/IUIComponent.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/DialogTextbox.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/DialogTextbox.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/IResponseController.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/IResponseController.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/ResponseControllerIndexed.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/DialogTextbox/ResponseControllerIndexed.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/GridOption.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/GridOption.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/SpriteOption.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/SpriteOption.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/UIOption.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/Option/UIOption.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/OptionsGrid.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/OptionsGrid/OptionsGrid.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/UIUtility.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Tools/UIUtility.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/UICtx.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/UICtx.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Utilities/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Utilities/Utilities.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/Dialog/Responses/Combat/ro_yesno.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/Dialog/Responses/Combat/ro_yesno.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/EncounterFactories/ef_hardencounter.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/EncounterFactories/ef_hardencounter.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/StreamingAssets/Enemies/en_lessergoblin.json" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/StreamingAssets/Enemies/en_lessergoblin.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Entities/Interfaces/ICharacterController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/System/Shell/Commands/Combat/SCContinue.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
+  <component name="ProjectId" id="2VXYva1Xo33HAMl8VHdkbGZdTFC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;game/combat-engine&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;/Users/mitchellhogle/Library/Application Support/JetBrains/Rider2023.2/resharper-host/DecompilerCache&quot;,
+      &quot;/Users/mitchellhogle/Library/Application Support/JetBrains/Rider2023.2/resharper-host/SourcesCache&quot;,
+      &quot;/Users/mitchellhogle/.local/share/Symbols/src&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Start Unity" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/2022.3.0f1/Unity.app/Contents/MacOS/Unity" />
+      <option name="PROGRAM_PARAMETERS" value="-projectPath $PROJECT_DIR$ -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Unit Tests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="/Applications/Unity/Hub/Editor/2022.3.0f1/Unity.app/Contents/MacOS/Unity" />
+      <option name="PROGRAM_PARAMETERS" value="-runTests -batchmode -projectPath $PROJECT_DIR$ -testResults Logs/results.xml -testPlatform EditMode -debugCodeOptimization" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="projectPathOnTarget" />
+      <option name="selectedOptions">
+        <list />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dc03ceba-d5cd-4c8e-ae7b-83d0d008d3e3" name="Changes" comment="" />
+      <created>1694984124409</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1694984124409</updated>
+      <workItem from="1694984125606" duration="8000" />
+      <workItem from="1694984169768" duration="82000" />
+      <workItem from="1694984265515" duration="34888000" />
+      <workItem from="1695091731131" duration="9503000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="Both" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>

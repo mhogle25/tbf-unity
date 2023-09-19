@@ -11622,10 +11622,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.17043121
-    y: 0.14963503
-    width: 0.6570842
-    height: 0.7007299
+    x: 0.16535994
+    y: 0.07984791
+    width: 1.8246615
+    height: 1.946768
   near clip plane: 0
   far clip plane: 1000
   field of view: 43
@@ -23085,7 +23085,7 @@ MonoBehaviour:
   nametagTextField: {fileID: 7819217480724047634}
   continueIcon: {fileID: 2158157277367825122}
   dialogFileManager: {fileID: 804794703}
-  defaultMessageSpeed: 0.05
+  defaultMessageSpeed: 0.02
   messageInterrupt: 0
   autoPass: 0
   onEndOfQueuedDialogs:

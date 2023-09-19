@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using BF2D.Game.Actions;
 using BF2D.UI;
 using BF2D.Game.Combat.Actions;
 using BF2D.Game.Enums;
@@ -11,9 +12,8 @@ namespace BF2D.Game.Combat
     {
         public class InitializeInfo
         {
-            public Party players = null;
-            public Encounter enemies = null;
-            public string openingDialogKey = $"di_opening_{Strings.System.DEFAULT_ID}";
+            public Party party = null;
+            public Encounter encounter = null;
             public float themePaletteOffset = 0.3f;
         }
 
@@ -40,13 +40,7 @@ namespace BF2D.Game.Combat
         public int EnemyCount => this.combatGrid.ActiveEnemies.Length;
 
         public IEnumerable<CharacterCombat> Characters => this.combatGrid.ActiveCharacters;
-        public int CharacterCount => this.combatGrid.ActivePlayers.Length + this.combatGrid.ActiveEnemies.Length;
-
-        public IEnumerable<CharacterCombat> Allies => GetAllies(this.CurrentCharacter.Alignment);
-        public int AllyCount => GetAllies(this.CurrentCharacter.Alignment).Length;
-
-        public IEnumerable<CharacterCombat> Opponents => GetOpponents(this.CurrentCharacter.Alignment);
-        public int OpponentCount => GetOpponents(this.CurrentCharacter.Alignment).Length;
+        public int CharacterCount => this.combatGrid.ActiveCharacters.Length;
 
         public IEnumerable<CharacterCombat> AllPlayers => this.combatGrid.AllPlayers;
         public int AllPlayersCount => this.combatGrid.AllPlayers.Length;
@@ -55,20 +49,14 @@ namespace BF2D.Game.Combat
         public int AllEnemiesCount => this.combatGrid.AllEnemies.Length;
 
         public IEnumerable<CharacterCombat> AllCharacters => this.combatGrid.AllCharacters;
-        public int AllCharactersCount => this.combatGrid.AllPlayers.Length + this.combatGrid.AllEnemies.Length;
-
-        public IEnumerable<CharacterCombat> AllAllies => GetAllAllies(this.CurrentCharacter.Alignment);
-        public int AllAlliesCount => GetAllAllies(this.CurrentCharacter.Alignment).Length;
-
-        public IEnumerable<CharacterCombat> AllOpponents => GetAllOpponents(this.CurrentCharacter.Alignment);
-        public int AllOpponentsCount => GetAllOpponents(this.CurrentCharacter.Alignment).Length;
+        public int AllCharactersCount => this.combatGrid.AllCharacters.Length;
 
         public DialogTextbox OrphanedTextbox => this.orphanedTextbox;
 
         protected sealed override void SingletonAwakened()
         {
             this.listener = CombatInfoListen;
-        }
+        } 
 
         private void Update()
         {
@@ -179,10 +167,8 @@ namespace BF2D.Game.Combat
             this.OrphanedTextbox.View.gameObject.SetActive(false);
         }
 
-        public bool CombatIsOver()
-        {
-            return EnemiesAreDefeated() || PlayersAreDefeated();
-        }
+        public bool CombatIsOver() => 
+            EnemiesAreDefeated() || PlayersAreDefeated();
 
         public bool EnemiesAreDefeated()
         {
@@ -200,29 +186,53 @@ namespace BF2D.Game.Combat
             return playersDefeated;
         }
 
-        public bool OpponentsAreAtFullHealth() => CharactersAreAtFullHealth(this.Opponents);
+        public CharacterCombat[] GetAllies(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.ActivePlayers,
+            CharacterAlignment.Enemy => this.combatGrid.ActiveEnemies,
+            _ => Array.Empty<CharacterCombat>()
+        };
 
-        public bool AlliesAreAtFullHealth() => CharactersAreAtFullHealth(this.Allies);
+        public CharacterCombat[] GetOpponents(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.ActiveEnemies,
+            CharacterAlignment.Enemy => this.combatGrid.ActivePlayers,
+            _ => Array.Empty<CharacterCombat>()
+        };
+
+        public CharacterCombat[] GetAllAllies(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.AllPlayers,
+            CharacterAlignment.Enemy => this.combatGrid.AllEnemies,
+            _ => Array.Empty<CharacterCombat>()
+        };
+
+        public CharacterCombat[] GetAllOpponents(CharacterAlignment alignment) => alignment switch
+        {
+            CharacterAlignment.Player => this.combatGrid.AllEnemies,
+            CharacterAlignment.Enemy => this.combatGrid.AllPlayers,
+            _ => Array.Empty<CharacterCombat>()
+        };
+
+        public bool OpponentsAreAtFullHealth(CharacterAlignment alignment) => CharactersAreAtFullHealth(GetOpponents(alignment));
+
+        public bool AlliesAreAtFullHealth(CharacterAlignment alignment) => CharactersAreAtFullHealth(GetAllies(alignment));
 
         public CharacterCombat RandomCharacter()
         {
             return this.combatGrid.ActiveCharacters[UnityEngine.Random.Range(0, this.combatGrid.ActiveCharacters.Length)];
         }
 
-        public CharacterCombat RandomAlly()
+        public CharacterCombat RandomAlly(CharacterAlignment alignment)
         {
-            if (this.AllyCount < 1)
-                return null;
-
-            return GetAllies(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, this.AllyCount)];
+            CharacterCombat[] allies = GetAllies(alignment);
+            return allies.Length < 1 ? null : GetAllies(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, allies.Length)];
         }
 
-        public CharacterCombat RandomOpponent()
+        public CharacterCombat RandomOpponent(CharacterAlignment alignment)
         {
-            if (this.OpponentCount < 1)
-                return null;
-
-            return GetOpponents(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, this.OpponentCount)];
+            CharacterCombat[] opponents = GetOpponents(alignment);
+            return opponents.Length < 1 ? null : GetOpponents(this.CurrentCharacter.Alignment)[UnityEngine.Random.Range(0, opponents.Length)];
         }
         #endregion
 
@@ -238,7 +248,15 @@ namespace BF2D.Game.Combat
         }
         #endregion
 
-        #region Private Methods
+        #region Private Methods        
+        private static bool CharactersAreAtFullHealth(IEnumerable<CharacterCombat> characters)
+        {
+            foreach (CharacterCombat character in characters)
+                if (character.Stats.Health != character.Stats.MaxHealth && !character.Stats.Dead)
+                    return false;
+            return true;
+        }
+        
         private void HandleUtilityEntityLoot<T>(IUtilityEntityHolder<T> receiver, IEnumerable<string> ids) where T : UtilityEntityInfo
         {
             string lootMessage = string.Empty;
@@ -253,52 +271,24 @@ namespace BF2D.Game.Combat
                 this.standaloneTextboxControl.Message(lootMessage);
         }
 
-        private string NPC_ERROR(string name) => $"[CombatCtx:{name}] Allignment cannot be NPC";
-
-        private CharacterCombat[] GetAllies(CharacterAlignment alignment) => alignment switch
-        {
-            CharacterAlignment.Player => this.combatGrid.ActivePlayers,
-            CharacterAlignment.Enemy => this.combatGrid.ActiveEnemies,
-            _ => throw new Exception(NPC_ERROR("GetAllies"))
-        };
-
-        private CharacterCombat[] GetOpponents(CharacterAlignment alignment) => alignment switch
-        {
-            CharacterAlignment.Player => this.combatGrid.ActiveEnemies,
-            CharacterAlignment.Enemy => this.combatGrid.ActivePlayers,
-            _ => throw new Exception(NPC_ERROR("GetOpponents"))
-        };
-
-        private CharacterCombat[] GetAllAllies(CharacterAlignment alignment) => alignment switch
-        {
-            CharacterAlignment.Player => this.combatGrid.AllPlayers,
-            CharacterAlignment.Enemy => this.combatGrid.AllEnemies,
-            _ => throw new Exception(NPC_ERROR("GetAllAllies"))
-        };
-
-        private CharacterCombat[] GetAllOpponents(CharacterAlignment alignment) => alignment switch
-        {
-            CharacterAlignment.Player => this.combatGrid.AllEnemies,
-            CharacterAlignment.Enemy => this.combatGrid.AllPlayers,
-            _ => throw new Exception(NPC_ERROR("GetAllOpponents"))
-        };
-
-        private bool CharactersAreAtFullHealth(IEnumerable<CharacterCombat> characters)
-        {
-            foreach (CharacterCombat character in characters)
-                if (character.Stats.Health != character.Stats.MaxHealth && !character.Stats.Dead)
-                    return false;
-            return true;
-        }
-
         private void Initialize(InitializeInfo initInfo)
-        {
-            this.combatGrid.Setup(initInfo.players, initInfo.enemies);
-
-            this.standaloneTextboxControl.Dialog(initInfo.openingDialogKey, 0, BeginTurn);
+        {            
+            Encounter encounter = initInfo.encounter;
+            TargetedGameAction onInit = encounter.OnInit;
+            
+            this.combatGrid.Setup(initInfo.party, encounter);
+            ShCtx.One.Log($"Combat initialized with {CombatCtx.One.PlayerCount} players and {CombatCtx.One.EnemyCount} enemies.");
+            
+            this.standaloneTextboxControl.Dialog
+            (
+                id: encounter.OpeningDialogKey, 
+                startingLine: 0, 
+                callback: onInit is null ? 
+                    BeginTurn : 
+                    () => encounter.Leader.CurrentController.RunTargetedGameAction(onInit, BeginTurn)
+            );
+            
             this.standaloneTextboxControl.TakeControl();
-
-            ShCtx.One.Log($"Combat intialized with {CombatCtx.One.PlayerCount} players and {CombatCtx.One.EnemyCount} enemies.");
         }
 
         private void BeginTurn()
@@ -310,13 +300,14 @@ namespace BF2D.Game.Combat
                     UICtx.One.TakeControl(this.mainMenu);
                 });
                 this.standaloneTextboxControl.TakeControl();
+                
                 return;
             }
 
-            this.CurrentCharacter.Stats.CombatAI.Run();
+            this.CurrentCharacter.Stats.CombatAI.Run(this.CurrentCharacter);
         }
 
-        private List<JobInfo.LevelUpInfo> AllocateExperience(IEnumerable<CharacterCombat> characters, long experience)
+        private static List<JobInfo.LevelUpInfo> AllocateExperience(IEnumerable<CharacterCombat> characters, long experience)
         {
             List<JobInfo.LevelUpInfo> infos = new();
 

@@ -3,8 +3,6 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using BF2D.Game.Actions;
 using UnityEngine;
-using BF2D.Utilities;
-using System.Linq;
 
 namespace BF2D.Game
 {
@@ -12,34 +10,37 @@ namespace BF2D.Game
     public class EncounterFactory : Entity
     {
         [Serializable]
-        private class Ranking<T>
+        private class Ranking
         {
             [JsonProperty] public readonly int rank = 0;
-            [JsonProperty] public readonly T property = default;
+            [JsonProperty] public readonly string id = default;
         };
 
-        private struct PropertySegment<T>
+        private struct PropertySegment
         {
             public int index;
-            public T property;
+            public string id;
         }
 
-        private class Selector<T>
+        [Serializable]
+        private class Selector : List<Ranking>
         {
-            [JsonProperty] protected readonly List<Ranking<T>> rankings = new();
-            [JsonIgnore] private readonly List<T> propertiesCache = new();
+            [JsonIgnore] private readonly List<string> propertiesCache = new();
 
-            protected virtual void RefreshCache()
+            private void RefreshCache()
             {
                 this.propertiesCache.Clear();
 
-                foreach (Ranking<T> ranking in this.rankings)
+                foreach (Ranking ranking in this)
                     for (int j = 0; j < ranking.rank; j++)
-                        this.propertiesCache.Add(ranking.property);
+                        this.propertiesCache.Add(ranking.id);
             }
 
-            public T Roll()
+            public string Roll()
             {
+                if (this.Count < 1)
+                    return string.Empty;
+
                 if (this.propertiesCache.Count < 1)
                     RefreshCache();
 
@@ -49,36 +50,34 @@ namespace BF2D.Game
         }
 
         [Serializable]
-        private class MultiSelector<T> : Selector<T>
+        private class MultiSelector
         {
-            [JsonProperty] private readonly NumRandInt count = new(1);
-            [JsonProperty] private readonly bool noOverlaps = false;
+            [JsonProperty] private readonly List<Ranking> idRankings = new();
+            [JsonProperty] private readonly NumRandInt count = new(0);
+            [JsonProperty] private readonly bool noOverlap = false;
 
-            [JsonIgnore] private readonly List<PropertySegment<T>> propertiesCache = new();
+            [JsonIgnore] private readonly List<PropertySegment> propertiesCache = new();
 
-            protected override void RefreshCache()
+            private void RefreshCache()
             {
                 this.propertiesCache.Clear();
 
-                for (int i = 0; i < this.rankings.Count; i++)
+                for (int i = 0; i < this.idRankings.Count; i++)
                 {
-                    Ranking<T> ranking = this.rankings[i];
+                    Ranking ranking = this.idRankings[i];
                     for (int j = 0; j < ranking.rank; j++)
-                        this.propertiesCache.Add(new PropertySegment<T> { index = i, property = ranking.property });
+                        this.propertiesCache.Add(new PropertySegment { index = i, id = ranking.id });
                 }
             }
 
-            public IEnumerable<T> Roll(int maxCount = int.MaxValue)
+            public IEnumerable<string> Roll()
             {
+                if (this.idRankings.Count < 1)
+                    yield break;
+
                 int count = this.count.Calculate();
 
-                if (count > maxCount)
-                {
-                    Debug.LogError("[EncounterFactory:Roll] Cannot exceed max count value");
-                    yield break;
-                }
-
-                if (this.noOverlaps && count > this.rankings.Count)
+                if (this.noOverlap && count > this.idRankings.Count)
                 {
                     Debug.LogError("[EncounterFactory:Roll] Cannot prevent overlaps while also choosing more properties than this factory's ranking count");
                     yield break;
@@ -91,86 +90,51 @@ namespace BF2D.Game
                 for (int i = 0; i < count;)
                 {
                     int index = UnityEngine.Random.Range(0, this.propertiesCache.Count);
-                    PropertySegment<T> property = this.propertiesCache[index];
+                    PropertySegment property = this.propertiesCache[index];
 
-                    if (this.noOverlaps)
+                    if (this.noOverlap)
                     {
                         if (visited.Contains(property.index))
                             continue;
                         visited.Add(property.index);
                     }
 
-                    yield return property.property;
+                    yield return property.id;
 
                     i++;
                 }
+
+                yield break;
             }
         }
 
         [JsonIgnore] public override string ID { get => this.id; set => this.id = value; }
         [JsonIgnore] public string id = string.Empty;
 
-        [JsonProperty] private readonly LootProperty loot = null;
-        [JsonProperty] private readonly Selector<string> leader = new();
-        [JsonProperty] private readonly MultiSelector<string> activeEnemies = new();
-        [JsonProperty] private readonly MultiSelector<string> inactiveEnemies = new();
+        [JsonProperty] private readonly Selector openingDialogIDRankings = null;
+        [JsonProperty] private readonly LootProperty loot = new();
+        [JsonProperty] private readonly Selector leader = null;
+        [JsonProperty] private readonly MultiSelector activeEnemies = new();
+        [JsonProperty] private readonly MultiSelector inactiveEnemies = new();
         [JsonProperty] private readonly TargetedGameAction onInit = null;
 
-        [JsonIgnore] private readonly Stack<int> selectedPositions = new();
+        public void StageEncounter() => GameCtx.One.StageEncounter(InstantiateEncounter());
 
-        public void StageEncounter()
+        public Encounter InstantiateEncounter()
         {
-            GameCtx.One.StageEncounter(InstantiateEncounter());
-        }
+            Encounter encounter = new(this.openingDialogIDRankings?.Roll(), this.loot, this.onInit);
+            string leaderID = this.leader.Roll();
 
-        public Encounter InstantiateEncounter() => new(this);
+            if (!string.IsNullOrEmpty(leaderID))
+                encounter.AddEnemy(leaderID);
 
-        public LootProperty ResolveLoot() => this.loot;
+            foreach (string id in this.activeEnemies.Roll())
+                encounter.AddEnemy(id);
 
-        public EncounterCharacterProperty ResolveLeader() => new()
-        {
-            ID = this.leader.Roll(),
-            Position = RollPosition()
-        };
+            foreach (string id in this.inactiveEnemies.Roll())
+                encounter.AddEnemy(id);
 
-        public List<EncounterCharacterProperty> ResolveActiveEnemies()
-        {
-            List<EncounterCharacterProperty> list = new();
-            foreach (string id in this.activeEnemies.Roll(Numbers.maxPartySize))
-            {
-                list.Add(new EncounterCharacterProperty
-                {
-                    ID = id,
-                    Position = RollPosition()
-                });
-            }
-            return list;
-        }
-
-        public List<string> ResolveInactiveEnemies() => this.inactiveEnemies.Roll().ToList();
-
-        public TargetedGameAction ResolveOnInit() => this.onInit;
-
-        public void Reset()
-        {
-            this.selectedPositions.Clear();
-            List<int> positions = new();
-            for (int i = 0; i < Numbers.maxPartySize; i++)
-                positions.Add(i);
-            positions.Shuffle();
-            foreach (int i in positions)
-                this.selectedPositions.Push(i);
-        }
-
-        private int RollPosition()
-        {
-            if (this.selectedPositions.Count < 1)
-            {
-                Debug.Log("[EncounterFactory:RollPosition] Tried to roll a position but all grid positions were taken");
-                return -1;
-            }
-
-            return this.selectedPositions.Pop();
+            return encounter;
         }
     }
 }

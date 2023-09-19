@@ -22,7 +22,7 @@ namespace BF2D.Game.Actions
             public NumRandInt exertionCostModifier;
         }
 
-        public class Info
+        public class RunInfo
         {
             public string message = string.Empty;
             public bool targetWasKilled = false;
@@ -136,9 +136,9 @@ namespace BF2D.Game.Actions
         }
 
 
-        public Info Run(CharacterStats source, CharacterStats target, Specs specs)
+        public RunInfo Run(CharacterStats source, CharacterStats target, Specs specs)
         {
-            Info info = new()
+            RunInfo runInfo = new()
             {
                 source = source,
                 target = target
@@ -146,16 +146,16 @@ namespace BF2D.Game.Actions
 
             if (!Probability.Roll(this.successRate + specs.successRateModifier.Calculate(source), source.Luck))
             {
-                info.failed = true;
-                return info;
+                runInfo.failed = true;
+                return runInfo;
             }
 
             int exertionCost = ExertionCost(source, specs);
             if (exertionCost > source.Stamina)
             {
-                info.failed = true;
-                info.insufficientStamina = true;
-                return info;
+                runInfo.failed = true;
+                runInfo.insufficientStamina = true;
+                return runInfo;
             }
 
             if (exertionCost > 0)
@@ -169,13 +169,13 @@ namespace BF2D.Game.Actions
             {
                 if (this.resetHealth)
                 {
-                    info.message += $"{target.Name}'s {Strings.Character.HEALTH} went up to full. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.HEALTH} went up to full. {Strings.DialogTextbox.PAUSE_BREIF}";
                     target.ResetHealth();
                 }
 
                 if (this.resetStamina)
                 {
-                    info.message += $"{target.Name}'s {Strings.Character.STAMINA} went up to full. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.STAMINA} went up to full. {Strings.DialogTextbox.PAUSE_BREIF}";
                     target.ResetStamina();
                 }
 
@@ -184,69 +184,69 @@ namespace BF2D.Game.Actions
 
                 if (this.damage is not null)
                     if (deathGem && deathTarget)
-                        info.message += RnHealHelper(this.damage, source, target);
+                        runInfo.message += RnHealHelper(this.damage, source, target);
                     else
-                        info.message += RnDamageHelper(this.damage, target.Damage, source, target, true, specs);
+                        runInfo.message += RnDamageHelper(this.damage, target.Damage, source, target, true, specs);
 
                 if (this.directDamage is not null)
                     if (deathGem && deathTarget)
-                        info.message += RnHealHelper(this.directDamage, source, target);
+                        runInfo.message += RnHealHelper(this.directDamage, source, target);
                     else 
-                        info.message += RnDamageHelper(this.directDamage, target.DirectDamage, source, target, true, specs);
+                        runInfo.message += RnDamageHelper(this.directDamage, target.DirectDamage, source, target, true, specs);
 
                 if (this.psychicDamage is not null)
                     if (deathGem && deathTarget)
-                        info.message += RnHealHelper(this.psychicDamage, source, target);
+                        runInfo.message += RnHealHelper(this.psychicDamage, source, target);
                     else 
-                        info.message += RnDamageHelper(this.psychicDamage, target.PsychicDamage, source, target, true, specs);
+                        runInfo.message += RnDamageHelper(this.psychicDamage, target.PsychicDamage, source, target, true, specs);
 
                 if (this.criticalDamage is not null)
                     if (deathGem && deathTarget)
-                        info.message += RnHealHelper(this.criticalDamage, source, target);
+                        runInfo.message += RnHealHelper(this.criticalDamage, source, target);
                     else
-                        info.message += RnCriticalDamageHelper(this.criticalDamage, source, target);
+                        runInfo.message += RnCriticalDamageHelper(this.criticalDamage, source, target);
 
                 if (this.heal is not null)
                     if ((deathGem && deathTarget) || (!deathGem && !deathTarget))
-                        info.message += RnHealHelper(this.heal, source, target);
+                        runInfo.message += RnHealHelper(this.heal, source, target);
                     else
-                        info.message += RnDamageHelper(this.heal, target.Damage, source, target, false, specs);
+                        runInfo.message += RnDamageHelper(this.heal, target.Damage, source, target, false, specs);
 
                 if (this.recover is not null)
-                    info.message += $"{target.Name} recovered {this.recover.Run(source, target.Recover)} {Strings.Character.STAMINA.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name} recovered {this.recover.Run(source, target.Recover)} {Strings.Character.STAMINA.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.exert is not null)
-                    info.message += $"{target.Name} exerted {this.exert.Run(source, target.Exert)} {Strings.Character.STAMINA.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name} exerted {this.exert.Run(source, target.Exert)} {Strings.Character.STAMINA.ToLower()}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.statusEffect is not null)
-                    info.message += this.statusEffect.Run(source, target);
+                    runInfo.message += this.statusEffect.Run(source, target);
 
                 if (this.constitutionUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.CONSTITUTION} went up by {this.constitutionUp.Run(source, target.ConstitutionUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.CONSTITUTION} went up by {this.constitutionUp.Run(source, target.ConstitutionUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.enduranceUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.ENDURANCE} went up by {this.enduranceUp.Run(source, target.EnduranceUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.ENDURANCE} went up by {this.enduranceUp.Run(source, target.EnduranceUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.swiftnessUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.SWIFTNESS} went up by {this.swiftnessUp.Run(source, target.SwiftnessUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.SWIFTNESS} went up by {this.swiftnessUp.Run(source, target.SwiftnessUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.strengthUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.STRENGTH} went up by {this.strengthUp.Run(source, target.StrengthUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.STRENGTH} went up by {this.strengthUp.Run(source, target.StrengthUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.toughnessUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.TOUGHNESS} went up by {this.toughnessUp.Run(source, target.ToughnessUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.TOUGHNESS} went up by {this.toughnessUp.Run(source, target.ToughnessUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.willUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.WILL} went up by {this.willUp.Run(source, target.WillUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.WILL} went up by {this.willUp.Run(source, target.WillUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
 
                 if (this.fortuneUp is not null)
-                    info.message += $"{target.Name}'s {Strings.Character.FORTUNE} went up by {this.fortuneUp.Run(source, target.FortuneUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
+                    runInfo.message += $"{target.Name}'s {Strings.Character.FORTUNE} went up by {this.fortuneUp.Run(source, target.FortuneUp)}. {Strings.DialogTextbox.PAUSE_BREIF}";
             }
 
-            info.targetWasKilled = !targetDeadPrevious && target.Dead;
-            info.targetWasRevived = targetDeadPrevious && !target.Dead;
+            runInfo.targetWasKilled = !targetDeadPrevious && target.Dead;
+            runInfo.targetWasRevived = targetDeadPrevious && !target.Dead;
 
-            return info;
+            return runInfo;
         }
 
         public string TextBreakdown(CharacterStats source, Specs specs)

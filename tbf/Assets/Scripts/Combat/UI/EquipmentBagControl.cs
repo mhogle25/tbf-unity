@@ -112,11 +112,8 @@ namespace BF2D.Game.Combat
             }
         }
 
-        private void OnBack()
-        {
+        private static void OnBack() =>
             UICtx.One.PassControlBack();
-            this.textbox.SetViewActive(false);
-        }
 
         private void EquipmentsOnConfirm()
         {

@@ -15,7 +15,7 @@ namespace BF2D.Game
         [JsonIgnore] public int Probability => this.probability;
         [JsonIgnore] public int Count => this.count;
 
-        public void RollForLoot(List<string> collectionToAppend)
+        public IEnumerable<string> RollForLoot()
         {
             GameCtx ctx = GameCtx.One;
 
@@ -26,7 +26,7 @@ namespace BF2D.Game
 
             for (int i = 0; i < this.Count; i++)
                 if (Utilities.Probability.Roll(this.Probability, luckiestPlayer.Luck))
-                    collectionToAppend.Add(this.ID);
+                    yield return this.ID;
         }
     }
 }

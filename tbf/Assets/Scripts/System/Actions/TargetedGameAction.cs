@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using BF2D.Game.Enums;
 using Newtonsoft.Json;
 
@@ -20,8 +22,8 @@ namespace BF2D.Game.Actions
             }
         }
 
-        [JsonIgnore] public CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.TargetedGemSlots);
-        [JsonIgnore] public bool IsRestoration
+        [JsonIgnore] public override CombatAlignment Alignment => CombatAlignmentSelector.CalculateCombatAlignedCollection(this.TargetedGemSlots);
+        [JsonIgnore] public override bool IsRestoration
         {
             get
             {
@@ -39,7 +41,7 @@ namespace BF2D.Game.Actions
                 return false;
             }
         }
-
+        
         public override string TextBreakdown(CharacterStats source)
         {
             string description = string.Empty;

@@ -3,12 +3,7 @@ using System;
 
 namespace BF2D.Game.Combat.Actions
 {
-    public class FleeCombatActionInfo : ICombatActionInfo
+    public class FleeCombatActionInfo
     {
-        public List<string> GetOpeningMessage()
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }

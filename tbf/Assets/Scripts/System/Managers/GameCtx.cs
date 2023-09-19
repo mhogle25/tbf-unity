@@ -301,8 +301,8 @@ namespace BF2D.Game
         {
             this.queuedCombats.Enqueue(new Combat.CombatCtx.InitializeInfo
             {
-                players = this.currentSave.Party,
-                enemies = encounter
+                party = this.currentSave.Party,
+                encounter = encounter
             });
         }
 

@@ -41,7 +41,7 @@ namespace BF2D.Game.Actions
             exertionCostModifier = this.exertionCostModifier
         };
 
-        public CharacterAction.Info Run(CharacterStats self)
+        public CharacterAction.RunInfo Run(CharacterStats self)
         {
             return this.Gem.Run(self, self, this.Specs);
         }

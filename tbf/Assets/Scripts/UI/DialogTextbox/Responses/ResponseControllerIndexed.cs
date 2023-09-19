@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace BF2D.UI
 {
@@ -31,19 +32,27 @@ namespace BF2D.UI
         public class ActionData
         {
             public int index = 0;
-            public string key = string.Empty;
+            public string id = string.Empty;
         }
 
         public void OnConfirm(string json)
         {
-            ActionData data = Utilities.JSON.DeserializeJson<ActionData>(json);
+            ActionData data;
+            try
+            {
+                data = Utilities.JSON.DeserializeJson<ActionData>(json);
+            }
+            catch (Exception x)
+            {
+                Debug.LogError(x);
+                return;
+            }
 
             if (data is not null)
             {
                 this.onConfirmIndex?.Invoke(data.index);
-                this.onConfirmKey?.Invoke(data.key);
+                this.onConfirmKey?.Invoke(data.id);
             }
-
         }
 
         public void OnBack() => this.onBack?.Invoke();

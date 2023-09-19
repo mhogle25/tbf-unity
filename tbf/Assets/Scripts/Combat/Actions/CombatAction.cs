@@ -11,110 +11,72 @@ namespace BF2D.Game.Combat.Actions
     {
         public CombatActionType Type => this.type;
         private CombatActionType type = CombatActionType.Event;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+
         public ActCombatActionInfo Act 
         { 
-            get 
-            { 
-                return this.Type == CombatActionType.Act ? this.actCombatAction : null; 
-            } 
-            set 
+            get => this.Type == CombatActionType.Act ? this.actCombatAction : null; 
+            init
             {
                 this.type = CombatActionType.Act;
                 this.actCombatAction = value;
             } 
         }
-        private ActCombatActionInfo actCombatAction = null;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+        private readonly ActCombatActionInfo actCombatAction = null;
+
         public EquipCombatActionInfo Equip 
         { 
-            get 
-            { 
-                return this.Type == CombatActionType.Equip ? this.equipCombatAction : null; 
-            } 
-            set 
+            get => this.Type == CombatActionType.Equip ? this.equipCombatAction : null; 
+            init 
             {
                 this.type = CombatActionType.Equip;
                 this.equipCombatAction = value; 
             } 
         }
-        private EquipCombatActionInfo equipCombatAction = null;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+        private readonly EquipCombatActionInfo equipCombatAction = null;
+
         public EventCombatActionInfo Event { 
-            get 
-            { 
-                return this.Type == CombatActionType.Event ? this.eventCombatAction : null; 
-            } 
-            set
+            get => this.Type == CombatActionType.Event ? this.eventCombatAction : null; 
+            init
             {
                 this.type = CombatActionType.Event;
                 this.eventCombatAction = value; 
             } 
         }
-        private EventCombatActionInfo eventCombatAction = null;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+        private readonly EventCombatActionInfo eventCombatAction = null;
+
         public FleeCombatActionInfo Flee 
         { 
-            get 
-            { 
-                return this.Type == CombatActionType.Flee ? this.fleeCombatAction : null; 
-            } 
-            set
+            get => this.Type == CombatActionType.Flee ? this.fleeCombatAction : null; 
+            init
             {
                 this.type = CombatActionType.Flee;
                 this.fleeCombatAction = value; 
             } 
         }
-        private FleeCombatActionInfo fleeCombatAction = null;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+        private readonly FleeCombatActionInfo fleeCombatAction = null;
+
         public ItemCombatActionInfo Item 
         { 
-            get 
-            { 
-                return this.Type == CombatActionType.Item ? this.itemCombatAction : null; 
-            } 
-            set
+            get => this.Type == CombatActionType.Item ? this.itemCombatAction : null; 
+            init
             {
                 this.type = CombatActionType.Item;
                 this.itemCombatAction = value; 
             } 
         }
-        private ItemCombatActionInfo itemCombatAction = null;
-        /// <summary>
-        /// Resets all other combat action types referenced in this object
-        /// </summary>
+        private readonly ItemCombatActionInfo itemCombatAction = null;
+        
         public RosterCombatActionInfo Roster 
         { 
             get => this.Type == CombatActionType.Roster ? this.rosterCombatAction : null; 
-            set 
+            init 
             {
 
                 this.type = CombatActionType.Roster;
                 this.rosterCombatAction = value;
             } 
         }
-        private RosterCombatActionInfo rosterCombatAction = null;
-
-        public ICombatActionInfo CurrentInfo => this.type switch
-        {
-            CombatActionType.Flee => this.Flee,
-            CombatActionType.Act => this.Act,
-            CombatActionType.Item => this.Item,
-            CombatActionType.Roster => this.Roster,
-            CombatActionType.Equip => this.Equip,
-            CombatActionType.Event => this.Event,
-            _ => null,
-        };
+        private readonly RosterCombatActionInfo rosterCombatAction = null;
 
         public void SetupControlled()
         {
@@ -131,7 +93,7 @@ namespace BF2D.Game.Combat.Actions
             }
         }
 
-        public void SetupAI(CharacterCombatAI ai)
+        public void SetupAI(CharacterCombat source)
         {
             switch (this.type)
             {
@@ -142,28 +104,29 @@ namespace BF2D.Game.Combat.Actions
                 case CombatActionType.Event: break; //TODO
                 case CombatActionType.Flee: break;  //TODO
                 case CombatActionType.Item:
-                    ai.SetupTargetedGems();
+                    source.Stats.CombatAI.SetupTargetedGameAction(GetTargetedGameAction(), source);
+                    CombatCtx.One.RunCombatEvents();
                     break;
                 case CombatActionType.Roster: break;
             }
         }
 
-        public IEnumerable<TargetedCharacterActionSlot> GetTargetedGems() => this.type switch
+        public TargetedGameAction GetTargetedGameAction() => this.type switch
         {
             CombatActionType.Act => null,//TODO
-            CombatActionType.Item => this.Item.TargetedGemSlots,
+            CombatActionType.Item => this.Item.OnUse,
             _ => throw new Exception("[CombatAction:GetTargetedGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
         };
         
 
-        public IEnumerable<TargetedCharacterActionSlot> UseTargetedGems() => this.type switch
+        public TargetedGameAction UseTargetedGameAction() => this.type switch
         {
             CombatActionType.Act => null,//TODO
-            CombatActionType.Item => this.Item.UseTargetedGems(),
+            CombatActionType.Item => this.Item.UseOnUse(),
             _ => throw new Exception("[CombatAction:GetTargetedGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),
         };
 
-        public IEnumerable<CharacterActionSlot> GetGems() => this.type switch
+        public UntargetedGameAction GetUntargetedGameAction() => this.type switch
         {
             CombatActionType.Equip => this.Equip.OnEquip,
             _ => throw new Exception("[CombatAction:GetGems] Tried to get the list of gems but the CombatAction was a type other than Act or Item."),

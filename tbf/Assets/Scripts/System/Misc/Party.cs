@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BF2D.Game.Actions;
 using Newtonsoft.Json;
 using UnityEngine;
-using System.Linq;
+using BF2D.Game.Combat;
 
 namespace BF2D.Game
 {
@@ -15,6 +15,7 @@ namespace BF2D.Game
         {
             [JsonIgnore] public CharacterStats Stats { get => this.character; set => this.character = value; }
             [JsonIgnore] public int Position { get => this.position; set => this.position = value; }
+            [JsonIgnore] public ICharacterController CurrentController { get; set; }
 
             [JsonProperty] private int position;
             [JsonProperty] private CharacterStats character;
@@ -39,7 +40,18 @@ namespace BF2D.Game
         [JsonIgnore] public int Ether { get => this.ether; set => this.ether = value; }
 
         [JsonIgnore] public override int ActiveCharacterCount => this.leader is null ? 0 : this.activePlayers.Count + 1;
-        [JsonIgnore] public override IEnumerable<ICharacterInfo> ActiveCharacters => this.leader is null ? null : new ICharacterInfo[] { this.leader }.Concat(this.activePlayers);
+        [JsonIgnore] public override IEnumerable<ICharacterInfo> ActiveCharacters
+        {
+            get
+            {
+                if (this.leader is null)
+                    yield break;
+
+                yield return this.leader;
+                foreach (CharacterProperty player in this.activePlayers)
+                    yield return player;
+            }
+        }
         [JsonIgnore] public override ICharacterInfo Leader => this.leader;
 
         public ICharacterInfo AddPlayer(CharacterStats newCharacter)

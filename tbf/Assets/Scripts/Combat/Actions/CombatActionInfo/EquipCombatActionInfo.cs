@@ -5,7 +5,7 @@ using BF2D.Game.Enums;
 
 namespace BF2D.Game.Combat.Actions
 {
-    public class EquipCombatActionInfo : ICombatActionInfo
+    public class EquipCombatActionInfo
     {
         public EquipmentInfo Info { get => this.info; set => this.info = value; }
         private EquipmentInfo info = null;
@@ -13,7 +13,7 @@ namespace BF2D.Game.Combat.Actions
         public EquipmentType Type { get => this.type; set => this.type = value; }
         private EquipmentType type = EquipmentType.Accessory;
 
-        public IEnumerable<CharacterActionSlot> OnEquip => this.Info?.Get()?.OnEquip?.GemSlots ?? new CharacterActionSlot[] { };
+        public UntargetedGameAction OnEquip => this.Info?.Get()?.OnEquip;
 
         public List<string> Run()
         {
@@ -40,7 +40,5 @@ namespace BF2D.Game.Combat.Actions
 
             return new() { message };
         }
-
-        public List<string> GetOpeningMessage() => this.Info?.Get()?.OnEquip?.Message;
     }
 }

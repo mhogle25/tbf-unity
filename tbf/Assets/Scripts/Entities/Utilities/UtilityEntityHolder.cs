@@ -10,6 +10,8 @@ namespace BF2D.Game
     {
         [JsonIgnore] protected readonly Dictionary<string, T> utilityEntityIndex = new();
 
+        public T this[string id] => Get(id);
+
         public T Acquire(string id)
         {
             T info = AddIfNone(id);

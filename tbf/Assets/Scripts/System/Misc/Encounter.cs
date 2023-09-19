@@ -1,49 +1,82 @@
 using System;
-using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
-using System.Linq;
 using BF2D.Game.Actions;
 
 namespace BF2D.Game
 {
-    [Serializable]
     public class Encounter : CharacterGroup, ICache
-    {
-        [JsonConstructor]
-        public Encounter() { }
-
-        public Encounter(EncounterFactory factory)
+    {    
+        private class CharacterProperty : ICharacterInfo, ICache
         {
-            loot = factory.ResolveLoot();
-            leader = factory.ResolveLeader();
-            activeEnemies = factory.ResolveActiveEnemies();
-            inactiveEnemies = factory.ResolveInactiveEnemies();
-            onInit = factory.ResolveOnInit();
+            public CharacterStats Stats
+            {
+                get
+                {
+                    if (string.IsNullOrEmpty(this.ID))
+                        return null;
 
-            factory.Reset();
+                    this.cached ??= GameCtx.One.InstantiateEnemy(this.ID);
+
+                    return this.cached;
+                }
+            }
+
+            public string ID { private get; set; }
+            public int Position { get; set; }
+            public ICharacterController CurrentController { get; set; }
+
+            private CharacterStats cached;
+
+            public void Clear() => this.cached = null;
+        }
+        
+        public Encounter(
+            string openingDialogKey,
+            LootProperty loot,
+            TargetedGameAction onInit
+            )
+        {
+            this.onInit = onInit;
+
+            if (openingDialogKey is not null)
+                this.openingDialogKey = openingDialogKey;
+
+            if (loot is not null)
+                this.loot = loot;
         }
 
-        [JsonProperty] private readonly LootProperty loot = new();
+        private readonly LootProperty loot = new();
+        private readonly string openingDialogKey = $"di_opening_{Strings.System.DEFAULT_ID}"; 
+        private readonly TargetedGameAction onInit = null;
+        private CharacterProperty leader = null;
+        private readonly List<CharacterProperty> activeEnemies = new();
+        private readonly List<string> inactiveEnemies = new();
 
-        [JsonProperty] private EncounterCharacterProperty leader = null;
-        [JsonProperty] private readonly List<EncounterCharacterProperty> activeEnemies = new();
-        [JsonProperty] private readonly List<string> inactiveEnemies = new();
+        public LootProperty Loot => this.loot;
+        public TargetedGameAction OnInit => this.onInit;
+        public string OpeningDialogKey => this.openingDialogKey;
 
-        [JsonProperty] private readonly TargetedGameAction onInit = null;
+        public override int ActiveCharacterCount => this.leader is null ? 0 : this.activeEnemies.Count + 1;
+        public override IEnumerable<ICharacterInfo> ActiveCharacters
+        {
+            get
+            {
+                if (this.leader is null)
+                    yield break;
 
-        // Loot
-        [JsonIgnore] public LootProperty Loot => this.loot;
-
-        [JsonIgnore] public TargetedGameAction OnInit => this.onInit;
-
-        [JsonIgnore] public override int ActiveCharacterCount => this.leader is null ? 0 : this.activeEnemies.Count + 1;
-        [JsonIgnore] public override IEnumerable<ICharacterInfo> ActiveCharacters => this.leader is null ? null : new List<ICharacterInfo>() { this.leader }.Concat(this.activeEnemies);
-        [JsonIgnore] public override ICharacterInfo Leader => this.leader;
+                yield return this.leader;
+                foreach (CharacterProperty enemy in this.activeEnemies)
+                    yield return enemy;
+            }
+        }
+        
+        public override ICharacterInfo Leader => this.leader;
 
         public void Clear()
         {
-            foreach (EncounterCharacterProperty enemy in this.activeEnemies)
+            foreach (CharacterProperty enemy in this.activeEnemies)
                 enemy.Clear();
         }
 
@@ -51,7 +84,7 @@ namespace BF2D.Game
         {
             if (string.IsNullOrEmpty(id))
             {
-                Debug.LogError("[SaveData:AddCharacter] Tried to add a character but the id was null");
+                Debug.LogError("[Encounter:AddEnemy] Tried to add an enemy but the id was null");
                 return null;
             }
 
@@ -63,7 +96,7 @@ namespace BF2D.Game
 
             int position = GetNextAvailablePosition();
 
-            EncounterCharacterProperty enemy = new()
+            CharacterProperty enemy = new()
             {
                 ID = id,
                 Position = position
@@ -84,7 +117,7 @@ namespace BF2D.Game
             if (this.leader.Equals(newLeader))
                 return newLeader;
 
-            if (newLeader is not EncounterCharacterProperty leader)
+            if (newLeader is not CharacterProperty leader)
             {
                 Debug.LogError($"[Encounter:ChangeLeader] Tried to change leaders but the given character was not valid for an encounter -> {newLeader.Stats.Name}");
                 return null;
@@ -96,9 +129,13 @@ namespace BF2D.Game
                 return null;
             }
 
-            EncounterCharacterProperty oldLeader = this.leader;
+            CharacterProperty oldLeader = null;
+            if (this.leader is not null)
+            {
+                oldLeader = this.leader;
+                this.activeEnemies.Add(oldLeader);
+            }
             this.activeEnemies.Remove(leader);
-            this.activeEnemies.Add(oldLeader);
             this.leader = leader;
             return oldLeader;
         }

@@ -13,12 +13,7 @@ namespace BF2D.Game.Combat
         public delegate List<string> RunEvent();
         private RunEvent animEvent = null;
 
-        public void ChangeAnimState(string newState)
-        {
-            ChangeAnimState(newState, null);
-        }
-
-        public void ChangeAnimState(string newState, RunEvent callback)
+        public void ChangeAnimState(string newState, RunEvent callback = null)
         {
             if (this.animState == newState) return;
             this.animator.Play(newState);

@@ -3,14 +3,14 @@
         "text": "Yes",
         "action": 
         {
-            "key": "y"
+            "id": "y"
         }
     },
     {
         "text": "No",
         "action": 
         {
-            "key": "n"
+            "id": "n"
         }
     }
 ]

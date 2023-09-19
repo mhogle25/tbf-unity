@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BF2D.Game
@@ -25,5 +26,9 @@ namespace BF2D.Game
         public string Extract(string id);
 
         public T Get(string id);
+
+        public int Count { get; }
+
+        public T this[string id] { get; }
     }
 }

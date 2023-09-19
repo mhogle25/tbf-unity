@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using BF2D.Game.Actions;
@@ -8,6 +9,7 @@ namespace BF2D.Game.Combat
 {
     public class ItemsCharacterTargeter : OptionsGridControl
     {
+        [Serializable]
         public struct AlignmentFlag
         {
             public bool players;
@@ -25,7 +27,7 @@ namespace BF2D.Game.Combat
         {
             this.stagedTargetedGemSlots.Clear();
             this.stagedTargetedGemSlot = null;
-            foreach (TargetedCharacterActionSlot targetedGemSlot in CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGems())
+            foreach (TargetedCharacterActionSlot targetedGemSlot in CombatCtx.One.CurrentCharacter.CurrentCombatAction.GetTargetedGameAction().TargetedGemSlots)
                 this.stagedTargetedGemSlots.Enqueue(targetedGemSlot);
 
             Continue();
@@ -57,6 +59,7 @@ namespace BF2D.Game.Combat
 
         private void TargeterSetup(CharacterTarget target)
         {
+            CharacterAlignment alignment = CombatCtx.One.CurrentCharacter.Alignment;
             switch (target)
             {
                 case CharacterTarget.Self:
@@ -67,14 +70,14 @@ namespace BF2D.Game.Combat
                     SetupDialog(this.data.PlayerPlatforms);
                     return;
                 case CharacterTarget.AllAllies:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Allies;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.GetAllies(alignment);
                     Continue();
                     return;
                 case CharacterTarget.Opponent:
                     SetupDialog(this.data.EnemyPlatforms);
                     return;
                 case CharacterTarget.AllOpponents:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.Opponents;
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = CombatCtx.One.GetOpponents(alignment);
                     Continue();
                     return;
                 case CharacterTarget.Any:
@@ -92,11 +95,11 @@ namespace BF2D.Game.Combat
                     Continue();
                     return;
                 case CharacterTarget.RandomAlly:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomAlly() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomAlly(alignment) };
                     Continue();
                     return;
                 case CharacterTarget.RandomOpponent:
-                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomOpponent() };
+                    this.stagedTargetedGemSlot.TargetInfo.CombatTargets = new CharacterCombat[] { CombatCtx.One.RandomOpponent(alignment) };
                     Continue();
                     return;
                 default:

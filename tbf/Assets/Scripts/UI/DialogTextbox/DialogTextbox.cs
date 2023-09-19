@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -123,6 +124,7 @@ namespace BF2D.UI
         #region Public Overrides
         public override void UtilityInitialize()
         {
+            this.View.gameObject.SetActive(true);
             this.state = StateDialogQueue;
             this.textField.text = string.Empty;
             base.UtilityInitialize();
@@ -137,31 +139,14 @@ namespace BF2D.UI
         #endregion
 
         #region Public Methods
-        /// <summary>
-        /// Pushes a single message to the dialog queue
-        /// </summary>
-        /// <param name="message">The message to be displayed</param>
-        public void Message(string message) 
-        {
-            Message(message, null);
-        }
 
         /// <summary>
         /// Pushes a single message to the dialog queue with a callback function
         /// </summary>
         /// <param name="message">The message to be displayed</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, Action callback)
-        {
-            Message(message, callback, null);
-        }
-
-        /// <summary>
-        /// Pushes a single message to the dialog queue with a callback function
-        /// </summary>
-        /// <param name="message">The message to be displayed</param>
-        /// <param name="callback">Called at the end of dialog</param>
-        public void Message(string message, Action callback, params string[] inserts)
+        /// <param name="inserts">Will replace insert tags in dialog by index</param>
+        public void Message(string message = null, Action callback = null, params string[] inserts)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -171,7 +156,7 @@ namespace BF2D.UI
 
             List<string> lines = new()
             {
-                $"{message}[{DialogTextbox.END_TAG}]'"
+                AppendEndTag(message)
             };
 
             lines = ReplaceInsertTags(lines, inserts);
@@ -187,41 +172,21 @@ namespace BF2D.UI
         }
 
         /// <summary>
-        /// Pushes a dialog from the list of loaded dialog files to the dialog queue
-        /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
-        public void Dialog(string key, int startingLine) 
-        {
-            Dialog(key, startingLine, null);
-        }
-
-        /// <summary>
         /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
         /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
+        /// <param name="id">The filename of the desired dialog</param>
         /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLine, Action callback)
+        /// <param name="inserts">Will replace insert tags in dialog by index</param>
+        public void Dialog(string id = "", int startingLine = 0, Action callback = null, params string[] inserts)
         {
-            Dialog(key, startingLine, callback, null);
-        }
-
-        /// <summary>
-        /// Pushes a dialog from the list of loaded dialog files to the dialog queue with a callback function
-        /// </summary>
-        /// <param name="key">The filename of the desired dialog</param>
-        /// <param name="startingLine">The line the dialog will start from (0 is the first line)</param>
-        /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(string key, int startingLine, Action callback, params string[] inserts)
-        {
-            if (!this.dialogs.ContainsKey(key))
+            if (!this.dialogs.ContainsKey(id))
             {
-                Debug.LogError($"[DialogTextbox] The key '{key}' was not found in the dialogs dictionary");
+                Debug.LogError($"[DialogTextbox] The key '{id}' was not found in the dialogs dictionary");
                 return;
             }
 
-            List<string> lines = this.dialogs[key];
+            List<string> lines = this.dialogs[id];
 
             if (startingLine < 0 || startingLine >= lines.Count)
             {
@@ -246,29 +211,9 @@ namespace BF2D.UI
         /// </summary>
         /// <param name="lines">The dialog to be displayed</param>
         /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
-        public void Dialog(List<string> lines,  int startingLine) 
-        {
-            Dialog(lines, startingLine, null);
-        }
-
-        /// <summary>
-        /// Pushes a dialog to the dialog queue
-        /// </summary>
-        /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
         /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLine, Action callback)
-        {
-            Dialog(lines, startingLine, callback, null);
-        }
-
-        /// <summary>
-        /// Pushes a dialog to the dialog queue
-        /// </summary>
-        /// <param name="lines">The dialog to be displayed</param>
-        /// <param name="startingLine">The line the dialog starts from (0 is the first line)</param>
-        /// <param name="callback">Called at the end of dialog</param>
-        public void Dialog(List<string> lines, int startingLine, Action callback, params string[] inserts)
+        /// <param name="inserts">Will replace insert tags in dialog by index</param>
+        public void Dialog(List<string> lines = null, int startingLine = 0, Action callback = null, params string[] inserts)
         {
             if (lines is null || lines.Count < 1)
             {
@@ -357,6 +302,28 @@ namespace BF2D.UI
             List<string> newDialog = new();
             for (int i = 0; i < dialog.Count; i++)
                 newDialog.Add(ReplaceInsertTags(dialog[i], inserts));
+
+            return newDialog;
+        }
+
+        public static List<string> AppendDelayToEachLine(List<string> dialog, float delaySecs) =>
+            dialog.Select(line => $"{line}[{DialogTextbox.PAUSE_TAG}:{delaySecs}]").ToList();
+        
+
+        public static string AppendEndTag(string line) =>
+            $"{line}[{DialogTextbox.END_TAG}]";
+
+        public static List<string> AppendEndTag(List<string> dialog)
+        {
+            List<string> newDialog = new();
+            int count = dialog.Count;
+            for (int i = 0; i < count; i++)
+            {
+                string line = dialog[i];
+                if (i == count - 1)
+                    line = AppendEndTag(line);
+                newDialog.Add(line);
+            }
 
             return newDialog;
         }
@@ -481,9 +448,9 @@ namespace BF2D.UI
             if (message[this.messageIndex] == '[')
             {
                 //Take and read tag
-                char tag = message[this.messageIndex + 1];
+                char op = message[this.messageIndex + 1];
                 int newMessageIndex = this.messageIndex;
-                switch (tag)
+                switch (op)
                 {
                     case DialogTextbox.PAUSE_TAG: PauseAction(message, ref newMessageIndex); break;   //Case: Pause for seconds
                     case DialogTextbox.SPEED_TAG: SpeedAction(message, ref newMessageIndex); break;   //Case: New text speed
@@ -493,10 +460,10 @@ namespace BF2D.UI
                     case DialogTextbox.RESPONSE_TAG: ResponseAction(message, ref newMessageIndex); return false;
                     case DialogTextbox.END_TAG: this.state = StateEndOfDialog; return false;
                     default:
-                        if (tag == DialogTextbox.INSERT_TAG)
+                        if (op == DialogTextbox.INSERT_TAG)
                             Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Message '{message}' has incorrectly formatted insert tags");
                         else
-                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{tag}' was not valid");
+                            Debug.LogError($"[DialogTextbox:MessageParseAndDisplay] Tag '{op}' was not valid");
                         Cancel();
                         return true;
                 }
@@ -652,11 +619,11 @@ namespace BF2D.UI
             this.nametag.gameObject.SetActive(false);
         }
 
-        private bool ValidJson(string json)
+        private static bool ValidJson(string json)
         {
             try
             {
-                object rd = JsonConvert.DeserializeObject<object>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
+                JsonConvert.DeserializeObject<object>(json, new Newtonsoft.Json.Converters.StringEnumConverter());
             } 
             catch
             {
@@ -687,43 +654,36 @@ namespace BF2D.UI
 
             foreach (ResponseData option in options)
             {
-                try
+                if (this.prereqConditionChecker && this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
+                    continue;
+
+                string action = option.action.ToString();
+
+                this.responseOptionsControl.Controlled.Add(new GridOption.Data
                 {
-                    if (this.prereqConditionChecker && this.prereqConditionChecker.CheckCondition(option.prereq.ToString()))
-                        continue;
-
-                    string action = option.action.ToString();
-
-                    this.responseOptionsControl.Controlled.Add(new GridOption.Data
+                    text = option.text,
+                    onInput = new InputButtonCollection<Action>
                     {
-                        text = option.text,
-                        onInput = new InputButtonCollection<Action>
+                        [InputButton.Confirm] = () =>
                         {
-                            [InputButton.Confirm] = () =>
-                            {
-                                foreach (IResponseController controller in this.responseControllers)
-                                    controller.OnConfirm(action);
+                            foreach (IResponseController controller in this.responseControllers)
+                                controller.OnConfirm(action);
 
-                                this.responseOptionConfirmEvent?.Invoke(action);
+                            this.responseOptionConfirmEvent?.Invoke(action);
 
-                                ResponseConfirm(option.dialogIndex);
-                            },
-                            [InputButton.Back] = () =>
-                            {
-                                FinalizeResponse();
+                            ResponseConfirm(option.dialogIndex);
+                        },
+                        [InputButton.Back] = () =>
+                        {
+                            FinalizeResponse();
 
-                                foreach (IResponseController controller in this.responseControllers)
-                                    controller.OnBack();
+                            foreach (IResponseController controller in this.responseControllers)
+                                controller.OnBack();
 
-                                this.responseOptionBackEvent?.Invoke();
-                            }
+                            this.responseOptionBackEvent?.Invoke();
                         }
-                    }); 
-                } 
-                catch (Exception x)
-                {
-                    throw x;
-                }
+                    }
+                });
             }
 
             UICtx.StartControlGeneric(this.responseOptionsControl);
@@ -770,6 +730,7 @@ namespace BF2D.UI
             string newMessage = message.Replace($"[{DialogTextbox.INSERT_TAG}:{index}]", insert);
             return newMessage;
         }
+
         #endregion
     }
 }

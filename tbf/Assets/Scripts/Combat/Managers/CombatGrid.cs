@@ -59,14 +59,9 @@ namespace BF2D.Game.Combat
         #endregion
 
         #region Public Utilities
+
         public long GetTotalExperience()
         {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning("[CombatGrid:GetTotalExperience] Tried to get the total experience from the fight but combat wasn't over.");
-                return 0;
-            }
-
             long value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
                 value += character.CurrentJob.ExperienceAward;
@@ -76,12 +71,6 @@ namespace BF2D.Game.Combat
 
         public int GetTotalCurrencyLoot()
         {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalCurrencyLoot] Tried to get the total {Strings.Game.CURRENCY} loot from the fight but combat wasn't over.");
-                return 0;
-            }
-
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
                 value += character.Loot.CurrencyLoot.Calculate(this.activeParty.Leader.Stats);
@@ -92,12 +81,6 @@ namespace BF2D.Game.Combat
 
         public int GetTotalEtherLoot()
         {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalEtherLoot] Tried to get the total {Strings.Game.ETHER} loot from the fight but combat wasn't over.");
-                return 0;
-            }
-
             int value = 0;
             foreach (CharacterStats character in this.defeatedEnemies)
                 value += character.Loot.EtherLoot.Calculate(this.activeParty.Leader.Stats);
@@ -106,50 +89,24 @@ namespace BF2D.Game.Combat
             return value;
         }
 
-        public IEnumerable<string> GetTotalItemLoot()
-        {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalItemLoot] Tried to get the total item loot from the fight but combat wasn't over.");
-                return new List<string>();
-            }
+        public IEnumerable<string> GetTotalItemLoot() =>
+            GetTotalLoot(this.activeEncounter.Loot.ItemLoot, character => character.Loot.ItemLoot);
 
-            return GetTotalLoot(this.activeEncounter.Loot.ItemLoot, character => character.Loot.ItemLoot);
-        }
+        public IEnumerable<string> GetTotalEquipmentLoot() =>
+            GetTotalLoot(this.activeEncounter.Loot.EquipmentLoot, character => character.Loot.EquipmentLoot);
 
-        public IEnumerable<string> GetTotalEquipmentLoot()
-        {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalEquipmentLoot] Tried to get the total equipment loot from the fight but combat wasn't over.");
-                return new List<string>();
-            }
+        public IEnumerable<string> GetTotalGemLoot() =>
+            GetTotalLoot(this.activeEncounter.Loot.GemLoot, character => character.Loot.GemLoot);
 
-            return GetTotalLoot(this.activeEncounter.Loot.EquipmentLoot, character => character.Loot.EquipmentLoot);
-        }
-
-        public IEnumerable<string> GetTotalGemLoot()
-        {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalGemLoot] Tried to get the total gem loot from the fight but combat wasn't over.");
-                return new List<string>();
-            }
-
-            return GetTotalLoot(this.activeEncounter.Loot.GemLoot, character => character.Loot.GemLoot);
-        }
-
-        public IEnumerable<string> GetTotalRuneLoot()
-        {
-            if (!CombatCtx.One.CombatIsOver())
-            {
-                Debug.LogWarning($"[CombatGrid:GetTotalRuneLoot] Tried to get the total rune loot from the fight but combat wasn't over.");
-                return new List<string>();
-            }
-
-            return GetTotalLoot(this.activeEncounter.Loot.RuneLoot, character => character.Loot.RuneLoot);
-        }
-
+        public IEnumerable<string> GetTotalRuneLoot() => 
+            GetTotalLoot(this.activeEncounter.Loot.RuneLoot, character => character.Loot.RuneLoot);
+        
+        /// <summary>
+        /// Sets up the combat grid by creating character controllers, assigning them to tiles in the combat grid,
+        /// and doubly-linking a reference to itself on the associated character's info object
+        /// </summary>
+        /// <param name="party">The current party. Contains information on players and their global stats.</param>
+        /// <param name="encounter">The current encounter. Contains information on enemies, combat loot, etc.</param>
         public void Setup(Party party, Encounter encounter)
         {
             this.activeParty = party;
@@ -162,15 +119,13 @@ namespace BF2D.Game.Combat
 
             SetupCharacters(party, this.playerPlatforms, ref this.playersCount, InstantiatePlayerCombat);
             SetupCharacters(encounter, this.enemyPlatforms, ref this.enemiesCount, InstantiateEnemyCombat);
-
-            SpeedSort();
         }
 
         public void PassTurn()
         {
             List<CharacterCombat> toBeDestroyed = new();
 
-            this.characterQueue.RemoveAll((character) =>
+            this.characterQueue.RemoveAll(character =>
             {
                 if (character.Stats.Dead)
                 {
@@ -206,11 +161,11 @@ namespace BF2D.Game.Combat
         public void GridReset()
         {
             foreach (CombatGridTile tile in this.playerPlatforms)
-                if (tile.AssignedCharacter != null)
+                if (tile.AssignedCharacter)
                     tile.AssignedCharacter.Destroy();
 
             foreach (CombatGridTile tile in this.enemyPlatforms)
-                if (tile.AssignedCharacter != null)
+                if (tile.AssignedCharacter)
                     tile.AssignedCharacter.Destroy();
 
             this.characterQueue.Clear();
@@ -224,7 +179,7 @@ namespace BF2D.Game.Combat
 
         public void MoveEnemy(int sourceIndex, int destinationIndex) => MoveCharacter(sourceIndex, destinationIndex, this.enemyPlatforms);
 
-        public void MakeEnemyLeader(CharacterCombat newLeader)
+        public void MakeEnemyLeader(ICharacterInfo newLeader)
         {
             if (this.activeEncounter is null)
             {
@@ -232,10 +187,10 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            newLeader.MakeLeader(this.activeEncounter);
+            this.activeEncounter?.ChangeLeader(newLeader);
         }
 
-        public void MakePlayerLeader(CharacterCombat newLeader)
+        public void MakePlayerLeader(ICharacterInfo newLeader)
         {
             if (this.activeParty is null)
             {
@@ -243,7 +198,7 @@ namespace BF2D.Game.Combat
                 return;
             }
 
-            newLeader.MakeLeader(this.activeParty);
+            this.activeParty.ChangeLeader(newLeader);
         }
         #endregion
 
@@ -265,6 +220,7 @@ namespace BF2D.Game.Combat
         {
             CharacterCombat player = Instantiate(this.playerCombatPrefabsDict[playerInfo.Stats.PrefabID]);
             player.CharacterInfo = playerInfo;
+            playerInfo.CurrentController = player;
             return player;
         }
 
@@ -273,6 +229,7 @@ namespace BF2D.Game.Combat
             CharacterCombat enemy = Instantiate(this.enemyCombatPrefabsDict[enemyInfo.Stats.PrefabID]);
             enemyInfo.Stats.ResetHealth();
             enemy.CharacterInfo = enemyInfo;
+            enemyInfo.CurrentController = enemy;
             return enemy;
         }
 
@@ -291,16 +248,14 @@ namespace BF2D.Game.Combat
 
         private IEnumerable<string> GetTotalLoot(IEnumerable<UtilityEntityLoot> collection, Func<CharacterStats, IEnumerable<UtilityEntityLoot>> lootCollectionDelegate)
         {
-            List<string> totalLoot = new();
-
             foreach (CharacterStats character in this.defeatedEnemies)
                 foreach (UtilityEntityLoot loot in lootCollectionDelegate(character))
-                    loot.RollForLoot(totalLoot);
+                    foreach (string id in loot.RollForLoot())
+                        yield return id;
 
             foreach (UtilityEntityLoot loot in collection)
-                loot.RollForLoot(totalLoot);
-
-            return totalLoot;
+                foreach (string id in loot.RollForLoot())
+                    yield return id;
         }
 
         private void SetupCharacters(CharacterGroup group, CombatGridTile[] platforms, ref int count, Func<ICharacterInfo, CharacterCombat> creator)
@@ -319,9 +274,9 @@ namespace BF2D.Game.Combat
                     continue;
                 }
 
-                CharacterCombat playerCombat = creator(info);
-                playerCombat.SetPosition(platforms[info.Position], info.Position);
-                this.characterQueue.Add(playerCombat);
+                CharacterCombat characterCombat = creator(info);
+                characterCombat.SetPosition(platforms[info.Position], info.Position);
+                this.characterQueue.Add(characterCombat);
                 count++;
             }
         }

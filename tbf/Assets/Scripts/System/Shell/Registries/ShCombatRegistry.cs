@@ -32,7 +32,8 @@ namespace BF2D.Game.Combat
                 { "numrand", SCNumRand.Run },
                 { "players", SCListPlayers.Run },
                 { "embueitem", SCEmbueItem.Run },
-                { "acquiregems", SCAcquireGems.Run }
+                { "acquiregems", SCAcquireGems.Run },
+                { "continue", SCContinue.Run }
             };
         }
     }

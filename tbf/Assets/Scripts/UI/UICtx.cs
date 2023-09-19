@@ -151,11 +151,7 @@ namespace BF2D.UI
             if (this.log)
                 Debug.Log($"Take Control: {uiControl.name}");
 
-            //Dont give control to the component that is already in control
-            if (ReferenceEquals(this.currentControl, uiControl))
-                return;
-
-            if (this.currentControl)
+            if (this.currentControl && !ReferenceEquals(this.currentControl, uiControl))
             {
                 this.CurrentStack.Push(this.currentControl);
                 EndControl(this.currentControl);

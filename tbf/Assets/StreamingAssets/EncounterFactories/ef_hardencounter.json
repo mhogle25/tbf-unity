@@ -1,67 +1,65 @@
 {
-    "encounter": 
-    {
-        "leader": 
+    "leader": 
+    [
         {
-            "rankings": 
-            [
-                {
-                    "rank": 3,
-                    "property":
-                    {
-                        "position": 0,
-                        "id": "en_lessergoblin"
-                    }
-                },
-                {
-                    "rank": 1,
-                    "property": 
-                    {
-                        "pos"
-                    }
-                }
-            ]
+            "rank": 1,
+            "id": "en_lessergoblin"
+        }
+    ],
+    "activeEnemies": 
+    {
+        "count": 
+        {
+            "expression": "$ 2 3"
         },
-        "activeEnemies": 
+        "idRankings": 
         [
             {
-                "position": 1,
+                "rank": 4,
                 "id": "en_lessergoblin"
             },
             {
-                "position": 2,
+                "rank": 1,
                 "id": "en_lessergoblin"
             },
             {
-                "position": 3,
+                "rank": 22,
                 "id": "en_lessergoblin"
+            }
+        ]
+    },
+    "loot": 
+    {
+        "itemLoot": 
+        [
+            {
+                "id": "it_medicinalherb",
+                "probability": 90,
+                "count": 2
             }
         ],
-        "inactiveEnemies": 
+        "currencyLoot": 
         {
-
-        },
-        "loot": 
-        {        
-            "itemsLoot": 
-            [
-                {
-                    "id": "it_firecracker",
-                    "probability": 40
-                }
-            ],
-            "currencyLoot": 
-            {
-                "expression": "$ 3 7"
-            },
-            "etherLoot": 
-            {
-                "expression": "$ 1 2"
-            }
-        },
-        "onInit": 
-        {
-            // A game action just like any other
+            "value": 7
         }
+    },
+    "onInit": 
+    {
+        "message": 
+        [
+            "[N:Goblin Chief]You've yee'd your last haw,[P:0.2] Vapor Knight.",
+            "Prepare to die!"
+        ],
+        "targetedGemSlots": 
+        [
+            {
+                "target": "AllOpponents",
+                "gemID": "gm_damage_01",
+                "repeat": 
+                {
+                    "expression": "$ 1 3"
+                }
+            }
+        ]
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using BF2D.Enums;
 using BF2D.Game.Enums;
 using UnityEngine;
 
@@ -119,8 +118,8 @@ namespace BF2D.Game
         // Luck properties
         [JsonIgnore] public int Luck 
         { 
-            get 
-            { 
+            get
+            {
                 int value = this.Fortune + this.LuckModifier;
                 if (value < 0) value = 0;
                 return value;
@@ -239,11 +238,11 @@ namespace BF2D.Game
         public int Exert(int exertion)
         {
             int value = exertion > 0 ? exertion : 1;
-
-            if (this.stamina < value)
-                value = this.stamina;   //Stamina shouldn't drop below 0
-
             this.stamina -= value;
+
+            if (this.stamina < 0)
+                this.stamina = 0;   // Stamina shouldn't drop below 0
+
             return value;
         }
 

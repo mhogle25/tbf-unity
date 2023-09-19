@@ -38,6 +38,6 @@ namespace BF2D.Game.Actions
                 this.Target == CharacterTarget.RandomOpponent;
         }
 
-        public CharacterAction.Info Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target, this.Specs);
+        public CharacterAction.RunInfo Run(CharacterStats source, CharacterStats target) => this.Gem.Run(source, target, this.Specs);
     }
 }

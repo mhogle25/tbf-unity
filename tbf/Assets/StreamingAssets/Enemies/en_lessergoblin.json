@@ -54,7 +54,7 @@
     ],
     "loot": 
     {
-        "itemsLoot": 
+        "itemLoot": 
         [
             {
                 "id": "it_firecracker",

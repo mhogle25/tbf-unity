@@ -260,7 +260,6 @@ namespace BF2D.Utilities
 
     public static class Collections
     {
-
         public static void Shuffle<T>(this IList<T> list)
         {
             RNGCryptoServiceProvider provider = new();
